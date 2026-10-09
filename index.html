@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentSWE: Can Coding Agents Build the Agent You Actually Want?</title>
+<meta name="description" content="AgentSWE is a benchmark for agent software engineering: 25 tasks that test whether coding agents deliver the agent a natural-language requirement describes, across creation, editing and optimization.">
+<meta property="og:title" content="AgentSWE: Can Coding Agents Build the Agent You Actually Want?">
+<meta property="og:description" content="A benchmark for agent software engineering: 25 tasks across creation, editing and optimization.">
+<meta property="og:image" content="static/images/overview.png">
+<style>
+  :root {
+    --ink: #1f2430;
+    --muted: #5d6475;
+    --line: #e4e6ec;
+    --bg: #ffffff;
+    --soft: #f6f7fa;
+    --creation: #e8455a;
+    --editing: #f08a1c;
+    --optimization: #2a86d1;
+    --accent: #3b4bdb;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+  header.hero { text-align: center; padding: 56px 0 28px; }
+  .hero h1 { font-size: 46px; line-height: 1.1; margin: 0; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 24px; font-weight: 600; margin: 10px 0 22px; color: #333a4a; }
+  .authors { font-size: 18px; margin: 0 0 6px; }
+  .authors span { margin: 0 8px; white-space: nowrap; }
+  .affil { color: var(--muted); font-size: 15px; margin: 2px 0; }
+  .notes { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  .buttons { margin-top: 22px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 999px;
+    background: #23262f; color: #fff; font-weight: 600; font-size: 15px;
+  }
+  .btn:hover { background: #3a3f4d; text-decoration: none; }
+  .btn.disabled { background: #b9bcc6; cursor: default; }
+  .btn svg { width: 17px; height: 17px; fill: currentColor; }
+  section { padding: 34px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 { font-size: 28px; margin: 0 0 16px; text-align: center; }
+  h3 { font-size: 19px; margin: 0 0 8px; }
+  p { margin: 0 0 14px; }
+  figure { margin: 18px 0 6px; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 8px; }
+  figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; }
+  .abstract { max-width: 860px; margin: 0 auto; text-align: justify; hyphens: auto; }
+  .tldr {
+    max-width: 860px; margin: 0 auto 18px; padding: 14px 18px; border-left: 4px solid var(--accent);
+    background: var(--soft); border-radius: 6px;
+  }
+  .stages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 8px 0 18px; }
+  .stage { border: 1px solid var(--line); border-radius: 12px; padding: 18px; border-top: 5px solid; }
+  .stage.c { border-top-color: var(--creation); }
+  .stage.e { border-top-color: var(--editing); }
+  .stage.o { border-top-color: var(--optimization); }
+  .stage .count { font-size: 13px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
+  .stage.c .count { color: var(--creation); }
+  .stage.e .count { color: var(--editing); }
+  .stage.o .count { color: var(--optimization); }
+  .stage p { font-size: 15px; color: #3a4050; }
+  .stage ul { margin: 6px 0 0; padding-left: 18px; font-size: 14px; color: var(--muted); }
+  .tabs { display: flex; justify-content: center; gap: 8px; margin: 6px 0 14px; flex-wrap: wrap; }
+  .tab {
+    border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 7px 16px;
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--muted);
+  }
+  .tab[aria-selected="true"] { color: #fff; border-color: transparent; }
+  .tab[data-k="creation"][aria-selected="true"] { background: var(--creation); }
+  .tab[data-k="editing"][aria-selected="true"] { background: var(--editing); }
+  .tab[data-k="optimization"][aria-selected="true"] { background: var(--optimization); }
+  .tab[data-k="summary"][aria-selected="true"] { background: #23262f; }
+  .table-scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 620px; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { text-align: right; font-weight: 700; background: var(--soft); }
+  th:first-child, td:first-child { text-align: left; }
+  td { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.mean td { font-weight: 700; border-top: 2px solid #c9ccd6; }
+  td.best { font-weight: 700; color: var(--accent); }
+  .tnote { color: var(--muted); font-size: 13px; margin-top: 8px; text-align: center; }
+  .findings { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .finding { background: var(--soft); border-radius: 12px; padding: 18px; }
+  .finding .num { font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1.1; }
+  .finding .numlabel { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .finding p { font-size: 15px; margin: 0; }
+  .figrow { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-top: 18px; }
+  pre.bib {
+    position: relative; background: #f3f4f7; border-radius: 10px; padding: 16px 18px; overflow-x: auto;
+    font-size: 13.5px; line-height: 1.5; margin: 0;
+  }
+  .copy {
+    position: absolute; top: 10px; right: 10px; border: 1px solid var(--line); background: #fff;
+    border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer;
+  }
+  footer { color: var(--muted); font-size: 13px; text-align: center; padding: 26px 0 40px; border-top: 1px solid var(--line); }
+  @media (max-width: 780px) {
+    .hero h1 { font-size: 36px; }
+    .hero .subtitle { font-size: 19px; }
+    .stages, .findings, .figrow { grid-template-columns: 1fr; }
+    .abstract { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <h1>AgentSWE</h1>
+  <div class="subtitle">Can Coding Agents Build the Agent You Actually Want?</div>
+  <p class="authors">
+    <span>Jiahao Wang<sup>1,2,†</sup></span>
+    <span>Hongjin Qian<sup>1,†</sup></span>
+    <span>Yuyang Hu<sup>1,3</sup></span>
+    <span>Zheng Liu<sup>1,*</sup></span>
+  </p>
+  <p class="affil"><sup>1</sup>Beijing Academy of Artificial Intelligence (BAAI)</p>
+  <p class="affil"><sup>2</sup>Institute of Automation, Chinese Academy of Sciences &nbsp; <sup>3</sup>Renmin University of China</p>
+  <p class="notes"><sup>†</sup>Equal contribution &nbsp; <sup>*</sup>Corresponding author</p>
+  <div class="buttons">
+    <span class="btn disabled" title="Coming soon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6zM14 3v5h5"/></svg>Paper (arXiv, coming soon)
+    </span>
+    <a class="btn" href="https://github.com/VectorSpaceLab/AgentSWE">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>Code
+    </a>
+    <a class="btn" href="https://github.com/VectorSpaceLab/AgentSWE#lite">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>Lite (8 tasks)
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <figure>
+    <img src="static/images/overview.png" alt="AgentSWE at a glance">
+    <figcaption>(a) Existing benchmarks grade the patch a coding agent writes, or the performance of an agent someone
+      else built. (b) AgentSWE commissions an agent from a natural-language requirement and grades what the delivered
+      agent does on held-out cases. (c) Mean held-out score of five builders in the Codex harness.</figcaption>
+  </figure>
+</section>
+
+<section id="abstract">
+  <h2>Abstract</h2>
+  <p class="abstract">
+    As the production of software passes into the hands of software itself, coding agents are increasingly
+    commissioned to build agents fitted to their users' own workflows. This delegation carries a quiet assumption,
+    that the delivered agent will faithfully serve the requirement it was built for, rather than merely appear to.
+    No existing benchmark tests that assumption. We introduce <b>AgentSWE</b>, a benchmark for <i>agent software
+    engineering</i> spanning three stages of the agent development lifecycle: <b>Creation</b> of a complete agent
+    from a natural-language requirement, <b>Editing</b> of production agent codebases, and <b>Optimization</b>
+    toward a measurable target. Each of its 25 tasks is framed as a commission rather than an exam: the builder
+    iterates against a handful of illustrative cases, while acceptance exercises the frozen submission on held-out
+    cases designed to span the full requirement, grading behavior against requirement-derived rubrics under hard
+    pass/fail gates or, for Optimization, against the source benchmark's own objective. Evaluating a range of coding
+    agents across models and harnesses, we find that none comes close to delivering what a requirement asks for: the
+    gap between what a builder demonstrates and what it delivers is the norm, not the corner case. An accompanying
+    empirical analysis of the failure trajectories identifies recurring failure modes, among them overfitting to the
+    visible cases, hollow runtimes behind code that looks complete, and unsupported claims of completion, turning
+    verdicts into signals by which coding agents may learn to build the agents they are asked for.
+  </p>
+</section>
+
+<section id="benchmark">
+  <h2>The Benchmark</h2>
+  <div class="stages">
+    <div class="stage c">
+      <div class="count">Creation · 10 tasks</div>
+      <h3>Build an agent from scratch</h3>
+      <p>The builder starts from an empty workspace and delivers a complete agent for a domain requirement.</p>
+      <ul>
+        <li>Repository bug repair, database analytics, formal theorem proving</li>
+        <li>Desktop GUI automation, web research report, schema-guided web extraction</li>
+        <li>Scientific PDF translation, document-to-editable PPTX, document QA, vulnerability validation</li>
+      </ul>
+    </div>
+    <div class="stage e">
+      <div class="count">Editing · 10 tasks</div>
+      <h3>Extend a production agent</h3>
+      <p>The builder adds new capabilities to a pinned open-source agent without breaking what already works.</p>
+      <ul>
+        <li>AI-Scientist, Aider, Claude Code, Codex, DeepCode</li>
+        <li>DeepTutor, Dyad, OpenClaw, OpenHands, OpenWiki</li>
+      </ul>
+    </div>
+    <div class="stage o">
+      <div class="count">Optimization · 5 tasks</div>
+      <h3>Improve a working agent</h3>
+      <p>The builder improves a runnable starter agent toward the source benchmark's own objective.</p>
+      <ul>
+        <li>BrowseComp, τ³ (retail), Terminal-Bench</li>
+        <li>PinchBench, OSWorld</li>
+      </ul>
+    </div>
+  </div>
+  <figure>
+    <img src="static/images/construction.png" alt="How AgentSWE tasks are constructed">
+    <figcaption>How the tasks are built, and what each task gives the coding agent and keeps for evaluation.</figcaption>
+  </figure>
+</section>
+
+<section id="evaluation">
+  <h2>Evaluation Protocol</h2>
+  <p class="tldr">The builder works in one persistent session against the public development cases and gets
+    feedback on each submission. When development ends, the delivery is frozen and run on held-out cases it has never
+    seen, in an isolated, pinned runtime where every model call goes through the benchmark's gateway. Creation and
+    Editing deliveries must pass hard validity gates before a requirement-derived rubric scores them; Optimization
+    deliveries are scored by gap closure under the source benchmark's evaluator.</p>
+  <figure>
+    <img src="static/images/evaluation.png" alt="Develop and freeze, then held-out evaluation">
+  </figure>
+</section>
+
+<section id="results">
+  <h2>Results</h2>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-k="summary" aria-selected="true">Summary</button>
+    <button class="tab" role="tab" data-k="creation" aria-selected="false">Creation</button>
+    <button class="tab" role="tab" data-k="editing" aria-selected="false">Editing</button>
+    <button class="tab" role="tab" data-k="optimization" aria-selected="false">Optimization</button>
+  </div>
+  <div class="table-scroll"><table id="results-table"></table></div>
+  <p class="tnote" id="results-note"></p>
+</section>
+
+<section id="findings">
+  <h2>What Goes Wrong</h2>
+  <div class="findings">
+    <div class="finding">
+      <h3>Overfitting to the visible cases</h3>
+      <div class="num">+13.1 → +1.8</div>
+      <div class="numlabel">Optimization gain, development vs. held-out</div>
+      <p>Eleven Creation runs finish development at 90 or above, yet their held-out Result averages 9.9. Builders fit
+        their agents to the cases they can see.</p>
+    </div>
+    <div class="finding">
+      <h3>Hollow runtimes</h3>
+      <div class="num">58.1%</div>
+      <div class="numlabel">of traced held-out Creation executions fail a validity gate</div>
+      <p>Code that reads as complete often does not run. A static code review cannot tell zero-score deliveries from
+        the rest; in Editing, 28 of 33 deliveries leave some added capability absent, never invoked or only partly executed.</p>
+    </div>
+    <div class="finding">
+      <h3>Unsupported claims of completion</h3>
+      <div class="num">9 reports</div>
+      <div class="numlabel">claim completions their own records contradict</div>
+      <p>6 of 42 final Creation reports and 3 of 19 Optimization reports overclaim. Delivered Editing agents do it too:
+        in 13 of 33 runs they report outcomes their own logs contradict.</p>
+    </div>
+  </div>
+  <div class="figrow">
+    <figure>
+      <img src="static/images/dev-vs-heldout.png" alt="Optimization gain on development and held-out cases">
+      <figcaption>Optimization: gain over the starter on development (open) and held-out (filled) cases.</figcaption>
+    </figure>
+    <figure>
+      <img src="static/images/creation-outcomes.png" alt="Outcomes of held-out Creation executions">
+      <figcaption>Outcomes of held-out Creation executions by builder.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="bibtex">
+  <h2>BibTeX</h2>
+  <pre class="bib"><button class="copy" type="button">Copy</button><code id="bib">@misc{wang2026agentswe,
+  title  = {AgentSWE: Can Coding Agents Build the Agent You Actually Want?},
+  author = {Jiahao Wang and Hongjin Qian and Yuyang Hu and Zheng Liu},
+  year   = {2026},
+  note   = {arXiv preprint coming soon}
+}</code></pre>
+</section>
+
+</main>
+
+<footer>AgentSWE · <a href="https://github.com/VectorSpaceLab/AgentSWE">github.com/VectorSpaceLab/AgentSWE</a> · Apache License 2.0</footer>
+
+<script>
+  // Held-out results from Table 1 of the paper. Creation and Editing: mean Result (0-100); Optimization: S = 100 * gap closure.
+  const BUILDERS = ["GPT-5.6 Sol", "GPT-5.5", "DeepSeek-V4-Pro", "DeepSeek-V4-Flash", "Qwen3.6-35B-A3B"];
+  const DATA = {
+    creation: [
+      ["Authorized vulnerability validation", 0.0, 0.0, 14.0, 14.0, 0.0],
+      ["Database analytics", 3.0, 9.8, 14.3, 0.0, 0.0],
+      ["Desktop GUI automation", 18.0, 3.2, 17.5, 12.0, 0.0],
+      ["Document-to-editable PPTX", 0.0, 9.8, 18.7, 16.8, 21.7],
+      ["Evidence-grounded document QA", 3.3, 12.2, 0.0, 3.5, 0.0],
+      ["Formal theorem proving", 66.7, 0.0, 16.5, 63.0, 0.0],
+      ["Repository bug repair", 27.7, 0.0, 60.0, 0.0, 0.0],
+      ["Schema-guided web extraction", 0.0, 0.0, 6.7, 0.0, 0.0],
+      ["Scientific PDF translation", 18.3, 21.8, 25.3, 26.0, 0.0],
+      ["Web research report", 0.0, 0.8, 18.0, 15.3, 1.7],
+      ["Mean", 13.7, 5.8, 19.1, 15.1, 2.3],
+    ],
+    editing: [
+      ["Claude policy provenance", 24.0, 43.7, 28.3, 0.0, 0.0],
+      ["Aider worktree transaction", 21.5, 20.0, 47.3, 0.0, 0.0],
+      ["OpenHands effect recovery", 4.0, 20.5, 24.3, 0.0, 0.0],
+      ["OpenClaw channel handoff", 38.5, 12.3, 19.5, 0.0, 0.0],
+      ["Codex execution residual", 11.7, 70.0, 35.0, 0.0, 0.0],
+      ["AI-Scientist reproducibility gate", 48.5, 67.3, 61.7, 54.3, 0.0],
+      ["DeepCode claim traceability", 26.5, 41.3, 32.7, 47.0, 0.0],
+      ["DeepTutor adaptive remediation", 54.2, 14.3, 31.0, 25.7, 0.0],
+      ["Dyad acceptance-driven workflow", 9.8, 18.0, 22.5, 0.0, 0.0],
+      ["OpenWiki change-impact documentation", 0.0, 8.5, 14.0, 12.8, 0.0],
+      ["Mean", 23.9, 31.6, 31.6, 14.0, 0.0],
+    ],
+    optimization: [
+      ["BrowseComp", 32.3, 18.4, -1.0, 34.1, 8.5],
+      ["τ³", 4.3, 0.0, 15.8, -50.0, -23.8],
+      ["Terminal-Bench", -10.0, 7.7, 0.0, 2.8, 7.7],
+      ["PinchBench", -14.9, -11.1, -38.7, -34.4, 12.1],
+      ["OSWorld", 12.0, -9.1, 4.0, 12.0, 0.0],
+      ["Mean", 4.7, 1.2, -4.0, -7.1, 0.9],
+    ],
+  };
+  const NOTES = {
+    summary: "Mean held-out score per stage. Creation and Editing: Result (0–100). Optimization: gap closure S (negative means worse than the starter). All builders use the Codex harness.",
+    creation: "Mean held-out Result (0–100) per Creation task.",
+    editing: "Mean held-out Result (0–100) per Editing task.",
+    optimization: "Gap closure S = 100γ on held-out instances; negative means the delivery scores below the starter.",
+  };
+  function fmt(v) { return (v < 0 ? "−" + Math.abs(v).toFixed(1) : v.toFixed(1)); }
+  function rowsFor(k) {
+    if (k !== "summary") return DATA[k];
+    const pick = s => DATA[s][DATA[s].length - 1].slice(1);
+    return [["Creation", ...pick("creation")], ["Editing", ...pick("editing")], ["Optimization", ...pick("optimization")]];
+  }
+  function render(k) {
+    const rows = rowsFor(k);
+    const head = "<tr><th>" + (k === "summary" ? "Stage" : "Task") + "</th>" + BUILDERS.map(b => "<th>" + b + "</th>").join("") + "</tr>";
+    const body = rows.map(r => {
+      const vals = r.slice(1), max = Math.max(...vals);
+      const cls = r[0] === "Mean" ? ' class="mean"' : "";
+      return "<tr" + cls + "><td>" + r[0] + "</td>" + vals.map(v => '<td' + (v === max && max !== 0 ? ' class="best"' : '') + '>' + fmt(v) + "</td>").join("") + "</tr>";
+    }).join("");
+    document.getElementById("results-table").innerHTML = "<thead>" + head + "</thead><tbody>" + body + "</tbody>";
+    document.getElementById("results-note").textContent = NOTES[k];
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.k === k ? "true" : "false"));
+  }
+  document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => render(t.dataset.k)));
+  render("summary");
+  document.querySelector(".copy").addEventListener("click", e => {
+    const text = document.getElementById("bib").textContent;
+    const done = () => { e.target.textContent = "Copied"; setTimeout(() => e.target.textContent = "Copy", 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, done); else done();
+  });
+</script>
+</body>
+</html>
