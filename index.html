@@ -128,14 +128,15 @@
   <h1>AgentSWE</h1>
   <div class="subtitle">Can Coding Agents Build the Agent You Actually Want?</div>
   <p class="authors">
-    <span>Jiahao Wang<sup>1,2,†</sup></span>
-    <span>Hongjin Qian<sup>1,†</sup></span>
+    <span>Jiahao Wang<sup>1,2,*</sup></span>
+    <span>Hongjin Qian<sup>1,*</sup></span>
     <span>Yuyang Hu<sup>1,3</sup></span>
-    <span>Zheng Liu<sup>1,*</sup></span>
+    <span>Jiajun Zhang<sup>2</sup></span>
+    <span>Zheng Liu<sup>1,†</sup></span>
   </p>
-  <p class="affil"><sup>1</sup>Beijing Academy of Artificial Intelligence (BAAI)</p>
+  <p class="affil"><sup>1</sup>Beijing Academy of Artificial Intelligence</p>
   <p class="affil"><sup>2</sup>Institute of Automation, Chinese Academy of Sciences &nbsp; <sup>3</sup>Renmin University of China</p>
-  <p class="notes"><sup>†</sup>Equal contribution &nbsp; <sup>*</sup>Corresponding author</p>
+  <p class="notes"><sup>*</sup>Equal contribution &nbsp; <sup>†</sup>Corresponding author</p>
   <div class="buttons">
     <span class="btn disabled" title="Coming soon">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6zM14 3v5h5"/></svg>Paper (arXiv, coming soon)
@@ -176,8 +177,8 @@
     agents across models and harnesses, we find that none comes close to delivering what a requirement asks for: the
     gap between what a builder demonstrates and what it delivers is the norm, not the corner case. An accompanying
     empirical analysis of the failure trajectories identifies recurring failure modes, among them overfitting to the
-    visible cases, hollow runtimes behind code that looks complete, and unsupported claims of completion, turning
-    verdicts into signals by which coding agents may learn to build the agents they are asked for.
+    visible cases, hollow runtimes behind code that looks complete, and unsupported claims of completion, each a
+    signal by which coding agents can learn to build the agents they are asked for.
   </p>
 </section>
 
@@ -245,13 +246,14 @@
 
 <section id="lite">
   <h2>AgentSWE-Lite</h2>
-  <p class="callout"><b>Start here.</b> Lite v1.1 is 8 of the 25 tasks: three Creation, three Editing and two
-    Optimization tasks. It runs with deepseek-flash as the runtime model and the judge, so a single DeepSeek API key is
-    all you need: no search key and no release assets. It is the quickest way to measure your own coding agent.</p>
+  <p class="callout"><b>Start here.</b> AgentSWE-Lite is 8 of the 25 tasks: three Creation, three Editing and two
+    Optimization tasks. DeepSeek-V4.1-Flash is the runtime model and the judge in all three stages, so a single
+    DeepSeek API key is all you need: no search key and no release assets. It is the lower-cost entry point for
+    evaluating your own coding agent.</p>
   <div class="table-scroll"><table id="lite-table"></table></div>
-  <p class="tnote">Mean of three runs per task (profile <code>lite-v1.1</code>). Creation and Editing: Result (0–100);
-    Optimization: gap closure S. Use these as the reference for your Lite runs; they are not comparable with the full
-    benchmark above.</p>
+  <p class="tnote">Mean over three builds per pairing in Codex (profile <code>lite-v1.1</code>). Creation and Editing:
+    held-out Result (0–100); Optimization: S. DeepSeek-V4.1-Flash is the runtime model and the judge, so the Creation
+    and Optimization levels are not comparable with the main results above.</p>
   <pre class="cmd"><span class="c"># in a clone of the repository, with AGENTSWE_DEFAULT_API_KEY set in .env</span>
 echo AGENTSWE_PROFILE=lite-v1.1 &gt;&gt; .env
 python3 -m agentswe doctor repo db pdf deeptutor aider openwiki tau3 pinch
@@ -272,7 +274,7 @@ python3 -m agentswe run &lt;task&gt; --builder codex</pre>
     <div class="finding">
       <h3>Hollow runtimes</h3>
       <div class="num">58.1%</div>
-      <div class="numlabel">of traced held-out Creation executions fail a validity gate</div>
+      <div class="numlabel">of traced non-GUI held-out Creation executions fail a validity gate</div>
       <p>Code that reads as complete often does not run. A static code review cannot tell zero-score deliveries from
         the rest; in Editing, 28 of 33 deliveries leave some added capability absent, never invoked or only partly executed.</p>
     </div>
@@ -287,11 +289,11 @@ python3 -m agentswe run &lt;task&gt; --builder codex</pre>
   <div class="figrow">
     <figure>
       <img src="static/images/dev-vs-heldout.png" alt="Optimization gain on development and held-out cases">
-      <figcaption>Optimization: gain over the starter on development (open) and held-out (filled) cases.</figcaption>
+      <figcaption>Optimization: gain over the starter on development (open) and held-out (filled) cases, averaged over five builders per benchmark.</figcaption>
     </figure>
     <figure>
       <img src="static/images/creation-outcomes.png" alt="Outcomes of held-out Creation executions">
-      <figcaption>Outcomes of held-out Creation executions by builder.</figcaption>
+      <figcaption>Outcomes of held-out Creation executions by builder. Only graded executions reach the Result rubric.</figcaption>
     </figure>
   </div>
 </section>
@@ -300,7 +302,7 @@ python3 -m agentswe run &lt;task&gt; --builder codex</pre>
   <h2>BibTeX</h2>
   <pre class="bib"><button class="copy" type="button">Copy</button><code id="bib">@misc{wang2026agentswe,
   title  = {AgentSWE: Can Coding Agents Build the Agent You Actually Want?},
-  author = {Jiahao Wang and Hongjin Qian and Yuyang Hu and Zheng Liu},
+  author = {Jiahao Wang and Hongjin Qian and Yuyang Hu and Jiajun Zhang and Zheng Liu},
   year   = {2026},
   note   = {arXiv preprint coming soon}
 }</code></pre>
@@ -374,28 +376,24 @@ python3 -m agentswe run &lt;task&gt; --builder codex</pre>
     document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.k === k ? "true" : "false"));
   }
   document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => render(t.dataset.k)));
-  // Lite v1.1: mean of three runs per task, deepseek-flash as runtime model and judge.
-  const LITE_BUILDERS = ["DeepSeek-V4-Flash", "GPT-5.6 Sol", "Qwen3.6-35B-A3B"];
+  // AgentSWE-Lite (paper table tab:lite): mean over three builds per pairing in Codex, values as printed in the paper.
+  const LITE_BUILDERS = ["GPT-5.6 Sol", "DeepSeek-V4.1-Flash", "Qwen3.6-35B-A3B"];
   const LITE = [
-    ["Creation", "Repository bug repair (repo)", 30.03, 42.90, 0.00],
-    ["", "Database analytics (db)", 38.67, 7.43, 0.00],
-    ["", "Scientific PDF translation (pdf)", 31.93, 18.90, 0.00],
-    ["Editing", "DeepTutor adaptive remediation (deeptutor)", 27.56, 52.22, 0.00],
-    ["", "Aider worktree transaction (aider)", 39.33, 13.00, 6.00],
-    ["", "OpenWiki change-impact documentation (openwiki)", 21.00, 22.78, 0.00],
-    ["Optimization", "τ³ retail (tau3)", 13.04, 10.14, 4.35],
-    ["", "PinchBench (pinch)", 24.35, 19.42, 2.41],
+    ["Creation", "Scientific PDF translation (pdf)", 18.9, 31.9, 0.0],
+    ["", "Database analytics (db)", 7.4, 38.7, 0.0],
+    ["", "Repository bug repair (repo)", 42.9, 30.0, 0.0],
+    ["Editing", "DeepTutor adaptive remediation (deeptutor)", 52.2, 27.6, 0.0],
+    ["", "Aider worktree transaction (aider)", 13.0, 39.3, 6.0],
+    ["", "OpenWiki change-impact documentation (openwiki)", 22.8, 21.0, 0.0],
+    ["Optimization", "τ³ (tau3)", 10.1, 13.0, 4.3],
+    ["", "PinchBench (pinch)", 19.4, 24.3, 2.4],
   ];
-  function liteMean(stage) {
-    const idx = {Creation: [0, 1, 2], Editing: [3, 4, 5], Optimization: [6, 7]}[stage];
-    return [0, 1, 2].map(j => idx.reduce((a, i) => a + LITE[i][2 + j], 0) / idx.length);
-  }
-  function round1(v) { return (Math.round(v * 10 + 1e-9) / 10); }
+  const LITE_MEANS = [["Creation", 23.1, 33.5, 0.0], ["Editing", 29.3, 29.3, 2.0], ["Optimization", 14.8, 18.7, 3.4]];
   (function renderLite() {
     const head = "<tr><th>Stage</th><th>Task</th>" + LITE_BUILDERS.map(b => "<th>" + b + "</th>").join("") + "</tr>";
     const cells = vals => { const r = vals.map(round1), m = Math.max(...r); return r.map(v => '<td' + (v === m && m !== 0 ? ' class="best"' : '') + '>' + v.toFixed(1) + "</td>").join(""); };
     let body = LITE.map(r => '<tr><td class="stg">' + r[0] + "</td><td>" + r[1] + "</td>" + cells(r.slice(2)) + "</tr>").join("");
-    body += ["Creation", "Editing", "Optimization"].map((st, i) => '<tr class="mean"><td class="stg">' + (i === 0 ? "Mean" : "") + "</td><td>" + st + "</td>" + cells(liteMean(st)) + "</tr>").join("");
+    body += LITE_MEANS.map((m, i) => '<tr class="mean"><td class="stg">' + (i === 0 ? "Mean" : "") + "</td><td>" + m[0] + "</td>" + cells(m.slice(1)) + "</tr>").join("");
     document.getElementById("lite-table").innerHTML = "<thead>" + head + "</thead><tbody>" + body + "</tbody>";
   })();
   render("summary");
