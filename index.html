@@ -101,6 +101,18 @@
     position: absolute; top: 10px; right: 10px; border: 1px solid var(--line); background: #fff;
     border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer;
   }
+  .callout {
+    max-width: 860px; margin: 0 auto 18px; padding: 14px 18px; border-radius: 10px;
+    background: #eef6ee; border: 1px solid #cfe5cf;
+  }
+  .callout b { color: #1f6b35; }
+  pre.cmd {
+    max-width: 860px; margin: 16px auto 0; background: #1f2430; color: #e8eaf0; border-radius: 10px;
+    padding: 14px 18px; overflow-x: auto; font-size: 13.5px; line-height: 1.6;
+  }
+  pre.cmd .c { color: #8e96a8; }
+  td.stg { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.4px; }
+  #lite-table th:nth-child(2), #lite-table td:nth-child(2) { text-align: left; }
   footer { color: var(--muted); font-size: 13px; text-align: center; padding: 26px 0 40px; border-top: 1px solid var(--line); }
   @media (max-width: 780px) {
     .hero h1 { font-size: 36px; }
@@ -131,7 +143,7 @@
     <a class="btn" href="https://github.com/VectorSpaceLab/AgentSWE">
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>Code
     </a>
-    <a class="btn" href="https://github.com/VectorSpaceLab/AgentSWE#lite">
+    <a class="btn" href="#lite">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>Lite (8 tasks)
     </a>
   </div>
@@ -229,6 +241,22 @@
   </div>
   <div class="table-scroll"><table id="results-table"></table></div>
   <p class="tnote" id="results-note"></p>
+</section>
+
+<section id="lite">
+  <h2>AgentSWE-Lite</h2>
+  <p class="callout"><b>Start here.</b> Lite v1.1 is 8 of the 25 tasks: three Creation, three Editing and two
+    Optimization tasks. It runs with deepseek-flash as the runtime model and the judge, so a single DeepSeek API key is
+    all you need: no search key and no release assets. It is the quickest way to measure your own coding agent.</p>
+  <div class="table-scroll"><table id="lite-table"></table></div>
+  <p class="tnote">Mean of three runs per task (profile <code>lite-v1.1</code>). Creation and Editing: Result (0–100);
+    Optimization: gap closure S. Use these as the reference for your Lite runs; they are not comparable with the full
+    benchmark above.</p>
+  <pre class="cmd"><span class="c"># in a clone of the repository, with AGENTSWE_DEFAULT_API_KEY set in .env</span>
+echo AGENTSWE_PROFILE=lite-v1.1 &gt;&gt; .env
+python3 -m agentswe doctor repo db pdf deeptutor aider openwiki tau3 pinch
+python3 -m agentswe setup &lt;task&gt;
+python3 -m agentswe run &lt;task&gt; --builder codex</pre>
 </section>
 
 <section id="findings">
@@ -346,6 +374,30 @@
     document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.k === k ? "true" : "false"));
   }
   document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => render(t.dataset.k)));
+  // Lite v1.1: mean of three runs per task, deepseek-flash as runtime model and judge.
+  const LITE_BUILDERS = ["DeepSeek-V4-Flash", "GPT-5.6 Sol", "Qwen3.6-35B-A3B"];
+  const LITE = [
+    ["Creation", "Repository bug repair (repo)", 30.03, 42.90, 0.00],
+    ["", "Database analytics (db)", 38.67, 7.43, 0.00],
+    ["", "Scientific PDF translation (pdf)", 31.93, 18.90, 0.00],
+    ["Editing", "DeepTutor adaptive remediation (deeptutor)", 27.56, 52.22, 0.00],
+    ["", "Aider worktree transaction (aider)", 39.33, 13.00, 6.00],
+    ["", "OpenWiki change-impact documentation (openwiki)", 21.00, 22.78, 0.00],
+    ["Optimization", "τ³ retail (tau3)", 13.04, 10.14, 4.35],
+    ["", "PinchBench (pinch)", 24.35, 19.42, 2.41],
+  ];
+  function liteMean(stage) {
+    const idx = {Creation: [0, 1, 2], Editing: [3, 4, 5], Optimization: [6, 7]}[stage];
+    return [0, 1, 2].map(j => idx.reduce((a, i) => a + LITE[i][2 + j], 0) / idx.length);
+  }
+  function round1(v) { return (Math.round(v * 10 + 1e-9) / 10); }
+  (function renderLite() {
+    const head = "<tr><th>Stage</th><th>Task</th>" + LITE_BUILDERS.map(b => "<th>" + b + "</th>").join("") + "</tr>";
+    const cells = vals => { const r = vals.map(round1), m = Math.max(...r); return r.map(v => '<td' + (v === m && m !== 0 ? ' class="best"' : '') + '>' + v.toFixed(1) + "</td>").join(""); };
+    let body = LITE.map(r => '<tr><td class="stg">' + r[0] + "</td><td>" + r[1] + "</td>" + cells(r.slice(2)) + "</tr>").join("");
+    body += ["Creation", "Editing", "Optimization"].map((st, i) => '<tr class="mean"><td class="stg">' + (i === 0 ? "Mean" : "") + "</td><td>" + st + "</td>" + cells(liteMean(st)) + "</tr>").join("");
+    document.getElementById("lite-table").innerHTML = "<thead>" + head + "</thead><tbody>" + body + "</tbody>";
+  })();
   render("summary");
   document.querySelector(".copy").addEventListener("click", e => {
     const text = document.getElementById("bib").textContent;
