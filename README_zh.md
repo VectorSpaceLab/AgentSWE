@@ -111,7 +111,8 @@ python3 -m agentswe result <run_id>
 
 `--smoke` 用很小的预算检查整条流程能否跑通：只评一个隐藏用例，之前创建任务有一次开发提交，修改任务有两次。网络好的
 服务器上，`repo` 首次 setup 加 smoke 需要 25 到 45 分钟；一个修改任务的 smoke 需要 10 分钟到约 2 小时。去掉 `--smoke` 就是按论文
-协议完整运行。smoke 的分数不能和论文的数字比较。
+协议完整运行。smoke 的分数不能和论文的数字比较。完整运行的时长取决于 builder 工作多久，上限是它的预算（创建 8 小时、10 次提交，
+修改 5 小时、5 次提交，优化 16 小时、5 轮开发），再加上隐藏用例的评测，从不到一小时到大约一天不等。
 
 网络调研、PPTX 和 BrowseComp 三个任务还需要兼容 Serper 的搜索 key。在防火墙或代理之后使用，见
 [docs/ENV.md](docs/ENV.md)。
@@ -129,6 +130,10 @@ python3 -m agentswe run <task> --builder codex
 ```
 
 三个修改任务还需要带 systemd 委派的 cgroup v2，`doctor` 会检查。
+
+完整的修改任务运行中，builder 有 5 小时和最多 5 次被接受的提交。如果时间用完时 builder 还没结束，运行会在隐藏用例之前停止。
+没有任何提交被接受时，`agentswe result` 按协议报告 0 分；否则它列出被接受的提交，但不给分数，因为这个版本还不能冻结最后一次
+提交并评测它（见 [docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)）。
 
 ## 📚 文档（英文）
 

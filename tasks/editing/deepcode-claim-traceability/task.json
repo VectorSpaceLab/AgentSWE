@@ -52,7 +52,7 @@
     "runtime_model": "deepseek-flash/high",
     "judge": "deepseek-flash/max, max_output_tokens 64000",
     "early_stop_resample": "formal only, 1 extra logical request",
-    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+    "freeze": "freeze_latest_accepted: development ends when the Builder exits, uses up its 5 accepted submissions or uses up its 5-hour budget; the last accepted submission is frozen and scored on the held-out cases, and a Builder with no accepted submission scores 0. The task's one-stop runs the held-out cases only after a Builder session that ended by itself or after its last submission: when the budget cuts the Builder off, the run stops before the held-out cases and `agentswe result` adds a `budget_exhausted` block (the accepted submissions, the latest one, and score 0 when none was accepted)"
   },
   "smoke": {
     "profile": "single-dev-two-round-hidden-smoke-v1",

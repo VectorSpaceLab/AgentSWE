@@ -887,15 +887,17 @@ def _case_validity(case: dict) -> tuple[bool | None, str | None]:
     return None, None
 
 
-def _failure_party(case: dict) -> tuple[str | None, str | None]:
+def _failure_party(case: dict, valid: bool | None = None) -> tuple[str | None, str | None]:
     """Who the evaluator attributes the case's failure to, and why: failure_attribution, else classification_axis;
     Dyad records `attribution.owner` (the candidate for a candidate_failure, else the evaluator/provider, also for a
     valid case, which has no failure) and `failure_class`. A failure_attribution with fatal false records no failure
-    (Claude names the candidate as the owner of a successful outcome too), so it has no failure party."""
+    (Claude names the candidate as the owner of a successful outcome too), so it has no failure party; nor does a
+    case whose own verdict is valid fall back to classification_axis (AI-Scientist writes "candidate" there on
+    every case, valid ones included)."""
     attribution = case.get("failure_attribution") if isinstance(case.get("failure_attribution"), dict) else {}
     if attribution.get("fatal") is False:
         return None, None
-    party = attribution.get("party") or case.get("classification_axis")
+    party = attribution.get("party") or (case.get("classification_axis") if valid is not True else None)
     owner = case.get("attribution") if isinstance(case.get("attribution"), dict) else {}
     if not party and owner.get("owner") and case.get("classification") != "valid":
         party = owner["owner"]
@@ -990,7 +992,7 @@ def _smoke_held_out(run_dir: Path, summaries: dict) -> tuple[list[dict], str | N
     rows = []
     for case in cases:
         valid, valid_field = _case_validity(case)
-        party, reason = _failure_party(case)
+        party, reason = _failure_party(case, valid)
         rows.append({"case_id": case["case_id"], "classification": case.get("classification"),
                      "valid": valid, "valid_field": valid_field, "infrastructure_valid": _infrastructure_valid(case),
                      "failure_party": party, "failure_reason": reason})
@@ -1115,6 +1117,254 @@ def smoke_outcome(run_dir: Path, summaries: dict) -> dict:
     return outcome
 
 
+# A formal run whose Builder the time budget cut off. The protocol (task.json `protocol`: max_dev_rounds 5,
+# builder_session_sec 18000) ends development when the Builder exits, uses up its accepted submissions or uses up its
+# time; the last accepted submission is frozen and scored on the held-out cases, and a Builder with no accepted
+# submission delivers nothing and scores 0. The task trees freeze and start the held-out cases only after a Builder
+# session that ended with a successful terminal event (or was cut after its last submission), so a session the budget
+# cut off stops at the tree's lifecycle gate with no held-out case and no score. budget_cut_state() recognizes such a
+# run from its own files (read only); result() reports it as `budget_exhausted`. The cut, the gate and nothing after:
+#   the last Builder segment in builder_segment_receipt.json (control/builder_segments.py) is an infrastructure_cut
+#     with Harbor's AgentTimeoutError (its agent timeout; Harbor then exits 0), or ended within
+#     BUDGET_DEADLINE_MARGIN_SECONDS of the Builder deadline (the outer deadline: exit 124), and no segment followed it;
+#   the strict native Builder evidence has exactly one error, the missing terminal event; the tree recorded the
+#     Builder's exit as 0 or 124, or as 125 only because the Builder's Harbor trial ended on AgentTimeoutError (Codex's
+#     trial attestation, and the pre-agent gate of DeepCode, Dyad and OpenHands, refuse a trial with any exception),
+#     with the resource proof valid; the tree's summary has its lifecycle gate status;
+#   no held-out evidence and no formal_aggregation.json.
+BUDGET_DEADLINE_MARGIN_SECONDS = 600.0
+BUDGET_SEGMENT_RECEIPT = "builder_segment_receipt.json"
+BUDGET_TERMINAL_ERROR = "native Builder has no successful terminal event"
+# tree: (summary, its lifecycle gate status, strict native evidence (file, key; None: the whole file),
+#        accepted submission records (file, or a glob of one record per file; key, None: the whole document))
+BUDGET_CUT_LAYOUTS = {
+    "aider": ("summary.json", "builder_integration_incomplete", ("builder_session_attestation.json", "native_evidence"),
+              ("builder_session_attestation.json", "candidate_records")),
+    "ai-scientist": ("summary.json", "builder_integration_incomplete",
+                     ("builder_session_attestation.json", "native_evidence"), ("lifecycle/dev_lifecycle.json", "records")),
+    "claude": ("summary.json", "builder_integration_incomplete", ("builder_session_attestation.json", "native_evidence"),
+               ("builder_session_attestation.json", "candidate_records")),
+    "codex": ("one_stop_summary.json", "builder_lifecycle_incomplete", ("one_stop_summary.json", "native_evidence"),
+              ("one_stop_summary.json", "dev_lifecycle")),
+    "deepcode": ("summary.json", "builder_lifecycle_incomplete",
+                 ("builder_session_attestation.json", "native_attestation"),
+                 ("lifecycle/dev_feedback_candidate_[0-9][0-9][0-9].json", None)),
+    "deeptutor": ("summary.json", "formal_evidence_incomplete", ("builder_native_attestation.json", None),
+                  ("lifecycle/controller_state.json", "records")),
+    "dyad": ("summary.json", "builder_lifecycle_incomplete", ("builder_session_attestation.json", "native_attestation"),
+             ("lifecycle/dev_lifecycle.json", None)),
+    "openclaw": ("summary.json", "builder_lifecycle_incomplete", ("builder_session_attestation.json", "native_evidence"),
+                 ("builder_session_attestation.json", "submissions")),
+    "openhands": ("summary.json", "builder_integration_incomplete",
+                  ("builder_session_attestation.json", "native_evidence"),
+                  ("builder_session_attestation.json", "candidate_records")),
+    "openwiki": ("summary.json", "builder_lifecycle_incomplete", ("builder_session_attestation.json", "native_evidence"),
+                 ("builder_session_attestation.json", "candidate_records")),
+}
+# What the trees write once the held-out cases start (attestations, case dirs, the fresh held-out broker's first
+# stats) or are aggregated; none of it exists at the lifecycle gate.
+BUDGET_AFTER_GATE = ("formal_aggregation.json", "formal_scoring", "hidden", "hidden_after_freeze",
+                     "hidden-after-freeze-attestation.json", "hidden_after_freeze_attestation.json",
+                     "lifecycle/hidden-after-freeze-attestation.json", "lifecycle/hidden_after_freeze_attestation.json",
+                     "lifecycle/hidden", "lifecycle/evaluations/hidden", "evaluations/hidden", "hidden-result.json",
+                     "lifecycle/hidden-result.json", "hidden_result.json", "lifecycle/hidden_result.json",
+                     "hidden_broker_initial.json", "hidden_broker_before.json", "hidden_lower_broker_initial.json")
+BUDGET_PREAGENT_GATE = "builder_preagent_gate_attestation.json"
+BUDGET_PREAGENT_TRIAL_ERROR = "Harbor trial failed or never started the native Agent"
+BUDGET_CODEX_GATE_ERRORS = ("Builder native feedback evidence incomplete: ", "Builder Harbor failed: ",
+                            "Builder did not produce an accepted Candidate")
+BUDGET_RECORD_NUMBER = ("submission_number", "source_submission", "submission", "number", "round", "candidate_number")
+BUDGET_RECORD_ID = ("submission_id", "source_submission_id", "candidate_id")
+# Editing tasks for which `agentswe freeze <run_id>` freezes a budget-cut run and runs its held-out cases (none yet).
+BUDGET_FREEZE_TASKS: frozenset[str] = frozenset()
+BUDGET_RULE = ("Development ends when the Builder exits, uses up its 5 accepted submissions or uses up its 5-hour "
+               "budget. The last accepted submission is frozen and scored on the held-out cases; a Builder with no "
+               "accepted submission delivers nothing and scores 0.")
+BUDGET_DOCS = "docs/ENV.md, section \"When the Editing Builder budget ends\""
+
+
+def _run_task_key(run_dir: Path) -> str | None:
+    """The tree a formal run dir belongs to (<formal root>/codex_xhigh/<task>/<launch id>-<task>)."""
+    if run_dir.parent.name in BUDGET_CUT_LAYOUTS and run_dir.name.endswith("-" + run_dir.parent.name):
+        return run_dir.parent.name
+    return next((key for key in sorted(BUDGET_CUT_LAYOUTS, key=len, reverse=True)
+                 if run_dir.name.endswith("-" + key)), None)
+
+
+def _last_builder_segment(run_dir: Path) -> tuple[dict, dict] | None:
+    """(the receipt, the last segment whose trial was promoted), when that segment ended the Builder session."""
+    receipt = util.read_json(run_dir / BUDGET_SEGMENT_RECEIPT)
+    attempts = receipt.get("attempts") if isinstance(receipt, dict) else None
+    segments = [a for a in attempts if isinstance(a, dict) and a.get("promoted")] if isinstance(attempts, list) else []
+    if not segments or not isinstance(receipt.get("builder_deadline_epoch"), (int, float)):
+        return None
+    last = segments[-1]
+    if (last.get("decision") or {}).get("resume") is True:
+        return None  # a resume was decided: the session did not end with this segment
+    return receipt, last
+
+
+def _budget_cut_segment(receipt: dict, last: dict) -> dict | None:
+    exception = last.get("harbor_exception") if isinstance(last.get("harbor_exception"), dict) else {}
+    ended = last.get("ended_at_epoch")
+    left = receipt["builder_deadline_epoch"] - ended if isinstance(ended, (int, float)) else None
+    timed_out = last.get("exit_reason") == "infrastructure_cut" and exception.get("exception_type") == "AgentTimeoutError"
+    at_deadline = (left is not None and left <= BUDGET_DEADLINE_MARGIN_SECONDS
+                   and last.get("exit_reason") in ("infrastructure_cut", "outer_timeout"))
+    if last.get("exit_code") not in (0, 124) or not (timed_out or at_deadline):
+        return None
+    return {"segment": last.get("segment_index"), "exit_reason": last.get("exit_reason"),
+            "harbor_exit_code": last.get("exit_code"), "harbor_exception": exception.get("exception_type"),
+            "ended_seconds_before_deadline": round(left, 1) if left is not None else None,
+            "budget_seconds": receipt.get("budget_seconds")}
+
+
+def _codex_budget_exit(summary: dict, cut: dict) -> bool:
+    """Codex's gate: its errors are the native one, the Harbor exit and (none accepted) the missing Candidate; a 125
+    is the budget cut only when every trial exception is AgentTimeoutError (or, at the outer deadline, none was
+    recorded) and the resource and cleanup proofs are valid."""
+    errors = summary.get("gate_errors")
+    if not isinstance(errors, list) or not all(isinstance(e, str) and e.startswith(BUDGET_CODEX_GATE_ERRORS)
+                                               for e in errors):
+        return False
+    builder = summary.get("builder") if isinstance(summary.get("builder"), dict) else {}
+    code = builder.get("exit_code")
+    if code in (0, 124):
+        return True
+    invalid = builder.get("infrastructure_invalid") if isinstance(builder.get("infrastructure_invalid"), dict) else {}
+    if code != 125 or invalid.get("resources_valid") is not True or not (
+            invalid.get("cleanup_complete") is True or invalid.get("cleanup_retained_terminal") is True):
+        return False
+    trials = invalid.get("trials") if isinstance(invalid.get("trials"), list) else []
+    types = {(t.get("exception_info") or {}).get("exception_type") for t in trials
+             if isinstance(t, dict) and t.get("exception_info")}
+    if types:
+        return types == {"AgentTimeoutError"}
+    left = cut.get("ended_seconds_before_deadline")
+    return left is not None and left <= BUDGET_DEADLINE_MARGIN_SECONDS
+
+
+def _trial_timeout_125(run_dir: Path) -> bool:
+    """DeepCode, Dyad and OpenHands record 125 when the Builder's Harbor trial has any exception: it is the budget cut
+    when that trial started the Agent, its only exception is AgentTimeoutError and the resource proof is valid."""
+    resources = util.read_json(run_dir / "builder_resource_attestation.json")
+    gate = util.read_json(run_dir / BUDGET_PREAGENT_GATE)
+    if not (isinstance(resources, dict) and resources.get("valid") is True and isinstance(gate, dict)):
+        return False
+    trial = gate.get("trial") if isinstance(gate.get("trial"), dict) else {}
+    return (gate.get("errors") == [BUDGET_PREAGENT_TRIAL_ERROR]
+            and (trial.get("exception_info") or {}).get("exception_type") == "AgentTimeoutError"
+            and bool(trial.get("agent_setup")) and bool(trial.get("agent_execution")))
+
+
+def _accepted_record(record) -> bool:
+    """A submission the tree's controller accepted and finished evaluating: not refused, not left non-consuming
+    (an infrastructure attempt, a completion after the freeze), not still running."""
+    if not isinstance(record, dict) or record.get("accepted") is False or record.get("post_freeze_superseded"):
+        return False
+    if any(record.get(key) is False for key in ("consumed", "submission_consumed", "round_consumed")):
+        return False
+    state = str(record.get("state") or "")
+    return state != "running" and not any(word in state for word in ("infrastructure", "unresolved", "in_progress"))
+
+
+def _budget_records(run_dir: Path, spec: tuple[str, str | None]) -> tuple[list[dict], str | None]:
+    """The accepted submissions in the order the tree recorded them, and where they were read."""
+    name, key = spec
+    if any(ch in name for ch in "*?["):
+        paths = sorted(run_dir.glob(name))
+        records = [util.read_json(p) for p in paths]
+        source = str(run_dir / name) if paths else None
+    else:
+        value = util.read_json(run_dir / name)
+        records = value.get(key) if isinstance(value, dict) and key else value
+        if isinstance(records, dict) and isinstance(records.get("records"), list):
+            records = records["records"]
+        source = str(run_dir / name) if value is not None else None
+    return [r for r in records if _accepted_record(r)] if isinstance(records, list) else [], source
+
+
+def _submission_label(record: dict) -> dict:
+    label = {}
+    number = next((record[k] for k in BUDGET_RECORD_NUMBER if isinstance(record.get(k), int)), None)
+    if number is not None:
+        label["submission"] = number
+    ident = next((record[k] for k in BUDGET_RECORD_ID if isinstance(record.get(k), str) and record[k]), None)
+    if ident:
+        label["id"] = ident
+    if isinstance(record.get("candidate_digest"), str) and record["candidate_digest"]:
+        label["digest"] = record["candidate_digest"]
+    return label
+
+
+def budget_cut_state(run_dir: Path, *, task: str | None = None, unit_state: str | None = None) -> dict | None:
+    """What a formal Editing run the Builder budget cut off left behind, or None for any other run (read only).
+
+    `task` is the control-plane task name (TASK_KEYS; default: from the run dir's name); `unit_state` the run's
+    systemd ActiveState (a live unit is never a cut). Returns the tree, the gate status and summary, the cut segment,
+    and the distinct accepted submissions with the latest one (its number, id and digest where the tree records them).
+    """
+    if unit_state in LIVE_UNIT_STATES or not run_dir.is_dir():
+        return None
+    key = task or _run_task_key(run_dir)
+    layout = BUDGET_CUT_LAYOUTS.get(key or "")
+    if layout is None or (run_dir / "readiness_current_binding.json").exists():
+        return None  # not an Editing tree, or a readiness (smoke) run
+    if any((run_dir / rel).exists() for rel in BUDGET_AFTER_GATE):
+        return None
+    summary_name, gate_status, (native_file, native_key), records_spec = layout
+    summary = util.read_json(run_dir / summary_name)
+    if not isinstance(summary, dict) or summary.get("status") != gate_status:
+        return None
+    hidden = summary.get("hidden")
+    if isinstance(hidden, dict) and hidden.get("status") not in (None, "not_started"):
+        return None
+    segment = _last_builder_segment(run_dir)
+    cut = _budget_cut_segment(*segment) if segment else None
+    if cut is None:
+        return None
+    document = util.read_json(run_dir / native_file)
+    native = document.get(native_key) if isinstance(document, dict) and native_key else document
+    if not isinstance(native, dict) or native.get("errors") != [BUDGET_TERMINAL_ERROR]:
+        return None
+    if key == "codex":
+        if not _codex_budget_exit(summary, cut):
+            return None
+        recorded = (summary.get("builder") or {}).get("exit_code") if isinstance(summary.get("builder"), dict) else None
+    else:
+        builder = document.get("builder_process") if isinstance(document.get("builder_process"), dict) else {}
+        recorded = next((v for v in (native.get("builder_exit_code"), document.get("builder_exit_code"),
+                                     builder.get("exit_code"), summary.get("builder_exit_code"))
+                         if isinstance(v, int)), None)
+        if recorded not in (None, 0, 124) and not (recorded == 125 and _trial_timeout_125(run_dir)):
+            return None
+    if isinstance(recorded, int):
+        cut["recorded_exit_code"] = recorded  # the Builder exit the tree recorded (125 for a refused trial)
+    records, source = _budget_records(run_dir, records_spec)
+    distinct = {record.get("candidate_digest") or json.dumps(_submission_label(record), sort_keys=True)
+                for record in records}
+    return {"task": key, "status": gate_status, "summary": summary_name, "builder": cut,
+            "accepted_submissions": len(distinct),
+            "latest_accepted": _submission_label(records[-1]) if records else None, "records": source}
+
+
+def budget_exhausted_report(state: dict, run_id: str) -> dict:
+    """The `budget_exhausted` block of `agentswe result`: the protocol's rule and what it means for this run."""
+    block = {"accepted_submissions": state["accepted_submissions"], "latest_accepted": state["latest_accepted"],
+             "rule": BUDGET_RULE, "held_out": "not run"}
+    if state["accepted_submissions"] == 0:
+        block.update(scored=True, score=0, score_basis="No submission was accepted before the Builder budget ended; "
+                                                       "the protocol scores this as 0.")
+    else:
+        block["scored"] = False
+        block["next"] = (f"agentswe freeze {run_id}: freeze the latest accepted submission and run the held-out cases"
+                         if state["task"] in BUDGET_FREEZE_TASKS else
+                         f"A freeze command is not yet available for this task, so this run has no score; see "
+                         f"{BUDGET_DOCS}.")
+    block.update(builder=state["builder"], gate_status=state["status"], summary=state["summary"])
+    return block
+
+
 def result(cfg: Config, launch: dict) -> dict | None:
     st = status(cfg, launch)
     if st["alive"]:
@@ -1135,6 +1385,12 @@ def result(cfg: Config, launch: dict) -> dict | None:
     # A smoke's summaries say result_axis "N/A" and combined_score null; its outcome is in the run's own files.
     if launch.get("mode") == "smoke" and run_dir and run_dir.is_dir():
         res["smoke"] = smoke_outcome(run_dir, data)
+    # A formal run whose Builder the time budget cut off stops at its tree's lifecycle gate without a score; say what
+    # the protocol makes of it (0 when no submission was accepted).
+    if launch.get("mode") == "formal" and run_dir:
+        cut = budget_cut_state(run_dir, task=TASK_KEYS.get(launch["task"]), unit_state=st["unit_state"])
+        if cut:
+            res["budget_exhausted"] = budget_exhausted_report(cut, launch["run_id"])
     # A run that stopped before writing its summaries (for example a one-stop refusing to start) says why here.
     if st["orchestrator_log"] and (not data or st["unit_state"] == "failed"):
         res["orchestrator_log"] = st["orchestrator_log"]

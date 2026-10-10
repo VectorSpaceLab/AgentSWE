@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import math
 import os
@@ -660,6 +661,36 @@ def _nul_paths(output: object) -> list[str]:
     return [item for item in str(output).split("\0") if item]
 
 
+@contextlib.contextmanager
+def evaluation_directory(prefix: str):
+    """Scratch tree for one case whose removal can never cost the case its result.
+
+    Submitted code runs as uid 65534 and may create directories under {work},
+    HOME or TMPDIR. The verifier has no CAP_DAC_OVERRIDE or CAP_FOWNER, so it
+    can neither empty nor chmod such a directory, and TemporaryDirectory's
+    cleanup raises PermissionError from its chmod retry even with
+    ignore_cleanup_errors=True. A cleanup that fails is reported on stderr and
+    whatever remains is left to the disposable verifier container.
+    """
+    temporary = tempfile.TemporaryDirectory(prefix=prefix, ignore_cleanup_errors=True)
+    try:
+        yield temporary.name
+    finally:
+        try:
+            temporary.cleanup()
+        except Exception as exc:
+            try:
+                shutil.rmtree(temporary.name, ignore_errors=True)
+            except Exception:
+                pass
+            print(json.dumps({
+                "evaluation_directory_cleanup": "incomplete",
+                "path": temporary.name,
+                "remaining": os.path.lexists(temporary.name),
+                "error": f"{type(exc).__name__}: {exc}",
+            }), file=sys.stderr, flush=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--case-dir", required=True, type=Path)
@@ -709,7 +740,7 @@ def main() -> int:
         result["errors"].append(f"unsafe patch: {exc}")
         args.result.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
         return 2
-    with tempfile.TemporaryDirectory(prefix="repair-v4-", ignore_cleanup_errors=True) as temporary_name:
+    with evaluation_directory("repair-v4-") as temporary_name:
         temp = Path(temporary_name)
         repo = temp / "repository"
         work = temp / "recovery-work"

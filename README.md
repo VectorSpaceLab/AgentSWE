@@ -120,7 +120,9 @@ python3 -m agentswe result <run_id>
 `--smoke` runs a small budget to check that everything works: one held-out case, after one development submission
 for Creation and two for Editing. On a well-connected server the first setup and smoke run of `repo` take 25 to 45
 minutes; an Editing smoke takes 10 minutes to about 2 hours. Drop `--smoke` for a full run under the paper's
-protocol. Smoke scores are not comparable with the paper's.
+protocol. Smoke scores are not comparable with the paper's. A full run takes as long as the builder works, up to its
+budget (Creation 8 hours and 10 submissions, Editing 5 hours and 5 submissions, Optimization 16 hours and 5
+development rounds), plus the held-out evaluation: from under an hour to about a day.
 
 The web research, PPTX and BrowseComp tasks also need a Serper-compatible search key. Behind a firewall or a proxy,
 see [docs/ENV.md](docs/ENV.md).
@@ -139,6 +141,12 @@ python3 -m agentswe run <task> --builder codex
 ```
 
 The three Editing tasks also need cgroup v2 with systemd delegation; `doctor` checks it.
+
+In a full Editing run the builder has 5 hours and up to 5 accepted submissions. If the time runs out before the
+builder finishes, the run stops before the held-out cases. With no accepted submission, `agentswe result` reports a
+score of 0, as the protocol says. Otherwise it lists the accepted submissions and reports no score, because this
+release cannot yet freeze the last one and evaluate it (see
+[docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)).
 
 ## 📚 Documentation
 

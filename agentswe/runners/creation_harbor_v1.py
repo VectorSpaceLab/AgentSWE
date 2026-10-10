@@ -436,8 +436,23 @@ MAX_ERROR_CHARS = 4000
 
 def last_infrastructure_error(run_dir: Path) -> dict | None:
     """The newest infrastructure error the one_stop recorded: hidden-phase replay events
-    (hidden_infrastructure_events.json, written after the freeze) win over dev-evaluation events
-    (infrastructure_events.json); within a ledger the last event is the newest."""
+    (hidden_infrastructure_events.json, written after the freeze) win, then the hidden evaluation's own
+    runtime_infrastructure_failure.json (tasks without hidden replay, such as repository-bug-repair, write
+    only this), then dev-evaluation events (infrastructure_events.json); within a ledger the last event is
+    the newest."""
+    events = util.read_json(run_dir / "hidden_infrastructure_events.json", []) or []
+    if not (isinstance(events, list) and any(isinstance(e, dict) and e.get("error") for e in events)):
+        hidden = sorted((run_dir / "evaluations").glob("*-hidden*/runtime_infrastructure_failure.json"),
+                        key=lambda path: path.stat().st_mtime)
+        failures = util.read_json(hidden[-1], []) if hidden else []
+        failures = [f for f in failures if isinstance(f, dict) and f.get("error")] if isinstance(failures, list) else []
+        if failures:
+            last = failures[-1]
+            error = f"{last['error']} ({last['exception_type']})" if last.get("exception_type") else str(last["error"])
+            at = datetime.fromtimestamp(hidden[-1].stat().st_mtime, timezone.utc).isoformat()
+            return {"source": str(hidden[-1].relative_to(run_dir)), "phase": "hidden_eval",
+                    "phase_id": hidden[-1].parent.name, "state": "infrastructure_error", "at": at,
+                    "error": error if len(error) <= MAX_ERROR_CHARS else error[:MAX_ERROR_CHARS - 3] + "..."}
     for name, key in (("hidden_infrastructure_events.json", "error"), ("infrastructure_events.json", "infrastructure_error")):
         events = util.read_json(run_dir / name, []) or []
         events = [e for e in events if isinstance(e, dict) and e.get(key)] if isinstance(events, list) else []

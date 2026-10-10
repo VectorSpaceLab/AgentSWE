@@ -105,6 +105,19 @@ class CreationEndedWithoutResult(unittest.TestCase):
                          ("infrastructure_events.json", "dev_evaluation", "dev-r001-a001-e5a77a15d6e0",
                           "2026-10-09T17:00:41.295256+00:00"))
 
+    def test_hidden_evaluation_failure_without_replay_ledger(self):
+        # repository-bug-repair has no hidden replay: its hidden evaluation records the failure only in
+        # evaluations/<run>-hidden/runtime_infrastructure_failure.json, which must win over an older dev event.
+        (self.run_dir / "hidden_infrastructure_events.json").unlink()
+        write(self.run_dir / "evaluations" / f"{RUN_ID}-hidden" / "runtime_infrastructure_failure.json", [{
+            "path": "jobs/x-hidden/test_006__abc/result.json", "error": "Harbor trial infrastructure exception",
+            "exception_type": "RewardFileNotFoundError"}])
+        error = self.result()["last_infrastructure_error"]
+        self.assertEqual((error["source"], error["phase"], error["phase_id"], error["state"]),
+                         (f"evaluations/{RUN_ID}-hidden/runtime_infrastructure_failure.json", "hidden_eval",
+                          f"{RUN_ID}-hidden", "infrastructure_error"))
+        self.assertEqual(error["error"], "Harbor trial infrastructure exception (RewardFileNotFoundError)")
+
     def test_no_recorded_error_and_no_wrapper_line(self):
         # A killed process group never reaches the wrapper's exit line.
         for name in ("hidden_infrastructure_events.json", "infrastructure_events.json"):

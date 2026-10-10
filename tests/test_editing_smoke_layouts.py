@@ -300,6 +300,15 @@ class SmokeShapesOfTheReleaseSmokes(unittest.TestCase):
                                            "reason": "deadline"})
         self.assertEqual(ed._failure_party(failed), ("candidate", "deadline"))
 
+    def test_valid_case_has_no_classification_axis_party(self):
+        # AI-Scientist writes classification_axis "candidate" on every held-out case; a valid one (Result 77 in a
+        # release smoke) has no failure, so no failure party. An invalid one keeps the axis as its party.
+        ok = {"case_id": "test_001", "classification": "candidate_valid", "classification_axis": "candidate"}
+        self.assertEqual(ed._failure_party(ok, True), (None, None))
+        failed = dict(ok, classification="candidate_behavior_failure")
+        self.assertEqual(ed._failure_party(failed, False), ("candidate", None))
+        self.assertEqual(ed._failure_party(failed), ("candidate", None))
+
     def claude_run(self, events):
         write(self.run_dir / "lifecycle/round_001.json", {"accepted": True, "submission_number": 1, "dev": [
             {"case_id": "dev_001", "classification": "candidate_behavior_observed", "infrastructure_invalid": False,

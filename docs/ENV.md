@@ -118,6 +118,42 @@ limits its Builder to 8 CPUs with `cpu_quota`/`cpu_period`; Harbor patch 0007 (`
 `cpus` override out of such a compose, so the container starts under any compose version (Compose 2.40 otherwise
 sends both, and the Docker daemon refuses the container).
 
+### When the Editing Builder budget ends
+
+A formal Editing run gives the Builder 5 hours and up to 5 accepted submissions (`task.json` `protocol`:
+`builder_session_sec`, `max_dev_rounds`). Development ends when the Builder exits, uses up its submissions or uses up
+its time; the last accepted submission is then frozen and scored on the six held-out cases, and a Builder with no
+accepted submission scores 0.
+
+Each task runs its held-out cases only after a Builder session that ended by itself or after its last submission.
+When the 5 hours run out first, the run stops before the held-out cases: the unit ends `failed` (exit status 2) and
+the summary's status is `builder_integration_incomplete`, `builder_lifecycle_incomplete` or
+`formal_evidence_incomplete`, depending on the task. `agentswe result` then adds a `budget_exhausted` block with
+`accepted_submissions`, `latest_accepted` (its number, and its id and digest where the task records them), the rule,
+and `held_out: "not run"`:
+
+- with no accepted submission: `scored: true`, `score: 0` and `score_basis`. The 0 follows from the rule, not from
+  the finalizer, so the result has no `formal_result_publishable`.
+- otherwise: `scored: false`, and `next` says that this release cannot yet freeze such a run, so it has no score.
+
+The block appears only when the last Builder segment (`builder_segment_receipt.json`) ended on Harbor's agent
+timeout (`AgentTimeoutError`) or within 10 minutes of the deadline, the only native Builder evidence error is the
+missing terminal event, and no held-out case has started. Some tasks record this cut as Builder exit 125 (their trial
+gate refuses any Harbor exception), which still counts. Smoke runs, runs that finished normally and runs stopped by
+any other infrastructure failure get no block. The two manual freeze scripts of earlier releases
+(`runners/editing/tools/manual_freeze_budget_exhausted.py`, `lite_manual_freeze.py`) were bound to specific recorded
+runs and could not run in an install; they have been removed.
+
+## When an evaluation fails on infrastructure
+
+- Creation does not resume an evaluation that fails on infrastructure. A development submission whose evaluation
+  fails that way does not use up a submission, and the builder may submit again. A held-out evaluation that fails
+  that way ends the run without a score; `agentswe result` reports the failure and the last infrastructure error.
+- Editing resumes a Builder session that an infrastructure failure cut off, in the same Codex session, at most twice
+  and only within the time left in the 5-hour budget. A development evaluation that fails on infrastructure does not
+  use up a submission. Held-out cases are not re-run.
+- Optimization resumes the evaluation (next section).
+
 ## Optimization runs
 
 An Optimization run resumes an evaluation that fails on infrastructure (a Harbor environment that does not start,
@@ -184,7 +220,7 @@ a command line.
 | ghcr.io unreachable (Terminal-Bench) | `AGENTSWE_GHCR_REGISTRY=<ghcr.io mirror host>`; `AGENTSWE_DEBIAN_MIRROR` for the Debian packages of one Terminal-Bench image |
 | apt or PyPI slow inside the Terminal-Bench task images | the controller builds each case's task image during the run and installs its packages there; `AGENTSWE_TERMINALBENCH_APT_MIRROR=<mirror base>` rewrites `archive.ubuntu.com`, `security.ubuntu.com` and `deb.debian.org` to `<mirror base>/ubuntu`, `/debian` and `/debian-security`, so the base must serve all three (for example `http://mirrors.tuna.tsinghua.edu.cn`); `AGENTSWE_TERMINALBENCH_PIP_INDEX=<PyPI simple index>` (default `https://pypi.org/simple`) |
 | Terminal-Bench `qemu-startup` / `qemu-alpine-ssh` images (Debian 11 base) | their apt sources always come from the Debian archive, whose bullseye security updates have left deb.debian.org and regular mirrors; `AGENTSWE_TERMINALBENCH_DEBIAN_ARCHIVE=<archive base>` (default `http://archive.debian.org`, serving `/debian` and `/debian-security`), for example a mirror of it at `<mirror>/debian-archive` |
-| github.com, PyPI or the apt archive unreachable from the Terminal-Bench containers | 34 of the 40 held-out and 5 of the 10 dev Terminal-Bench cases keep their upstream verifier `test.sh`, which installs its test tools when it runs: curl from the apt archive, uv with astral's installer (the script from astral.sh, the uv release archive from github.com), then pytest and the test packages from PyPI. A verifier that fails there runs no test; the controller records that as an infrastructure failure, which is retried and shown under `infrastructure` in `agentswe status`, not as a 0. `AGENTSWE_TERMINALBENCH_GITHUB_DOWNLOAD_BASE=<mirror of the github.com release downloads>` reaches these verifiers as `UV_INSTALLER_GITHUB_BASE_URL`, so the installer fetches `<base>/astral-sh/uv/releases/download/<version>/<archive>` (uv 0.7.13; 0.8.14 for `financial-document-processor`; the current release for `install-windows-3.11`). astral.sh and PyPI must still be reachable: `AGENTSWE_TERMINALBENCH_PIP_INDEX` does not reach the verifiers, and `AGENTSWE_TERMINALBENCH_APT_MIRROR` reaches their apt only in the 26 of these 39 images whose Dockerfile runs apt (the rewritten apt sources stay in the image) |
+| github.com, PyPI or the apt archive unreachable from the Terminal-Bench containers | 34 of the 40 held-out and 5 of the 10 dev Terminal-Bench cases keep their upstream verifier `test.sh`, which installs its test tools when it runs: curl from the apt archive, uv with astral's installer (the script from astral.sh, which redirects to releases.astral.sh; the uv release archive from github.com), then pytest and the test packages from PyPI (pypi.org, files.pythonhosted.org). A verifier that fails there runs no test; the controller records that as an infrastructure failure, which is retried and shown under `infrastructure` in `agentswe status`, not as a 0. `AGENTSWE_TERMINALBENCH_GITHUB_DOWNLOAD_BASE=<mirror of the github.com release downloads>` reaches these verifiers as `UV_INSTALLER_GITHUB_BASE_URL`, so the installer fetches `<base>/astral-sh/uv/releases/download/<version>/<archive>` (uv 0.7.13; 0.8.14 for `financial-document-processor`; the current release for `install-windows-3.11`). astral.sh, releases.astral.sh and PyPI must still be reachable (with the base set, the installer takes the uv archive only from it): `AGENTSWE_TERMINALBENCH_PIP_INDEX` does not reach the verifiers, and `AGENTSWE_TERMINALBENCH_APT_MIRROR` reaches their apt only in the 26 of these 39 images whose Dockerfile runs apt (the rewritten apt sources stay in the image) |
 | PyPI downloads stall | `AGENTSWE_PIP_INDEX_URL=<PyPI mirror>/simple/` |
 | conda-forge slow | `AGENTSWE_CONDA_CHANNEL=<conda-forge mirror>` (package URLs in env specs are rewritten to it) |
 | npm / Node.js downloads slow | `AGENTSWE_NPM_REGISTRY`, `AGENTSWE_NODE_DIST_URL` |
