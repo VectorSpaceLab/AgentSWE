@@ -438,11 +438,11 @@ def last_infrastructure_error(run_dir: Path) -> dict | None:
     """The newest infrastructure error the one_stop recorded: hidden-phase replay events
     (hidden_infrastructure_events.json, written after the freeze) win, then the hidden evaluation's own
     runtime_infrastructure_failure.json (tasks without hidden replay, such as repository-bug-repair, write
-    only this), then dev-evaluation events (infrastructure_events.json); within a ledger the last event is
+    only this, in the hidden evaluation directory or in its eval-run/ for the judge job), then dev-evaluation events (infrastructure_events.json); within a ledger the last event is
     the newest."""
     events = util.read_json(run_dir / "hidden_infrastructure_events.json", []) or []
     if not (isinstance(events, list) and any(isinstance(e, dict) and e.get("error") for e in events)):
-        hidden = sorted((run_dir / "evaluations").glob("*-hidden*/runtime_infrastructure_failure.json"),
+        hidden = sorted((run_dir / "evaluations").glob("*-hidden*/**/runtime_infrastructure_failure.json"),
                         key=lambda path: path.stat().st_mtime)
         failures = util.read_json(hidden[-1], []) if hidden else []
         failures = [f for f in failures if isinstance(f, dict) and f.get("error")] if isinstance(failures, list) else []
@@ -451,7 +451,8 @@ def last_infrastructure_error(run_dir: Path) -> dict | None:
             error = f"{last['error']} ({last['exception_type']})" if last.get("exception_type") else str(last["error"])
             at = datetime.fromtimestamp(hidden[-1].stat().st_mtime, timezone.utc).isoformat()
             return {"source": str(hidden[-1].relative_to(run_dir)), "phase": "hidden_eval",
-                    "phase_id": hidden[-1].parent.name, "state": "infrastructure_error", "at": at,
+                    "phase_id": str(hidden[-1].parent.relative_to(run_dir / "evaluations")),
+                    "state": "infrastructure_error", "at": at, "case_record": last.get("path"),
                     "error": error if len(error) <= MAX_ERROR_CHARS else error[:MAX_ERROR_CHARS - 3] + "..."}
     for name, key in (("hidden_infrastructure_events.json", "error"), ("infrastructure_events.json", "infrastructure_error")):
         events = util.read_json(run_dir / name, []) or []
@@ -484,6 +485,28 @@ def process_gone(launch: dict) -> bool:
     return launch.get("host") in (None, socket.gethostname()) and not util.pid_alive(int(launch["pid"]))
 
 
+def reduced_evidence_cases(score_summary_path) -> list[str]:
+    """Case ids of one evaluation phase whose Result judge scored reduced evidence: the overflow fallback of a Creation
+    eval (repository-bug-repair, database-analytics) retried with a smaller prompt and recorded
+    evidence_reduced: true in that case's eval_result.json."""
+    summary = util.read_json(Path(score_summary_path), {}) if score_summary_path else {}
+    cases = []
+    for case in (summary or {}).get("cases") or []:
+        if isinstance(case, dict) and case.get("eval_result"):
+            evaluation = util.read_json(Path(str(case["eval_result"])), {}) or {}
+            if isinstance(evaluation, dict) and evaluation.get("evidence_reduced") is True:
+                cases.append(str(case.get("case_id")))
+    return cases
+
+
+def evidence_reduced_counts(summary: dict) -> dict:
+    """How many cases the Result judge scored on reduced evidence: held-out (scored) and dev-feedback cases."""
+    heldout = reduced_evidence_cases(summary.get("hidden_summary"))
+    dev = sum(len(reduced_evidence_cases(r.get("dev_summary"))) for r in summary.get("dev_lifecycle") or []
+              if isinstance(r, dict))
+    return {"heldout": len(heldout), "heldout_cases": heldout, "dev": dev}
+
+
 def result(cfg: Config, launch: dict) -> dict | None:
     run_dir = Path(launch["run_dir"])
     summary = util.read_json(run_dir / "one_stop_summary.json")
@@ -506,6 +529,7 @@ def result(cfg: Config, launch: dict) -> dict | None:
         "valid": summary.get("status") == "completed", "invalid_reason": None if summary.get("status") == "completed"
         else summary.get("status"),
         "per_case": dict(zip(hidden, scores)),
+        "evidence_reduced": evidence_reduced_counts(summary),
         "dev_scores": [r.get("dev_mean") for r in summary.get("dev_lifecycle", []) if isinstance(r, dict)],
         "usage": {"runtime": {"calls": ledger_calls, "tokens": ledger_tokens}},
         "provenance": {"repo_commit": launch.get("repo_commit"), "repo_dirty": launch.get("repo_dirty"),

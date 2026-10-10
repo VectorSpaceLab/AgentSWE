@@ -1078,6 +1078,16 @@ def _infrastructure_gate(summaries: dict, run_dir: Path | None = None) -> dict |
                 "classification": events[-1].get("classification"),
                 "summary_classification": summary.get("classification"), "reason": observed,
                 "unconsumed_submissions": events}
+    # OpenHands keeps a stop at its public infrastructure gate only in its dev lifecycle: the phase, and per attempt
+    # the cases it counted as infrastructure and why.
+    lifecycle = util.read_json(run_dir / "lifecycle" / "dev_lifecycle.json") if run_dir else None
+    attempts = lifecycle.get("infrastructure_attempts") if isinstance(lifecycle, dict) else None
+    if isinstance(attempts, list) and attempts and "infrastructure" in str(lifecycle.get("phase") or ""):
+        last = attempts[-1] if isinstance(attempts[-1], dict) else {}
+        summary = next((summaries[n] for n in names if isinstance(summaries.get(n), dict)), {})
+        return {"summary": None, "source": str(run_dir / "lifecycle" / "dev_lifecycle.json"),
+                "status": summary.get("status"), "phase": lifecycle.get("phase"), "attempts": len(attempts),
+                "classification": last.get("infrastructure_failures"), "reason": last.get("infrastructure_case_reasons")}
     return None
 
 

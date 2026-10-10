@@ -118,6 +118,19 @@ class CreationEndedWithoutResult(unittest.TestCase):
                           f"{RUN_ID}-hidden", "infrastructure_error"))
         self.assertEqual(error["error"], "Harbor trial infrastructure exception (RewardFileNotFoundError)")
 
+    def test_hidden_judge_job_failure(self):
+        # The held-out judge (Eval) job records its failure one level down, in eval-run/; it is newer than the
+        # candidate job's own record and must be the one reported.
+        (self.run_dir / "hidden_infrastructure_events.json").unlink()
+        hidden = self.run_dir / "evaluations" / f"{RUN_ID}-hidden"
+        write(hidden / "eval-run" / "runtime_infrastructure_failure.json", [{
+            "path": "jobs/x-eval-hidden/test_002__abc/result.json", "error": "Harbor trial infrastructure exception",
+            "exception_type": "RewardFileNotFoundError"}])
+        error = self.result()["last_infrastructure_error"]
+        self.assertEqual((error["source"], error["phase_id"]),
+                         (f"evaluations/{RUN_ID}-hidden/eval-run/runtime_infrastructure_failure.json",
+                          f"{RUN_ID}-hidden/eval-run"))
+
     def test_no_recorded_error_and_no_wrapper_line(self):
         # A killed process group never reaches the wrapper's exit line.
         for name in ("hidden_infrastructure_events.json", "infrastructure_events.json"):

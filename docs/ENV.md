@@ -192,6 +192,37 @@ any formal run.
   use up a submission. Held-out cases are not re-run.
 - Optimization resumes the evaluation (next section).
 
+### When a Result-judge prompt does not fit the judge context
+
+This applies to `repository-bug-repair` and `database-analytics`, whose judge prompt carries the whole candidate
+output.
+
+- The default judge has a context of 1,048,576 tokens. The provider counts the request's 100,000-token output limit
+  against that context, so 948,576 tokens remain for the prompt.
+- The first judge request always carries the full prompt, unchanged.
+- The eval tries once more with reduced evidence in either of these cases:
+  - the provider answers HTTP 400 and the body says the context length was exceeded;
+  - the provider answers HTTP 400 with no message, and an upper estimate of the prompt is above 900,000 tokens.
+    The estimate counts each control character (NUL included) as 1 token, each non-ASCII character as 1 token per
+    UTF-8 byte, and each other character as 0.8 tokens. It counts typical prompts 2 to 4 times high.
+- The reduced prompt is built in steps, in this order. The estimate is recomputed after each step, and the eval stops
+  at the first step whose prompt fits under 900,000, or under 95% of the room the provider says is left for input
+  when that is smaller:
+  1. repeated values in the harness evidence become references to the copy that is kept;
+  2. binary files (a NUL byte, or not valid UTF-8) become a `path`, size and sha256 marker;
+  3. files that are neither required deliverables nor listed in `run_report.json` become the same marker.
+- The reduced prompt is sent once.
+- If it still does not fit, or the retry fails, the case is an infrastructure error, as before.
+- The case's `eval_result.json` gains three fields, none of them read by scoring:
+  - `evidence_reduced: true`;
+  - `prompt_reduction`, the receipt: the trigger and a redacted body sample, the steps, and the prompt sizes before
+    and after. The same receipt is also written to `prompt_reduction.json`.
+  - `judge_http_errors`, a redacted sample (at most 2,000 characters, credentials removed) of every judge 4xx body.
+- `verify_score.py` scores such a case as any other.
+- `agentswe result` reports `evidence_reduced`: the held-out cases judged on reduced evidence, their count, and the
+  count of dev cases judged that way.
+- To check that first requests are unchanged, `tools/verify_judge_inputs.py` replays archived judge inputs offline.
+
 ## Optimization runs
 
 An Optimization run resumes an evaluation that fails on infrastructure (a Harbor environment that does not start,
