@@ -1,0 +1,7 @@
+{
+  "scientific_fidelity": 20,
+  "case_recovery": 35,
+  "durable_side_effects": 25,
+  "verified_provenance": 12,
+  "honest_safe_delivery": 8
+}

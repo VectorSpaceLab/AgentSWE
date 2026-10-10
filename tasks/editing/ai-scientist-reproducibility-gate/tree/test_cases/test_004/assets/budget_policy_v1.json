@@ -1,0 +1,1 @@
+{"schema_version":1,"project_id":"project-policy","policy_version":"policy-1","currency":"USD","limit_micros":1000,"rates":{"gpt-5.6-sol":{"prompt_micros_per_million":1500001,"completion_micros_per_million":7000003}},"permissions":{"prepare":["worker-policy"],"commit":["worker-policy"],"status":["worker-policy"],"cancel":["worker-policy"]}}

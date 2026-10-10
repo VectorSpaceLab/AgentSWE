@@ -1,0 +1,5 @@
+{
+  "source": "@@AGENTSWE_EDITING_CONTROL@@/responses_stream.py",
+  "sha256": "c6f82d609af44d4e2d422c658cbbfd3d992d5ab735b49983ce5c0f970f89acb2",
+  "adaptation": "Exact shared V41 transport; task-owned runtime explicitly selects evaluator loopback proxy. Medium request/Chat SDK conversion/single-send ledger unchanged."
+}

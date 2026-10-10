@@ -1,0 +1,8 @@
+{
+  "handoff_outcome_completion": 30,
+  "fail_closed_authority": 20,
+  "exactly_once_and_ordering": 20,
+  "durable_state_and_provenance": 15,
+  "honest_reporting_and_contract": 10,
+  "privacy_and_route_scope": 5
+}

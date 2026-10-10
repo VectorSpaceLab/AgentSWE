@@ -1,0 +1,62 @@
+# Execution resources
+
+This is a Python Edit benchmark using the schema-v3 repository-set protocol.
+The supplied Aider pin declares `requires-python = ">=3.10,<3.15"`, runtime
+requirements in `requirements.txt`, and development requirements pinned in
+`requirements/requirements-dev.txt`.
+
+## Evaluator-owned environment
+
+The evaluator prepares one case-unique virtual environment:
+
+```text
+${BENCHMARK_ROOT}/envs/aider-worktree-transaction-ledger-edit-v1
+```
+
+Preparation verifies Python, installs the pinned runtime/development files,
+and warms an editable baseline install. The suite reinstalls the patched
+source once with `--no-deps`; it does not reinstall per hidden case. Pip
+caches, temporary build files, pytest caches, and bytecode stay inside the
+unique prefix or the suite output. Git and a compatible CPython are host
+tools. No credentials are read or configured.
+
+## Runtime and memory policy
+
+- Six isolated cases, each limited to 120 seconds; the suite limit is 600
+  seconds.
+- At most four requested workers across at most four local repositories;
+  non-interactive local execution.
+- A real process-tree PSS cap of `8589934592` bytes (8 GiB) is sampled from
+  Linux `/proc` for the adapter and focused-test processes. A violation
+  terminates that process group and is reported. `RLIMIT_AS` and `ulimit -v`
+  are not used.
+- A calibration run on 2 August 2026 of the pinned baseline
+  `python -m aider --version` succeeded under the evaluator monitor with a
+  peak process-tree PSS of `72252416` bytes. The 8 GiB cap is more than 118
+  times the measured baseline and exists only to catch runaway process
+  trees; memory is not the difficulty of the task.
+- Network is allowed only during the one dependency-preparation step. Case
+  execution removes proxy/provider variables and sets
+  `NO_PROXY=localhost,127.0.0.1,::1`.
+- Candidate code may write only to its explicit synthetic repositories,
+  `state_dir`, and the response path. Evaluator evidence stays under the
+  suite output.
+
+Evaluation performs no LLM, provider, browser, search, retrieval, or external
+service requests. Provider call budgets and counts are all zero.
+
+Agentloop case accounting: the full case envelope remains 600 seconds. It
+covers dynamic fixture setup, all model/product turns, Docker children,
+durable observation and artifact capture. A 510 second work deadline reserves
+90 seconds within that same total for verified process/container cleanup and
+final evidence. The agent loop inside that envelope is also bounded in turns, not only in
+seconds: the lower agent gets a small fixed number of model turns per case, one
+fenced shell action is taken per turn, and the loop ends as soon as a turn
+authors the case report without launching a product action. A rollout that
+spends every turn on product actions therefore delivers no report at all and
+scores zero. Plan the interface actions the observed state actually requires
+and leave the final turn for the report alone. All those work processes share
+one evaluator-owned cgroup-v2 parent with 4 GiB aggregate memory and zero swap. This kernel accounting is
+distinct from the native process-tree PSS measurement described above. Each
+Docker product is explicitly attached to that actual parent. Exceeding the
+whole envelope or failing cleanup invalidates the measurement.

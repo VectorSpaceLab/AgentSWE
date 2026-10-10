@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "case_id", "observations", "integrity", "decision"],
+  "properties": {
+    "schema_version": {"const": "openwiki-agent-result/v1"},
+    "case_id": {"type": "string"},
+    "observations": {"type": "array"},
+    "integrity": {"type": "object"},
+    "decision": {"type": "object", "required": ["completion_claim", "rationale"]}
+  }
+}

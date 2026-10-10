@@ -1,0 +1,112 @@
+# Interface and delivery
+
+## Runtime and compatibility
+
+Use Python 3.11 and the standard library on the gate path. The evaluator installs no dependencies. New production code belongs in the supplied repository. Existing launcher behavior stays off by default when claim verification is not configured.
+
+The original one-shot command remains supported:
+
+```bash
+python -m ai_scientist.claim_verification \
+  --workspace <workspace> \
+  --output <output_dir> \
+  --ledger <claim_ledger.json> \
+  --replay-tolerance 0.000001
+```
+
+It writes `claim_ledger.json`, `verification_report.json`, and `validated_writeup.md`. It requires no capsule or budget arguments.
+
+## Governed release command
+
+The governed invocation uses the session arguments plus the capsule, budget, attestation, and notification policy/store arguments:
+
+```text
+--session-store <durable_session_directory>
+--tenant-id <nonempty_id>
+--verification-id <nonempty_id>
+--request-id <nonempty_id>
+--owner-id <nonempty_actor_id>
+--generation <positive_integer>
+--operation <prepare|commit|verify|status|cancel>
+[--takeover-generation <positive_integer>]
+--project-id <nonempty_project_id>
+--capsule-policy <workspace_relative_json_path>
+--usage-statement <workspace_relative_json_path>
+--budget-policy <workspace_relative_json_path>
+--budget-store <durable_budget_directory>
+--run-manifest <workspace_relative_run_manifest.json>
+
+The governed route also accepts `--attestation-store`, `--notification-store`, `--attestation-policy`, and `--notification-policy`. A commit writes `attestation.json` and `notification_receipt.json` and atomically records project-keyed durable copies. The attestation contains deterministic `attestation_id`, `commit_id`, `capsule_id`, `release_digest`, `policy_version`, `key_id`, and `status: valid`. The notification contains deterministic `event_id`, topic, project, commit/attestation IDs, policy version, and `status: delivered`. Identical retries return byte-identical receipts and one durable event; malformed, unauthorized, drifted, or conflicting requests return structured errors without peer-project disclosure.
+```
+
+`launch_scientist_bfts.py --verify-claims-only` exposes the same route before any optional upstream import. Every argument uses the existing `--claim-` prefix, including the five new arguments. The module and the launcher call the same implementation.
+
+For release state, identity is scoped by `(tenant_id, verification_id)`; for budget state, identity is scoped by `project_id`. `request_id` is the idempotency key. Its fingerprint binds the complete identity, project, workspace digest, evidence manifest, replay tolerance, capsule policy, usage statement, budget policy version and bytes, and the computed charge. The operation is not part of the fingerprint.
+
+### Lifecycle
+
+- `prepare` verifies the science, creates the durable staged release set, capsule, and provenance journal, and reserves the exact charge. It publishes none of the five release artifacts and does not settle usage. It writes a response receipt.
+- `commit` re-checks the identity, generation, workspace and policy fingerprints, the staged science bytes, the staged capsule bytes, the science gate, and reservation ownership. It then archives one release set and settles that reservation once. The scientific decision and the archive status are two independent axes: a complete audit package that explicitly records `block` can be archived; commit cannot turn block into release and does not grant paper publication or scientific review approval.
+- `verify` is the atomic convenience form of prepare-then-commit.
+- `status` is read-only. It reports the current release phase plus only the named project's limit, reserved, settled, and remaining micro-units and that request's budget entry. It does not expose peer-project identifiers, participants, calls, or totals.
+- `cancel` releases the caller's current uncommitted reservation and makes its prepared generation uncommittable. It never reverses a settled release.
+
+Every governed operation must atomically persist the lifecycle state of that request to a durable record under `--session-store` and recover from it in a subsequent independent process. The record stores `schema_version`, `request_fingerprint`, the current `phase` (`prepared`/`committed`/`cancelled`), and the complete identity (top-level or in an `identity` object). The internal directory hierarchy is up to the implementation as long as the paths are safe, relative, and enumerable; the evaluator looks up by `request_fingerprint` under that directory and does not accept a phase that exists only in the response receipt.
+
+A successful governed response writes `transaction_receipt.json` and `budget_receipt.json`. Both are UTF-8 JSON with `schema_version: 1`. The transaction receipt keeps the recorded identity, owner/generation, request and workspace fingerprints, the stable commit ID at commit, artifact hashes, the ledger transition hash, and the canonical hash-linked event history. A prepared receipt exposes the relative `stage_path` under `--session-store` and the hash of every staged release artifact. The budget receipt shows the project, policy version, currency, usage digest, exact charge, request budget status (`reserved`, `settled`, or `cancelled`), the reservation or settlement ID where applicable, and a project snapshot with integer `limit_micros`, `reserved_micros`, `settled_micros`, and `remaining_micros`.
+
+The v3 `transaction_receipt.json` must also contain the canonical `science_gate` object: `schema_version: 1`, `gate_version: "3"`, the final `decision`, `evidence_manifest_sha256`, `policy_sha256`, the SHA-256 of the three scientific release bytes, and the canonical `digest` computed without the `digest` field. The committed capsule's `capsule_manifest.json` must contain the same `science_gate_digest`; `attestation.json` and `notification_receipt.json` must reference it too. The evaluator recomputes independently from the actual output bytes and the workspace policy and does not accept digests later rebuilt in the workspace or self-reported only in the report.
+
+The five committed release artifacts are:
+```text
+claim_ledger.json
+verification_report.json
+validated_writeup.md
+reproducibility_capsule.zip
+reproducibility_run.json
+```
+
+An exact retry after commit returns the same commit ID, settlement ID, capsule ID, journal ID, charge, and byte-identical five release artifacts. It recovers lost output copies from the verified durable committed state. It does not replay, re-claim, reserve again, or settle again.
+
+Generation takeover remains an explicit compare-and-swap. A higher generation may supersede only the named current uncommitted generation. Supersession fences the old owner and atomically releases or transfers its reservation. Concurrent acquisition of the same generation admits only one owner. Request conflicts, policy drift, workspace drift, corrupted stages, invalid capsule paths, duplicate call-ID conflicts, unknown models, over-budget attempts, unauthorized participants, and malformed input exit non-zero, write a structured `error.json`, and preserve the last committed release and project totals.
+
+## Deterministic capsule
+
+`capsule_policy.json` has `schema_version: 1` and a `members` list of `{path, role}` objects. Paths are unique relative workspace paths. Directories, symlinks, absolute paths, traversal, missing files, special files, and paths outside the workspace are rejected. Only the listed source members may enter the capsule.
+
+The ZIP contains exactly:
+
+- `capsule_manifest.json`;
+- `release/claim_ledger.json`, `release/verification_report.json`, and `release/validated_writeup.md`;
+- one `evidence/<path>` entry per capsule policy member.
+
+The manifest has `schema_version: 1`, the complete release identity and project/policy bindings, `currency`, `charge_micros`, `capsule_id`, and a lexicographically ordered `members` list. Each member records the archive path, role, SHA-256, and byte size. Release roles are `claim_ledger`, `verification_report`, and `validated_writeup`; evidence roles come from the policy. `capsule_id` is the SHA-256 of the UTF-8 canonical JSON of the complete manifest with `capsule_id` omitted, using `sort_keys=True` and separators `(',', ':')`.
+
+Archive names are in lexicographic order. ZIP entries use the timestamp `1980-01-01 00:00:00`, no comments or extra fields, Unix regular-file mode `0644`, and `ZIP_STORED`. Capsule bytes are therefore stable across processes and retries. No host paths, secrets, temporary files, locks, session state, or unselected workspace files may appear. The `science_gate_digest` in `capsule_manifest.json` must equal the transaction receipt's fence digest.
+
+## Usage and budget arithmetic
+
+`usage_statement.json` has `schema_version: 1`, a non-empty `run_id`, and `calls`. Each call has a non-empty `call_id` and `model`, plus non-negative integer `prompt_tokens` and `completion_tokens`. Identical duplicate call IDs count once; duplicate IDs with different content are a conflict.
+
+`budget_policy.json` has `schema_version: 1`, a matching `project_id`, a non-empty `policy_version` and `currency`, a non-negative integer `limit_micros`, per-model non-negative integer `prompt_micros_per_million` and `completion_micros_per_million`, and operation-specific participant lists in `permissions`.
+
+For every unique call, compute each token-class charge as:
+```text
+ceil(token_count * rate_micros_per_million / 1_000_000)
+```
+
+using integer arithmetic, then sum all token-class charges into `charge_micros`. Project availability is `limit_micros - reserved_micros - settled_micros`. All durable totals and IDs are coordinated under an inter-process lock; floating-point currency arithmetic is forbidden.
+
+## Scientific outcomes and integration
+
+Keep the Cycle 001 scientific ledger/report/write-up schemas and verification semantics. After empirical content exists and before paper publication or scientific review approval, both write-up modes must invoke the same governed gate. `block` prevents paper publication/scientific review approval; the revised audit content together with the block conclusion may still be carried forward and archived. If source evidence is missing or digests are inconsistent, the report must explicitly retain the blocked/integrity_error status and the missing work and must not claim a scientific safety pass; when the audit package's own bytes, the transaction fingerprint, or the capsule are tampered with, commit must still be refused. Configuration is non-interactive and off by default.
+
+## Delivery
+
+Deliver exactly three top-level regular files:
+
+- `solution.patch`: a non-empty UTF-8 unified Git patch relative to the repository root that applies only once.
+- `edit_report.json`: an object of schema `1.0` (string `schema_version`), a concise `feature_summary`, exact `changed_paths` (identical to the paths touched by the patch), a factual `commands_and_results` array (each entry an object with string `command`, integer `exit_code`, string `result`), and string arrays `compatibility_notes` and `limitations`.
+- `run_report.json`: exactly a schema `1.0` object with a non-empty string `status`; `artifact_paths` equal to `['solution.patch', 'edit_report.json', 'run_report.json']`; a string array `errors`; a non-negative numeric top-level `runtime_seconds`; a non-negative integer top-level `peak_memory_bytes`; and `api_calls` containing non-negative integer `gateway`, `serper`, and `web_retrieval`.
+
+Nested runtime objects, `peak_memory_mb`, `resource_usage`, or top-level API counters do not replace the required fields. Do not include credentials, evaluator material, fixtures, caches, generated output, or source dumps.

@@ -1,0 +1,39 @@
+{
+  "schema_version": "agentswe-edit-agentloop-provenance/v1",
+  "owner": "owner-18",
+  "topic": "DeepTutor adaptive remediation",
+  "authoritative_source": "@@AGENTSWE_EDITING_TASKS@@/deeptutor-adaptive-remediation/a0src",
+  "authoritative_source_digest": "1dda8c9737d0997b5efc9fa7a85348f96b05b73e67d5f5b8ac7625cd4eae57bc",
+  "authoritative_benchmark_digest": "b3b510684520e23a237035a60990c46843157e564edd360325009d54791ad078",
+  "digest_algorithm": "0830-edit-v2 recursive sha256 over relative paths, symlink targets, file sizes, and file bytes",
+  "authoritative_manifest": "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2/v2_benchmark_manifest.json",
+  "legacy_native_result_semantics": "edited software native behavioral score; not Agent-loop Result",
+  "write_scope": "@@AGENTSWE_EDITING_TASKS@@/deeptutor-adaptive-remediation/tree",
+  "read_only_inputs": [
+    "@@AGENTSWE_EDITING_TASKS@@/deeptutor-adaptive-remediation/a0src",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit.md",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit-v2.md",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4",
+    "@@AGENTSWE_EDITING_TASKS@@/codex-execution-residual/tree",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2/formal-runs"
+  ],
+  "migration_input": "@@AGENTSWE_LEGACY_DATA@@/0902-edit-agentloop-pilot/deeptutor/run-20260902-builder-session-v2/candidate2-work",
+  "migration_input_commit": "853e0bfa437b81aaa167dacc30f5b2a6340d04db",
+  "migration_input_status": "read-only worktree with tracked and untracked changes; not a formal Builder session",
+  "migration_scope": [
+    "deeptutor/api/routers/mastery_path.py",
+    "deeptutor/agents/chat/agent_loop.py",
+    "deeptutor/capabilities/mastery/tools.py",
+    "deeptutor/learning/adaptive.py",
+    "deeptutor/learning/models.py",
+    "deeptutor/learning/tests/test_snapshot_chain_audit.py",
+    "deeptutor/tools/mastery_tool.py"
+  ],
+  "delivery_patch_sha256": "7084c1ed984cf5d38326c4f6557c474a3449b0605a1ddb67eebccd4ab0eba4ff",
+  "delivery_digest": "0cdc7c2d8c2540198c36d46a9743760354136cd1d72b2fea8ca7ff44c08d5078",
+  "status": "PARTIAL",
+  "status_reason": "Provider-free contracts pass and real gpt-5.6-sol/medium product runs now exist, including a zero-failure transport-repair replay. The latest full Builder pilot still has zero accepted submissions, no freeze, no post-freeze hidden execution, and no completed independent Result/Code judges.",
+  "paper_as_run_authoritative_source_digest": "56d107ba0798b0c2f0f852db4af6b8860c75b08f2f43e8d2971ad15e8202c862",
+  "release_source_language": "en-upstream"
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": "0905-edit-changed-files-v1",
+  "task": "openclaw",
+  "files": [
+    "controller/builder_session_controller.py",
+    "controller/two_round_controller.py",
+    "evaluator/formal_finalize.py",
+    "evaluator/formal_gates.py",
+    "evaluator/semantic_finalize.py",
+    "evaluator/tests/test_0905_offline_contract.py",
+    "harbor/formal_one_stop.py",
+    "harbor/retry_pilot_hidden.py",
+    "meta/0905_case_contract.json",
+    "meta/0905_changed_files.json",
+    "meta/0905_migration_note.md"
+  ],
+  "last_static_repair_files": ["harbor/formal_one_stop.py", "harbor/retry_pilot_hidden.py"],
+  "last_static_repair_commands": ["PYTHONPYCACHEPREFIX=/tmp/0905-pycache python3 -m py_compile harbor/formal_one_stop.py harbor/retry_pilot_hidden.py", "python3 harbor/formal_one_stop.py --self-test"],
+  "last_static_repair_result": "current-run container-ID cleanup and fail-closed inspect path; provider-free static audit passed",
+  "provider_calls": 0,
+  "heavy_containers_started": false,
+  "readiness": "REPAIR",
+  "repair_delta": [
+    "startup failure cleanup covers partially started broker containers",
+    "pilot mode does not allocate an unused Result-judge broker",
+    "cleanup removes and docker-inspects every owned container",
+    "one-stop summary records the actual pilot/full hidden inventory"
+  ]
+}

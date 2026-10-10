@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_submission",
+    "accepted_submission_count",
+    "max_dev_rounds",
+    "session_id",
+    "builder_witness_digest",
+    "candidate_digest",
+    "feedback_received",
+    "feedback_chain_consumed",
+    "same_session_verified",
+    "hidden_allowed",
+    "frozen_tree_read_only",
+    "frozen_tree_regular",
+    "frozen_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "agentswe-deeptutor-freeze/v2"},
+    "source_submission": {"type": "integer", "minimum": 1, "maximum": 10},
+    "accepted_submission_count": {"type": "integer", "minimum": 1, "maximum": 10},
+    "max_dev_rounds": {"type": "integer", "minimum": 1, "maximum": 10},
+    "session_id": {"type": "string", "minLength": 1},
+    "builder_witness_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "feedback_received": {"const": true},
+    "feedback_chain_consumed": {"type": "boolean"},
+    "same_session_verified": {"const": true},
+    "hidden_allowed": {"const": true},
+    "frozen_tree_read_only": {"const": true},
+    "frozen_tree_regular": {"const": true},
+    "frozen_at": {"type": "string", "format": "date-time"}
+  }
+}

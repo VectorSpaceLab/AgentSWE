@@ -1,0 +1,45 @@
+{
+ "task": "openwiki-change-impact",
+ "upstream": {
+  "repo": "https://github.com/langchain-ai/openwiki",
+  "commit": "630eb9ec3fa22a4bed2d347fc3ea3a6a3bd22abc",
+  "git_tree": "d998e8759e885f51daf8fe0ff57d79bfc7d011f0",
+  "license": "MIT",
+  "redistribute_a0": false
+ },
+ "note": null,
+ "layers": {
+  "upstream_to_english_source": {
+   "added": 0,
+   "removed_from_upstream": 0,
+   "modified": 0,
+   "meaning": "English source package a0 == pinned upstream (subset for deeptutor); no local functional edits"
+  },
+  "english_source_to_asrun": {
+   "files": 25,
+   "summary": {
+    "doc/translated": 25
+   },
+   "meaning": "2026-08-19 machine translation of the package (0818-benchmark-cn) + any later edit; see private migration/zh-asrun-changes.json"
+  }
+ },
+ "language": {
+  "as_run": "zh (machine-translated docs/fixtures in a0)",
+  "functional_risk_files": [],
+  "functional_risk_count": 0
+ },
+ "evaluator_digest_pins_on_asrun_a0": [
+  [
+   "dev_cases/harness_support.py",
+   "PINNED_SOURCE_TREE_HASH",
+   "092844ed148d028bf7205ce5d98aff2a77ff4d80842326ab249e7bc5182bcc68",
+   "re-pinned to the en-upstream a0 (dev_cases/harness_support.tree_hash); paper as-run zh a0 value 9f89b2c56a072f2e5c63d3b60bd6e7c7e9f56861ee1500e0925603ab938e1160"
+  ]
+ ],
+ "files": {
+  "fetch": "fetch.sh",
+  "en_manifest": "en-upstream.sha256",
+  "subset": null,
+  "private_zh_asrun_dir": "migration/private/zh-asrun/openwiki-change-impact"
+ }
+}

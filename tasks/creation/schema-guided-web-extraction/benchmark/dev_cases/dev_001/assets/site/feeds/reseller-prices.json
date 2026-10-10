@@ -1,0 +1,146 @@
+[
+  {
+    "asset_id": "AU-2001",
+    "price": 19.15,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2002",
+    "price": 18.8,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2003",
+    "price": 24.65,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2004",
+    "price": 23.9,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2005",
+    "price": 28.95,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2006",
+    "price": 27.8,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2007",
+    "price": 33.25,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2008",
+    "price": 32.9,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2009",
+    "price": 38.75,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2010",
+    "price": 38.0,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2011",
+    "price": 43.05,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2012",
+    "price": 41.9,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2013",
+    "price": 47.35,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2014",
+    "price": 47.0,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2015",
+    "price": 52.85,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2016",
+    "price": 52.1,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2017",
+    "price": 57.15,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2018",
+    "price": 56.0,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2019",
+    "price": 61.45,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2020",
+    "price": 61.1,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2021",
+    "price": 66.95,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2022",
+    "price": 66.2,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2023",
+    "price": 71.25,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  },
+  {
+    "asset_id": "AU-2024",
+    "price": 70.1,
+    "verified": true,
+    "observed_at": "2026-07-02T10:00:00Z"
+  }
+]

@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "cases": {
+    "test_001": {
+      "assertions": [
+        {"id":"SHELL8.CONTINUATION_ISSUE_FENCE","points":15,"semantic":"Exact-target continuation issuance/replay fences fresh source work while established lifecycle settlement remains correlated."},
+        {"id":"SHELL8.CONTINUATION_ACTIVATE_ONCE","points":15,"semantic":"Concurrent exact target delivery activates one successor session generation; wrong target and token reuse fail."},
+        {"id":"SHELL8.DAMAGE_QUARANTINES_AUTHORITY","points":15,"semantic":"Interior damage atomically quarantines hook, approval, lease, effect, continuation, and maintenance authority."},
+        {"id":"SHELL8.BOUNDED_REPAIR_ATTEST","points":20,"semantic":"Repair advances in multiple atomic batches and requires two distinct configured verifier attestations."},
+        {"id":"SHELL8.REPAIR_COMMIT_INVALIDATES_SUFFIX","points":10,"semantic":"One repair generation commits/replays, discards unverified suffix authority, and invalidates pre-repair tokens/claims."},
+        {"id":"SHELL8.POLICY_EFFECT_COMPATIBILITY","points":5,"semantic":"Nested shell policy, pinned Post, reservation, approval, and effect identity remain coherent across continuation and repair."},
+        {"id":"SHELL8.EXACT_REPAIR_CONTINUATION_VIEWS","points":5,"semantic":"Repair and continuation views use exact bounded correlated schemas without bearer or damaged payload disclosure."},
+        {"id":"SHELL8.REPAIRED_CHAIN_FRESH_WORK","points":5,"semantic":"The repaired chain records one repair commit and fresh governed work succeeds only on healthy authority."},
+        {"id":"SHELL9.INTEGRITY_SEAL_AND_PATH_FENCE","points":10,"semantic":"Plugin-file sealing, protected-path normalization, and persistent tamper quarantine fail closed."}
+      ],
+      "caps": [
+        {"id":"CAP.SHELL8_SOURCE_SUFFIX_OR_TOKEN_AUTHORITY","maximum":10,"semantic":"Old source, wrong/reused token, corrupt suffix, or quarantined/staging authority is accepted."},
+        {"id":"CAP.SHELL8_REPAIR_CONTINUATION_SECRET","maximum":10,"semantic":"A continuation, verifier, repair, approval, claim, or evaluator secret is disclosed."},
+        {"id":"CAP.SHELL9_INTEGRITY_BYPASS","maximum":10,"semantic":"A protected path or tampered sealed plugin is authorized, or compromised state is cleared."}
+      ]
+    },
+    "test_002": {
+      "assertions": [
+        {"id":"TXN8.ONE_PENDING_CONTINUATION","points":15,"semantic":"Concurrent different issue IDs select one pending exact-target continuation under capacity one."},
+        {"id":"TXN8.DUPLICATE_ACTIVATION_GENERATION","points":15,"semantic":"Duplicate target Pre activates exactly one new session generation and preserves one receipt/effect identity."},
+        {"id":"TXN8.REPAIR_BEGIN_RACE_QUARANTINE","points":10,"semantic":"Damage fences transactions and concurrent repair IDs have one resumable generation winner."},
+        {"id":"TXN8.PARTIAL_ADVANCE_ATOMIC","points":10,"semantic":"A killed partial repair advance publishes no cursor and restart resumes bounded monotonic progress."},
+        {"id":"TXN8.VERIFIER_AND_COMMIT_CAS","points":15,"semantic":"Distinct verifier coverage and repair commit compare-and-swap choose one lineage with exact replay."},
+        {"id":"TXN8.CONFLICT_QUOTA_EFFECT_PRESERVED","points":10,"semantic":"Receipt conflict, one-slot quota, approval, Post, and effect generation remain exactly once."},
+        {"id":"TXN8.CORRELATED_MACHINE_VIEWS","points":10,"semantic":"Receipt, continuation, repair, approval, lease, effect, and audit views correlate exact identities."},
+        {"id":"TXN8.TORN_TAIL_FRESH_RESTART","points":5,"semantic":"Torn-tail recovery after repair retains healthy lineage and admits fresh work without suffix revival."},
+        {"id":"TXN9.INTEGRITY_SEAL_AND_PATH_FENCE","points":10,"semantic":"Plugin-file sealing, protected-path normalization, and persistent tamper quarantine fail closed."}
+      ],
+      "caps": [
+        {"id":"CAP.TXN8_MULTIPLE_SESSION_OR_REPAIR_WINNERS","maximum":10,"semantic":"Multiple continuation activations/repair lineages, source bypass, or partial candidate authority is observed."},
+        {"id":"CAP.TXN8_STALE_OR_FORGED_AUTHORITY","maximum":10,"semantic":"A stale token, corrupt suffix, wrong verifier, stale claim, or forged repair envelope mutates state."},
+        {"id":"CAP.TXN9_INTEGRITY_BYPASS","maximum":10,"semantic":"A protected path or tampered sealed plugin is authorized, or compromised state is cleared."}
+      ]
+    },
+    "test_003": {
+      "assertions": [
+        {"id":"MCP8.DELEGATED_CONTINUATION_SCOPE","points":15,"semantic":"Attenuated delegated MCP authority continues to one target generation without scope or epoch amplification."},
+        {"id":"MCP8.SOURCE_WRONG_TARGET_DENIALS","points":10,"semantic":"Old source, wrong target, encoded path, credential header, missing token, and widened delegation create no authority."},
+        {"id":"MCP8.REPAIR_ROTATION_QUARANTINE","points":15,"semantic":"Key rotation plus interior damage quarantines delegated, delivery, continuation, and owner authority."},
+        {"id":"MCP8.REPAIR_ATTEST_REVOCATION","points":15,"semantic":"Two independent verifier attestations promote a repair that preserves transitive delegation revocation."},
+        {"id":"MCP8.REPAIR_HANDOFF_BOUNDARY","points":15,"semantic":"Repaired state transfers through ownership while source, standby, and checkpoint archive cannot activate continuation."},
+        {"id":"MCP8.ACTIVE_TARGET_NEXT_GENERATION","points":10,"semantic":"Only the activated owner target can issue and activate the next session continuation generation."},
+        {"id":"MCP8.EFFECT_CLAIM_INVALIDATION","points":5,"semantic":"Repair invalidates stale effect claims while retained completed evidence stays correlated and redacted."},
+        {"id":"MCP8.ALL_PLANE_VIEWS_CHAIN_REDACTION","points":5,"semantic":"All exact bounded machine views and repaired target chain disclose no bearer, MCP result, damaged payload, key, or secret."},
+        {"id":"MCP9.INTEGRITY_SEAL_AND_PATH_FENCE","points":10,"semantic":"Plugin-file sealing, protected-path normalization, and persistent tamper quarantine fail closed."}
+      ],
+      "caps": [
+        {"id":"CAP.MCP8_FORBIDDEN_SESSION_OR_OWNER_AUTHORITY","maximum":10,"semantic":"Forbidden/revoked MCP, wrong session, source/standby/archive, or quarantined authority is accepted."},
+        {"id":"CAP.MCP8_BEARER_OR_REPAIR_DISCLOSURE","maximum":10,"semantic":"A delegation, continuation, repair, verifier, approval, claim, handoff, or evaluator secret is disclosed."},
+        {"id":"CAP.MCP9_INTEGRITY_BYPASS","maximum":10,"semantic":"A protected path or tampered sealed plugin is authorized, or compromised state is cleared."}
+      ]
+    },
+    "test_004": {
+      "assertions": [
+        {"id":"EPOCH8.PENDING_TOKEN_EPOCH_FENCE","points":15,"semantic":"A pending continuation fences its source and blocks policy successor acceptance until cancel or activation."},
+        {"id":"EPOCH8.SUCCESSOR_TARGET_GENERATION","points":10,"semantic":"After cancellation, epoch 71 is accepted and one exact target continuation generation activates."},
+        {"id":"EPOCH8.MIXED_EPOCH_REPAIR","points":10,"semantic":"Repair reconstructs mixed pinned-old/current-epoch lifecycles without adopting or reviving suffix fields."},
+        {"id":"EPOCH8.REPAIR_THEN_EPOCH72","points":15,"semantic":"One attested repair lineage commits before linked epoch 72 can become current."},
+        {"id":"EPOCH8.CHECKPOINT_DUAL_LINEAGE_EVIDENCE","points":15,"semantic":"Checkpoint replay preserves policy/repair/continuation lineage only as checkpoint-only evidence."},
+        {"id":"EPOCH8.ARCHIVE_REPAIR_CONTINUATION_FENCE","points":5,"semantic":"Checkpoint archive cannot begin/verify/commit repair or issue/cancel/activate continuation."},
+        {"id":"EPOCH8.MULTI_LINEAGE_ANTIROLLBACK","points":15,"semantic":"Policy fork/rollback, pre-repair checkpoint, stale token, and sibling repair lineage fail closed."},
+        {"id":"EPOCH8.COHERENT_CHAINED_VIEWS","points":5,"semantic":"One valid post-repair chain and exact views expose coherent epoch, repair, checkpoint, owner, and session lineages."},
+        {"id":"EPOCH9.INTEGRITY_SEAL_AND_PATH_FENCE","points":10,"semantic":"Plugin-file sealing, protected-path normalization, and persistent tamper quarantine fail closed."}
+      ],
+      "caps": [
+        {"id":"CAP.EPOCH8_STALE_POLICY_REPAIR_OR_ARCHIVE","maximum":10,"semantic":"Stale policy/repair/checkpoint, old token, or checkpoint-only authority is accepted."},
+        {"id":"CAP.EPOCH8_MULTIPLE_LINEAGE_CHILDREN","maximum":10,"semantic":"More than one direct policy, repair, continuation, or checkpoint lineage child becomes current."},
+        {"id":"CAP.EPOCH9_INTEGRITY_BYPASS","maximum":10,"semantic":"A protected path or tampered sealed plugin is authorized, or compromised state is cleared."}
+      ]
+    },
+    "test_005": {
+      "assertions": [
+        {"id":"MAINT8.COMPACT_ROTATE_PENDING","points":10,"semantic":"Compaction/key rotation preserve one live continuation and existing approval/lease/effect state before damage."},
+        {"id":"MAINT8.QUARANTINE_ALL_PLANES","points":15,"semantic":"Compacted interior damage fences hooks and every authority-bearing inspector plane."},
+        {"id":"MAINT8.PARTIAL_REPAIR_RESTART","points":20,"semantic":"Killed partial repair input publishes no candidate cursor and restart resumes bounded reconstruction."},
+        {"id":"MAINT8.DUAL_VERIFY_COMMIT_RECOVERY","points":15,"semantic":"Distinct verifier coverage and lost-output commit replay recover exactly one healthy repair generation."},
+        {"id":"MAINT8.CONTINUATION_EXPIRY_RECONCILE","points":10,"semantic":"Expired unactivated continuation restores only its source through bounded reconcile and token stays unusable."},
+        {"id":"MAINT8.FRESH_WORK_AFTER_REPAIR","points":5,"semantic":"Fresh approved/reserved/effect work succeeds after repair without reviving invalidated claims or tokens."},
+        {"id":"MAINT8.TORN_TAIL_EXACT_VIEWS","points":10,"semantic":"Torn-tail recovery preserves exact bounded continuation, repair, approval, lease, effect, and audit views."},
+        {"id":"MAINT8.ALL_PLANE_REDACTION","points":5,"semantic":"Quarantine, repair, continuation, diagnostics, views, and raw durable evidence disclose no secrets or damaged payload."},
+        {"id":"MAINT9.INTEGRITY_SEAL_AND_PATH_FENCE","points":10,"semantic":"Plugin-file sealing, protected-path normalization, and persistent tamper quarantine fail closed."}
+      ],
+      "caps": [
+        {"id":"CAP.MAINT8_QUARANTINE_STAGE_OR_EXPIRED_TOKEN","maximum":10,"semantic":"Quarantined/staging authority or an expired/invalidated continuation token is accepted."},
+        {"id":"CAP.MAINT8_SECRET_OR_DAMAGE_DISCLOSURE","maximum":10,"semantic":"A continuation, repair, verifier, claim, approver, damaged payload, or evaluator secret is disclosed."},
+        {"id":"CAP.MAINT9_INTEGRITY_BYPASS","maximum":10,"semantic":"A protected path or tampered sealed plugin is authorized, or compromised state is cleared."}
+      ]
+    },
+    "test_006": {
+      "assertions": [
+        {"id":"COMPAT8.LEGACY_UNIVERSAL_DEFAULTS","points":10,"semantic":"Missing/schema-1 workflows remain compatible with healthy repair generation zero and no continuation authority."},
+        {"id":"COMPAT8.MANAGED_CONTINUATION_OPT_IN","points":15,"semantic":"Version-2 opt-in issues/cancels/activates exact session generations while preserving approval/quota/effect behavior."},
+        {"id":"COMPAT8.BOUNDED_REPAIR_MIXED_STATE","points":15,"semantic":"Mixed legacy/managed format state repairs through bounded reconstruction and two verifier attestations."},
+        {"id":"COMPAT8.RESTART_REPAIR_COMMIT_REPLAY","points":10,"semantic":"Restart and exact repair commit replay preserve healthy repair generation and invalidate old bearers."},
+        {"id":"COMPAT8.FORMAT_CHECKPOINT_COMPOSITION","points":10,"semantic":"Format-2 checkpoint replay preserves repair/continuation/effect lineage while archive authority remains fenced."},
+        {"id":"COMPAT8.INVALID_NEW_POLICY_NO_STATE","points":15,"semantic":"Invalid repair and continuation successors deny mutation, permit safe Read, and create no new authority state."},
+        {"id":"COMPAT8.ALL_BOUNDED_SCHEMAS","points":10,"semantic":"Universal receipts and every repair/continuation/older public view use exact bounded schemas."},
+        {"id":"COMPAT8.CHAIN_EXISTING_PLUGIN","points":5,"semantic":"The repaired format-2 chain is valid and existing-plugin preservation passed validity."},
+        {"id":"COMPAT9.INTEGRITY_SEAL_AND_PATH_FENCE","points":10,"semantic":"Plugin-file sealing, protected-path normalization, and persistent tamper quarantine fail closed."}
+      ],
+      "caps": [
+        {"id":"CAP.COMPAT8_INVALID_ARCHIVE_OR_TOKEN_AUTHORITY","maximum":10,"semantic":"Invalid-policy, stale token, corrupt suffix, checkpoint-only, or repair rollback authority is accepted."},
+        {"id":"CAP.COMPAT8_SECRET_DISCLOSURE","maximum":10,"semantic":"A continuation, repair, verifier, claim, approval, checkpoint, handoff, upgrade, or evaluator secret is disclosed."},
+        {"id":"CAP.COMPAT9_INTEGRITY_BYPASS","maximum":10,"semantic":"A protected path or tampered sealed plugin is authorized, or compromised state is cleared."}
+      ]
+    }
+  }
+}

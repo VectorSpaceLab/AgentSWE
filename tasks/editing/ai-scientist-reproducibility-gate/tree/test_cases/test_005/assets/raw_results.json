@@ -1,0 +1,1 @@
+{"metric":"accuracy","scale":"fraction","rows":[{"seed":10,"baseline":0.70,"ember":0.76},{"seed":20,"baseline":0.72,"ember":0.67},{"seed":30,"baseline":0.68,"ember":0.70},{"seed":40,"baseline":0.71,"ember":0.67},{"seed":50,"baseline":0.69,"ember":0.75}]}

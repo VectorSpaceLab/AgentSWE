@@ -1,0 +1,11 @@
+{
+  "case_id": "test_001",
+  "visibility": "hidden",
+  "seed_mode": "lost_claim_lease",
+  "prompt_file": "test_cases/test_001/input.md",
+  "required_tools_any": ["mastery_remediation_status", "mastery_remediation_claim", "mastery_remediation_ack"],
+  "provenance_tools_any": ["mastery_review_plan", "mastery_learning_events", "mastery_learner_snapshot"],
+  "max_model_calls": 12,
+  "max_tool_calls": 26,
+  "require_safe_refusal": true
+}

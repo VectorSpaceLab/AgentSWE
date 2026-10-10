@@ -1,0 +1,5 @@
+{
+  "source": "@@AGENTSWE_LEGACY_HARBOR@@/0910-edit-repair/direct_harbor_builder.py",
+  "sha256": "a705257aa6a3bfc763727d66e60812430992852162da2b0eee90a56f91b61e6b",
+  "adaptation": "Exact V41 helper; only configured GATEWAY CONNECT authority accepted, private destinations rejected before upstream proxy connection."
+}

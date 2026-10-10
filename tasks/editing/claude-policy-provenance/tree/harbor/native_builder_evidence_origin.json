@@ -1,0 +1,5 @@
+{
+  "source": "@@AGENTSWE_EDITING_TASKS@@/ai-scientist-reproducibility-gate/tree/harbor/native_builder_evidence.py",
+  "sha256": "500ae11a1d8acb06738543725f05bed0a06187247a768bd363e54131d4eb1c6e",
+  "adaptation": "exact task-owned copy; record mapping belongs to formal_one_stop.py"
+}

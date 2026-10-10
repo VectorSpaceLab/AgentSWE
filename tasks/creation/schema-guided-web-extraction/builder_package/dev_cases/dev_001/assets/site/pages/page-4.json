@@ -1,0 +1,38 @@
+[
+  {
+    "asset_id": "AU-2019",
+    "name": "Aurora Compass 19",
+    "detail": "details/d-19.html",
+    "catalog_price": 60.3
+  },
+  {
+    "asset_id": "AU-2020",
+    "name": "Cinder Gauge 20",
+    "detail": "details/d-20.html",
+    "catalog_price": 62.65
+  },
+  {
+    "asset_id": "AU-2021",
+    "name": "Delta Meter 21",
+    "detail": "details/d-21.html",
+    "catalog_price": 65.0
+  },
+  {
+    "asset_id": "AU-2022",
+    "name": "Frost Housing 22",
+    "detail": "details/d-22.html",
+    "catalog_price": 67.35
+  },
+  {
+    "asset_id": "AU-2023",
+    "name": "Harbor Tripod 23",
+    "detail": "details/d-23.html",
+    "catalog_price": 69.7
+  },
+  {
+    "asset_id": "AU-2024",
+    "name": "Juniper Probe 24",
+    "detail": "details/d-24.html",
+    "catalog_price": 72.05
+  }
+]

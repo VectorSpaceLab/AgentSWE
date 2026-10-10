@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "web-research-frozen-oracle-v1",
+  "type": "object",
+  "required": ["oracle_version", "cutoff", "coverage", "cases"],
+  "properties": {
+    "oracle_version": {"const": "2026-06-30.v1"},
+    "cutoff": {"const": "2026-06-30"},
+    "coverage": {"enum": ["anchor_only", "complete"]},
+    "cases": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["case_id", "verification_topics", "sources", "facts"],
+        "properties": {
+          "case_id": {"pattern": "^test_00[1-6]$"},
+          "verification_topics": {"type": "array", "minItems": 3, "items": {"type": "string", "minLength": 3}},
+          "sources": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["id", "publisher", "title", "locator", "body_kind", "captured_at", "snapshot_note"],
+              "properties": {
+                "id": {"pattern": "^O[1-9][0-9]*$"},
+                "publisher": {"type": "string", "minLength": 2},
+                "title": {"type": "string", "minLength": 3},
+                "locator": {"pattern": "^https?://"},
+                "body_kind": {"enum": ["html", "pdf", "repository", "structured_data", "scan"]},
+                "captured_at": {"format": "date"},
+                "snapshot_note": {"type": "string", "minLength": 12}
+              },
+              "additionalProperties": false
+            }
+          },
+          "facts": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["id", "statement", "centrality", "source_ids", "accepted_qualifications"],
+              "properties": {
+                "id": {"pattern": "^F[1-9][0-9]*$"},
+                "statement": {"type": "string", "minLength": 12},
+                "centrality": {"enum": ["gate", "major", "context"]},
+                "source_ids": {"type": "array", "minItems": 1, "items": {"pattern": "^O[1-9][0-9]*$"}},
+                "accepted_qualifications": {"type": "array", "items": {"type": "string"}}
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

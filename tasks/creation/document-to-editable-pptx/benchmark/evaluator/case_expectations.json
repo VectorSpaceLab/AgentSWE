@@ -1,0 +1,66 @@
+{
+  "dev_001": {
+    "slide_count": 8,
+    "closed_corpus": true,
+    "notes_slides": [3, 4, 5],
+    "min_native_charts": 1,
+    "min_native_tables": 0,
+    "required_tokens": ["Metrovale", "0.55"]
+  },
+  "dev_002": {
+    "slide_count": 7,
+    "closed_corpus": false,
+    "notes_slides": [2, 3, 4, 5, 6],
+    "min_native_charts": 1,
+    "min_native_tables": 0,
+    "required_tokens": ["DART", "NASA"]
+  },
+  "test_001": {
+    "slide_count": 7,
+    "closed_corpus": false,
+    "notes_slides": [2, 3, 4, 5, 6],
+    "min_native_charts": 0,
+    "min_native_tables": 1,
+    "required_tokens": ["2025-05-29", "Hugging Face"]
+  },
+  "test_002": {
+    "slide_count": 9,
+    "closed_corpus": false,
+    "notes_slides": [2, 3, 4, 5, 6, 7],
+    "min_native_charts": 1,
+    "min_native_tables": 0,
+    "required_tokens": ["Apple", "FY2024", "fiscal"]
+  },
+  "test_003": {
+    "slide_count": 9,
+    "closed_corpus": false,
+    "notes_slides": [2, 3, 4, 5, 6, 7, 8],
+    "min_native_charts": 0,
+    "min_native_tables": 0,
+    "required_tokens": ["20 Mar 2025", "verified", "unknown"]
+  },
+  "test_004": {
+    "slide_count": 10,
+    "closed_corpus": false,
+    "notes_slides": [2, 3, 4, 5, 6, 7, 8, 9],
+    "min_native_charts": 0,
+    "min_native_tables": 1,
+    "required_tokens": ["direct air capture", "biochar", "evidence"]
+  },
+  "test_005": {
+    "slide_count": 8,
+    "closed_corpus": true,
+    "notes_slides": [2, 3, 4, 5, 6, 7, 8],
+    "min_native_charts": 1,
+    "min_native_tables": 1,
+    "required_tokens": ["Aster Field", "English", "French"]
+  },
+  "test_006": {
+    "slide_count": 11,
+    "closed_corpus": true,
+    "notes_slides": [4, 5, 6, 7, 8, 9],
+    "min_native_charts": 1,
+    "min_native_tables": 0,
+    "required_tokens": ["CONFIDENTIAL - BOARD", "NPV", "Cobalt Works"]
+  }
+}

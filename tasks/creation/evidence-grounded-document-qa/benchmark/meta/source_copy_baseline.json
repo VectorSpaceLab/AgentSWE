@@ -1,0 +1,6 @@
+{
+  "source_directory": "${AGENTSWE_HOME}/benchmark/evidence-grounded-document-qa-agent-hard-v3-r2",
+  "captured_before_v4_edits": true,
+  "algorithm": "SHA-256 over sorted relative UTF-8 path, NUL byte, and file bytes for every regular file",
+  "aggregate_sha256": "05d8cf57204aca4744510fd834d8e49b3188e3baef663f4099d112a8fa89b15e"
+}

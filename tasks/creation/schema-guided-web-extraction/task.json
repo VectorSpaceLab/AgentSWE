@@ -1,0 +1,77 @@
+{
+  "id": "schema-guided-web-extraction",
+  "family": "creation",
+  "short": "schema",
+  "title": "Schema-guided web extraction",
+  "version": "hard-v4",
+  "tier": "T1",
+  "lite": false,
+  "status": "runnable",
+  "runner": "creation_harbor_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "task-base",
+    "ubuntu-base",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "trusted-browser"
+  ],
+  "envs": [
+    "schema-guided-web-extraction-agent-v2"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git"
+    ],
+    "disk_gb": 20
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 10,
+    "builder_session_sec": 28800
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 3600
+  },
+  "upstream": {
+    "role": "requirement source; no upstream code copied",
+    "details": "benchmark/meta"
+  },
+  "runner_config": {
+    "n_concurrent": 2,
+    "harbor_profile": "creation"
+  },
+  "notes": [
+    "Extracted from the evaluator of the paper's final Creation evaluation with the Lite delta (provider constants, Builder session-limit freeze, n_concurrent 1-2) and the release edits; verify_score fatal filter includes 'dimensions must be an object' (Lite fix).",
+    "Runnable: a smoke with deepseek-flash for every role (Creation runtime at the smoke-default effort none) reached the Result judge on every case: dev_001 = 20, dev_002 = 20, held-out test_001 = 20 (all scoreable, contracts valid and publishable; 3 judge calls, 0 failures).",
+    "Release change (2026-10-10): adapter/eval-template/solution/run_eval.py normalize_evaluation_state reads the judge's prose (assessment, major_errors) as an infrastructure marker only when it holds the standalone token INFRASTRUCTURE_ERROR or INFRASTRUCTURE_INVALID (underscores, any case, no letter, digit or underscore immediately before or after). The previous rule turned every non-alphanumeric into '_' and matched substrings, so prose such as 'evaluator-side infrastructure errors' voided a scored case. The harness, the transport and the judge's structured evaluation_state mark infrastructure as before, and verify_score.py reads the state run_eval writes."
+  ]
+}

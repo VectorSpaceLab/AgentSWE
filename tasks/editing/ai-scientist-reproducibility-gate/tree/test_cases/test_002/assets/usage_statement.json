@@ -1,0 +1,1 @@
+{"schema_version":1,"run_id":"concurrent-budget","calls":[{"call_id":"shared-charge","model":"gpt-5.6-sol","prompt_tokens":1111,"completion_tokens":555}]}

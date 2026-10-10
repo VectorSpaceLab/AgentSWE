@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "candidate_failures": ["candidate_delivery_failure", "candidate_build_failure", "candidate_product_failure", "candidate_contract_failure", "candidate_timeout", "candidate_no_observable_behavior"],
+  "infrastructure_invalid": ["broker_failure", "provider_failure", "credential_mount_failure", "evaluator_failure", "mount_isolation_failure", "docker_failure", "timeout_before_product_start", "launcher_failure", "native_binding_failure"],
+  "rule": "Candidate-owned patch/build/product/contract/strategy failures may receive zero or a cap. Provider, broker, credential, mount, evaluator, Docker, and pre-start failures are infrastructure-invalid/N/A and never Candidate zero."
+}

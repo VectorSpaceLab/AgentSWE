@@ -1,0 +1,84 @@
+{
+  "id": "web-research-report",
+  "family": "creation",
+  "short": "web",
+  "title": "Web research report",
+  "version": "v3",
+  "tier": "T2",
+  "lite": false,
+  "status": "runnable",
+  "runner": "creation_harbor_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [
+    "search"
+  ],
+  "images": [
+    "builder-codex",
+    "task-base",
+    "ubuntu-base",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "trusted-browser"
+  ],
+  "envs": [
+    "web-research-report-agent-v2",
+    "evidence-grounded-document-qa-agent-v2"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git"
+    ],
+    "disk_gb": 20
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 10,
+    "builder_session_sec": 28800
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 3600
+  },
+  "upstream": {
+    "role": "requirement source; no upstream code copied",
+    "details": "benchmark/meta"
+  },
+  "runner_config": {
+    "n_concurrent": 2,
+    "harbor_profile": "creation",
+    "env": {
+      "AGENTSWE_PDF_READER_PYTHON": "$AGENTSWE_HOME/envs/evidence-grounded-document-qa-agent-v2/bin/python"
+    }
+  },
+  "notes": [
+    "Extracted from the evaluator of the paper's final Creation evaluation with the Lite delta (provider constants, Builder session-limit freeze, n_concurrent 1-2) and the release edits; verify_score fatal filter includes 'dimensions must be an object' (Lite fix).",
+    "The trusted independent-source fetcher (benchmark/evaluator/independent_sources.py, run on the host at staging) reads PDFs with the QA environment's Python, as in the paper; setup therefore builds both envs.",
+    "Runnable with deepseek-flash for every role on the DeepSeek API (smoke-default Creation runtime effort none, Builder and judge effort max). A smoke runs end to end: the Builder froze (builder_exit); its candidate searched 466 times through the per-run search front with the read-only trust mounts staged (broker accounting 466/466 HTTP 200); held-out test_001 reached the Result judge (1 call, no failure): scoreable, contract valid, score publishable, score 0, a candidate-quality zero (the judge's validity rule: the report was an unfocused excerpt dump, not the requested decision report); both dev cases were candidate timeouts at 600 s. Earlier smokes, before the read-only trust mounts were added, scored dev_001 = 62 and dev_002 = 76 (scoreable, valid, publishable; 2 judge calls; 239/239 searches through the front) and held-out test_001 = 25 (valid, publishable). The shared add_search_front path is also covered by a PPTX smoke (8 trust mounts staged, 7/7 searches) and by tests/e2e_search_front.py (19/19). Candidate-quality zeros stay common with the flash Builder: a candidate that reads SERPER_TOKEN only from its process environment, which the evaluator's Web candidate runner does not set, never loads the documented credential file and searches nothing.",
+    "Release change (2026-10-10): adapter/eval-template/solution/run_eval.py normalize_evaluation_state reads the judge's prose (assessment, major_errors) as an infrastructure marker only when it holds the standalone token INFRASTRUCTURE_ERROR or INFRASTRUCTURE_INVALID (underscores, any case, no letter, digit or underscore immediately before or after). The previous rule turned every non-alphanumeric into '_' and matched substrings, so prose such as 'evaluator-side infrastructure errors' voided a scored case. The harness, the transport and the judge's structured evaluation_state mark infrastructure as before, and verify_score.py reads the state run_eval writes."
+  ]
+}

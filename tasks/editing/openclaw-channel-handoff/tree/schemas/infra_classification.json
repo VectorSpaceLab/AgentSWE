@@ -1,0 +1,7 @@
+{
+  "schema_version": "agentswe-infra-classification-v1",
+  "candidate_failure": ["invalid_patch", "build_failure", "missing_product_artifact", "agent_no_model_call", "agent_strategy_failure", "invalid_result_contract", "candidate_product_failure", "candidate_behavior_failure"],
+  "infrastructure_invalid": ["broker_unavailable", "provider_error", "credential_mount_error", "candidate_mount_error", "docker_error", "evaluator_oracle_error", "timeout_before_product_entry", "broker_infrastructure_error", "launcher_infrastructure_error"],
+  "integrity_failure": ["frozen_candidate_mutation"],
+  "rule": "Never rewrite infrastructure-invalid as Candidate zero; never rewrite a valid lower-agent strategy failure as infrastructure."
+}

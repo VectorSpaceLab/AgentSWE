@@ -1,0 +1,18 @@
+{
+  "schema_version": "agentswe-edit-provenance/v1",
+  "benchmark_id": "claude-policy-provenance-agentloop-v1",
+  "owner": "owner-11",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/11-edit-claude-policy-provenance-v3",
+  "authoritative_source_digest_from_locked_manifest": "955fb0d21bf915234048d9915f69ac456e1b455db6daea962718a5cb63aa95da",
+  "authoritative_source_digest_computed_by_sibling": "cd2f6d86967468d48c3efc5a7a9ac87bdcb0f3f0b557b40616bfdd00f2322335",
+  "source_digest_algorithm": "sha256 over sorted relative path, type, byte length, and bytes; excludes .git, __pycache__, .evaluator-pyc",
+  "sibling_copy_policy": "source was copied before sibling-only edits; source remains read-only",
+  "staging_reference_read_only": "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2",
+  "legacy_reference_read_only": ["@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit.md", "@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit-v2.md"],
+  "copy_audit": {"source_modified": false, "sibling_only_writes": true},
+  "local_digest_recorded_after_setup": true,
+  "source_git_status_observed": "dirty_before_sibling_work; existing upstream edits were preserved and not attributed to this migration",
+  "agentloop_stage": "A-static-infrastructure",
+  "broker_successful_calls_observed": 0,
+  "formal_result_claimed": false
+}

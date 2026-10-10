@@ -1,0 +1,463 @@
+{
+  "packages": [
+    "libasound2t64=1.2.11-1ubuntu0.3",
+    "libatk-bridge2.0-0t64=2.52.0-1build1",
+    "libatk1.0-0t64=2.52.0-1build1",
+    "libatspi2.0-0t64=2.52.0-1build1",
+    "libcairo2=1.18.0-3build1",
+    "libcups2t64=2.4.7-1.2ubuntu7.14",
+    "libdbus-1-3=1.14.10-4ubuntu4.1",
+    "libgbm1=25.2.8-0ubuntu0.24.04.2",
+    "libglib2.0-0t64=2.80.0-6ubuntu3.8",
+    "libnspr4=2:4.35-1.1build1",
+    "libnss3=2:3.98-1ubuntu0.2",
+    "libpango-1.0-0=1.52.1+ds-1build1",
+    "libx11-6=2:1.8.7-1build1",
+    "libxcb1=1.15-1ubuntu2",
+    "libxcomposite1=1:0.4.5-1build3",
+    "libxdamage1=1:1.1.6-1build1",
+    "libxext6=2:1.3.4-1build2",
+    "libxfixes3=1:6.0.0-2build1",
+    "libxkbcommon0=1.6.0-1build1",
+    "libxrandr2=2:1.5.2-2build1",
+    "python3=3.12.3-0ubuntu2.1"
+  ],
+  "files": {
+    "browser/lib/libX11.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libX11.so.6.4.0",
+      "sha256": "c5b5d782bd9cab3420a62df88f5c991507edf3331a89f98464ddbc538c37b879"
+    },
+    "browser/lib/libXau.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0",
+      "sha256": "8040da3f8516c1acfe39f04ff022480cdb273705ba5e7a4ca70bbdb1527cd67a"
+    },
+    "browser/lib/libXcomposite.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXcomposite.so.1.0.0",
+      "sha256": "675c78d8d5b088a59ad4f8eb15419d0842b17caca3317a5e9f68573171ec5d61"
+    },
+    "browser/lib/libXdamage.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXdamage.so.1.1.0",
+      "sha256": "6ff910fbde851ede163b9066671e1740e374df414591015d90770b99d5b3de4a"
+    },
+    "browser/lib/libXdmcp.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0",
+      "sha256": "667d97d6da16016400ab10de9f83ef4ab209ceb6adf68ff9650225ec13e723b0"
+    },
+    "browser/lib/libXext.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0",
+      "sha256": "2907e6a996465de5b32a0dd10534d4416b87f1dee5670aaa7b19301a1fc93f44"
+    },
+    "browser/lib/libXfixes.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0",
+      "sha256": "89e5897f438456013d2297850a7558cd28c9ad1f6978447197568949fb6a0fd9"
+    },
+    "browser/lib/libXi.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0",
+      "sha256": "a51348c921ce1a35123fa7c99dc59bfd3e815be6829874fe15ae55172901d3e4"
+    },
+    "browser/lib/libXrandr.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0",
+      "sha256": "bc6120a734d52e7f5e3611334e9f3cff0b3ce1b129bb20b6412ce8f0f62c049d"
+    },
+    "browser/lib/libXrender.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0",
+      "sha256": "250977e0e004b6c0556144c3e683487063b4582dc83d205196ec3aa65d54e2c6"
+    },
+    "browser/lib/libasound.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libasound.so.2.0.0",
+      "sha256": "ff4c69ef420f2d0ab92c813d2222d097c6a7eafe3b13952aed069e2bb0204f55"
+    },
+    "browser/lib/libatk-1.0.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libatk-1.0.so.0.25209.1",
+      "sha256": "d312f3dbed8f19037bf4d8581f0e41ddfe53796dc7abbc9b7f253495d472a923"
+    },
+    "browser/lib/libatk-bridge-2.0.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0.0.0",
+      "sha256": "366fcd2f2cd9a77767855a7c25b00ffce57e6b55109a2bf800872f0337a28415"
+    },
+    "browser/lib/libatspi.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libatspi.so.0.0.1",
+      "sha256": "4af877d2d235b7eaab015abe6d81b82c82fe506a5d71403b9bbdfcbce99e8141"
+    },
+    "browser/lib/libavahi-client.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libavahi-client.so.3.2.9",
+      "sha256": "b3dca38686ab3869e1026c5b851ffa7ad6b66a420e0651ee4c033f3c3d7bdf35"
+    },
+    "browser/lib/libavahi-common.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libavahi-common.so.3.5.4",
+      "sha256": "39554b903a4ff94fb42375f552009995f5bbcbc8468e3c467883d551183dca62"
+    },
+    "browser/lib/libblkid.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0",
+      "sha256": "f3d6283f6b58de134f0f13094deac9c3af6764923c62e85f08a5780ad4ebe039"
+    },
+    "browser/lib/libbrotlicommon.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1.1.0",
+      "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b"
+    },
+    "browser/lib/libbrotlidec.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libbrotlidec.so.1.1.0",
+      "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5"
+    },
+    "browser/lib/libbsd.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libbsd.so.0.12.1",
+      "sha256": "e86cd4f0019f42c2ba5e60602e0edc8694d2948377d98c3654d0f6bddb5254bb"
+    },
+    "browser/lib/libbz2.so.1.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4",
+      "sha256": "218c4abdabce31161f3c2778762986d1fe06633705c7eb004a740946a5ccdfff"
+    },
+    "browser/lib/libcairo.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libcairo.so.2.11800.0",
+      "sha256": "3144bd5935aee427d6c191b6b6d0ebf9010fb6320295a7f73edd276bc6993f2d"
+    },
+    "browser/lib/libcap.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libcap.so.2.66",
+      "sha256": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84"
+    },
+    "browser/lib/libcom_err.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+      "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08"
+    },
+    "browser/lib/libcups.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libcups.so.2",
+      "sha256": "df3aa37f2995344a4e0b09d0ee9d98241dadb3e282fe11054899bbb7bcc57eaa"
+    },
+    "browser/lib/libdatrie.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libdatrie.so.1.4.0",
+      "sha256": "507f33edbbc19b80637d6d66f8e3f62fac097d0b4e9ee6f6f23f535ecea26a61"
+    },
+    "browser/lib/libdbus-1.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.32.4",
+      "sha256": "a6ae7b4ef48562b40d7b9ba8efd2e49f6528b7cc6364bea382dcee4b473b5413"
+    },
+    "browser/lib/libdrm.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libdrm.so.2.125.0",
+      "sha256": "ff39219aa058421e46afd36851342370cd1932d2557eb22f54e129755642bf67"
+    },
+    "browser/lib/libexpat.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libexpat.so.1.9.1",
+      "sha256": "c42ff317838b4b4639e2ea801905f0317177c6df7e31b2f0d0240e3c3ac0cfde"
+    },
+    "browser/lib/libffi.so.8": {
+      "source": "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.4",
+      "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153"
+    },
+    "browser/lib/libfontconfig.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libfontconfig.so.1.12.1",
+      "sha256": "a94b4059b27766f563894c8f7e61762b6f6b2e25c59ef36b730164d4b75c6c98"
+    },
+    "browser/lib/libfreetype.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libfreetype.so.6.20.1",
+      "sha256": "c14c53c5baff12afafb610c6312fb879e9bb77e80dd42e27504d52d6d8bcd059"
+    },
+    "browser/lib/libfribidi.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libfribidi.so.0.4.0",
+      "sha256": "550020af7ff4f77e3f05500e71051b676ee76f530479c2a836dfe899fcaf8395"
+    },
+    "browser/lib/libgbm.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgbm.so.1.0.0",
+      "sha256": "66f584160554d07f03d2a2fd1037d6af8f071e189c92438a77924e99c4572f0d"
+    },
+    "browser/lib/libgcc_s.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb"
+    },
+    "browser/lib/libgcrypt.so.20": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgcrypt.so.20.4.3",
+      "sha256": "9f872b8956edfa11a3ad093f509cf312e8d135dd801ca548c990daa214c03bd4"
+    },
+    "browser/lib/libgio-2.0.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.8000.0",
+      "sha256": "d8c4cf698e9b8790584cc5ede813a86ec4f041c0d58daa452b72431572685a87"
+    },
+    "browser/lib/libglib-2.0.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.8000.0",
+      "sha256": "42467d0dbcc0a6c9e0a31f05a5944095504ce98f093c3fe0825f0a1533fa8207"
+    },
+    "browser/lib/libgmodule-2.0.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.8000.0",
+      "sha256": "f8445c01952fd3ff0bb4f17f73be821af3e4b9b61546ff517392e9baeb8f2126"
+    },
+    "browser/lib/libgmp.so.10": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+      "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804"
+    },
+    "browser/lib/libgnutls.so.30": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.37.1",
+      "sha256": "ddbae2995750875c07bc218d12a062d73f8250678f54dedda7e9be5068781c98"
+    },
+    "browser/lib/libgobject-2.0.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.8000.0",
+      "sha256": "99bf0727e0ca4faf12ab09b753b3d03294562c29c559b970c4dad435f9ec2bc6"
+    },
+    "browser/lib/libgpg-error.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgpg-error.so.0.34.0",
+      "sha256": "6cb18a007bfcb623029f4528a36b46578fea7dc34c2b505b8e6e0d99e6348cd1"
+    },
+    "browser/lib/libgraphite2.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgraphite2.so.3.2.1",
+      "sha256": "fcfaf843b25b58b88319ced52f826fc8213a661f3693c916f88641eddffe05b8"
+    },
+    "browser/lib/libgssapi_krb5.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+      "sha256": "6c1b81696044d79a47d6f0f494ee60aaf641c525c46a11da0c6e4a041a782d3c"
+    },
+    "browser/lib/libharfbuzz.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libharfbuzz.so.0.60830.0",
+      "sha256": "4562cfcfd18935324ba3ac74a944898b867ab87a56e925ab3e351ba773f1513e"
+    },
+    "browser/lib/libhogweed.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.8",
+      "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3"
+    },
+    "browser/lib/libidn2.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+      "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad"
+    },
+    "browser/lib/libk5crypto.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+      "sha256": "73bc9d72c0c684d6149a3c38f96aab891d178375415c05954fdda587685936f5"
+    },
+    "browser/lib/libkeyutils.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+      "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe"
+    },
+    "browser/lib/libkrb5.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+      "sha256": "9615a2841f0783c410eec7fae005a951282551cfedd377737ad8431c8c8cde64"
+    },
+    "browser/lib/libkrb5support.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+      "sha256": "0aa43578471faecbd642ed2ee6ab92b6682a2b676644193e956fc59d18ca24bb"
+    },
+    "browser/lib/liblz4.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/liblz4.so.1.9.4",
+      "sha256": "40bffd0a098387368b16b992abd5f7cf43c0fa2f05cabe5a6d483719554adfda"
+    },
+    "browser/lib/liblzma.so.5": {
+      "source": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5",
+      "sha256": "696e868dd0700a19a6d65fc01608ec2d70d3cb91f65710e89180cd2e688f30cb"
+    },
+    "browser/lib/libmd.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libmd.so.0.1.0",
+      "sha256": "423e18586b6ea740f4465afd64f7a9a4cb7264ed979c8e7256f9085af5345fef"
+    },
+    "browser/lib/libmount.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0",
+      "sha256": "43831ab1f85948e5599c5c0295d87ad6d03e3d58b801534abdf4cd5d266388de"
+    },
+    "browser/lib/libnettle.so.8": {
+      "source": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.8",
+      "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc"
+    },
+    "browser/lib/libnspr4.so": {
+      "source": "/usr/lib/x86_64-linux-gnu/libnspr4.so",
+      "sha256": "c32583a53640c144757419b977a76976ee3dbda7b905a0af1046ace3c570ae98"
+    },
+    "browser/lib/libnss3.so": {
+      "source": "/usr/lib/x86_64-linux-gnu/libnss3.so",
+      "sha256": "55b09461bb63081b8e1d4f600583b0e1fdb8eff1ebe2f25e44cfa5f45b2d4169"
+    },
+    "browser/lib/libnssutil3.so": {
+      "source": "/usr/lib/x86_64-linux-gnu/libnssutil3.so",
+      "sha256": "39deb60cb4cd5a8b1ee4da37f838de80c65258a81428a4bdb668ffd6f93a9501"
+    },
+    "browser/lib/libp11-kit.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.3.1",
+      "sha256": "c6b469a006685ebf2075e200180c3b21f41b88ad722c5697d736ea558cfe3ea1"
+    },
+    "browser/lib/libpango-1.0.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.5200.1",
+      "sha256": "44fbb30ec8f9b2621095bad0d27cc15cec39245133124a44e8abc45193cbb493"
+    },
+    "browser/lib/libpcre2-8.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.11.2",
+      "sha256": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b"
+    },
+    "browser/lib/libpixman-1.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libpixman-1.so.0.42.2",
+      "sha256": "73aa0daeedb7228754d798b194e2ff69c8b82a689b9aa4f1d8ab32a8763b0cc5"
+    },
+    "browser/lib/libplc4.so": {
+      "source": "/usr/lib/x86_64-linux-gnu/libplc4.so",
+      "sha256": "f68520b4a9ba6190c67ce96511192f9af31dd96d91f18fd64cca48ffe08f7deb"
+    },
+    "browser/lib/libplds4.so": {
+      "source": "/usr/lib/x86_64-linux-gnu/libplds4.so",
+      "sha256": "403f3c1ec489de93d04b5a386d2e659af6da0a41e09ffb90a280b6d68eeb1617"
+    },
+    "browser/lib/libpng16.so.16": {
+      "source": "/usr/lib/x86_64-linux-gnu/libpng16.so.16.43.0",
+      "sha256": "eac265b3506df0d9110dd9143e1d0503e2daabafe1d98b23fac8ca17b71d1f6b"
+    },
+    "browser/lib/libresolv.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+      "sha256": "4086b12d3b95ef6f02373b30b88444e7d79fb8693ed1cfeaa5162e6959878912"
+    },
+    "browser/lib/libselinux.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libselinux.so.1",
+      "sha256": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670"
+    },
+    "browser/lib/libsmime3.so": {
+      "source": "/usr/lib/x86_64-linux-gnu/libsmime3.so",
+      "sha256": "38b9c337509c7cf443d6c5f49d4e9e9bd0bb4bf53de48f47c9d39a29757ab7ac"
+    },
+    "browser/lib/libsystemd.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.38.0",
+      "sha256": "9a1c78e4ced3d4914023d58d97cdc508e897d135c6ce0d56ead2d35456fa8b04"
+    },
+    "browser/lib/libtasn1.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+      "sha256": "59994414d0cdec4f678ef91eaaafc44b26b00bca507e4cc7978caaf79f584173"
+    },
+    "browser/lib/libthai.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libthai.so.0.3.1",
+      "sha256": "1a72e318418dc0ee6014401de9d9976516fe127358c07c305e1198b9814e2b31"
+    },
+    "browser/lib/libudev.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.8",
+      "sha256": "cff5e373cb5a89114a94dd2e1bffe57da9b2456249cf8a4280a6976837b10311"
+    },
+    "browser/lib/libunistring.so.5": {
+      "source": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.0.0",
+      "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1"
+    },
+    "browser/lib/libxcb-render.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libxcb-render.so.0.0.0",
+      "sha256": "35fdef7a90d7f44a0ad9cb259c9ee22f04a48cb064ceb1fc7d17be815acab327"
+    },
+    "browser/lib/libxcb-shm.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libxcb-shm.so.0.0.0",
+      "sha256": "ad78a7b22409685ca82e54346c2b9465d697f303e69e74a9c1693bb206e319df"
+    },
+    "browser/lib/libxcb.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0",
+      "sha256": "7958a0136b121bdc4c708968569ad152a9ed208ab026e2537b1005dde64ca440"
+    },
+    "browser/lib/libxkbcommon.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0.0.0",
+      "sha256": "3eb6c7315985803a7c72cb81aa3293b763e6cfc907b70b7b2f641c2827cd90f9"
+    },
+    "browser/lib/libz.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libz.so.1.3",
+      "sha256": "9b64150b28505a33d6bc3ecf709c279f6de97a1c184dbda65d06ee4537f6d286"
+    },
+    "browser/lib/libzstd.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.5",
+      "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb"
+    },
+    "pptx/lib/libavahi-client.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libavahi-client.so.3.2.9",
+      "sha256": "b3dca38686ab3869e1026c5b851ffa7ad6b66a420e0651ee4c033f3c3d7bdf35"
+    },
+    "pptx/lib/libavahi-common.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libavahi-common.so.3.5.4",
+      "sha256": "39554b903a4ff94fb42375f552009995f5bbcbc8468e3c467883d551183dca62"
+    },
+    "pptx/lib/libcap.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libcap.so.2.66",
+      "sha256": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84"
+    },
+    "pptx/lib/libcom_err.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+      "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08"
+    },
+    "pptx/lib/libcups.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libcups.so.2",
+      "sha256": "df3aa37f2995344a4e0b09d0ee9d98241dadb3e282fe11054899bbb7bcc57eaa"
+    },
+    "pptx/lib/libdbus-1.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.32.4",
+      "sha256": "a6ae7b4ef48562b40d7b9ba8efd2e49f6528b7cc6364bea382dcee4b473b5413"
+    },
+    "pptx/lib/libffi.so.8": {
+      "source": "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.4",
+      "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153"
+    },
+    "pptx/lib/libgcrypt.so.20": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgcrypt.so.20.4.3",
+      "sha256": "9f872b8956edfa11a3ad093f509cf312e8d135dd801ca548c990daa214c03bd4"
+    },
+    "pptx/lib/libgmp.so.10": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+      "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804"
+    },
+    "pptx/lib/libgnutls.so.30": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.37.1",
+      "sha256": "ddbae2995750875c07bc218d12a062d73f8250678f54dedda7e9be5068781c98"
+    },
+    "pptx/lib/libgpg-error.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgpg-error.so.0.34.0",
+      "sha256": "6cb18a007bfcb623029f4528a36b46578fea7dc34c2b505b8e6e0d99e6348cd1"
+    },
+    "pptx/lib/libgssapi_krb5.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+      "sha256": "6c1b81696044d79a47d6f0f494ee60aaf641c525c46a11da0c6e4a041a782d3c"
+    },
+    "pptx/lib/libhogweed.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.8",
+      "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3"
+    },
+    "pptx/lib/libidn2.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+      "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad"
+    },
+    "pptx/lib/libk5crypto.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+      "sha256": "73bc9d72c0c684d6149a3c38f96aab891d178375415c05954fdda587685936f5"
+    },
+    "pptx/lib/libkeyutils.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+      "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe"
+    },
+    "pptx/lib/libkrb5.so.3": {
+      "source": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+      "sha256": "9615a2841f0783c410eec7fae005a951282551cfedd377737ad8431c8c8cde64"
+    },
+    "pptx/lib/libkrb5support.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+      "sha256": "0aa43578471faecbd642ed2ee6ab92b6682a2b676644193e956fc59d18ca24bb"
+    },
+    "pptx/lib/liblz4.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/liblz4.so.1.9.4",
+      "sha256": "40bffd0a098387368b16b992abd5f7cf43c0fa2f05cabe5a6d483719554adfda"
+    },
+    "pptx/lib/liblzma.so.5": {
+      "source": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5",
+      "sha256": "696e868dd0700a19a6d65fc01608ec2d70d3cb91f65710e89180cd2e688f30cb"
+    },
+    "pptx/lib/libnettle.so.8": {
+      "source": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.8",
+      "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc"
+    },
+    "pptx/lib/libp11-kit.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.3.1",
+      "sha256": "c6b469a006685ebf2075e200180c3b21f41b88ad722c5697d736ea558cfe3ea1"
+    },
+    "pptx/lib/libresolv.so.2": {
+      "source": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+      "sha256": "4086b12d3b95ef6f02373b30b88444e7d79fb8693ed1cfeaa5162e6959878912"
+    },
+    "pptx/lib/libsystemd.so.0": {
+      "source": "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.38.0",
+      "sha256": "9a1c78e4ced3d4914023d58d97cdc508e897d135c6ce0d56ead2d35456fa8b04"
+    },
+    "pptx/lib/libtasn1.so.6": {
+      "source": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+      "sha256": "59994414d0cdec4f678ef91eaaafc44b26b00bca507e4cc7978caaf79f584173"
+    },
+    "pptx/lib/libunistring.so.5": {
+      "source": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.0.0",
+      "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1"
+    },
+    "pptx/lib/libz.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libz.so.1.3",
+      "sha256": "9b64150b28505a33d6bc3ecf709c279f6de97a1c184dbda65d06ee4537f6d286"
+    },
+    "pptx/lib/libzstd.so.1": {
+      "source": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.5",
+      "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb"
+    }
+  }
+}

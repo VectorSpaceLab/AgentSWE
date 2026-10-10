@@ -1,0 +1,146 @@
+{
+  "id": "ai-scientist-reproducibility-gate",
+  "family": "editing",
+  "short": "ai-scientist",
+  "title": "AI-Scientist reproducibility gate",
+  "version": "16-edit-ai-scientist-reproducibility-gate-v5-agentloop-v1",
+  "tier": "T1",
+  "lite": false,
+  "status": "runnable",
+  "runner": "editing_agentloop_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "edit-candidate-python311"
+  ],
+  "envs": [
+    "ai-python311-compiler-runtime"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": true,
+    "systemd_delegation": true,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git",
+      "systemd-run",
+      "bwrap"
+    ],
+    "disk_gb": 10
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 5,
+    "builder_session_sec": 18000,
+    "score": "Result only (Code axis skipped_by_policy)",
+    "runtime_model": "deepseek-flash/high",
+    "judge": "deepseek-flash/max, max_output_tokens 64000",
+    "early_stop_resample": "formal only, 1 extra logical request",
+    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+  },
+  "smoke": {
+    "profile": "single-dev-two-round-hidden-smoke-v1",
+    "accepted_dev_rounds": 2,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 28800,
+    "note": "this is the readiness/admission run; scores are not comparable"
+  },
+  "upstream": {
+    "repo": "https://github.com/SakanaAI/AI-Scientist-v2",
+    "commit": "96bd51617cfdbb494a9fc283af00fe090edfae48",
+    "git_tree": "3ff187965e78b1192659b061e43164c29741ccfe",
+    "license": "LicenseRef-AI-Scientist-Source-Code-License-1.0",
+    "redistribute_a0": false
+  },
+  "runner_config": {
+    "tree": "tree",
+    "legacy_tree_name": "16-edit-ai-scientist-reproducibility-gate-v5-agentloop-v1",
+    "a0": {
+      "fetch": "a0/fetch.sh",
+      "dest": "tree/input/repository",
+      "lang_options": [
+        "en-upstream"
+      ],
+      "evaluator_digest_pins": [
+        [
+          "dev_cases/public_harness.py",
+          "SOURCE_TREE_SHA256",
+          "ea87e48ce5da9e883f150eb9d56b31e4064a1897321f282e5d7001b65b87c960",
+          "re-pinned to the en-upstream a0 (public_harness.snapshot_source_hash(), 1d01a3e); paper as-run zh a0 value 31c19b2305e3398f53cc99918f6d41579c19dd883ff5868d0b1f2a4f220386e7. run_hidden only records the match in its preflight (no gate); evaluator/tests/test_harness.py asserts it"
+        ]
+      ]
+    },
+    "hidden_issued": null,
+    "formal_extra_flags": [],
+    "task_environment": {},
+    "render_tokens": "see staging README: every @@AGENTSWE_*@@ token must be rendered to an absolute path at setup",
+    "harbor_profile": "site"
+  },
+  "language": {
+    "task_docs_as_run": "zh (machine translation of 2026-08-19 + later zh edits)",
+    "a0_as_run": "zh (machine-translated docs/fixtures in a0)",
+    "a0_functional_risk_files": 4,
+    "english_task_docs": "lang/en-backtranslation/ (zh->en back-translation made for the anonymous repo)",
+    "paper_as_run": {
+      "task_docs": "zh (machine translation of 2026-08-19 + later zh edits)",
+      "a0": "zh (machine-translated docs/fixtures in a0)"
+    },
+    "release_language": "en",
+    "release_task_docs": "English backtranslation under lang/en-backtranslation/ where present; native English otherwise",
+    "release_a0": "en-upstream",
+    "release_cjk_check": "tools/scan.py --release"
+  },
+  "paper": {
+    "columns": [
+      "DeepSeek-V4-Pro",
+      "GPT-5.6-Sol",
+      "GPT-5.5",
+      "DeepSeek-V4-Flash",
+      "Qwen3.6-35B-A3B"
+    ],
+    "result": [
+      61.67,
+      48.5,
+      67.33,
+      54.33,
+      0
+    ]
+  },
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "runs": [
+      66.33,
+      70.0,
+      63.83
+    ],
+    "mean_at_3": 66.72,
+    "sd": 3.1
+  },
+  "notes": [
+    "a0 is fetched by commit (a0/fetch.sh); never redistributed.",
+    "License section 3.3: the use restrictions must be passed on in any agreement governing derivative works; no AI-Scientist code or patch of it may ship in this repository.",
+    "zh-asrun a0 overlay held out of the repository (RAIL-based licence, section 3.3); sha256 542e5ff48232b982",
+    "Runnable: readiness admits the task with the 12 restored as-run .pre files in the tree (hidden test_001 Result 30, scoreable).",
+    "Release change (2026-10-10): Docker 29 removes an exited or stopped --rm container asynchronously: for several seconds `docker inspect` still shows it and `docker rm -f` answers \"removal of container ... is already in progress\" (exit 1); Docker 24 has removed it by then. agentloop/product_resource_gate.py (container_absent), evaluator/immutable_replay.py cleanup_owned_runtime (a listed --rm product container that is being removed, or already gone at inspect, is no longer an unconfirmed cleanup), evaluator/provider_free_preflight.py and harbor/formal_one_stop.py remove_and_verify_container record rm's stderr and, when rm answers \"already in progress\", wait up to 30 s for the container to be gone before deciding absence. Any other rm refusal is judged as before, and a container still present after the wait is not absent. Seen with Docker 29.2.1."
+  ]
+}

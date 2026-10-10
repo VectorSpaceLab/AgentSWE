@@ -1,0 +1,1 @@
+{"dataset":"variance-mini","split_id":"split-F","seeds":[10,20,30,40,50],"significance_alpha":0.01,"variance_cv_limit":0.03}

@@ -1,0 +1,37 @@
+[
+  {
+    "person_id": "RG-306",
+    "display": "Tomas Ibrahim",
+    "role": "Designer",
+    "as_of": "2026-06-15T09:00:00Z",
+    "profile": "profiles/card-94.html"
+  },
+  {
+    "person_id": "RG-307",
+    "display": "Yara Singh",
+    "role": "Editor",
+    "as_of": "2026-06-16T09:00:00Z",
+    "profile": "profiles/card-14.html"
+  },
+  {
+    "person_id": "RG-308",
+    "display": "Zhen Patel",
+    "role": "Engineer",
+    "as_of": "2026-06-17T09:00:00Z",
+    "profile": "profiles/card-31.html"
+  },
+  {
+    "person_id": null,
+    "display": "I. Lopez",
+    "role": "Researcher",
+    "as_of": "2026-06-18T09:00:00Z",
+    "profile": "profiles/card-48.html"
+  },
+  {
+    "person_id": "RG-310",
+    "display": "Owen Morgan",
+    "role": "Photographer",
+    "as_of": "2026-06-19T09:00:00Z",
+    "profile": "profiles/card-65.html"
+  }
+]

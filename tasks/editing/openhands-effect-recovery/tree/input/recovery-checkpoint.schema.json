@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benchmark.invalid/openhands/recovery-checkpoint-v3.schema.json",
+  "title": "OpenHands Recovery Checkpoint v3",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "backendId", "conversationId", "checkpointId", "revision", "eventCursor", "workspace", "lease", "runGeneration", "terminalState", "cancellationRevision", "completedEffects", "pendingEffects", "recentEventIds", "audit", "inspectionGrants", "compaction", "integrity"],
+  "properties": {
+    "schemaVersion": {"const": 3},
+    "backendId": {"type": "string", "minLength": 1, "maxLength": 256},
+    "conversationId": {"type": "string", "minLength": 1, "maxLength": 256},
+    "checkpointId": {"type": "string", "minLength": 1, "maxLength": 256},
+    "revision": {"type": "integer", "minimum": 1},
+    "eventCursor": {"type": "integer", "minimum": 0},
+    "runGeneration": {"type": "integer", "minimum": 1},
+    "workspace": {"type": "object", "required": ["digest", "version"], "properties": {"digest": {"type": "string"}, "version": {"type": ["string", "null"]}}},
+    "lease": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["ownerId", "epoch", "fencingToken", "expiresAt"], "properties": {"ownerId": {"type": "string"}, "epoch": {"type": "integer", "minimum": 1}, "fencingToken": {"type": "string", "minLength": 16}, "expiresAt": {"type": "number"}}}]},
+    "terminalState": {"enum": ["active", "paused", "cancelled", "completed"]},
+    "cancellationRevision": {"type": ["integer", "null"]},
+    "completedEffects": {"type": "array", "maxItems": 100},
+    "pendingEffects": {"type": "array", "maxItems": 100},
+    "recentEventIds": {"type": "array", "maxItems": 64, "items": {"type": "string"}},
+    "audit": {"type": "array", "maxItems": 64},
+    "inspectionGrants": {"type": "array", "maxItems": 16},
+    "compaction": {"type": "object", "required": ["generation", "compactedThroughRevision", "compactedThroughEventCursor", "anchorDigest"], "properties": {"generation": {"type": "integer", "minimum": 0}, "compactedThroughRevision": {"type": "integer", "minimum": 0}, "compactedThroughEventCursor": {"type": "integer", "minimum": 0}, "anchorDigest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}}},
+    "integrity": {"type": "object", "required": ["algorithm", "digest"], "properties": {"algorithm": {"const": "sha256"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}}
+  }
+}

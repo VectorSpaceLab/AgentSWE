@@ -1,0 +1,8 @@
+{
+  "metric": "accuracy",
+  "scale": "fraction",
+  "rows": [
+    {"method": "baseline", "seed": 17, "value": 0.710},
+    {"method": "cedar", "seed": 17, "value": 0.722}
+  ]
+}

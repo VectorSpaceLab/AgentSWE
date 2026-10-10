@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "case_id": "test_006",
+  "scenario": "journal_stability_manifest_drift_and_safe_cancellation",
+  "evaluator_nonce": "runtime-generated",
+  "oracle": "evaluator-private"
+}

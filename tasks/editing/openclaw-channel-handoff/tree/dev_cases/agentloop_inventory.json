@@ -1,0 +1,21 @@
+{
+  "schema_version": "openclaw-agentloop-public-inventory-v1",
+  "cases": [
+    {
+      "case_id": "dev_001",
+      "family": "owner_rotation_text_and_interaction",
+      "product_entry": "node openclaw.mjs gateway -> agent / agent.wait -> sessions.send/chat.send",
+      "observations": ["channel/account/peer/thread route", "lease and grant generations", "delivery and callback receipts", "session/transcript state"],
+      "artifact": "agent_result.json",
+      "oracle_disclosed": false
+    },
+    {
+      "case_id": "dev_002",
+      "family": "crash_resume_thread_media_and_compaction",
+      "product_entry": "node openclaw.mjs gateway -> agent / agent.wait with isolated OPENCLAW_STATE_DIR",
+      "observations": ["thread route identity", "idempotent provider effect", "content-addressed attachment manifest", "restart/compaction evidence"],
+      "artifact": "agent_result.json",
+      "oracle_disclosed": false
+    }
+  ]
+}

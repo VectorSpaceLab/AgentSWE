@@ -1,0 +1,102 @@
+{
+  "task": "ai-scientist",
+  "sibling": "@@AGENTSWE_EDITING_TASKS@@/ai-scientist-reproducibility-gate/tree",
+  "dev_cases": [
+    "dev_001",
+    "dev_002"
+  ],
+  "hidden_cases": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "primary_user_goal_by_case": {
+    "test_001": "Publish a scientifically supported release with digest-bound evidence and attestations.",
+    "test_002": "Complete one durable release after response loss and a concurrent budget claimant.",
+    "test_003": "Recover supported partial-worker evidence while rejecting a corrupt capsule or fatal pool.",
+    "test_004": "Apply current release policies after an interrupted migration and stale takeover.",
+    "test_005": "Release one project without disclosing or charging a colliding unauthorized project.",
+    "test_006": "Safely cancel and re-enter a corrected release while preserving exact durable evidence."
+  },
+  "primary_failure_axis_by_case": {
+    "test_001": "science/evidence release fencing",
+    "test_002": "response-loss exactly-once settlement",
+    "test_003": "partial recovery versus fatal integrity",
+    "test_004": "policy migration and stale takeover",
+    "test_005": "project isolation",
+    "test_006": "cancellation and journal stability"
+  },
+  "secondary_failure_axes_by_case": {
+    "test_001": [
+      "attestation binding"
+    ],
+    "test_002": [
+      "concurrent budget reservation"
+    ],
+    "test_003": [
+      "capsule corruption"
+    ],
+    "test_004": [
+      "scoped cleanup"
+    ],
+    "test_005": [
+      "notification retry"
+    ],
+    "test_006": [
+      "manifest drift"
+    ]
+  },
+  "dynamic_facts": {
+    "test_001": [
+      "evidence manifest digest",
+      "verification id",
+      "run generation"
+    ],
+    "test_002": [
+      "request id",
+      "reservation generation",
+      "lost-response state"
+    ],
+    "test_003": [
+      "worker set",
+      "capsule digest",
+      "recovery generation"
+    ],
+    "test_004": [
+      "policy digest",
+      "owner generation",
+      "project scope"
+    ],
+    "test_005": [
+      "tenant/project ids",
+      "colliding verification ids",
+      "notification receipt"
+    ],
+    "test_006": [
+      "journal bytes",
+      "manifest revision",
+      "cancellation generation"
+    ]
+  },
+  "candidate_visible_inputs": "Natural release goal, case-local scientific assets, governed launcher/tool surface, redacted transaction context, and placeholder broker credential.",
+  "evaluator_only_oracle": "Expected science facts, private manifests/assertion weights, owner/generation oracle, unauthorized peer secrets, judge prompt, hidden inventory, and real provider credential.",
+  "real_lower_entry": "agentloop/lower_agent_launcher.py",
+  "product_api_entry": "input/repository/launch_scientist_bfts.py",
+  "broker_model": "deepseek-flash",
+  "broker_effort": "high",
+  "agent_authored_artifact": "case-local agent_result.json plus real release capsule/receipt/attestation/notification artifacts created by the governed product run",
+  "native_harness_role": "benchmark_harness.py/oracles verify scientific and protocol facts only; formal hidden execution is through the model-driven product launcher.",
+  "result_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+  "code_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+  "formal_one_stop_entry": "harbor/formal_one_stop.py",
+  "known_overlap_or_leakage": [
+    "All six agentloop runtime task directories now exist and are selected by _run_case.",
+    "The lower launcher reads the current per-case task.md contract (with a narrow legacy input.md fallback); prior smoke attempts predating this correction are not current-digest evidence.",
+    "The historical 0905 smoke predates the model-authored final-artifact and container-verified cleanup changes; the fresh 2026-09-05 attempts remain non-publishable because infrastructure failures prevented independent Result judging."
+  ],
+  "readiness": "REPAIR",
+  "remaining_blocker": "Obtain a fresh publishable real smoke against the current two-call lower loop: at least one scoreable hidden case must complete the lower gpt-5.6-sol/medium path, produce the model-authored agent_result.json, receive exactly one independent gpt-5.6-sol/xhigh Result judgment, and finish with evaluator-owned container absence; reference-003 and reference-004 are retained as non-publishable infrastructure/integration evidence."
+}

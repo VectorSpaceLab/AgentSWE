@@ -1,0 +1,152 @@
+[
+  {
+    "asset_id": "AU-2024",
+    "price": 72.8,
+    "status": "active",
+    "observed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2023",
+    "price": 70.45,
+    "status": "active",
+    "observed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2022",
+    "price": 68.1,
+    "status": "active",
+    "observed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2020",
+    "price": 63.4,
+    "status": "active",
+    "observed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2019",
+    "price": 61.05,
+    "status": "active",
+    "observed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2018",
+    "price": 58.7,
+    "status": "active",
+    "observed_at": "2026-07-18T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2017",
+    "price": 56.35,
+    "status": "active",
+    "observed_at": "2026-07-17T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2016",
+    "price": 51.25,
+    "status": "active",
+    "observed_at": "2026-01-04T09:00:00Z"
+  },
+  {
+    "asset_id": "AU-2016",
+    "price": 54.0,
+    "status": "active",
+    "observed_at": "2026-07-16T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2015",
+    "price": 51.65,
+    "status": "active",
+    "observed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2013",
+    "price": 46.95,
+    "status": "active",
+    "observed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2012",
+    "price": 44.6,
+    "status": "active",
+    "observed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2011",
+    "price": 39.5,
+    "status": "active",
+    "observed_at": "2026-01-04T09:00:00Z"
+  },
+  {
+    "asset_id": "AU-2011",
+    "price": 42.25,
+    "status": "active",
+    "observed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2010",
+    "price": 39.9,
+    "status": "active",
+    "observed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2009",
+    "price": 37.55,
+    "status": "active",
+    "observed_at": "2026-07-18T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2008",
+    "price": 35.2,
+    "status": "active",
+    "observed_at": "2026-07-17T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2006",
+    "price": 27.75,
+    "status": "active",
+    "observed_at": "2026-01-04T09:00:00Z"
+  },
+  {
+    "asset_id": "AU-2006",
+    "price": 30.5,
+    "status": "active",
+    "observed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2005",
+    "price": 28.15,
+    "status": "active",
+    "observed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2004",
+    "price": 25.8,
+    "status": "active",
+    "observed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2003",
+    "price": 23.45,
+    "status": "active",
+    "observed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2002",
+    "price": 21.1,
+    "status": "active",
+    "observed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "asset_id": "AU-2001",
+    "price": 16.0,
+    "status": "active",
+    "observed_at": "2026-01-04T09:00:00Z"
+  },
+  {
+    "asset_id": "AU-2001",
+    "price": 18.75,
+    "status": "active",
+    "observed_at": "2026-07-10T12:00:00Z"
+  }
+]

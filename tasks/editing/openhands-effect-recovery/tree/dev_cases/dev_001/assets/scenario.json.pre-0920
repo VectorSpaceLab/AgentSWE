@@ -1,0 +1,19 @@
+{
+  "backendId": "public-local",
+  "conversationId": "public-crash-delivery",
+  "callbackRejectionRecovery": true,
+  "syncResponseLossRetry": true,
+  "syncNoticeSelfEcho": true,
+  "workspaceChunkResume": true,
+  "workspaceConflictBlocksAll": true,
+  "workspace": { "digest": "sha256:public-tree-a", "version": "git:public-a" },
+  "effect": {
+    "deliveryId": "public-delivery-write-1",
+    "effectId": "public-write-1",
+    "idempotencyKey": "file:src/public.ts:sha256:new",
+    "toolName": "file_editor",
+    "kind": "local_write",
+    "retryClass": "reconcile",
+    "resultMetadata": { "path": "src/public.ts", "digestAlgorithm": "sha256" }
+  }
+}

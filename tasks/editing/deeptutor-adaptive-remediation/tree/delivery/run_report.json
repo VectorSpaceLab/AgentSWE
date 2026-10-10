@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "status": "stage_a_verified_no_model_run",
+  "artifact_paths": ["solution.patch", "edit_report.json", "run_report.json"],
+  "errors": ["No evaluator-owned lower-model broker or formal Agent-loop run was started by this task.", "No model-authored product result is synthesized; formal Result and Code score remain N/A."],
+  "runtime_seconds": 0,
+  "peak_memory_bytes": 0,
+  "api_calls": {"gateway": 0, "serper": 0, "web_retrieval": 0}
+}

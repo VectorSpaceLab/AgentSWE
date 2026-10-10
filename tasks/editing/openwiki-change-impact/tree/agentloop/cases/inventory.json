@@ -1,0 +1,16 @@
+{
+  "schema_version": "agentswe-openwiki-agentloop-inventory/v1",
+  "public": [
+    {"case_id": "dev_001", "scenario": "rename_and_lost_response", "focus": ["rename propagation", "executable example", "lost-response retry", "publication", "search"]},
+    {"case_id": "dev_002", "scenario": "expired_owner_and_conflict", "focus": ["stale-owner recovery", "partial stage cleanup", "default behavior", "conflict rejection", "publication", "search"]}
+  ],
+  "hidden": [
+    {"case_id": "test_001", "scenario": "module_move_compatibility", "focus": ["module move", "compatibility alias", "owner recovery"]},
+    {"case_id": "test_002", "scenario": "transitive_type_migration_corrupt_search", "focus": ["transitive return type", "lost response", "corrupt index"]},
+    {"case_id": "test_003", "scenario": "removed_api_migration", "focus": ["removed API", "deprecated API", "migration guidance", "tenant isolation"]},
+    {"case_id": "test_004", "scenario": "partial_stage_deleted_path", "focus": ["partial generation", "deleted path", "broken link", "example convergence"]},
+    {"case_id": "test_005", "scenario": "concurrent_duplicate", "focus": ["concurrent workers", "single receipt", "duplicate idempotence"]},
+    {"case_id": "test_006", "scenario": "ordinary_noop_security_isolation", "focus": ["no-op", "prompt injection resistance", "tenant isolation", "canary preservation"]}
+  ],
+  "oracle_policy": {"dynamic": true, "evaluator_owned": true, "expected_values_withheld_from_builder": true, "public_hidden_values_disjoint": true}
+}

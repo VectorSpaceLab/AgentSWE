@@ -1,0 +1,407 @@
+{
+  "comment": "Images built, exported or pulled by `agentswe setup`. Local tags live under agentswe-os/ so they never overwrite other tags on a shared host. Every FROM is pinned by digest behind ARG DOCKER_REGISTRY=docker.io (or GHCR_REGISTRY); build args map to .env variables via build_args_from_config. kind=export builds a FROM-scratch stage and writes it to a directory (docker buildx --output type=local). Track OI (2026-10-01).",
+  "ghcr": {
+    "repository_pattern": "ghcr.io/<org>/agentswe/<name>",
+    "tag": "same version tag as the local tag; CI also pushes <version>-r<N> for rebuilds and records the pushed digest in images.lock.json",
+    "push": "not yet"
+  },
+  "images": {
+    "builder-codex": {
+      "kind": "build",
+      "tag": "agentswe-os/builder-codex:0.144.1-node24.6.0",
+      "context": "images/builder-codex",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT",
+        "NODE_DIST_URL": "AGENTSWE_NODE_DIST_URL",
+        "NPM_REGISTRY": "AGENTSWE_NPM_REGISTRY"
+      },
+      "used_by": [
+        "builder trials of all 25 tasks (Harbor builder-template FROM)",
+        "runtime/judge brokers (Creation, Editing)",
+        "Editing Harbor task.toml docker_image"
+      ],
+      "codex_version": "0.144.1",
+      "node_version": "24.6.0",
+      "size_mb": 758,
+      "tier": "T1",
+      "reproduces": "agentswe/create-agent-builder-codex:0.144.1-node24.6.0-0812 (sha256:3bebcf4e7770)",
+      "parity": "identical (apt 133/133, /opt/openai/codex all files); only host-install leftovers in /opt/node differ"
+    },
+    "ubuntu-pinned": {
+      "kind": "pull",
+      "tag": "ubuntu:24.04",
+      "ref": "docker.io/library/ubuntu@sha256:561618e2c15bf2397621dd04f96926663a3b5616c189cf7e38db7e82f5c538ea",
+      "used_by": [
+        "templates that keep FROM <registry>/library/ubuntu@sha256:5616…"
+      ],
+      "size_mb": 78
+    },
+    "ubuntu-base": {
+      "kind": "build",
+      "tag": "agentswe-os/ubuntu-base:24.04-561618e2-git",
+      "context": "images/ubuntu-base",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT"
+      },
+      "used_by": [
+        "Creation/Optimization verifier and eval templates (FROM agentswe-os/ubuntu-base:…); replaces host git bind mounts"
+      ],
+      "size_mb": 159,
+      "tier": "T1",
+      "reproduces": "per-trial *__verifier__trial_main / eval env images (bare ubuntu)",
+      "parity": "INSTALL_GIT=0 identical; default adds git"
+    },
+    "task-base": {
+      "kind": "build",
+      "tag": "agentswe-os/task-base:24.04-py3-git",
+      "context": "images/task-base",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT"
+      },
+      "used_by": [
+        "Creation task-template environment (candidate container); Security: build_args INSTALL_EXTRA='iptables nftables'"
+      ],
+      "size_mb": 204,
+      "tier": "T1",
+      "reproduces": "per-trial dev_*__env_main (sha256:8c4c10ea70f6)",
+      "parity": "INSTALL_GIT=0 byte-identical (4296/4296); default adds git (+22 pkgs)"
+    },
+    "edit-candidate-python311": {
+      "kind": "build",
+      "tag": "agentswe-os/edit-candidate-python311:3.11.16",
+      "context": "images/edit-candidate-python311",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY"
+      },
+      "used_by": [
+        "Editing lower agent: claude, aider, ai-scientist, dyad",
+        "ai-scientist compiler runtime export"
+      ],
+      "size_mb": 1100,
+      "tier": "T1",
+      "reproduces": "agentswe/edit-candidate-python311:0826 (sha256:10b0f6506162)",
+      "parity": "identical content (23051/23051, 469/469 pkgs); new image id"
+    },
+    "egress-sidecar-base": {
+      "kind": "pull",
+      "tag": "gogost/gost:3.2.7-nightly.20260602",
+      "ref": "docker.io/gogost/gost@sha256:afc0137758ab4ce399d47a299f9abbacbf522b52a17e59cbb4b4e7a1a66e9196",
+      "used_by": [
+        "Harbor egress-control sidecar (built by Harbor on first use)"
+      ],
+      "note": "some Docker Hub mirrors refuse this repository; AGENTSWE_DOCKER_REGISTRY must point at one that serves it"
+    },
+    "harbor-kernel-probe": {
+      "kind": "pull",
+      "tag": "alpine:3.23.4",
+      "ref": "docker.io/library/alpine@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11",
+      "used_by": [
+        "Harbor egress-control nftables probe (docker run --rm)"
+      ]
+    },
+    "egress-sidecar": {
+      "kind": "build",
+      "tag": "agentswe-os/egress-sidecar:harbor0.20.0-gost3.2.7",
+      "context": "images/egress-sidecar",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY"
+      },
+      "used_by": [
+        "optional prebuild/push of the Harbor sidecar; Harbor itself builds harbor-prebuilt:harbor-docker-egress-control-sidecar--<hash>"
+      ],
+      "size_mb": 52,
+      "tier": "T1",
+      "optional": true,
+      "reproduces": "harbor-prebuilt:harbor-docker-egress-control-sidecar--b1e6760734a9e6f6",
+      "parity": "identical content (772/772)"
+    },
+    "opt-python312": {
+      "kind": "build",
+      "tag": "agentswe-os/opt-python312:3.12.13-20260807",
+      "context": "images/opt-python312",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT",
+        "PBS_BASE_URL": "AGENTSWE_PBS_BASE_URL"
+      },
+      "used_by": [
+        "tau3-retail and pinchbench-openclaw brokers/runtimes/graders (replaces ubuntu:24.04 + host Python + host /etc/ssl/certs mounts)",
+        "browsecomp/terminalbench/osworld brokers"
+      ],
+      "size_mb": 186,
+      "tier": "T1",
+      "parity": "/python identical to the uv-installed CPython except uv's BUILD/EXTERNALLY-MANAGED/_sysconfigdata edits"
+    },
+    "opt-tau3-runtime": {
+      "kind": "build",
+      "tag": "agentswe-os/opt-tau3-runtime:tau2-668d3bc",
+      "context": "images/opt-tau3-runtime",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "PIP_INDEX_URL": "AGENTSWE_PIP_INDEX_URL",
+        "GITHUB_CODELOAD": "AGENTSWE_GITHUB_CODELOAD"
+      },
+      "used_by": [
+        "tau3-retail per-case runtime (/tau2 replaces the host tau2-bench snapshot mount)"
+      ],
+      "depends_on": [
+        "opt-python312"
+      ],
+      "size_mb": 1220,
+      "tier": "T1",
+      "parity": "tau2 tree + .venv identical (10582 files + 28 prefix-only)"
+    },
+    "opt-pinchbench-runtime": {
+      "kind": "build",
+      "tag": "agentswe-os/opt-pinchbench-runtime:openclaw2026.7.1-2",
+      "context": "images/opt-pinchbench-runtime",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "PIP_INDEX_URL": "AGENTSWE_PIP_INDEX_URL",
+        "NODE_DIST_URL": "AGENTSWE_NODE_DIST_URL",
+        "NPM_REGISTRY": "AGENTSWE_NPM_REGISTRY",
+        "GITHUB_CODELOAD": "AGENTSWE_GITHUB_CODELOAD"
+      },
+      "used_by": [
+        "pinchbench-openclaw runtime and grader (/node, /openclaw, /pinchbench, /yaml-site replace host mounts)"
+      ],
+      "depends_on": [
+        "opt-python312"
+      ],
+      "size_mb": 759,
+      "tier": "T1",
+      "parity": "/node, /openclaw, /pinchbench, /yaml-site identical"
+    },
+    "env-builder": {
+      "kind": "build",
+      "tag": "agentswe-os/env-builder:1",
+      "context": "images/env-builder",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT",
+        "NODE_DIST_URL": "AGENTSWE_NODE_DIST_URL",
+        "PIP_INDEX_URL": "AGENTSWE_PIP_INDEX_URL",
+        "CONDA_FORGE_URL": "AGENTSWE_CONDA_FORGE_URL"
+      },
+      "used_by": [
+        "`agentswe setup`: builds tasks/*/*/env (conda/venv kinds) via env.Dockerfile and exports them to $AGENTSWE_HOME/envs"
+      ],
+      "size_mb": 484,
+      "tier": "T1"
+    },
+    "trusted-browser": {
+      "kind": "export",
+      "context": "images/trusted-browser",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT",
+        "NODE_DIST_URL": "AGENTSWE_NODE_DIST_URL",
+        "CFT_BASE_URL": "AGENTSWE_CFT_BASE_URL"
+      },
+      "exports": {
+        "trusted-browser-v1": "$AGENTSWE_HOME/deps/trusted-browser-v1",
+        "runtime-dependencies-v1": "$AGENTSWE_HOME/deps/runtime-dependencies-v1"
+      },
+      "used_by": [
+        "Creation verifiers of database-analytics, scientific-pdf-translation, evidence-grounded-document-qa, schema-guided-web-extraction, web-research-report, desktop-gui-automation (/opt/agentswe-trusted-browser)",
+        "document-to-editable-pptx (runtime-dependencies-v1/pptx/lib)"
+      ],
+      "size_mb": 616,
+      "tier": "T1",
+      "parity": "trusted-browser-v1 500/500 and runtime-dependencies-v1 225/225 files identical (fontconfig .uuid excluded)"
+    },
+    "pptx-libreoffice": {
+      "kind": "export",
+      "context": "images/pptx-libreoffice",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY"
+      },
+      "downloads": [
+        {
+          "name": "LibreOffice_25.8.7.3_Linux_x86-64_deb.tar.gz",
+          "url": "https://downloadarchive.documentfoundation.org/libreoffice/old/25.8.7.3/deb/x86_64/LibreOffice_25.8.7.3_Linux_x86-64_deb.tar.gz",
+          "sha256": "7f4d7b2e36921eec5122c655249a24cc88935ee357e8261fd3bccd15aa1f7b9f",
+          "note": "the TDF stable-tree file LibreOffice_25.8.7_Linux_x86-64_deb.tar.gz (and its mirrors, while 25.8.7 is current) has the same size and the same first, middle and last MiB",
+          "verified": "2026-10-02: sha256 equals the TDF-published hash file https://downloadarchive.documentfoundation.org/libreoffice/old/25.8.7.3/deb/x86_64/LibreOffice_25.8.7.3_Linux_x86-64_deb.tar.gz.sha256 (fetched over HTTPS)"
+        },
+        {
+          "name": "libxinerama1_1.1.4-3_amd64.deb",
+          "url": "http://archive.ubuntu.com/ubuntu/pool/main/libx/libxinerama/libxinerama1_1.1.4-3_amd64.deb",
+          "sha256": "be0caa6259a6c8d5ff75d2bd410a4cf6126b1d4dcb6a04b9c33f388d639f7b07",
+          "note": "Ubuntu jammy; usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0 byte-identical to the paper root"
+        }
+      ],
+      "exports": {
+        "libreoffice-root": "$AGENTSWE_HOME/deps/libreoffice/root"
+      },
+      "used_by": [
+        "document-to-editable-pptx evaluator renderer (AGENTSWE_LIBREOFFICE_ROOT, mounted read-only)"
+      ],
+      "size_mb": 721,
+      "tier": "T1",
+      "parity": "2026-10-03 (124): 15,597/15,597 release entries byte-identical to the paper root (create75 dependencies/libreoffice; same entry types, symlink targets and exec bits); the paper root has 46 extra entries, 44 __pycache__ and two fontconfig .uuid files written by use"
+    },
+    "edit-candidate-runtime": {
+      "kind": "build",
+      "tag": "agentswe-os/edit-candidate-runtime:0.144.1-iproute2",
+      "context": "images/edit-candidate-runtime",
+      "build_args_from_config": {
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT"
+      },
+      "used_by": [
+        "legacy 0826 Harbor-era Editing; no current tree uses it"
+      ],
+      "depends_on": [
+        "builder-codex"
+      ],
+      "size_mb": 764,
+      "tier": "legacy",
+      "optional": true,
+      "reproduces": "agentswe/edit-candidate-runtime:0826",
+      "parity": "identical (139/139 pkgs) except builder-codex leftovers"
+    },
+    "edit-code-judge": {
+      "kind": "build",
+      "tag": "agentswe-os/edit-code-judge:0.144.1-requests2.34.2",
+      "context": "images/edit-code-judge",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "PIP_INDEX_URL": "AGENTSWE_PIP_INDEX_URL"
+      },
+      "used_by": [
+        "Editing Code-axis judge (not used by the Result-only protocol)"
+      ],
+      "depends_on": [
+        "builder-codex"
+      ],
+      "size_mb": 759,
+      "tier": "optional",
+      "optional": true,
+      "reproduces": "agentswe/edit-code-judge:0909-requests2342 (sha256:b3fd1b7e9e1a)",
+      "parity": "89/89 vendored files equal the paper-era manifest"
+    },
+    "tbench-write-compressor": {
+      "kind": "build",
+      "tag": "agentswe-os/tbench-write-compressor-deps:20260812",
+      "context": "images/tbench-write-compressor",
+      "build_args_from_config": {
+        "GHCR_REGISTRY": "AGENTSWE_GHCR_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR"
+      },
+      "used_by": [
+        "terminalbench"
+      ],
+      "tier": "T3",
+      "optional": true
+    },
+    "tbench-reverse-engineering": {
+      "kind": "build",
+      "tag": "agentswe-os/tbench-reverse-engineering-deps:20260812",
+      "context": "images/tbench-reverse-engineering",
+      "build_args_from_config": {
+        "GHCR_REGISTRY": "AGENTSWE_GHCR_REGISTRY",
+        "DEBIAN_MIRROR": "AGENTSWE_DEBIAN_MIRROR"
+      },
+      "used_by": [
+        "terminalbench"
+      ],
+      "tier": "T3",
+      "optional": true
+    },
+    "tbench-csv-to-parquet": {
+      "kind": "build",
+      "tag": "agentswe-os/tbench-csv-to-parquet-deps:20260813",
+      "context": "images/tbench-csv-to-parquet",
+      "build_args_from_config": {
+        "GHCR_REGISTRY": "AGENTSWE_GHCR_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR"
+      },
+      "used_by": [
+        "terminalbench"
+      ],
+      "tier": "T3",
+      "optional": true
+    },
+    "tbench-accelerate-maximal-square": {
+      "kind": "build",
+      "tag": "agentswe-os/tbench-accelerate-maximal-square-deps:20260813",
+      "context": "images/tbench-accelerate-maximal-square",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "PIP_INDEX_URL": "AGENTSWE_PIP_INDEX_URL"
+      },
+      "used_by": [
+        "terminalbench"
+      ],
+      "tier": "T3",
+      "optional": true
+    },
+    "tbench-base-ubuntu": {
+      "kind": "pull",
+      "ref": "ghcr.io/laude-institute/t-bench/ubuntu-24-04:20250624@sha256:d34916434f1304da8b1fc7aeb547d1bee53770a4c4fe0ff4637eaca293d648d5",
+      "used_by": [
+        "terminalbench"
+      ],
+      "tier": "T3",
+      "amd64_config": "sha256:2591fd9a98fc54fc79cddd50700fa320a77880cfdee1e06169b22e7708b48ad1"
+    },
+    "tbench-base-python": {
+      "kind": "pull",
+      "ref": "ghcr.io/laude-institute/t-bench/python-3-13:20250620@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5",
+      "used_by": [
+        "terminalbench"
+      ],
+      "tier": "T3",
+      "amd64_config": "sha256:75cb41dc2d4f832786b0d4be2c474eb2177ece9d173bdfdff74af6509484dcc9"
+    },
+    "osworld-runtime": {
+      "kind": "build",
+      "tag": "agentswe-os/osworld-runtime:091f5ef",
+      "context": "images/osworld-runtime",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "PIP_INDEX_URL": "AGENTSWE_PIP_INDEX_URL"
+      },
+      "used_by": [
+        "osworld"
+      ],
+      "tier": "T3",
+      "optional": true
+    },
+    "osworld-provider": {
+      "kind": "pull",
+      "ref": "docker.io/happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+      "used_by": [
+        "osworld"
+      ],
+      "tier": "T3"
+    },
+    "task-base-net": {
+      "kind": "build",
+      "tag": "agentswe-os/task-base:24.04-py3-git-nft",
+      "context": "images/task-base",
+      "build_args_from_config": {
+        "DOCKER_REGISTRY": "AGENTSWE_DOCKER_REGISTRY",
+        "APT_MIRROR": "AGENTSWE_APT_MIRROR",
+        "APT_SNAPSHOT": "AGENTSWE_APT_SNAPSHOT"
+      },
+      "build_args": {
+        "INSTALL_EXTRA": "iptables nftables"
+      },
+      "used_by": [
+        "Security (authorized-vulnerability-validation) candidate container: the trusted solve.sh confines the Candidate's network with nft/iptables (paper Dockerfile: python3 iptables nftables ca-certificates)"
+      ],
+      "tier": "T1"
+    }
+  }
+}

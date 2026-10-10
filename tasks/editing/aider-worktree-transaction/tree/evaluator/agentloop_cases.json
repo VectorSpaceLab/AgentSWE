@@ -1,0 +1,15 @@
+{
+  "schema_version": "agentswe-aider-agentloop-case-manifest-v1",
+  "public_dev": {
+    "dev_001": {"scenario": "quarantined-repository-set-publish", "prompt": "cases/dev_001.md", "allowed_actions": ["inspect", "create", "run", "status", "recover", "attest"]},
+    "dev_002": {"scenario": "partial-decision-admission-takeover", "prompt": "cases/dev_002.md", "allowed_actions": ["inspect", "create", "run", "status", "recover", "attest"]}
+  },
+  "hidden": {
+    "test_001": {"scenario": "admission-bounded-dag", "allowed_actions": ["inspect", "create", "run", "status", "recover", "attest"]},
+    "test_002": {"scenario": "quarantine-closure", "allowed_actions": ["inspect", "create", "run", "status", "recover", "attest"]},
+    "test_003": {"scenario": "durable-decision-prefix", "allowed_actions": ["inspect", "create", "run", "status", "recover", "attest"]},
+    "test_004": {"scenario": "component-conflict-ownership", "allowed_actions": ["inspect", "create", "run", "status", "recover", "attest"]},
+    "test_005": {"scenario": "reverse-decision-dirty-state", "allowed_actions": ["inspect", "create", "run", "status", "recover", "rollback", "attest"]},
+    "test_006": {"scenario": "integrity-status-compatibility", "allowed_actions": ["inspect", "create", "run", "status", "recover", "attest"]}
+  }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "filing": "PM-8814",
+    "operator": "Drift Hydro 3",
+    "period": "Q2",
+    "detail": "details/permit-14.html",
+    "card_as_of": "2026-03-15"
+  },
+  {
+    "filing": "PM-8815",
+    "operator": "Elm Storage 3",
+    "period": "Q3",
+    "detail": "details/permit-15.html",
+    "card_as_of": "2026-04-16"
+  },
+  {
+    "filing": "PM-8816",
+    "operator": "Arc Wind 4",
+    "period": "Q4",
+    "detail": "details/permit-16.html",
+    "card_as_of": "2026-05-17"
+  },
+  {
+    "filing": "PM-8817",
+    "operator": "Blue Mesa 4",
+    "period": "Q1",
+    "detail": "details/permit-17.html",
+    "card_as_of": "2026-06-18"
+  },
+  {
+    "filing": "PM-8818",
+    "operator": "Civic Solar 4",
+    "period": "Q2",
+    "detail": "details/permit-18.html",
+    "card_as_of": "2026-07-19"
+  },
+  {
+    "filing": "PM-8819",
+    "operator": "Drift Hydro 4",
+    "period": "Q3",
+    "detail": "details/permit-19.html",
+    "card_as_of": "2026-02-20"
+  }
+]

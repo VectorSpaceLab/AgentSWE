@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "experiment_id": "exp-baseline-001",
+      "role": "baseline",
+      "method": "baseline",
+      "config": {"path": "baseline_config.json", "sha256": "fcd6477fdc17f01bee92ff102ea816c101f1af0e1702ae8e2ce87a57cafd3ecb"},
+      "seeds": [11, 22, 33],
+      "dataset": {"name": "mini_cls_v1", "split_id": "split-public-a", "split_sha256": "c017c7f0f9d40c365d06f0256f928f9621043ef49a2dca8a84d4f72a4c2f58b1"},
+      "budget": {"epochs": 10},
+      "metrics": [{"name": "accuracy", "scale": "fraction", "reported_value": 0.8, "raw_artifact": {"path": "raw_results.json", "sha256": "3e73087562719d74db851d006dc2c45afdb64c89a07864e0afe091e6a8423be6"}}],
+      "environment": {"python": "3.11", "device": "cpu"}
+    },
+    {
+      "experiment_id": "exp-nova-001",
+      "role": "candidate",
+      "method": "nova",
+      "config": {"path": "nova_config.json", "sha256": "fcd6477fdc17f01bee92ff102ea816c101f1af0e1702ae8e2ce87a57cafd3ecb"},
+      "seeds": [11, 22, 33],
+      "dataset": {"name": "mini_cls_v1", "split_id": "split-public-a", "split_sha256": "c017c7f0f9d40c365d06f0256f928f9621043ef49a2dca8a84d4f72a4c2f58b1"},
+      "budget": {"epochs": 10},
+      "metrics": [{"name": "accuracy", "scale": "fraction", "reported_value": 0.805, "raw_artifact": {"path": "raw_results.json", "sha256": "3e73087562719d74db851d006dc2c45afdb64c89a07864e0afe091e6a8423be6"}}],
+      "environment": {"python": "3.11", "device": "cpu"}
+    }
+  ],
+  "replays": [{"replay_id": "replay-public-001", "command": ["python", "replay.py", "--raw", "raw_results.json"], "working_directory": ".", "stdout_format": "json", "script_sha256": "dbe867ffd4350a5c34b8b2bbb838960bf03a5e7359a92d3a583b70e51ca5d55b", "timeout_seconds": 10}],
+  "release_policy": {"minimum_evidence_coverage": 1.0, "minimum_seeds_for_stability": 3, "block_on_integrity_error": true, "allow_automatic_numeric_rewrite": true, "required_decision": "release_with_revisions"}
+}

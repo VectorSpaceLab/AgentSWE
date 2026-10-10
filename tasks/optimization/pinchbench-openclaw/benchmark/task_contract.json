@@ -1,0 +1,490 @@
+{
+  "benchmark_id": "pinchbench-openclaw-agent-optimization-v1",
+  "contamination_policy": {
+    "answers_or_solutions_forbidden": true,
+    "hidden_or_evaluator_material_forbidden": true,
+    "static_terminalbench_solver_forbidden": true,
+    "task_id_branches_forbidden": true
+  },
+  "editable_space": [
+    "run_harness.py",
+    "productivity_policy.py"
+  ],
+  "evaluation": {
+    "cli": "python run_harness.py --input <input.jsonl> --output <predictions.jsonl> --run-dir <run_dir>",
+    "infrastructure_failure": "not official, not cached as zero, and does not consume a dev round",
+    "ordinary_candidate_failure": "official zero and consumes a dev round",
+    "primary_metric": "official mean score over rows",
+    "relative_improvement_definition": "(candidate_score-baseline_score)/abs(baseline_score); null when baseline_score is zero",
+    "reported_metrics": [
+      "baseline_score",
+      "candidate_score",
+      "absolute_improvement",
+      "relative_improvement"
+    ],
+    "same_evaluator_runtime_model_and_budget": true,
+    "same_path_for_baseline_and_candidate": true,
+    "score_only_final_task_outcomes": true
+  },
+  "fixed_space": {
+    "budgets": {
+      "model_calls": 20,
+      "runtime_seconds_cap": 600,
+      "runtime_tokens": 200000
+    },
+    "evaluator": "pinned PinchBench grade_task() automated/hybrid/LLM judge",
+    "model": "gpt-5.6-sol through evaluator-owned broker",
+    "runtime": "OpenClaw 2026.7.1-2",
+    "tools": "OpenClaw coding or minimal profile; private-account and media-generation tasks excluded"
+  },
+  "initial_artifact": {
+    "digest": "72dbc908f43736cc1ab2ae75700f108e2f2c2aac6b6731694a8ca288aa3b5b84",
+    "entrypoint": "run_harness.py",
+    "kind": "starter_harness",
+    "name": "OpenClaw Basic Productivity Agent",
+    "path": "starter_harness"
+  },
+  "schema_version": "3.0",
+  "splits": {
+    "dev": {
+      "cases": [
+        {
+          "case_id": "dev_001",
+          "category": "productivity",
+          "grading_type": "automated",
+          "timeout_seconds": 60,
+          "upstream_id": "task_sanity"
+        },
+        {
+          "case_id": "dev_002",
+          "category": "productivity",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_calendar"
+        },
+        {
+          "case_id": "dev_003",
+          "category": "skills",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_files"
+        },
+        {
+          "case_id": "dev_004",
+          "category": "productivity",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_todo_list_cleanup"
+        },
+        {
+          "case_id": "dev_005",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_iris_summary"
+        },
+        {
+          "case_id": "dev_006",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_stock_trend"
+        },
+        {
+          "case_id": "dev_007",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_apache_top_errors"
+        },
+        {
+          "case_id": "dev_008",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_syslog_boot"
+        },
+        {
+          "case_id": "dev_009",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_tldr"
+        },
+        {
+          "case_id": "dev_010",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_council_votes"
+        },
+        {
+          "case_id": "dev_011",
+          "category": "coding",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_dockerfile_optimization"
+        },
+        {
+          "case_id": "dev_012",
+          "category": "coding",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_multi_file_refactoring"
+        },
+        {
+          "case_id": "dev_013",
+          "category": "coding",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_k8s_debugging"
+        },
+        {
+          "case_id": "dev_014",
+          "category": "analysis",
+          "grading_type": "llm_judge",
+          "timeout_seconds": 240,
+          "upstream_id": "task_summary"
+        },
+        {
+          "case_id": "dev_015",
+          "category": "analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_spreadsheet_summary"
+        },
+        {
+          "case_id": "dev_016",
+          "category": "analysis",
+          "grading_type": "automated",
+          "timeout_seconds": 90,
+          "upstream_id": "task_access_log_anomaly"
+        },
+        {
+          "case_id": "dev_017",
+          "category": "productivity",
+          "grading_type": "hybrid",
+          "timeout_seconds": 240,
+          "upstream_id": "task_email_triage"
+        },
+        {
+          "case_id": "dev_018",
+          "category": "analysis",
+          "grading_type": "llm_judge",
+          "timeout_seconds": 300,
+          "upstream_id": "task_contract_analysis"
+        },
+        {
+          "case_id": "dev_019",
+          "category": "analysis",
+          "grading_type": "automated",
+          "timeout_seconds": 300,
+          "upstream_id": "task_session_chain_analysis"
+        },
+        {
+          "case_id": "dev_020",
+          "category": "coding",
+          "grading_type": "automated",
+          "timeout_seconds": 90,
+          "upstream_id": "task_shell_command_generator"
+        }
+      ],
+      "count": 20
+    },
+    "hidden": {
+      "cases": [
+        {
+          "case_id": "test_001",
+          "category": "productivity",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_cron_organizer"
+        },
+        {
+          "case_id": "test_002",
+          "category": "productivity",
+          "grading_type": "automated",
+          "timeout_seconds": 180,
+          "upstream_id": "task_pdf_to_calendar"
+        },
+        {
+          "case_id": "test_003",
+          "category": "productivity",
+          "grading_type": "llm_judge",
+          "timeout_seconds": 300,
+          "upstream_id": "task_daily_summary"
+        },
+        {
+          "case_id": "test_004",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_stock_volatility"
+        },
+        {
+          "case_id": "test_005",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_stock_best_worst"
+        },
+        {
+          "case_id": "test_006",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_temp_anomalies"
+        },
+        {
+          "case_id": "test_007",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_life_exp_change"
+        },
+        {
+          "case_id": "test_008",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_gdp_regions"
+        },
+        {
+          "case_id": "test_009",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_stations_coverage"
+        },
+        {
+          "case_id": "test_010",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_iris_outliers"
+        },
+        {
+          "case_id": "test_011",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_cities_density"
+        },
+        {
+          "case_id": "test_012",
+          "category": "csv_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_csv_pension_risk"
+        },
+        {
+          "case_id": "test_013",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_apache_critical"
+        },
+        {
+          "case_id": "test_014",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_apache_timeline"
+        },
+        {
+          "case_id": "test_015",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_nginx_status_codes"
+        },
+        {
+          "case_id": "test_016",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_nginx_slow_requests"
+        },
+        {
+          "case_id": "test_017",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_ssh_brute_force"
+        },
+        {
+          "case_id": "test_018",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_hdfs_failures"
+        },
+        {
+          "case_id": "test_019",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_mapreduce_resources"
+        },
+        {
+          "case_id": "test_020",
+          "category": "log_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_log_syslog_anomalies"
+        },
+        {
+          "case_id": "test_021",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_advisory_attendees"
+        },
+        {
+          "case_id": "test_022",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_advisory_technical"
+        },
+        {
+          "case_id": "test_023",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_council_budget"
+        },
+        {
+          "case_id": "test_024",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_council_public_comment"
+        },
+        {
+          "case_id": "test_025",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_tech_action_items"
+        },
+        {
+          "case_id": "test_026",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_tech_decisions"
+        },
+        {
+          "case_id": "test_027",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_executive_summary"
+        },
+        {
+          "case_id": "test_028",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_sentiment_analysis"
+        },
+        {
+          "case_id": "test_029",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_gov_recommendations"
+        },
+        {
+          "case_id": "test_030",
+          "category": "meeting_analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_meeting_searchable_index"
+        },
+        {
+          "case_id": "test_031",
+          "category": "coding",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_cicd_pipeline_debug"
+        },
+        {
+          "case_id": "test_032",
+          "category": "coding",
+          "grading_type": "automated",
+          "timeout_seconds": 120,
+          "upstream_id": "task_git_rescue_recovery"
+        },
+        {
+          "case_id": "test_033",
+          "category": "coding",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_test_generation"
+        },
+        {
+          "case_id": "test_034",
+          "category": "coding",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_selector_fix"
+        },
+        {
+          "case_id": "test_035",
+          "category": "analysis",
+          "grading_type": "automated",
+          "timeout_seconds": 300,
+          "upstream_id": "task_openclaw_comprehension"
+        },
+        {
+          "case_id": "test_036",
+          "category": "analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 240,
+          "upstream_id": "task_email_search"
+        },
+        {
+          "case_id": "test_037",
+          "category": "analysis",
+          "grading_type": "hybrid",
+          "timeout_seconds": 300,
+          "upstream_id": "task_cve_security_triage"
+        },
+        {
+          "case_id": "test_038",
+          "category": "analysis",
+          "grading_type": "automated",
+          "timeout_seconds": 150,
+          "upstream_id": "task_image_identification"
+        },
+        {
+          "case_id": "test_039",
+          "category": "writing",
+          "grading_type": "llm_judge",
+          "timeout_seconds": 180,
+          "upstream_id": "task_readme_generation"
+        },
+        {
+          "case_id": "test_040",
+          "category": "coding",
+          "grading_type": "hybrid",
+          "timeout_seconds": 180,
+          "upstream_id": "task_browser_automation"
+        }
+      ],
+      "count": 40
+    }
+  },
+  "track_semantics": "optimize a runnable initial agent; do not build from an empty submission",
+  "upstream": {
+    "dev_size": 20,
+    "eligibility_audit": "meta/eligibility_audit.json",
+    "hidden_size": 40,
+    "selection": "stratified by category, grading type, fixture profile and timeout",
+    "source": "PinchBench skill pinned task corpus",
+    "source_commit": "819384ae830492365b8363fc26bc2602e73f216d",
+    "source_task_count": 147
+  }
+}

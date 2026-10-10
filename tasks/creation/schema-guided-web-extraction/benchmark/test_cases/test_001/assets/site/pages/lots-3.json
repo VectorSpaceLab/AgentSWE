@@ -1,0 +1,44 @@
+[
+  {
+    "record_ref": "QL-5115",
+    "display_name": "Lunar Bracket",
+    "detail": "details/inspection-062.html",
+    "card_revision": "2026-07-15"
+  },
+  {
+    "record_ref": "QL-5116",
+    "display_name": "Mica Nozzle",
+    "detail": "details/inspection-081.html",
+    "card_revision": "2026-07-16"
+  },
+  {
+    "record_ref": "QL-5117",
+    "display_name": "Amber Valve",
+    "detail": "details/inspection-100.html",
+    "card_revision": "2026-07-17"
+  },
+  {
+    "record_ref": "QL-5118",
+    "display_name": "Cobalt Sleeve",
+    "detail": "details/inspection-119.html",
+    "card_revision": "2026-07-18"
+  },
+  {
+    "record_ref": "QL-5119",
+    "display_name": "Fern Coupler",
+    "detail": "details/inspection-138.html",
+    "card_revision": "2026-07-10"
+  },
+  {
+    "record_ref": "QL-5120",
+    "display_name": "Ivory Sensor",
+    "detail": "details/inspection-157.html",
+    "card_revision": "2026-07-11"
+  },
+  {
+    "record_ref": "QL-5121",
+    "display_name": "Juniper Relay",
+    "detail": "details/inspection-176.html",
+    "card_revision": "2026-07-12"
+  }
+]

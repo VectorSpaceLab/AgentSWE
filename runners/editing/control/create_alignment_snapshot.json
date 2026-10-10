@@ -1,0 +1,583 @@
+{
+  "schema_version": "agentswe-edit-create-alignment-snapshot-v1",
+  "created_at": "2026-09-04T20:10:20.167952+00:00",
+  "source_root": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4",
+  "source_files": [
+    {
+      "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/suite_config.py",
+      "sha256": "289da1e0300fc0044234ecbd9e6c51a318c1c5f67d83828ce9c089686fafb9f7",
+      "size": 5130,
+      "mtime_ns": 1787759850357594837
+    },
+    {
+      "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/launch_two_track.py",
+      "sha256": "cc0400962324561ce4e97c96ef0a87183dec465f741ef884bf00c71db69db481",
+      "size": 6155,
+      "mtime_ns": 1787759850361594915
+    },
+    {
+      "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/run_branch.py",
+      "sha256": "d7256dfc1008b94b4e4c8be72f23ada4b02bb477b7bf8d7ca16abd7fb0816027",
+      "size": 22131,
+      "mtime_ns": 1787759850361594915
+    },
+    {
+      "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+      "sha256": "db0188ef413842d1c02798796380e479c0d280cd051074cc85d52ec46e06400b",
+      "size": 36938,
+      "mtime_ns": 1788169314726389654
+    }
+  ],
+  "profiles": {
+    "codex_xhigh": {
+      "builder_agent": "codex",
+      "builder_model": "gpt-5.6-sol",
+      "builder_reasoning_effort": "xhigh",
+      "builder_harness_version": "0.144.1",
+      "provider": "gateway-responses"
+    },
+    "deepseek_max": {
+      "builder_agent": "codex",
+      "builder_model": "deepseek-v4-flash",
+      "builder_reasoning_effort": "max",
+      "builder_harness_version": "0.144.1",
+      "provider": "deepseek-responses",
+      "builder_agent_import_path": "deepseek_codex_agent:DeepSeekCodex"
+    },
+    "codex_gpt55_xhigh": {
+      "builder_agent": "codex",
+      "builder_model": "gpt-5.5",
+      "builder_reasoning_effort": "xhigh",
+      "builder_harness_version": "0.144.1",
+      "provider": "gateway-responses"
+    },
+    "deepseek_pro_max": {
+      "builder_agent": "codex",
+      "builder_model": "deepseek-v4-pro",
+      "builder_reasoning_effort": "max",
+      "builder_harness_version": "0.144.1",
+      "provider": "deepseek-responses",
+      "builder_agent_import_path": "deepseek_codex_agent:DeepSeekCodex",
+      "provider_config": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/deepseek-provider-pro-max.toml",
+      "model_catalog": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/deepseek-pro-models.json"
+    }
+  },
+  "task_count": 10,
+  "task_names": [
+    "desktop-gui-automation",
+    "document-to-editable-pptx",
+    "scientific-pdf-translation",
+    "web-research-report",
+    "database-analytics",
+    "schema-guided-web-extraction",
+    "repository-bug-repair",
+    "authorized-vulnerability-validation",
+    "evidence-grounded-document-qa",
+    "formal-theorem-proving"
+  ],
+  "effective_protocol": {
+    "selected_profiles": [
+      "codex_xhigh"
+    ],
+    "profile_scope": "codex_xhigh_only",
+    "builder_agent": "codex",
+    "builder_model": "gpt-5.6-sol",
+    "builder_reasoning_effort": "xhigh",
+    "builder_harness_version": "0.144.1",
+    "builder_provider": "gateway-responses",
+    "max_dev_rounds": 10,
+    "n_concurrent": 1,
+    "dev_passed_threshold": "mean > 60",
+    "dev_passed_is_automatic_freeze": false,
+    "lower_model": "gpt-5.6-sol",
+    "lower_reasoning_effort": "medium",
+    "result_judge": "gpt-5.6-sol/xhigh once per scoreable hidden",
+    "code_judge": "gpt-5.6-sol/xhigh once per frozen Candidate",
+    "combined_score": null
+  },
+  "observed_dual_axis_bundles": {
+    "count": 42,
+    "freeze_reasons": {
+      "builder_exit": 31,
+      "max_dev_rounds": 9,
+      "dev_passed": 2
+    },
+    "accepted_round_histogram": {
+      "3": 3,
+      "2": 2,
+      "5": 2,
+      "8": 2,
+      "1": 3,
+      "0": 1,
+      "4": 1,
+      "10": 25,
+      "9": 3
+    },
+    "bundles": [
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-desktop-gui-automation-codex_gpt55_xhigh-formal01/dual_axis_score_bundle.json",
+        "sha256": "3a2e4b2ffe830e45960f0e4711b600397f8a573d29aa6db7a134e288430e7549",
+        "task": "desktop-gui-automation",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 3,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-document-to-editable-pptx-codex_gpt55_xhigh-formal01/dual_axis_score_bundle.json",
+        "sha256": "ee6c7c9e1a1ac6ba657d060546cc34feb5a722668c21ec5b5bdb7ebf3a28a8c5",
+        "task": "document-to-editable-pptx",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 2,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-final-gpt55-database-analytics-codex_gpt55_xhigh-formal07/dual_axis_score_bundle.json",
+        "sha256": "140345f7c375e6f2ecde549c61608fa38f8ec85a01e253fc920a3c0792c0adbe",
+        "task": "database-analytics",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 5,
+        "dev_passed_rounds": 5,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-retry-evidence-grounded-document-qa-codex_gpt55_xhigh-formal02/dual_axis_score_bundle.json",
+        "sha256": "f33fe05cfdfa7ec404dd7f2d2cea2824ef7a64e336c27e15abcbb2e0e37d0e25",
+        "task": "evidence-grounded-document-qa",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 8,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-retry-formal-theorem-proving-codex_gpt55_xhigh-formal02/dual_axis_score_bundle.json",
+        "sha256": "2ef79f35afe49dd9b264622e1c1aeb1a4cc418274bc73c90a3423f6f07f44ffb",
+        "task": "formal-theorem-proving",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 1,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-retry-repository-bug-repair-codex_gpt55_xhigh-formal02/dual_axis_score_bundle.json",
+        "sha256": "13cae391344bfac5ccb2ef4f5e1ec57d8afd7ef1a34de79c53caae39d45a3154",
+        "task": "repository-bug-repair",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 0,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-retry3-authorized-vulnerability-validation-codex_gpt55_xhigh-formal04/dual_axis_score_bundle.json",
+        "sha256": "99e8bc896d2bd6b36a3ef0551d918e0bc4f9e404f14433216e7fecde83e28bf8",
+        "task": "authorized-vulnerability-validation",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 2,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-schema-guided-web-extraction-codex_gpt55_xhigh-formal01/dual_axis_score_bundle.json",
+        "sha256": "793df9b3b2e2c4abada511b7e57078f7520e4b5bae618d889a4eac1add3d1390",
+        "task": "schema-guided-web-extraction",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 4,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0826-two-dev-web-research-report-codex_gpt55_xhigh-formal01/dual_axis_score_bundle.json",
+        "sha256": "3c8dd210f69d8e6efb150a004b0bcf9525ed438f9912a6ddef131c6c047d055d",
+        "task": "web-research-report",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 3,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_gpt55_xhigh/0827-two-dev-final-gpt55-scientific-pdf-translation-codex_gpt55_xhigh-formal11/dual_axis_score_bundle.json",
+        "sha256": "c21dc981cd5d2f5fa0aa00920f96fbb9c40a96b0e4f1fec266839b9989c7eaf7",
+        "task": "scientific-pdf-translation",
+        "profile": "codex_gpt55_xhigh",
+        "accepted_rounds": 1,
+        "dev_passed_rounds": 1,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-authorized-vulnerability-validation-codex_xhigh-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "91e12843ddf7241fe6af292c62ad1f38be65a3817991d6080201f335efae3ccc",
+        "task": "authorized-vulnerability-validation",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-authorized-vulnerability-validation-codex_xhigh-remaining01/dual_axis_score_bundle.json",
+        "sha256": "fe509f310633dbf4575b9e58ea77ae4f49859978aaf2c538e34e54dfee220a84",
+        "task": "authorized-vulnerability-validation",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 1,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": false,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-database-analytics-codex_xhigh-pilot03/dual_axis_score_bundle.json",
+        "sha256": "2f20042d87f3b30065346441bd0d5bfec28e0ea36905f5eda21dc435e58bbc01",
+        "task": "database-analytics",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 2,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-desktop-gui-automation-codex_xhigh-gui-repair01/dual_axis_score_bundle.json",
+        "sha256": "427316e0fbc53185febd4ff3e77a184a62df4fbb7cf753c453009305f5fd8cbe",
+        "task": "desktop-gui-automation",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-document-to-editable-pptx-codex_xhigh-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "5f65910791e0f7bec1f991f084bce4bd293f5734712edb58de43395fffe7ef77",
+        "task": "document-to-editable-pptx",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 9,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-evidence-grounded-document-qa-codex_xhigh-remaining01/dual_axis_score_bundle.json",
+        "sha256": "3816b33ef4370e96ca776e5f8c0554fdb53b39e618b13827ac439b1779cc3fb2",
+        "task": "evidence-grounded-document-qa",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-formal-theorem-proving-codex_xhigh-pilot03/dual_axis_score_bundle.json",
+        "sha256": "5b87bbe758eb823a818d2bf4029f7b7670197cddca261231a5e1ab76ca71bb96",
+        "task": "formal-theorem-proving",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-repository-bug-repair-codex_xhigh-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "b31a1be6e12eb6dfb7e432cd2b7e11768b099d8ea4cf7c0dbf08d8dde216f39f",
+        "task": "repository-bug-repair",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-schema-guided-web-extraction-codex_xhigh-pilot03/dual_axis_score_bundle.json",
+        "sha256": "4aba981075056ead8f422bc342419ca33b619d106654d509c9bf85b4bf67740d",
+        "task": "schema-guided-web-extraction",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 8,
+        "dev_passed_rounds": 1,
+        "freeze_reason": "dev_passed",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-scientific-pdf-translation-codex_xhigh-remaining01/dual_axis_score_bundle.json",
+        "sha256": "6dc0b3d96d9def484d4324a68ef1cc7e4fb426b7a24d9d6324858ccfd95c2827",
+        "task": "scientific-pdf-translation",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 9,
+        "dev_passed_rounds": 5,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/codex_xhigh/0825-two-dev-web-research-report-codex_xhigh-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "6734a9318a76a94b24626e952b6dd7b2504f62450a711c624a596cffcccb100b",
+        "task": "web-research-report",
+        "profile": "codex_xhigh",
+        "accepted_rounds": 9,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-authorized-vulnerability-validation-deepseek_max-av-repair01/dual_axis_score_bundle.json",
+        "sha256": "90c166545bbc3acfd32d8a75270504cba2e2fe04bff96b997a96c9b6b3739d97",
+        "task": "authorized-vulnerability-validation",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-database-analytics-deepseek_max-pilot03/dual_axis_score_bundle.json",
+        "sha256": "2e49f378204346d83b3ea94370af90d7b165874db0a7f85fae22341e46435734",
+        "task": "database-analytics",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 10,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-desktop-gui-automation-deepseek_max-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "c094be4931ee529d6bc8e6da8f99dc565a2f8a0f29bf086d98a1ff3ed8d2fa5a",
+        "task": "desktop-gui-automation",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 4,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-document-to-editable-pptx-deepseek_max-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "3e6719a479005c0ff783c2a610d794dccdf7784cc45f617b7b8b9645d8466400",
+        "task": "document-to-editable-pptx",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 3,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-evidence-grounded-document-qa-deepseek_max-remaining01/dual_axis_score_bundle.json",
+        "sha256": "abe4fe6aab0f84eda1e6f9b5185644a61d01b67eab9b4c8bdb965845cae10100",
+        "task": "evidence-grounded-document-qa",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-formal-theorem-proving-deepseek_max-pilot03/dual_axis_score_bundle.json",
+        "sha256": "5e3d11cfac1ee86f86ad7ad5083938f059a6f28c359ecbcc44bd9c37e6da09c2",
+        "task": "formal-theorem-proving",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-repository-bug-repair-deepseek_max-remaining01/dual_axis_score_bundle.json",
+        "sha256": "7400b824fe40ebcf001e4948441985f5324b25e57bd39568b6d8573a025ee094",
+        "task": "repository-bug-repair",
+        "profile": "deepseek_max",
+        "accepted_rounds": 3,
+        "dev_passed_rounds": 1,
+        "freeze_reason": "dev_passed",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-schema-guided-web-extraction-deepseek_max-pilot03/dual_axis_score_bundle.json",
+        "sha256": "453a694e1a5e3b52d1b8fb9c85e7c47d38cc37538769fc241c23cfc2dcd03b00",
+        "task": "schema-guided-web-extraction",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "max_dev_rounds",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-scientific-pdf-translation-deepseek_max-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "bb51b55cd84c472c06a3cac7c780b7c38bb38ce78d143d016e50f06506153ea3",
+        "task": "scientific-pdf-translation",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 7,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_max/0825-two-dev-web-research-report-deepseek_max-protocolfix01/dual_axis_score_bundle.json",
+        "sha256": "3f3758d02871eb1a538c44aa5c44b3d514be50e25bddb3dd2d51c84a045b1876",
+        "task": "web-research-report",
+        "profile": "deepseek_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-database-analytics-deepseek_pro_max-formal01/dual_axis_score_bundle.json",
+        "sha256": "a9f12c256d85a595334446233d5372eedae421fd3476d0514ec977fd3f73b8a5",
+        "task": "database-analytics",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 5,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-desktop-gui-automation-deepseek_pro_max-formal01/dual_axis_score_bundle.json",
+        "sha256": "770d16ef8a762e7f7534e370cd662744e0fed0511e1361493d03c18a6e80d66c",
+        "task": "desktop-gui-automation",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-document-to-editable-pptx-deepseek_pro_max-formal01/dual_axis_score_bundle.json",
+        "sha256": "c851df5e7fdbc863a4c1aaddb4c7940414b715df22648de7e87e3f6b72b46610",
+        "task": "document-to-editable-pptx",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-final-dpsk-authorized-vulnerability-validation-deepseek_pro_max-formal08/dual_axis_score_bundle.json",
+        "sha256": "08af5ffd6c208332e632c245b0372e602d86ebf0bdd519ee067386a77d295c54",
+        "task": "authorized-vulnerability-validation",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-final-dpsk-evidence-grounded-document-qa-deepseek_pro_max-formal08/dual_axis_score_bundle.json",
+        "sha256": "4c840b6e2ac31842b74298bac9a2ad2d48226938907ecfe0df400c3b4cc4d2e1",
+        "task": "evidence-grounded-document-qa",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-final-dpsk-formal-theorem-proving-deepseek_pro_max-formal08/dual_axis_score_bundle.json",
+        "sha256": "8657e1a63601c64ba19289da46bc0a0dd82996822547d45f47ca5b70a0a380f9",
+        "task": "formal-theorem-proving",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-final-dpsk-repository-bug-repair-deepseek_pro_max-formal08/dual_axis_score_bundle.json",
+        "sha256": "0a08f79f8085eb5ee8b7d9e5f6662a06570b12b9ed352fe02de5f24e0e8432c4",
+        "task": "repository-bug-repair",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 5,
+        "dev_passed_rounds": 1,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-retry4-evidence-grounded-document-qa-deepseek_pro_max-formal05/dual_axis_score_bundle.json",
+        "sha256": "c56061e44716ea092e289b8f4d806640838dcf0b1ddcba8de767bedb1d623385",
+        "task": "evidence-grounded-document-qa",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-schema-guided-web-extraction-deepseek_pro_max-formal01/dual_axis_score_bundle.json",
+        "sha256": "e365f10c1ce490dd0d3d97a336394990a7573221df2ede8c1622960a3eca2101",
+        "task": "schema-guided-web-extraction",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-scientific-pdf-translation-deepseek_pro_max-formal01/dual_axis_score_bundle.json",
+        "sha256": "c82b5382a1a8747903cb84a08872dc23b34996c66b3402d071d0360663c1e5be",
+        "task": "scientific-pdf-translation",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 4,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      },
+      {
+        "path": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/runs/two_dev/deepseek_pro_max/0826-two-dev-web-research-report-deepseek_pro_max-formal01/dual_axis_score_bundle.json",
+        "sha256": "cf63044fab09e1e15e7c90ce31c5a34a6aa0cc8fc8bc683dcbbb793fa76a7f59",
+        "task": "web-research-report",
+        "profile": "deepseek_pro_max",
+        "accepted_rounds": 10,
+        "dev_passed_rounds": 0,
+        "freeze_reason": "builder_exit",
+        "result_publishable": true,
+        "code_publishable": true
+      }
+    ],
+    "interpretation": "Observed bundles are historical execution evidence, not an automatic publication selection. They demonstrate that Create permits varying accepted-round counts and both max_dev_rounds and Builder-driven exit; dev_passed is recorded per round and is not treated here as a new automatic Edit freeze condition."
+  },
+  "credential_values_recorded": false
+}

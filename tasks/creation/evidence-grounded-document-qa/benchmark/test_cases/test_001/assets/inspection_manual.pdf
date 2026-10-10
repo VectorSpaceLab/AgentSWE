@@ -1,0 +1,81 @@
+%PDF-1.4
+%synthetic-v4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 387 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (North Harbor Pier Coating Manual, revision 5) Tj ET
+BT /F2 11 Tf 1 0 0 1 54 706 Tm (Section 1 - Decision scope) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 680 Tm (Evaluate North Pier zones N1 through N4. South Harbor records are distractors.) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 654 Tm (Use inspected surface area as the weighting basis for coating-loss measurements.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 374 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Section 3 - Quantitative criterion) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 706 Tm (Area-weighted mean loss = sum\(area x loss\) / sum\(area\).) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (The quantitative criterion passes at or below 0.35 mm.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 650 Tm (Use the latest signed amendment for any invalidated measurement row.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 425 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Section 4 - Visual criterion) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 706 Tm (Five or more critical red-marker defects require repair regardless of mean loss.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (Use the inspector's image-key classifications when counting critical defects.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 650 Tm (The overall decision passes only when both quantitative and visual criteria pass.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 280 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Section 6 - Limits of inference) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 706 Tm (This inspection does not estimate remaining coating service life.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (A contractor marketing claim is not a measured durability result.) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000023 00000 n 
+0000000072 00000 n 
+0000000149 00000 n 
+0000000219 00000 n 
+0000000294 00000 n 
+0000000732 00000 n 
+0000000868 00000 n 
+0000001293 00000 n 
+0000001429 00000 n 
+0000001905 00000 n 
+0000002042 00000 n 
+0000002374 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+2512
+%%EOF

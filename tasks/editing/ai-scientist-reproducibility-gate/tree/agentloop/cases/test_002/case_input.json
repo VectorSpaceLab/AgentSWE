@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "case_id": "test_002",
+  "scenario": "lost_prepare_response_and_concurrent_budget_settlement",
+  "evaluator_nonce": "runtime-generated",
+  "oracle": "evaluator-private"
+}

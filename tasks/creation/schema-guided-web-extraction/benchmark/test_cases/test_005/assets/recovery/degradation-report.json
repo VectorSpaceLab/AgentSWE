@@ -1,0 +1,10 @@
+{
+  "resource": "primary/shard-b.json",
+  "expected_failure": [
+    "invalid_json",
+    "checksum_mismatch"
+  ],
+  "local_recovery_available": true,
+  "network_recovery_authorized": false,
+  "notes": "Use the manifest-declared snapshot and ordered local journal."
+}

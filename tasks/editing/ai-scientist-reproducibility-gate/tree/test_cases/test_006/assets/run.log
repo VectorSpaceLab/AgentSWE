@@ -1,0 +1,4 @@
+experiment_id=exp-fjord
+learning_rate=0.1
+epochs=7
+metric_accuracy=0.75

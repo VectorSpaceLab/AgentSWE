@@ -1,0 +1,30 @@
+{
+  "schema_version": "agentswe-as-run-files/v1",
+  "files": [
+    {
+      "path": "tasks/editing/aider-worktree-transaction/tree/dev_cases/dev_001/input.md.pre-0920-hardening",
+      "sha256": "24ae6a641215ae2ee873864657e42e83fe8f6c1b626ed8a15efc21939e402bc1",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/aider-worktree-transaction/tree/dev_cases/dev_002/input.md.pre-0920-hardening",
+      "sha256": "29a3455df77c0678f017396fa567d1100479a63f7bfb77342e127ae961c9614a",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/aider-worktree-transaction/tree/input/02_interface_and_delivery.md.pre-0920-hardening",
+      "sha256": "f2972f07f67506c88c9eb8b65e63497dc0cc64ee39b88f26bad2898bb331291c",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/aider-worktree-transaction/tree/input/03_requirements_and_constraints.md.pre-0920-hardening",
+      "sha256": "b35a8bdcd10fe440ca60610149ce1625c5d8e594d2e8f999d6004f24fe37b067",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/aider-worktree-transaction/tree/input/04_resources.md.pre-0920-hardening",
+      "sha256": "56965657d83ea20f342e924208e052808680153f7cb3e6e7f883a101076409d4",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    }
+  ]
+}

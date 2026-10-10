@@ -1,0 +1,89 @@
+{
+  "id": "database-analytics",
+  "family": "creation",
+  "short": "db",
+  "title": "Database analytics",
+  "version": "hard-v4",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "creation_harbor_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "task-base",
+    "ubuntu-base",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "trusted-browser"
+  ],
+  "envs": [
+    "database-analytics-agent-v2"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git"
+    ],
+    "disk_gb": 20
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 10,
+    "builder_session_sec": 28800
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 3600
+  },
+  "upstream": {
+    "repo": "https://github.com/vanna-ai/vanna",
+    "commit": "365d0617c1a4567ffee1b19b40c27feb4206bfcf",
+    "license": "MIT",
+    "role": "requirement source; no upstream code copied",
+    "redistribute_a0": true
+  },
+  "runner_config": {
+    "n_concurrent": 2,
+    "harbor_profile": "creation"
+  },
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "runs": [
+      36.3,
+      36.7,
+      43.0
+    ],
+    "mean_at_3": 38.67,
+    "sd": 3.76
+  },
+  "notes": [
+    "Lite fixes included: browser_probe.mjs cleanup retries; verify_score fatal filter.",
+    "Release change (2026-10-10): adapter/eval-template/solution/run_eval.py normalize_evaluation_state reads the judge's prose (assessment, major_errors) as an infrastructure marker only when it holds the standalone token INFRASTRUCTURE_ERROR or INFRASTRUCTURE_INVALID (underscores, any case, no letter, digit or underscore immediately before or after). The previous rule turned every non-alphanumeric into '_' and matched substrings, so prose such as 'evaluator-side infrastructure errors' voided a scored case. The harness, the transport and the judge's structured evaluation_state mark infrastructure as before, and verify_score.py reads the state run_eval writes."
+  ]
+}

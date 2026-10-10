@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "model", "reasoning_effort", "calls", "successful_calls", "failures", "prompt_tokens", "completion_tokens", "total_tokens"],
+  "properties": {"schema_version":{"const":1},"model":{"const":"gpt-5.6-sol"},"reasoning_effort":{"const":"medium"},"calls":{"type":"integer","minimum":0},"successful_calls":{"type":"integer","minimum":0},"failures":{"type":"integer","minimum":0},"prompt_tokens":{"type":"integer","minimum":0},"completion_tokens":{"type":"integer","minimum":0},"total_tokens":{"type":"integer","minimum":0}}
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "candidate_digest", "candidate_path", "frozen_at", "dev_feedback", "hidden_allowed", "source_submission", "frozen_tree_read_only", "frozen_digest_before", "frozen_digest_after", "frozen_digest_stable"],
+  "properties": {
+    "schema_version": {"const": "deepcode-agentloop-freeze-v2"},
+    "candidate_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_path": {"type": "string"},
+    "frozen_at": {"type": "string"},
+    "dev_feedback": {"type": "array"},
+    "hidden_allowed": {"const": true},
+    "source_submission": {"type": "integer", "minimum": 1, "maximum": 10},
+    "accepted_submission_count": {"type": "integer", "minimum": 1, "maximum": 10},
+    "max_dev_rounds": {"type": "integer", "minimum": 1, "maximum": 10},
+    "accepted_candidate_digests": {"type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true},
+    "feedback_chain_complete": {"const": true},
+    "frozen_tree_read_only": {"const": true},
+    "frozen_digest_before": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "frozen_digest_after": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "frozen_digest_stable": {"const": true}
+  },
+  "additionalProperties": true
+}

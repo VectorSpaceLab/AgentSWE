@@ -1,0 +1,80 @@
+{
+  "schema_version": "deepcode-agentloop-hidden-inventory-v1",
+  "oracle_policy": "evaluator-owned; no expected values, secrets, or case specs are mounted into Candidate",
+  "cases": [
+    {
+      "case_id": "test_001",
+      "focus": [
+        "concurrent idempotent submission",
+        "immutable registration",
+        "review idempotency",
+        "promotion compare-and-swap",
+        "scoped audit ledger"
+      ],
+      "dynamic_inputs": "fresh capsule, tenant, operation ids, response-loss schedule",
+      "artifact": "agent_result.json"
+    },
+    {
+      "case_id": "test_002",
+      "focus": [
+        "lease expiry",
+        "generation fencing",
+        "checkpoint advance and response-loss retry",
+        "pause/resume token rotation",
+        "attestation binding"
+      ],
+      "dynamic_inputs": "fresh partial capsule, seeded sampling project, lease timing",
+      "artifact": "agent_result.json"
+    },
+    {
+      "case_id": "test_003",
+      "focus": [
+        "cross-tenant isolation",
+        "idempotency conflict",
+        "safe path rejection",
+        "canonical semantic diff",
+        "policy-authorized review"
+      ],
+      "dynamic_inputs": "two tenants, colliding key, private project roots",
+      "artifact": "agent_result.json"
+    },
+    {
+      "case_id": "test_004",
+      "focus": [
+        "partial write",
+        "durable reconciliation",
+        "checkpointed rebuild",
+        "corrupt immutable snapshot",
+        "audit continuity"
+      ],
+      "dynamic_inputs": "truncated staging files and evaluator sentinel",
+      "artifact": "agent_result.json"
+    },
+    {
+      "case_id": "test_005",
+      "focus": [
+        "cancel fencing",
+        "replacement generation",
+        "atomic head swap",
+        "strict verification reuse",
+        "stale promotion refusal"
+      ],
+      "dynamic_inputs": "two workers, delayed generation, concurrent readers",
+      "artifact": "agent_result.json"
+    },
+    {
+      "case_id": "test_006",
+      "focus": [
+        "policy drift",
+        "blocked publication is unpromotable",
+        "security quarantine",
+        "fenced restore",
+        "fail-closed audit",
+        "legacy compatibility"
+      ],
+      "dynamic_inputs": "unavailable citation, changed policy version, corrupt durable state",
+      "artifact": "agent_result.json"
+    }
+  ],
+  "hidden_scope_note": "Every hidden case now exercises the Cycle 003 revision/execution surfaces in addition to the preserved capsule and durable-run behaviour; evaluator/manifests/*.json remain the deterministic public-evaluator assertion scope and are unchanged."
+}

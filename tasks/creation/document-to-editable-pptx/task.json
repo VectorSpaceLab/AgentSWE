@@ -1,0 +1,86 @@
+{
+  "id": "document-to-editable-pptx",
+  "family": "creation",
+  "short": "pptx",
+  "title": "Document to editable PPTX",
+  "version": "v3",
+  "tier": "T2",
+  "lite": false,
+  "status": "runnable",
+  "runner": "creation_harbor_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [
+    "search"
+  ],
+  "images": [
+    "builder-codex",
+    "task-base",
+    "ubuntu-base",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "trusted-browser",
+    "pptx-libreoffice"
+  ],
+  "envs": [
+    "document-to-editable-pptx-agent-v2"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git"
+    ],
+    "disk_gb": 20
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 10,
+    "builder_session_sec": 28800
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 3600
+  },
+  "upstream": {
+    "role": "requirement source; no upstream code copied",
+    "details": "benchmark/meta"
+  },
+  "runner_config": {
+    "n_concurrent": 2,
+    "harbor_profile": "creation",
+    "env": {
+      "AGENTSWE_EVALUATOR_DEPENDENCIES": "$AGENTSWE_HOME/deps/runtime-dependencies-v1",
+      "AGENTSWE_LIBREOFFICE_ROOT": "$AGENTSWE_HOME/deps/libreoffice/root"
+    }
+  },
+  "notes": [
+    "Extracted from the evaluator of the paper's final Creation evaluation with the Lite delta and the release edits.",
+    "agentswe/pptx-evaluator-runtime:0819 is the pinned ubuntu image (same image id); mapped to ubuntu-base.",
+    "The evaluator's LibreOffice root (images.json pptx-libreoffice, exported to deps/libreoffice/root) and the env's aspose-legacy/ are built from sha256-pinned downloads; parity with the paper roots is checked after the build.",
+    "Runnable: a smoke with deepseek-flash for every role (runtime effort high; search through the per-run search front, 9 calls, all HTTP 200) reached the Result judge: held-out test_001 = 13 (scoreable, contract valid, publishable; 1 judge call, 0 failures). Dev round 1 = 0, audited: on dev_001 the candidate's own .NET rasterizer exited 1 without a writable HOME (the frozen candidate sets HOME/TMPDIR itself); on dev_002 its single search query yielded no usable rows and it gave up (the same parsing code worked on held-out). The Builder ran to the 3600 s session limit; the session-timeout freeze check passed.",
+    "Release change (2026-10-10): adapter/eval-template/solution/run_eval.py normalize_evaluation_state reads the judge's prose (assessment, major_errors) as an infrastructure marker only when it holds the standalone token INFRASTRUCTURE_ERROR or INFRASTRUCTURE_INVALID (underscores, any case, no letter, digit or underscore immediately before or after). The previous rule turned every non-alphanumeric into '_' and matched substrings, so prose such as 'evaluator-side infrastructure errors' voided a scored case. The harness, the transport and the judge's structured evaluation_state mark infrastructure as before, and verify_score.py reads the state run_eval writes."
+  ]
+}

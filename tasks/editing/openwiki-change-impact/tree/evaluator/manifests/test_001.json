@@ -1,0 +1,23 @@
+{
+  "case_id": "test_001",
+  "change_kind": "git",
+  "scenario": "stale_owner_restart",
+  "preseed": "expired_claim_incomplete_stage",
+  "transaction": {"state_dir": ".openwiki-impact", "tenant_id": "format-team", "request_id": "move-004", "generation": 4, "payload_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "owner_id": "worker-new", "lease_ms": 2000},
+  "publication": {"root": ".openwiki-public", "site_id": "format-portal", "generation": 4, "base_path": "/reference/"},
+  "search": {"root": ".openwiki-search", "index_id": "format-portal", "generation": 4},
+  "search_queries": [{"query": "compatibility formatter", "limit": 3, "expected_paths": ["openwiki/api/format.md"]}, {"query": "Number formatter", "limit": 1, "expected_paths": ["openwiki/api/numbers.md"]}],
+  "ceilings": {"surface_availability": 25, "safety_boundary": 30},
+  "expected_pages": ["openwiki/api/format.md", "openwiki/architecture/modules.md"],
+  "direct_pages": ["openwiki/api/format.md", "openwiki/architecture/modules.md"],
+  "unaffected_pages": ["openwiki/api/numbers.md"],
+  "required_text": {"openwiki/api/format.md": ["src/text/format.js", "compatibility", "src/format.js"], "openwiki/architecture/modules.md": ["src/text/format.js"]},
+  "forbidden_text": {"openwiki/api/format.md": ["implementation lives in `src/format.js`"], "openwiki/architecture/modules.md": ["CLI --> LegacyFormat"]},
+  "expected_examples": {"format-new-path": "HI\n", "format-compat-path": "HI\n"},
+  "expected_stale_kinds": ["module-move", "compatibility-alias"],
+  "preserved_tokens": ["HANDWRITTEN: The compatibility path follows the next-major removal policy."],
+  "preserved_anchors": ["format-api", "module-layout"],
+  "expected_diagrams": ["module-layout"],
+  "expected_link_suffixes": [],
+  "weights": {"preserved_executable_docs": 15, "static_publication": 30, "full_text_search": 30, "cross_surface_convergence": 20, "production_compatibility_security": 5}
+}

@@ -1,0 +1,15 @@
+{
+  "schemas": [2, 3],
+  "migrationBackend": "default-local",
+  "foreignBackend": "foreign-backend%2Fchild",
+  "sameRevisionMigrationRace": true,
+  "staleRetryAfterRestart": true,
+  "corruption": ["tampered_digest", "future_version"],
+  "maxRetainedRevisions": 8,
+  "migratedCompactionScopeIsolation": true,
+  "legacyRecordsImmutable": true,
+  "removeFailureAfterPublication": true,
+  "dispatcherMigratedCursorHandoff": true,
+  "syncRecordsSurviveLedgerCompaction": true,
+  "workspaceRecordsSurviveLedgerCompaction": true
+}

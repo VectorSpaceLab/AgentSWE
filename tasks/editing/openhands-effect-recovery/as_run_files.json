@@ -1,0 +1,25 @@
+{
+  "schema_version": "agentswe-as-run-files/v1",
+  "files": [
+    {
+      "path": "tasks/editing/openhands-effect-recovery/tree/dev_cases/dev_001/assets/scenario.json.pre-0920",
+      "sha256": "68c685b2caf5f91c0766faebbc97a2c75c1d0f148f3686fa7eaf92d017b77ff9",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openhands-effect-recovery/tree/dev_cases/dev_001/natural_task.md.pre-0920",
+      "sha256": "98ae4af81cc58a2ead610800aab2e3ae2e681b0693842f4b264963f178786926",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openhands-effect-recovery/tree/input/02_interface_and_delivery.md.pre-0920",
+      "sha256": "47e1c650ff5f1a61532d3860111fed1aae55f3e479ce3dec60560784af4502c7",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openhands-effect-recovery/tree/input/03_requirements_and_constraints.md.pre-0920",
+      "sha256": "df6a97f688c6880ff8349473279bad2ce641c3b1cd56ef3aaf93b66ea59e263f",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    }
+  ]
+}

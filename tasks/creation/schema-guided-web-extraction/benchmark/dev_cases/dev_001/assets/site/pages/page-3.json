@@ -1,0 +1,38 @@
+[
+  {
+    "asset_id": "AU-2013",
+    "name": "Aurora Meter 13",
+    "detail": "details/d-13.html",
+    "catalog_price": 46.2
+  },
+  {
+    "asset_id": "AU-2014",
+    "name": "Cinder Housing 14",
+    "detail": "details/d-14.html",
+    "catalog_price": 48.55
+  },
+  {
+    "asset_id": "AU-2015",
+    "name": "Delta Tripod 15",
+    "detail": "details/d-15.html",
+    "catalog_price": 50.9
+  },
+  {
+    "asset_id": "AU-2016",
+    "name": "Frost Probe 16",
+    "detail": "details/d-16.html",
+    "catalog_price": 53.25
+  },
+  {
+    "asset_id": "AU-2017",
+    "name": "Harbor Beacon 17",
+    "detail": "details/d-17.html",
+    "catalog_price": 55.6
+  },
+  {
+    "asset_id": "AU-2018",
+    "name": "Juniper Sampler 18",
+    "detail": "details/d-18.html",
+    "catalog_price": 57.95
+  }
+]

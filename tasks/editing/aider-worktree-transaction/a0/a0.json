@@ -1,0 +1,59 @@
+{
+ "task": "aider-worktree-transaction",
+ "upstream": {
+  "repo": "https://github.com/Aider-AI/aider",
+  "commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+  "git_tree": "3a8257195db51e5c5cd3680dfd2022027f9c7904",
+  "license": "Apache-2.0",
+  "redistribute_a0": false
+ },
+ "note": null,
+ "layers": {
+  "upstream_to_english_source": {
+   "added": 0,
+   "removed_from_upstream": 0,
+   "modified": 0,
+   "meaning": "English source package a0 == pinned upstream (subset for deeptutor); no local functional edits"
+  },
+  "english_source_to_asrun": {
+   "files": 154,
+   "summary": {
+    "doc/translated": 143,
+    "doc/non-translation": 1,
+    "data/fixture/program-text/translated": 5,
+    "dependency-manifest/translated": 5
+   },
+   "meaning": "2026-08-19 machine translation of the package (0818-benchmark-cn) + any later edit; see private migration/zh-asrun-changes.json"
+  }
+ },
+ "language": {
+  "as_run": "zh (machine-translated docs/fixtures in a0)",
+  "functional_risk_files": [
+   "benchmark/swe-bench-lite.txt",
+   "benchmark/swe-bench.txt",
+   "requirements.txt",
+   "requirements/common-constraints.txt",
+   "requirements/requirements-browser.txt",
+   "requirements/requirements-dev.txt",
+   "requirements/requirements-help.txt",
+   "requirements/requirements-playwright.txt",
+   "tests/fixtures/chat-history-search-replace-gold.txt",
+   "tests/fixtures/sample-code-base-repo-map.txt"
+  ],
+  "functional_risk_count": 10
+ },
+ "evaluator_digest_pins_on_asrun_a0": [
+  [
+   "evaluator/code_inputs.py",
+   "BASELINE_DIGEST",
+   "1787cfbc6c4c79c4b918f7cd155d6274204651bbdddfc6689bac83c674e13575",
+   "matches neither a0: control/code_eval.py tree_digest is c8b05f41fc0c15657071e79c85d6e3bd49c7513ceec81f093b9b1af1d95de283 on the paper zh-asrun a0 and 60526b93b85fe63920650291e38c7ec0a76bb1041f66a7c818561b4276e50e73 on en-upstream. Read only by the retired Code axis and by the Code preflight in harbor/acceptance_reuse.py, which fail on either a0 (pre-existing, not a translation effect)"
+  ]
+ ],
+ "files": {
+  "fetch": "fetch.sh",
+  "en_manifest": "en-upstream.sha256",
+  "subset": null,
+  "private_zh_asrun_dir": "migration/private/zh-asrun/aider-worktree-transaction"
+ }
+}

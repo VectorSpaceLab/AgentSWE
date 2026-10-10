@@ -1,0 +1,58 @@
+{
+ "task": "deeptutor-adaptive-remediation",
+ "upstream": {
+  "repo": "https://github.com/HKUDS/DeepTutor",
+  "commit": "37c3db6df7e886aee4f61c97ec5e618b8ab379e8",
+  "git_tree": "bf3d5d1a2234ebd704dfe2a2530bd83bd8d3f36e",
+  "license": "see upstream (no LICENSE in snapshot)",
+  "redistribute_a0": false
+ },
+ "note": "a0 is a SUBSET (1266 of 6230 files) of upstream 37c3db6d; tree does not record the pin -- 37c3db6d comes from the anonymous-repo SOURCE_COMMITS and is confirmed here because every one of the 1266 files is byte-identical to it",
+ "layers": {
+  "upstream_to_english_source": {
+   "added": 0,
+   "removed_from_upstream": 4964,
+   "modified": 0,
+   "meaning": "English source package a0 == pinned upstream (subset for deeptutor); no local functional edits"
+  },
+  "english_source_to_asrun": {
+   "files": 283,
+   "summary": {
+    "doc/translated": 16,
+    "doc/non-translation": 3,
+    "dependency-manifest/translated": 1,
+    "data/fixture/program-text/translated": 8
+   },
+   "meaning": "2026-08-19 machine translation of the package (0818-benchmark-cn) + any later edit; see private migration/zh-asrun-changes.json"
+  }
+ },
+ "language": {
+  "as_run": "zh (machine-translated docs/fixtures in a0)",
+  "functional_risk_files": [
+   "requirements.txt",
+   "requirements/cli.txt",
+   "requirements/dev.txt",
+   "requirements/math-animator.txt",
+   "requirements/matrix-e2e.txt",
+   "requirements/matrix.txt",
+   "requirements/partners.txt",
+   "requirements/server.txt",
+   "tests/services/rag/testfile.txt"
+  ],
+  "functional_risk_count": 9
+ },
+ "evaluator_digest_pins_on_asrun_a0": [
+  [
+   "agentloop/protocol.py",
+   "AUTHORITATIVE_SOURCE_DIGEST",
+   "1dda8c9737d0997b5efc9fa7a85348f96b05b73e67d5f5b8ac7625cd4eae57bc",
+   "re-pinned to the en-upstream a0 subset (protocol.tree_digest, ec2d5bb); paper as-run zh a0 value 56d107ba0798b0c2f0f852db4af6b8860c75b08f2f43e8d2971ad15e8202c862"
+  ]
+ ],
+ "files": {
+  "fetch": "fetch.sh",
+  "en_manifest": "en-upstream.sha256",
+  "subset": "subset.txt",
+  "private_zh_asrun_dir": "migration/private/zh-asrun/deeptutor-adaptive-remediation"
+ }
+}

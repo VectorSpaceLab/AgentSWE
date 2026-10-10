@@ -1,0 +1,14 @@
+{
+  "schema_version": "agentswe-edit-agentloop-protocol-lock/v1",
+  "builder": {"model": "deepseek-flash", "reasoning_effort": "xhigh", "session": "continuous"},
+  "lower_agent": {"model": "deepseek-flash", "reasoning_effort": "medium", "transport": "evaluator-owned-responses-broker"},
+  "candidate_credential": "broker-only-placeholder",
+  "candidate_rounds": "up_to_10",
+  "max_dev_rounds": 10,
+  "feedback_revisions": "fresh_after_each_acceptance",
+  "dev_passed_is_automatic_freeze": false,
+  "dev_cases_per_round": ["dev_001", "dev_002"],
+  "hidden_requires_freeze": true,
+  "result_and_code_axes_independent": true,
+  "native_suite_role": ["build_gate", "mechanism_auxiliary", "not_agent_loop_result"]
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "broker_instance_id", "model", "reasoning_effort", "calls", "successful_calls", "failures", "broker_failures", "provider_failures", "credential_failures", "prompt_tokens", "completion_tokens", "total_tokens", "credential_source_key", "credential_value_recorded"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "broker_instance_id": {"type": "string", "minLength": 1},
+    "model": {"const": "gpt-5.6-sol"},
+    "reasoning_effort": {"const": "medium"},
+    "calls": {"type": "integer", "minimum": 0},
+    "successful_calls": {"type": "integer", "minimum": 0},
+    "failures": {"type": "integer", "minimum": 0},
+    "broker_failures": {"type": "integer", "minimum": 0},
+    "provider_failures": {"type": "integer", "minimum": 0},
+    "credential_failures": {"type": "integer", "minimum": 0},
+    "prompt_tokens": {"type": "integer", "minimum": 0},
+    "completion_tokens": {"type": "integer", "minimum": 0},
+    "total_tokens": {"type": "integer", "minimum": 0},
+    "forced_overrides": {"type": "integer", "minimum": 0},
+    "credential_source_key": {"enum": ["OPENAI_API_KEY", "GATEWAY_API_KEY", "raw_token"]},
+    "credential_value_recorded": {"const": false}
+  }
+}

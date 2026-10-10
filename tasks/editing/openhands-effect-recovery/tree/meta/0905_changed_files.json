@@ -1,0 +1,78 @@
+{
+  "schema_version": "0905-edit-changed-files-v1",
+  "task": "openhands",
+  "files": [
+    "evaluator/controller/two_round_controller.py",
+    "evaluator/schemas/freeze_manifest.schema.json",
+    "evaluator/formal_finalize.py",
+    "evaluator/harness/evaluate_suite.py",
+    "evaluator/semantic_finalize.py",
+    "evaluator/tests/test_0905_offline_contract.py",
+    "harbor/formal_one_stop.py",
+    "harbor/self_test.py",
+    "lower_agent/openhands_lower_agent.py",
+    "meta/0905_case_contract.json",
+    "meta/0905_changed_files.json",
+    "meta/0905_migration_note.md"
+  ],
+  "last_static_repair_files": ["harbor/formal_one_stop.py", "lower_agent/openhands_lower_agent.py", "lower_agent/agent_server_shim.py", "evaluator/broker/candidate_broker.py", "evaluator/tests/test_0905_offline_contract.py", "meta/0905_case_contract.json", "meta/0905_migration_note.md", "meta/0905_changed_files.json"],
+  "last_static_repair_commands": ["python3 -m py_compile evaluator/broker/candidate_broker.py lower_agent/agent_server_shim.py evaluator/tests/test_0905_offline_contract.py", "python3 -m unittest -v evaluator.tests.test_0905_offline_contract", "python3 harbor/formal_one_stop.py --self-test", "python3 harbor/formal_one_stop.py --pilot-self-test", "python3 harbor/self_test.py", "python3 evaluator/harness/self_test.py", "provider-free local fake-broker lower action-loop exercise", "python3 -m py_compile lower_agent/openhands_lower_agent.py harbor/formal_one_stop.py", "python3 -m unittest -v evaluator.tests.test_0905_offline_contract", "python3 harbor/self_test.py", "python3 harbor/formal_one_stop.py --pilot-self-test"],
+  "last_static_repair_result": "current-020 proved the repaired Builder delivery path with 88 completed successful gpt-5.6-sol/xhigh calls, one accepted Candidate, and 8 successful real gpt-5.6-sol/medium lower calls through the Candidate recovery adapter and production ConversationService. The model-selected trajectory reached seven recovery actions and was recorded, but the lower Vitest launcher still exited 124 at the evaluator-owned 360-second boundary before authoring agent_result.json; lifecycle classified this as evaluator infrastructure invalid and no hidden or judge phase started. The lower test budget is now 360 seconds, the default case controller budget is 360 seconds, and the prompt states product checkpoint/lease preconditions without selecting actions; 11 focused tests and both one-stop self-tests pass",
+  "provider_calls": 306,
+  "heavy_containers_started": true,
+  "current_repair_provider_calls": 301,
+  "current_repair_heavy_containers_started": true,
+  "readiness": "REPAIR",
+  "current_smoke_attempts": [
+    {
+      "run_id": "0909-smoke-current-016",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "Builder completed 72 successful gpt-5.6-sol/xhigh calls and produced valid Candidate delivery attempts, but the evaluator-owned public lower broker returned HTTP 502 for all 9 medium calls; no round was consumed, no Candidate was accepted, and hidden execution did not start"
+    },
+    {
+      "run_id": "0909-smoke-current-017",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "The first pilot after Responses input normalization made 18 Builder calls (17 completed successfully and 1 in flight) but hit the 1800-second Builder timeout before Candidate delivery; the public lower broker remained at zero calls, so the transport repair was not live-validated"
+    },
+    {
+      "run_id": "0909-smoke-current-018",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "The metadata-removal transport repair was loaded, but the Builder reached the 1800-second timeout after 64 Builder calls (63 completed successfully and 1 in flight) while repeated submission attempts were not recorded as a Candidate; public and hidden lower calls remained zero"
+    },
+    {
+      "run_id": "0909-smoke-current-019",
+      "status": "pilot_lower_timeout_boundary",
+      "publishable": false,
+      "reason": "Builder completed 118 successful calls with no failures, two distinct Candidate submissions were accepted, and public lower made 9 successful medium calls. Both dev_001 attempts reached the Candidate production ConversationService path, but the generated lower Vitest test was killed at its fixed 120-second timeout before authoring agent_result.json; hidden execution and judge did not start. This is retained as non-readiness evidence against the pre-repair timeout boundary, not as a provider failure or formal result"
+    },
+    {
+      "run_id": "0909-smoke-current-020",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "Builder completed 88 successful gpt-5.6-sol/xhigh calls and one Candidate was accepted. Public lower made 8 successful gpt-5.6-sol/medium calls and recorded a real model-selected recovery trajectory through the Candidate production ConversationService, but the lower launcher exited 124 at the evaluator-owned 360-second boundary before agent_result.json; lifecycle classified the attempt as public_infrastructure_invalid, and hidden execution plus independent judge did not start"
+    }
+  ],
+  "repair_delta": [
+    "pilot self-test now covers dev_001 plus hidden test_001 and test_002",
+    "pilot remains explicitly non-formal and does not publish Result or Code scores",
+    "formal mode closes the Builder/dev lower broker before starting a fresh hidden lower broker and proves zero initial calls/failures",
+    "lower-agent driver uses a bounded iterative model-selected action loop over all public recovery adapter operations and ConversationService production dispatcher/sync/workspace factories",
+    "trajectory.json is recorded after each product action and agent_result.json is accepted only when its observations/actions/digests bind to that trajectory",
+    "production_* actions are routed through Candidate ConversationService methods so dispatcher, browser-sync, and workspace-reconciler behavior cannot be supplied only by native diagnostic tests",
+    "documentation-only correction replaces stale formal-entry references with the explicit --run-formal entry point and records provider-free verification after the correction",
+    "Builder instructions now require an early smallest coherent public Candidate submission before expanding optional hidden recovery surfaces, reducing oversized-turn timeout risk without selecting lower-agent actions",
+    "the Builder Compose task now receives a deterministic explicit /24 from RFC 2544 benchmarking space after checking live Docker networks and host routes, so exhausted Docker default bridge pools cannot prevent Harbor from starting the Builder",
+    "an ownership-proven stopped DeepTutor Compose sidecar and its empty network were removed to release one default pool; an older empty network without sufficient run ownership evidence was deliberately left untouched",
+    "current-016 confirmed the repaired Builder mount and Candidate materialization/build path, but the public lower broker returned 9 consecutive HTTP 502 failures; product entry was observed, yet no successful provider response existed for scoreable lower evidence",
+    "the evaluator-owned lower broker now converts non-empty text input to canonical Responses message/input_text form and forces stream=false without changing the prompt or selecting actions",
+    "current-017 loaded that transport repair but timed out before Candidate delivery, leaving public lower calls at zero and readiness unchanged",
+    "two evaluator-owned transport probes isolated the remaining provider HTTP 400 to the non-standard metadata envelope: a text-to-structured-input plus stream=false request with metadata failed, the same request without metadata succeeded 200/1, and the broker now drops metadata before upstream forwarding",
+    "current-018 loaded metadata removal and authored a 72 KiB Candidate patch, but the Builder's repeated submission attempts were not recorded as a Candidate before timeout; public lower remained at zero, so no live benchmark validation was obtained",
+    "current-019 completed the first full post-transport lifecycle: 118 completed Builder calls, two accepted distinct Candidates, feedback digest consumption, and 9 successful gpt-5.6-sol/medium lower calls through the Candidate ConversationService production surface. Its two public attempts timed out only because the lower Vitest test used 120 seconds while the controller allowed 180 seconds; a local fake-broker replay reached the artifact phase, isolating the defect to the live latency budget rather than closeSession or a provider HTTP failure",
+    "the lower test timeout is now 360 seconds and the default controller case timeout is 360 seconds, with an explicit model prompt reminder to establish a product checkpoint and recovery lease before production dispatcher/sync/workspace actions; provider-free contract, self-test, pilot-self-test, and compilation checks pass",
+    "current-020 live-validated the timeout repair through one accepted Candidate and 8 successful medium lower calls with a trajectory bound to the Candidate recovery adapter and production ConversationService, but the generated Vitest launcher still timed out at 360 seconds before artifact validation; the evidence remains non-readiness pilot evidence and does not authorize formal"
+  ]
+}

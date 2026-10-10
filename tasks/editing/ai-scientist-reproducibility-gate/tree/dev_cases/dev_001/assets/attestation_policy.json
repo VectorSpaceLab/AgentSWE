@@ -1,0 +1,1 @@
+{"schema_version":1,"project_id":"public-repro","policy_version":"attest-2026-01","key_id":"public-release-key","allowed_owners":["worker-a","worker-b"]}

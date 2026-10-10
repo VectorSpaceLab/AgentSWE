@@ -1,0 +1,3 @@
+# generated from the installed dist-info (name, version, wheel tag) + PyPI file hashes
+sqlglot==27.8.0 \
+    --hash=sha256:3961277277bc5bae459762294e160b6b7ce998e7d016f5adf8311a1d50b7a1a7

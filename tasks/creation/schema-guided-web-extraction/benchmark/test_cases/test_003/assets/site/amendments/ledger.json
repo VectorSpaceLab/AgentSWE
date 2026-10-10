@@ -1,0 +1,72 @@
+[
+  {
+    "filing": "PM-8825",
+    "status": "approved",
+    "capacity_mw": 34.98,
+    "filed_at": "2026-02-26",
+    "sequence": 1
+  },
+  {
+    "filing": "PM-8825",
+    "status": "suspended",
+    "capacity_mw": 36.48,
+    "filed_at": "2026-07-14",
+    "sequence": 2
+  },
+  {
+    "filing": "PM-8819",
+    "status": "approved",
+    "capacity_mw": 27.36,
+    "filed_at": "2026-02-20",
+    "sequence": 1
+  },
+  {
+    "filing": "PM-8819",
+    "status": "suspended",
+    "capacity_mw": 28.86,
+    "filed_at": "2026-07-18",
+    "sequence": 2
+  },
+  {
+    "filing": "PM-8813",
+    "status": "approved",
+    "capacity_mw": 19.74,
+    "filed_at": "2026-02-14",
+    "sequence": 1
+  },
+  {
+    "filing": "PM-8813",
+    "status": "suspended",
+    "capacity_mw": 21.24,
+    "filed_at": "2026-07-12",
+    "sequence": 2
+  },
+  {
+    "filing": "PM-8807",
+    "status": "approved",
+    "capacity_mw": 12.12,
+    "filed_at": "2026-02-08",
+    "sequence": 1
+  },
+  {
+    "filing": "PM-8807",
+    "status": "suspended",
+    "capacity_mw": 13.62,
+    "filed_at": "2026-07-16",
+    "sequence": 2
+  },
+  {
+    "filing": "PM-8801",
+    "status": "approved",
+    "capacity_mw": 4.5,
+    "filed_at": "2026-02-02",
+    "sequence": 1
+  },
+  {
+    "filing": "PM-8801",
+    "status": "suspended",
+    "capacity_mw": 6.0,
+    "filed_at": "2026-07-10",
+    "sequence": 2
+  }
+]

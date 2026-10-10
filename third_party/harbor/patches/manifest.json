@@ -1,0 +1,407 @@
+{
+  "schema_version": "agentswe-harbor-patches/v1",
+  "upstream": {
+    "name": "harbor",
+    "version": "0.20.0",
+    "license": "Apache-2.0",
+    "wheel": "harbor-0.20.0-py3-none-any.whl",
+    "wheel_sha256": "4b7e48223aea2384cdb8c9eff35eaebd482fc9b1ec09f8193a121c47356ff19a",
+    "pypi": "https://pypi.org/project/harbor/0.20.0/",
+    "package_files": 396
+  },
+  "default_profile": "creation",
+  "profiles": {
+    "pristine": {
+      "description": "Unmodified harbor 0.20.0 content of every touched file (restore / profile switch).",
+      "used_by": [],
+      "files": {
+        "harbor/agents/installed/base.py": {
+          "sha256": "ceb37980afe9e9d3f3dcd4a667364b22169ffa3939e0cf19ec9ca07af41a889b",
+          "upstream_sha256": "ceb37980afe9e9d3f3dcd4a667364b22169ffa3939e0cf19ec9ca07af41a889b",
+          "source": "files/pristine/harbor/agents/installed/base.py",
+          "patches": []
+        },
+        "harbor/agents/installed/claude_code.py": {
+          "sha256": "c151b582cdbc9ce064bb1557fdd3f9a7a11d564dd5e45c2faafffd7bfdcb0701",
+          "upstream_sha256": "c151b582cdbc9ce064bb1557fdd3f9a7a11d564dd5e45c2faafffd7bfdcb0701",
+          "source": "files/pristine/harbor/agents/installed/claude_code.py",
+          "patches": []
+        },
+        "harbor/agents/installed/codex.py": {
+          "sha256": "265ed0bb9d930defe05aaf487044f463529af53380f2049523b467fb92e64f95",
+          "upstream_sha256": "265ed0bb9d930defe05aaf487044f463529af53380f2049523b467fb92e64f95",
+          "source": "files/pristine/harbor/agents/installed/codex.py",
+          "patches": []
+        },
+        "harbor/agents/terminus_2/tmux_session.py": {
+          "sha256": "38642b794c3358809dabddfb36ea53d57fadf3e1e6fd736d82b39da8f3ce7976",
+          "upstream_sha256": "38642b794c3358809dabddfb36ea53d57fadf3e1e6fd736d82b39da8f3ce7976",
+          "source": "files/pristine/harbor/agents/terminus_2/tmux_session.py",
+          "patches": []
+        },
+        "harbor/environments/docker/docker.py": {
+          "sha256": "8afcb733fac3ff9d0df0d7e4c6c0583a59ae6c0df0be196094157af36c8ee22d",
+          "upstream_sha256": "8afcb733fac3ff9d0df0d7e4c6c0583a59ae6c0df0be196094157af36c8ee22d",
+          "source": "files/pristine/harbor/environments/docker/docker.py",
+          "patches": []
+        },
+        "harbor/trial/single_step.py": {
+          "sha256": "15deae31efe1287e3db4a4f57d7732eeffd28a8c4fd385e86193e81a3c944218",
+          "upstream_sha256": "15deae31efe1287e3db4a4f57d7732eeffd28a8c4fd385e86193e81a3c944218",
+          "source": "files/pristine/harbor/trial/single_step.py",
+          "patches": []
+        }
+      },
+      "tree_sha256": "239943f9d484b6db3bf7c5dfcc53215e668bf3e674dfd8df53bbb83eb566074e"
+    },
+    "site": {
+      "description": "State of the shared uv-tool site-packages the paper's runs used: two in-place edits (codex.py 2026-08-12, tmux_session.py 2026-08-19). No resume code. The release adds 0007 (2026-10-08, docker.py): a main service whose task compose sets its own cpu_quota/cpu_period gets no resources-override cpus, so its Builder container starts under any Docker Compose version with the limits that compose v2.5.0 (which ignores cpus) gave it.",
+      "used_by": [
+        "Editing: every builder run (paper and Lite) - harbor CLI invoked from site-packages, agent class agentswe_codex_resume:CodexResume subclasses this codex.py",
+        "Optimization: every run (the paper's runs and its Lite runs); runs launched with --infrastructure-resume additionally load runners/optimization/harbor_overlay (single_step hook)",
+        "Creation builders without an overlay: the paper's main-table Creation builders and three earlier Creation runs"
+      ],
+      "files": {
+        "harbor/agents/installed/codex.py": {
+          "sha256": "eb8c6e933aae897546c9ca240eabcae5c367e806e70ee85eff6c1f1d3b2feeaf",
+          "upstream_sha256": "265ed0bb9d930defe05aaf487044f463529af53380f2049523b467fb92e64f95",
+          "source": "files/site/harbor/agents/installed/codex.py",
+          "patches": [
+            "0001"
+          ]
+        },
+        "harbor/agents/terminus_2/tmux_session.py": {
+          "sha256": "caa9b3a874e8ff7b30ded6a100444a645adce3b74cd0f48ec00b731453abc623",
+          "upstream_sha256": "38642b794c3358809dabddfb36ea53d57fadf3e1e6fd736d82b39da8f3ce7976",
+          "source": "files/site/harbor/agents/terminus_2/tmux_session.py",
+          "patches": [
+            "0002"
+          ]
+        },
+        "harbor/environments/docker/docker.py": {
+          "sha256": "542ea728d840a5b04c13854a71d38ff0f4a3bac2d9cf1a78ebb31ef30258f9c4",
+          "upstream_sha256": "8afcb733fac3ff9d0df0d7e4c6c0583a59ae6c0df0be196094157af36c8ee22d",
+          "source": "files/site/harbor/environments/docker/docker.py",
+          "patches": [
+            "0007"
+          ]
+        }
+      },
+      "tree_sha256": "895d504e45290b4809cf1b11a890e5bab56a4ec278ef292d934c4be5493d49c4"
+    },
+    "creation": {
+      "description": "Creation overlay as used from 2026-09-03 04:17Z on (identical bytes in every later Creation run of the paper, including its final Creation evaluation, the Discussion runs and the Lite runs).",
+      "used_by": [
+        "Creation held-out scoring of the paper's final Creation evaluation (main and Discussion cells)",
+        "Creation Discussion runs",
+        "Lite Creation (all phases)",
+        "Creation builder retries started after 2026-09-03T04:17Z (main/codex_xhigh PPTX and web-research, prompt/strategy_b PPTX)"
+      ],
+      "files": {
+        "harbor/agents/installed/base.py": {
+          "sha256": "10243d6038b59798290ef8210fbc5da91bf29d5ade32ce15c884877dcaa74aac",
+          "upstream_sha256": "ceb37980afe9e9d3f3dcd4a667364b22169ffa3939e0cf19ec9ca07af41a889b",
+          "source": "files/creation/harbor/agents/installed/base.py",
+          "patches": [
+            "0003"
+          ]
+        },
+        "harbor/agents/installed/codex.py": {
+          "sha256": "f421c69fbbc38dc2d42c030d71727e300a354a9dce497d8ef541d99268837dab",
+          "upstream_sha256": "265ed0bb9d930defe05aaf487044f463529af53380f2049523b467fb92e64f95",
+          "source": "files/creation/harbor/agents/installed/codex.py",
+          "patches": [
+            "0001",
+            "0004"
+          ]
+        },
+        "harbor/agents/terminus_2/tmux_session.py": {
+          "sha256": "caa9b3a874e8ff7b30ded6a100444a645adce3b74cd0f48ec00b731453abc623",
+          "upstream_sha256": "38642b794c3358809dabddfb36ea53d57fadf3e1e6fd736d82b39da8f3ce7976",
+          "source": "files/creation/harbor/agents/terminus_2/tmux_session.py",
+          "patches": [
+            "0002"
+          ]
+        },
+        "harbor/trial/single_step.py": {
+          "sha256": "7aacbd1c1853958248377a203f565375bef0f144339be92a4c6a9eae4ad6029f",
+          "upstream_sha256": "15deae31efe1287e3db4a4f57d7732eeffd28a8c4fd385e86193e81a3c944218",
+          "source": "files/creation/harbor/trial/single_step.py",
+          "patches": [
+            "0005"
+          ]
+        }
+      },
+      "tree_sha256": "a16b64f9cc467e509f31a25201842e9eec15ff828e26925297f00f2f6c7da03d"
+    },
+    "creation-0902": {
+      "description": "Historical: first Creation resume overlay (2026-09-02), codex.py still the site version (resume --last), base.py pristine.",
+      "used_by": [
+        "Creation Qwen main-table builders (started 2026-09-01T18:26Z)",
+        "Creation builder retries started before 2026-09-03T04:01Z (harness/opencode_gpt55 PDF, dev_count/4dev PPTX)"
+      ],
+      "files": {
+        "harbor/agents/installed/codex.py": {
+          "sha256": "eb8c6e933aae897546c9ca240eabcae5c367e806e70ee85eff6c1f1d3b2feeaf",
+          "upstream_sha256": "265ed0bb9d930defe05aaf487044f463529af53380f2049523b467fb92e64f95",
+          "source": "files/creation-0902/harbor/agents/installed/codex.py",
+          "patches": [
+            "0001"
+          ]
+        },
+        "harbor/agents/terminus_2/tmux_session.py": {
+          "sha256": "caa9b3a874e8ff7b30ded6a100444a645adce3b74cd0f48ec00b731453abc623",
+          "upstream_sha256": "38642b794c3358809dabddfb36ea53d57fadf3e1e6fd736d82b39da8f3ce7976",
+          "source": "files/creation-0902/harbor/agents/terminus_2/tmux_session.py",
+          "patches": [
+            "0002"
+          ]
+        },
+        "harbor/trial/single_step.py": {
+          "sha256": "7aacbd1c1853958248377a203f565375bef0f144339be92a4c6a9eae4ad6029f",
+          "upstream_sha256": "15deae31efe1287e3db4a4f57d7732eeffd28a8c4fd385e86193e81a3c944218",
+          "source": "files/creation-0902/harbor/trial/single_step.py",
+          "patches": [
+            "0005"
+          ]
+        }
+      },
+      "tree_sha256": "1ba4b681ba51ae37e6cd15c580f13787306f60500465fb4066d8aa7f32dd1033"
+    },
+    "creation-glm-0903": {
+      "description": "Historical: creation-0902 plus the claude_code.py provider patch.",
+      "used_by": [
+        "Creation GLM-5.3 + Claude Code builder (the original run and the rerun the paper reports)"
+      ],
+      "files": {
+        "harbor/agents/installed/claude_code.py": {
+          "sha256": "94f99c4471afa6926e4b8fa0441e6ddae67e7f4dcd73d4558335762f65923464",
+          "upstream_sha256": "c151b582cdbc9ce064bb1557fdd3f9a7a11d564dd5e45c2faafffd7bfdcb0701",
+          "source": "files/creation-glm-0903/harbor/agents/installed/claude_code.py",
+          "patches": [
+            "0006"
+          ]
+        },
+        "harbor/agents/installed/codex.py": {
+          "sha256": "eb8c6e933aae897546c9ca240eabcae5c367e806e70ee85eff6c1f1d3b2feeaf",
+          "upstream_sha256": "265ed0bb9d930defe05aaf487044f463529af53380f2049523b467fb92e64f95",
+          "source": "files/creation-glm-0903/harbor/agents/installed/codex.py",
+          "patches": [
+            "0001"
+          ]
+        },
+        "harbor/agents/terminus_2/tmux_session.py": {
+          "sha256": "caa9b3a874e8ff7b30ded6a100444a645adce3b74cd0f48ec00b731453abc623",
+          "upstream_sha256": "38642b794c3358809dabddfb36ea53d57fadf3e1e6fd736d82b39da8f3ce7976",
+          "source": "files/creation-glm-0903/harbor/agents/terminus_2/tmux_session.py",
+          "patches": [
+            "0002"
+          ]
+        },
+        "harbor/trial/single_step.py": {
+          "sha256": "7aacbd1c1853958248377a203f565375bef0f144339be92a4c6a9eae4ad6029f",
+          "upstream_sha256": "15deae31efe1287e3db4a4f57d7732eeffd28a8c4fd385e86193e81a3c944218",
+          "source": "files/creation-glm-0903/harbor/trial/single_step.py",
+          "patches": [
+            "0005"
+          ]
+        }
+      },
+      "tree_sha256": "b38a28a34577f04a1f8038c2a603bd85b16e57470cbafa9aa680daf07a0c996c"
+    }
+  },
+  "patches": [
+    {
+      "id": "0001",
+      "slug": "codex-provider-config-toml",
+      "path": "harbor/agents/installed/codex.py",
+      "from": "pristine",
+      "to": "site",
+      "title": "Codex: upload an explicit provider config.toml from CODEX_CONFIG_TOML_PATH",
+      "hunks": [
+        "C1 _resolve_config_toml_path()",
+        "C2 resolve + remote path",
+        "C3 upload, chown, cp to $CODEX_HOME/config.toml"
+      ],
+      "category": "b",
+      "profiles": [
+        "site",
+        "creation",
+        "creation-0902",
+        "creation-glm-0903"
+      ],
+      "score_effect": "Indirect but universal: this is how every AgentSWE builder gets its provider, model, reasoning effort and [features] multi_agent=false. Without it the builder runs against the default OpenAI provider (run invalid, not merely different).",
+      "upstream": "Equivalent native feature since harbor 0.21.0 (Codex(config=<path|inline>)); not byte-identical (0.21 re-renders the TOML via toml.dumps). Not backported to 0.20.x.",
+      "file": "series/0001-codex-provider-config-toml.patch",
+      "added_lines": 29,
+      "removed_lines": 0
+    },
+    {
+      "id": "0002",
+      "slug": "terminus2-tmux-env-prefix",
+      "path": "harbor/agents/terminus_2/tmux_session.py",
+      "from": "pristine",
+      "to": "site",
+      "title": "Terminus-2: pass session env through `env K=V tmux new-session` instead of `-e` (tmux < 3.2)",
+      "hunks": [
+        "T1 _tmux_start_session"
+      ],
+      "category": "a",
+      "profiles": [
+        "site",
+        "creation",
+        "creation-0902",
+        "creation-glm-0903"
+      ],
+      "score_effect": "TerminalBench only (Terminus-2 starter/candidate). On task images with tmux 3.1c the upstream `-e` makes session start fail whenever extra_env is non-empty (AgentSWE always passes AGENTSWE_TB_*). Not reachable from the Lite tasks.",
+      "upstream": "Still `-e` in 0.21.0-0.23.0: upstream candidate.",
+      "file": "series/0002-terminus2-tmux-env-prefix.patch",
+      "added_lines": 9,
+      "removed_lines": 6
+    },
+    {
+      "id": "0003",
+      "slug": "codex-stream-disconnect-pattern",
+      "path": "harbor/agents/installed/base.py",
+      "from": "pristine",
+      "to": "creation",
+      "title": "Classify Codex 'stream disconnected before completion' as ApiConnectionClosedError",
+      "hunks": [
+        "B1 ERROR_PATTERNS entry"
+      ],
+      "category": "a",
+      "profiles": [
+        "creation"
+      ],
+      "score_effect": "Changes only the exception class of a failed builder command. With builder resume enabled (the launcher of the paper's earlier Creation runs) such failures become resumable; with resume disabled (Lite) only result.json exception_type changes - both are caught by single_step and the Creation adapter withholds the phase either way.",
+      "upstream": "0.23.0 only matches Claude Code's 'API Error: stream closed before completion': upstream candidate.",
+      "file": "series/0003-codex-stream-disconnect-pattern.patch",
+      "added_lines": 4,
+      "removed_lines": 0
+    },
+    {
+      "id": "0004",
+      "slug": "codex-resume-root-session",
+      "path": "harbor/agents/installed/codex.py",
+      "from": "site",
+      "to": "creation",
+      "title": "Codex resume: resume the single root thread by id instead of `resume --last`",
+      "hunks": [
+        "C4 _root_session_selector_script",
+        "C5 _ROOT_SESSION_MARKER",
+        "C6 selector in resume setup",
+        "C7 resume \"$(cat marker)\" (+ output_path refactor, no-op)",
+        "C8 persisted_sessions_dir refactor (no-op)"
+      ],
+      "category": "a (C4-C7); d (refactor parts of C7, C8)",
+      "profiles": [
+        "creation"
+      ],
+      "score_effect": "Only on a resumed builder trial. `resume --last` can pick a sub-agent thread; the selector refuses unless exactly one root thread exists. With multi-agent disabled (Lite policy) both select the same thread.",
+      "upstream": "0.23.0 still uses `resume --last`: upstream candidate (generic multi-agent bug).",
+      "file": "series/0004-codex-resume-root-session.patch",
+      "added_lines": 59,
+      "removed_lines": 11
+    },
+    {
+      "id": "0005",
+      "slug": "single-step-infra-resume",
+      "path": "harbor/trial/single_step.py",
+      "from": "pristine",
+      "to": "creation",
+      "title": "SingleStepTrial: opt-in in-place resume after transient API/network failures",
+      "hunks": [
+        "S1 imports",
+        "S2 env/backoff/atomic-json helpers",
+        "S3 _run_agent resume loop + infrastructure_resume_state.json"
+      ],
+      "category": "b",
+      "profiles": [
+        "creation",
+        "creation-0902",
+        "creation-glm-0903"
+      ],
+      "score_effect": "Builder phase only, only when AGENTSWE_INFRA_RESUME_ENABLED=1 (set by the launcher of the paper's earlier Creation runs; NOT set for the Lite runs). With it disabled the behaviour equals upstream (ApiError subclasses NonZeroAgentExitCodeError and is recorded). Known quirks: each resume restarts the full agent timeout; agent_execution timing and AgentContext are overwritten by the last attempt; state file not finalised on a terminal non-infra error.",
+      "upstream": "No equivalent through 0.23.0 (job-level RetryConfig starts a fresh trial). Recommended: move into the AgentSWE Codex agent class.",
+      "file": "series/0005-single-step-infra-resume.patch",
+      "added_lines": 153,
+      "removed_lines": 11
+    },
+    {
+      "id": "0006",
+      "slug": "claude-code-provider-from-agent-env",
+      "path": "harbor/agents/installed/claude_code.py",
+      "from": "pristine",
+      "to": "creation-glm-0903",
+      "title": "Claude Code: take ANTHROPIC_BASE_URL / ANTHROPIC_MODEL from the agent env",
+      "hunks": [
+        "G1 ANTHROPIC_BASE_URL",
+        "G2 ANTHROPIC_MODEL"
+      ],
+      "category": "b",
+      "profiles": [
+        "creation-glm-0903"
+      ],
+      "score_effect": "GLM-5.3 + Claude Code row only (provider routing; without it the harness talks to the default Anthropic endpoint/model).",
+      "upstream": "Equivalent since 0.21.0 (base URL) / 0.22.0 (ANTHROPIC_MODEL from agent env).",
+      "file": "series/0006-claude-code-provider-from-agent-env.patch",
+      "added_lines": 8,
+      "removed_lines": 2
+    },
+    {
+      "id": "0007",
+      "slug": "docker-cpus-yield-to-task-cpu-quota",
+      "path": "harbor/environments/docker/docker.py",
+      "from": "pristine",
+      "to": "site",
+      "title": "Docker: no resources-override cpus for a main service whose task compose sets cpu_quota/cpu_period",
+      "hunks": [
+        "D1 _task_compose_sets_cpu_quota()",
+        "D2 _write_resources_compose_file: cpu_limit None when D1"
+      ],
+      "category": "a",
+      "profiles": [
+        "site"
+      ],
+      "score_effect": "None on scores; it decides whether an Editing Builder container starts at all. Every Editing task writes its Builder compose with cpu_quota=800000/cpu_period=100000 (the 8-CPU contract its builder_resources.py checks), and Harbor adds cpus=8 from task.toml. Docker Compose 2.40 sends cpus as NanoCPUs next to CpuPeriod, which the Docker daemon refuses (Conflicting options: Nano CPUs and CPU Period cannot both be set), so no Builder started there. Compose v2.5.0 ignores cpus: those Builders ran with quota/period only and NanoCPUs 0, which is what 0007 gives under every compose version. Composes without cpu_quota/cpu_period (all Creation and Optimization ones) still get cpus.",
+      "upstream": "Not checked against later Harbor releases; upstream candidate.",
+      "file": "series/0007-docker-cpus-yield-to-task-cpu-quota.patch",
+      "added_lines": 29,
+      "removed_lines": 1
+    }
+  ],
+  "not_shipped": [
+    {
+      "path": "harbor/environments/docker/docker.py",
+      "sha256": "badfd874ce52a347…",
+      "where": "a Creation retest deployment (no reported run)",
+      "what": "AGENTSWE_EGRESS_CONTROL_IMAGE: pin the egress sidecar to a frozen local image id",
+      "category": "c (environment) -> d for the release",
+      "why": "Only used by a Creation retest that produced no reported number. Mirror problems are handled without patching Harbor by tools/seed_egress_sidecar.py."
+    },
+    {
+      "path": "harbor/agents/terminus_2/tmux_session.py",
+      "sha256": "2769f6aeb13d8399…",
+      "where": "a Terminal-Bench harbor overlay (finish_terminalbench_salvage.py)",
+      "what": "newline keys via paste-buffer; bounded compose-exec timeouts (OPTIMIZATION_TERMINALBENCH_EXEC_TIMEOUT_SEC)",
+      "category": "d (inert)",
+      "why": "Never loaded: the sitecustomize hook prepends to harbor.agents.terminus_2.__path__ only after `import harbor.agents.terminus_2`, whose __init__ already imported tmux_session from site-packages. (tmux_session.__file__ resolves to site-packages, _transport_timeout_sec absent)."
+    },
+    {
+      "path": "harbor/trial/single_step.py",
+      "sha256": "75e308145be15c1c…",
+      "where": "Optimization harbor_overlay (runs launched with infrastructure resume)",
+      "what": "hook that delegates the builder resume loop to optimization_harbor_resume.run_with_infrastructure_resume",
+      "category": "b",
+      "why": "Shipped unchanged as a runner-side overlay (runners/optimization/harbor_overlay) that sitecustomize activates only when OPTIMIZATION_INFRA_RESUME=1, exactly as in the paper runs; patching the venv in place would also change runs that did not opt in."
+    },
+    {
+      "path": "harbor/** (392 other files)",
+      "sha256": "= wheel",
+      "where": "every Creation harbor-overlay copy",
+      "what": "full-package copy placed first on PYTHONPATH",
+      "category": "d",
+      "why": "Byte-identical to the wheel; replaced by in-place patching of 4 files."
+    }
+  ]
+}

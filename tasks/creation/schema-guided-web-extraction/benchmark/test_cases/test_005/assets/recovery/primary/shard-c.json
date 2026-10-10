@@ -1,0 +1,58 @@
+[
+  {
+    "package_id": "RC-6117",
+    "name": "Recovery parcel 17",
+    "price_usd": 31.22,
+    "quantity": 13,
+    "updated_at": "2026-07-17T09:00:00Z"
+  },
+  {
+    "package_id": "RC-6118",
+    "name": "Recovery parcel 18",
+    "price_usd": 32.39,
+    "quantity": 1,
+    "updated_at": "2026-07-18T09:00:00Z"
+  },
+  {
+    "package_id": "RC-6119",
+    "name": "Recovery parcel 19",
+    "price_usd": 33.56,
+    "quantity": 6,
+    "updated_at": "2026-07-19T09:00:00Z"
+  },
+  {
+    "package_id": "RC-6120",
+    "name": "Recovery parcel 20",
+    "price_usd": 34.73,
+    "quantity": 11,
+    "updated_at": "2026-07-20T09:00:00Z"
+  },
+  {
+    "package_id": "RC-6121",
+    "name": "Recovery parcel 21",
+    "price_usd": 35.9,
+    "quantity": 16,
+    "updated_at": "2026-07-21T09:00:00Z"
+  },
+  {
+    "package_id": "RC-6122",
+    "name": "Recovery parcel 22",
+    "price_usd": 37.07,
+    "quantity": 4,
+    "updated_at": "2026-07-01T09:00:00Z"
+  },
+  {
+    "package_id": "RC-6123",
+    "name": "Recovery parcel 23",
+    "price_usd": 38.24,
+    "quantity": 9,
+    "updated_at": "2026-07-02T09:00:00Z"
+  },
+  {
+    "package_id": "RC-6124",
+    "name": "Recovery parcel 24",
+    "price_usd": 39.41,
+    "quantity": 14,
+    "updated_at": "2026-07-03T09:00:00Z"
+  }
+]

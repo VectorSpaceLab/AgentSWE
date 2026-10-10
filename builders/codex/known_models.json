@@ -1,0 +1,26 @@
+{
+  "_comment": "Non-built-in builder models. context_window = prompt tokens the provider accepts after reserving the broker's completion cap. Descriptions match the AgentSWE-Lite v1 catalog so regenerated entries are byte identical.",
+  "deepseek-flash": {
+    "display_name": "DeepSeek-V4.1-Flash",
+    "description": "AgentSWE-Lite builder via the DeepSeek official API (Responses wire).",
+    "context_window": 272000
+  },
+  "Qwen/Qwen3.6-35B-A3B": {
+    "display_name": "Qwen3.6-35B-A3B",
+    "description": "AgentSWE-Lite builder via the Lite chat broker to DeepInfra.",
+    "context_window": 196608,
+    "aliases": [
+      "Qwen3.6-35B-A3B"
+    ]
+  },
+  "Qwen3.6-35B-A3B": {
+    "display_name": "Qwen3.6-35B-A3B",
+    "description": "Short-name alias of Qwen/Qwen3.6-35B-A3B (Codex records the short name).",
+    "context_window": 196608
+  },
+  "deepseek-v4-pro": {
+    "display_name": "DeepSeek-V4-Pro",
+    "description": "AgentSWE builder via the DeepSeek official API (Responses wire).",
+    "context_window": 272000
+  }
+}

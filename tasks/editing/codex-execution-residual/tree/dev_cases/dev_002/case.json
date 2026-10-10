@@ -1,0 +1,7 @@
+{
+  "case_id": "dev_002",
+  "scenario": "mixed_spill_range",
+  "required_actions": ["mixed_spill"],
+  "max_action_invocations": 1,
+  "spill": true
+}

@@ -1,0 +1,130 @@
+{
+  "id": "openhands-effect-recovery",
+  "family": "editing",
+  "short": "openhands",
+  "title": "OpenHands effect recovery",
+  "version": "13-edit-openhands-effect-recovery-agentloop-v1",
+  "tier": "T1",
+  "lite": false,
+  "status": "runnable",
+  "runner": "editing_agentloop_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe"
+  ],
+  "envs": [
+    "openhands-effect-recovery-ledger-edit-v1"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": true,
+    "systemd_delegation": true,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git",
+      "systemd-run",
+      "bwrap",
+      "node",
+      "curl"
+    ],
+    "disk_gb": 10
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 5,
+    "builder_session_sec": 18000,
+    "score": "Result only (Code axis skipped_by_policy)",
+    "runtime_model": "deepseek-flash/high",
+    "judge": "deepseek-flash/max, max_output_tokens 64000",
+    "early_stop_resample": "formal only, 1 extra logical request",
+    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+  },
+  "smoke": {
+    "profile": "single-dev-two-round-hidden-smoke-v1",
+    "accepted_dev_rounds": 2,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 28800,
+    "note": "this is the readiness/admission run; scores are not comparable"
+  },
+  "upstream": {
+    "repo": "https://github.com/OpenHands/OpenHands",
+    "commit": "7fa7b16968eeae6d8f5ea4f8136225ac8e621fe6",
+    "git_tree": "1d56bdf0b23140fc61ce8318b9cee720db351fe9",
+    "license": "MIT",
+    "redistribute_a0": false
+  },
+  "runner_config": {
+    "tree": "tree",
+    "legacy_tree_name": "13-edit-openhands-effect-recovery-agentloop-v1",
+    "a0": {
+      "fetch": "a0/fetch.sh",
+      "dest": "tree/input/repository",
+      "lang_options": [
+        "en-upstream"
+      ],
+      "evaluator_digest_pins": []
+    },
+    "hidden_issued": null,
+    "formal_extra_flags": [],
+    "task_environment": {},
+    "render_tokens": "see staging README: every @@AGENTSWE_*@@ token must be rendered to an absolute path at setup",
+    "harbor_profile": "site"
+  },
+  "language": {
+    "task_docs_as_run": "zh (machine translation of 2026-08-19 + later zh edits)",
+    "a0_as_run": "zh (machine-translated docs/fixtures in a0)",
+    "a0_functional_risk_files": 2,
+    "english_task_docs": "lang/en-backtranslation/ (zh->en back-translation made for the anonymous repo)",
+    "paper_as_run": {
+      "task_docs": "zh (machine translation of 2026-08-19 + later zh edits)",
+      "a0": "zh (machine-translated docs/fixtures in a0)"
+    },
+    "release_language": "en",
+    "release_task_docs": "English backtranslation under lang/en-backtranslation/ where present; native English otherwise",
+    "release_a0": "en-upstream",
+    "release_cjk_check": "tools/scan.py --release"
+  },
+  "paper": {
+    "columns": [
+      "DeepSeek-V4-Pro",
+      "GPT-5.6-Sol",
+      "GPT-5.5",
+      "DeepSeek-V4-Flash",
+      "Qwen3.6-35B-A3B"
+    ],
+    "result": [
+      24.33,
+      4.0,
+      20.5,
+      0,
+      0
+    ]
+  },
+  "notes": [
+    "Runnable: with deepseek-flash for every role, a readiness smoke completes two accepted dev rounds (dev_001 0 as candidate_timeout, then 99) and hidden test_001 Result 13 with a valid publishable contract, independent review 10/10; the release-provenance formal gate dry run passes.",
+    "Known limitation: a readiness attempt is void (public_infrastructure_invalid) when the candidate product throws inside the evaluator /state route (storage API misuse, or inspectRecovery throwing on a fresh conversation), which the paper harness counts as infrastructure.",
+    "Release change (2026-10-10): Docker 29 removes an exited or stopped --rm container asynchronously: for several seconds `docker inspect` still shows it and `docker rm -f` answers \"removal of container ... is already in progress\" (exit 1); Docker 24 has removed it by then. harbor/formal_one_stop.py retain_owned_container: the lower and Builder brokers run with --rm, so after `docker stop` Docker 29 shows them as removing (Docker 24 had removed them); readiness retention now waits up to 30 s for that removal and records the broker as absent instead of handing the coordinator a container that disappears. cleanup_owned_container records rm's stderr and waits the same way when rm answers \"already in progress\". lower_agent/isolated_runtime.py already polled. Any other rm refusal is judged as before, and a container still present after the wait is not absent. Seen with Docker 29.2.1."
+  ]
+}

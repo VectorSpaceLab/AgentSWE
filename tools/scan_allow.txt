@@ -1,0 +1,39 @@
+# <path-glob> <rule>  # reason
+broker/tests/fakes.py secret  # synthetic provider key used only against the offline fake upstream
+builders/codex/tests/test_gen_codex_config.py secret:openai-style  # fixture proving literal credentials are rejected
+tasks/editing/*/a0/*.sha256 email  # upstream file listings: retina asset names such as icon@2x.png
+tasks/editing/*/a0/*.sha256 path:home  # upstream file listings: frontend routes under home/
+tasks/editing/codex-execution-residual/tree/evaluator/verify_0911_replay_feedback_projection.py path:home  # synthetic path in a leak test
+tasks/editing/deepcode-claim-traceability/tree/evaluator/tests/test_public_execution_diagnostic_v61.py path:home  # synthetic path in a leak test
+tasks/editing/dyad-acceptance-driven/tree/evaluator/tests/test_0910_native_controller.py path:home  # synthetic path in a leak test
+tasks/editing/claude-policy-provenance/tree/test_cases/test_003/assets/events.json secret:private-key  # synthetic key header: the hook-policy leak-detection fixture
+tasks/creation/*/adapter/adapter.py scrub:literal-home-in-python  # default of AGENTSWE_HARBOR_ROOT / AGENTSWE_LIBREOFFICE_ROOT / AGENTSWE_EVALUATOR_DEPENDENCIES, which the creation runner always sets
+tasks/creation/web-research-report/benchmark/evaluator/independent_sources.py scrub:literal-home-in-python  # default of AGENTSWE_PDF_READER_PYTHON, set from runner_config.env
+tasks/optimization/terminalbench/benchmark/evaluator/native_tasks/* email  # upstream Terminal-Bench task trees (author contacts, synthetic data), byte-identical to the pinned upstream
+tasks/optimization/terminalbench/benchmark/evaluator/native_tasks/train-fasttext/tests/private_test.txt term:f7360ea7eb  # upstream Yelp review test data
+tasks/optimization/terminalbench/benchmark/evaluator/native_tasks/train-fasttext/tests/private_test.txt cjk  # upstream Yelp review test data (two reviews quote Chinese dish names as \u escapes)
+tasks/optimization/terminalbench/benchmark/evaluator/native_tasks/mteb-leaderboard/task.yaml term:f19656b7dd  # upstream task text naming a public embedding-model family
+tasks/optimization/terminalbench/benchmark/evaluator/native_tasks/sanitize-git-repo/tests/* secret  # synthetic credentials the upstream task asks the agent to remove
+tasks/optimization/terminalbench/benchmark/evaluator/native_tasks/configure-git-webserver/solution.sh path:home  # upstream reference solution; paths inside the task container
+tasks/optimization/terminalbench/benchmark/evaluator/task_metadata.json email  # upstream task author contacts
+tasks/optimization/osworld/benchmark/evaluator/task_metadata.json path:home  # VM user paths (/home/user/) in the upstream OSWorld task configs
+tasks/optimization/osworld/benchmark/evaluator/task_metadata.json email  # addresses in the upstream OSWorld task configs
+runners/optimization/optimization_native/osworld_images/task_metadata.json path:home  # evaluator copy of the same upstream task configs (digest-pinned by the controller)
+runners/optimization/optimization_native/osworld_images/task_metadata.json email  # evaluator copy of the same upstream task configs
+tasks/optimization/osworld/benchmark/test_cases/*/input.md email  # account addresses in upstream OSWorld instructions
+runners/editing/control/test_judge_https.py cjk  # synthetic non-ASCII fixture value in an offline control-plane test
+runners/editing/control/test_judge_stream_integration.py cjk  # synthetic non-ASCII fixture value in an offline control-plane test
+runners/editing/control/test_responses_stream.py cjk  # synthetic non-ASCII fixture value in an offline control-plane test
+runners/editing/optional/chat-wire/builder_broker_chat_upstream.py cjk  # upstream README heading retained in an optional compatibility docstring
+tasks/creation/scientific-pdf-translation/benchmark/dev_cases/*/assets/glossary.csv cjk  # builder-visible translation authority intentionally contains CJK terms
+tasks/creation/scientific-pdf-translation/builder_package/dev_cases/*/assets/glossary.csv cjk  # builder-visible translation authority intentionally contains CJK terms
+tasks/creation/scientific-pdf-translation/benchmark/test_cases/*/assets/glossary.csv cjk  # evaluator-owned translation authority intentionally contains CJK terms
+README_zh.md cjk  # Chinese translation of README.md for Chinese-speaking users; README.md stays authoritative
+README.md term:1cc58feb6b  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)
+README.md term:ff7c63e70e  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)
+README.md term:01b4480033  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)
+README.md term:f9cc0f5efc  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)
+README_zh.md term:1cc58feb6b  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)
+README_zh.md term:ff7c63e70e  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)
+README_zh.md term:01b4480033  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)
+README_zh.md term:f9cc0f5efc  # author names in the citation block; the paper is public on arXiv (user decision 2026-10-08)

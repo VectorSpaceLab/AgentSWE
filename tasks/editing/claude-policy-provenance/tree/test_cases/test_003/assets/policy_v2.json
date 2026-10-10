@@ -1,0 +1,77 @@
+{
+    "schema_version": 2,
+    "policy_id": "hidden-delegation",
+    "policy_epoch": 10,
+    "previous_policy_snapshot_digest": "sha256:9562ef03f828d9e80b610b6d416db31aedb05caad3f8f383805eb7e9e95dce0b",
+    "revision": "mcp-delegation-v2",
+    "mode": "enforce",
+    "default_decision": "deny",
+    "tools": {},
+    "paths": {
+        "allow": [
+            "src",
+            "src/**"
+        ],
+        "deny": [
+            "secrets/**",
+            ".env"
+        ]
+    },
+    "commands": {
+        "allow": [],
+        "deny": [],
+        "audit_only": [],
+        "rewrites": []
+    },
+    "network": {
+        "allow_hosts": [
+            "example.test"
+        ],
+        "deny_hosts": [
+            "blocked.test",
+            "169.254.169.254"
+        ]
+    },
+    "mcp": {
+        "mcp__files__inspect": {
+            "decision": "allow",
+            "require_delegation": true,
+            "path_fields": [
+                "path",
+                "/request/root"
+            ],
+            "url_fields": [
+                "url"
+            ],
+            "header_fields": [
+                "headers",
+                "authorization"
+            ],
+            "deny_paths": [
+                "secrets/**"
+            ],
+            "deny_hosts": [
+                "blocked.test",
+                "169.254.169.254"
+            ]
+        }
+    },
+    "reservation": {
+        "max_inflight": 1,
+        "max_session_inflight": 1,
+        "lease_seconds": 2,
+        "reclaim_expired": true
+    },
+    "approval": {
+        "threshold": 2,
+        "ticket_seconds": 4,
+        "principals": ["mcp-a", "mcp-b", "mcp-c"],
+        "tools": ["mcp__files__inspect"],
+        "principal_groups": {"mcp-a":"release", "mcp-b":"security", "mcp-c":"release"},
+        "required_groups": ["release", "security"]
+    },
+    "ownership": {"handoff_seconds": 5, "allowed_targets": ["mcp-recovery", "mcp-spare"]},
+    "delivery": {"claim_seconds": 3, "max_pending": 8, "require_completion": true},
+    "repair": {"max_quarantine_bytes": 1048576, "required_verifiers": 2, "verifiers": ["mcp-repair-a", "mcp-repair-b"]},
+    "continuation": {"token_seconds": 4, "max_pending": 2, "tools": ["mcp__files__inspect"]}
+}

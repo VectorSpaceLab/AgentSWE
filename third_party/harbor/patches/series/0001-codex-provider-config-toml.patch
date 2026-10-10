@@ -1,0 +1,60 @@
+Subject: [PATCH 0001] Codex: upload an explicit provider config.toml from CODEX_CONFIG_TOML_PATH
+
+Applies on top of profile 'pristine'.
+
+--- a/harbor/agents/installed/codex.py
++++ b/harbor/agents/installed/codex.py
+@@ -997,6 +997,18 @@
+ 
+         return None
+ 
++    def _resolve_config_toml_path(self) -> Path | None:
++        """Resolve an explicitly selected Codex provider config, if any."""
++        explicit = self._get_env("CODEX_CONFIG_TOML_PATH")
++        if not explicit:
++            return None
++        path = Path(explicit)
++        if not path.is_file():
++            raise ValueError(
++                f"CODEX_CONFIG_TOML_PATH points to non-existent file: {explicit}"
++            )
++        return path
++
+     @override
+     @with_prompt_template
+     async def run(
+@@ -1018,10 +1030,12 @@
+         #   2. CODEX_FORCE_AUTH_JSON=<truthy> → use ~/.codex/auth.json
+         #   3. Default: use OPENAI_API_KEY
+         auth_json_path = self._resolve_auth_json_path()
++        config_toml_path = self._resolve_config_toml_path()
+ 
+         remote_codex_home = self._REMOTE_CODEX_HOME.as_posix()
+         remote_secrets_dir = self._REMOTE_CODEX_SECRETS_DIR.as_posix()
+         remote_auth_path = (self._REMOTE_CODEX_SECRETS_DIR / "auth.json").as_posix()
++        remote_config_path = (self._REMOTE_CODEX_SECRETS_DIR / "config.toml").as_posix()
+         agent_sessions_dir = (EnvironmentPaths.agent_dir / "sessions").as_posix()
+ 
+         env: dict[str, str] = {
+@@ -1072,6 +1086,21 @@
+             )
+ 
+         setup_command += config_toml_block
++
++        if config_toml_path:
++            self.logger.debug(
++                "Codex config: using config.toml from %s", config_toml_path
++            )
++            await environment.upload_file(config_toml_path, remote_config_path)
++            if environment.default_user is not None:
++                await self.exec_as_root(
++                    environment,
++                    command=f"chown {environment.default_user} {remote_config_path}",
++                )
++            setup_command += (
++                f"\ncp {shlex.quote(remote_config_path)} "
++                '"$CODEX_HOME/config.toml"\n'
++            )
+ 
+         skills_command = self._build_register_skills_command()
+         if skills_command:

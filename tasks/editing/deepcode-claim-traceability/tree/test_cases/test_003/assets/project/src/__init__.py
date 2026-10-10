@@ -1,0 +1,1 @@
+"""Synthetic update-decay project."""

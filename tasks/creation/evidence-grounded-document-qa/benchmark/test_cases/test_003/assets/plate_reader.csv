@@ -1,0 +1,48 @@
+well,sample,absorbance,run_flag
+A01,blank-1,0.068,blank
+A02,blank-2,0.072,blank
+B05,Orchid-K,0.32,sample
+B06,Orchid-K,0.33,sample
+B07,Control-Q,0.225,invalidate by RN-8
+B08,Control-Q,0.195,valid
+C01,Iris-M distractor,0.61,different assay
+D09,wash/background,0.046,not a requested sample
+D10,wash/background,0.049,not a requested sample
+D11,wash/background,0.052,not a requested sample
+D12,wash/background,0.055,not a requested sample
+D13,wash/background,0.058,not a requested sample
+D14,wash/background,0.04,not a requested sample
+D15,wash/background,0.043,not a requested sample
+D16,wash/background,0.046,not a requested sample
+D17,wash/background,0.049,not a requested sample
+D18,wash/background,0.052,not a requested sample
+D19,wash/background,0.055,not a requested sample
+D20,wash/background,0.058,not a requested sample
+D21,wash/background,0.04,not a requested sample
+D22,wash/background,0.043,not a requested sample
+D23,wash/background,0.046,not a requested sample
+D24,wash/background,0.049,not a requested sample
+D25,wash/background,0.052,not a requested sample
+D26,wash/background,0.055,not a requested sample
+D27,wash/background,0.058,not a requested sample
+D28,wash/background,0.04,not a requested sample
+D29,wash/background,0.043,not a requested sample
+D30,wash/background,0.046,not a requested sample
+D31,wash/background,0.049,not a requested sample
+D32,wash/background,0.052,not a requested sample
+D33,wash/background,0.055,not a requested sample
+D34,wash/background,0.058,not a requested sample
+D35,wash/background,0.04,not a requested sample
+D36,wash/background,0.043,not a requested sample
+D37,wash/background,0.046,not a requested sample
+D38,wash/background,0.049,not a requested sample
+D39,wash/background,0.052,not a requested sample
+D40,wash/background,0.055,not a requested sample
+D41,wash/background,0.058,not a requested sample
+D42,wash/background,0.04,not a requested sample
+D43,wash/background,0.043,not a requested sample
+D44,wash/background,0.046,not a requested sample
+D45,wash/background,0.049,not a requested sample
+D46,wash/background,0.052,not a requested sample
+D47,wash/background,0.055,not a requested sample
+D48,wash/background,0.058,not a requested sample

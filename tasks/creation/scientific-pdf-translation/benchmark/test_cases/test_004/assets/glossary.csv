@@ -1,0 +1,5 @@
+source,target,authority
+soil organic carbon,토양 유기 탄소,required
+turnover time,회전 시간,required
+moisture response,수분 반응,required
+sensitivity coefficient,민감도 계수,required

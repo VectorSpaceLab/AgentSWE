@@ -1,0 +1,22 @@
+{
+  "scenario": "quarantined-repository-set-publish",
+  "plan_id": "public-federated-publish",
+  "coordinator_id": "public-owner-a",
+  "lease_seconds": 5,
+  "max_workers": 2,
+  "repositories": {
+    "root": {"id": "app", "files": {"app.txt": "app-base\n"}, "base_state_policy": "require_clean"},
+    "component": {"id": "core", "files": {"core.txt": "core-base\n"}, "base_state_policy": "require_clean"},
+    "gitlink_path": "vendor/core"
+  },
+  "subtasks": [
+    {"id": "app-edit", "repository_id": "app", "depends_on": [], "allowed_paths": ["app.txt"], "worker": "worker-app.json", "test": "test-app.json"},
+    {"id": "core-edit", "repository_id": "core", "depends_on": [], "allowed_paths": ["core.txt"], "worker": "worker-core.json", "test": "test-core.json"}
+  ],
+  "integration_tests": [
+    {"repository_id": "core", "spec": "test-core.json"},
+    {"repository_id": "app", "spec": "test-app.json"}
+  ],
+  "participant_order": ["core", "app"],
+  "crash": {"after": "federation_prepared", "occurrence": 1, "mode": "exit75"}
+}

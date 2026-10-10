@@ -1,0 +1,145 @@
+{
+  "id": "aider-worktree-transaction",
+  "family": "editing",
+  "short": "aider",
+  "title": "Aider worktree transaction",
+  "version": "12-edit-aider-worktree-transaction-agentloop-v1",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "editing_agentloop_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "edit-candidate-python311",
+    "egress-sidecar-base",
+    "harbor-kernel-probe"
+  ],
+  "envs": [
+    "aider-worktree-transaction-ledger-edit-v1"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": true,
+    "systemd_delegation": true,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git",
+      "systemd-run"
+    ],
+    "disk_gb": 10
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 5,
+    "builder_session_sec": 18000,
+    "score": "Result only (Code axis skipped_by_policy)",
+    "runtime_model": "deepseek-flash/high",
+    "judge": "deepseek-flash/max, max_output_tokens 64000",
+    "early_stop_resample": "formal only, 1 extra logical request",
+    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+  },
+  "smoke": {
+    "profile": "single-dev-two-round-hidden-smoke-v1",
+    "accepted_dev_rounds": 2,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 28800,
+    "note": "this is the readiness/admission run; scores are not comparable"
+  },
+  "upstream": {
+    "repo": "https://github.com/Aider-AI/aider",
+    "commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "git_tree": "3a8257195db51e5c5cd3680dfd2022027f9c7904",
+    "license": "Apache-2.0",
+    "redistribute_a0": false
+  },
+  "runner_config": {
+    "tree": "tree",
+    "legacy_tree_name": "12-edit-aider-worktree-transaction-agentloop-v1",
+    "a0": {
+      "fetch": "a0/fetch.sh",
+      "dest": "tree/input/repository",
+      "lang_options": [
+        "en-upstream"
+      ],
+      "evaluator_digest_pins": [
+        [
+          "evaluator/code_inputs.py",
+          "BASELINE_DIGEST",
+          "1787cfbc6c4c79c4b918f7cd155d6274204651bbdddfc6689bac83c674e13575",
+          "matches neither a0: control/code_eval.py tree_digest is c8b05f41fc0c15657071e79c85d6e3bd49c7513ceec81f093b9b1af1d95de283 on the paper zh-asrun a0 and 60526b93b85fe63920650291e38c7ec0a76bb1041f66a7c818561b4276e50e73 on en-upstream. Read only by the retired Code axis and by the Code preflight in harbor/acceptance_reuse.py, which fail on either a0 (pre-existing, not a translation effect)"
+        ]
+      ]
+    },
+    "hidden_issued": null,
+    "formal_extra_flags": [],
+    "task_environment": {},
+    "render_tokens": "see staging README: every @@AGENTSWE_*@@ token must be rendered to an absolute path at setup",
+    "harbor_profile": "site"
+  },
+  "language": {
+    "task_docs_as_run": "zh (machine translation of 2026-08-19 + later zh edits)",
+    "a0_as_run": "zh (machine-translated docs/fixtures in a0)",
+    "a0_functional_risk_files": 10,
+    "english_task_docs": "lang/en-backtranslation/ (zh->en back-translation made for the anonymous repo)",
+    "paper_as_run": {
+      "task_docs": "zh (machine translation of 2026-08-19 + later zh edits)",
+      "a0": "zh (machine-translated docs/fixtures in a0)"
+    },
+    "release_language": "en",
+    "release_task_docs": "English backtranslation under lang/en-backtranslation/ where present; native English otherwise",
+    "release_a0": "en-upstream",
+    "release_cjk_check": "tools/scan.py --release"
+  },
+  "paper": {
+    "columns": [
+      "DeepSeek-V4-Pro",
+      "GPT-5.6-Sol",
+      "GPT-5.5",
+      "DeepSeek-V4-Flash",
+      "Qwen3.6-35B-A3B"
+    ],
+    "result": [
+      47.33,
+      21.5,
+      20.0,
+      0,
+      0
+    ]
+  },
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "runs": [
+      18.33,
+      68.67,
+      31.0
+    ],
+    "mean_at_3": 39.33,
+    "sd": 26.18
+  },
+  "notes": [
+    "Includes the Lite fix: the lower-agent aider is launched with --no-detect-urls.",
+    "Runnable: under AGENTSWE_PROFILE=lite-v1.1 with deepseek-flash for every role (the five restored as-run .pre-* files in the tree), a readiness smoke completes two accepted dev rounds and hidden test_001 Result 27 (scoreable, publishable; the loss on the candidate); readiness admits the task and the formal gate dry run passes. Readiness does not resample: an attempt whose Result judge returns invalid JSON (for example unescaped quotes in an evidence string) is void.",
+    "Release change (2026-10-10): Docker 29 removes an exited or stopped --rm container asynchronously: for several seconds `docker inspect` still shows it and `docker rm -f` answers \"removal of container ... is already in progress\" (exit 1); Docker 24 has removed it by then. evaluator/harness/run_lower_agent_case.py (lower_cleanup.json after the evaluator killed a --rm turn container; the wait stays inside the case's 30 s cleanup reserve) and harbor/formal_one_stop.py cleanup_owned_containers record rm's stderr and, when rm answers \"already in progress\", wait up to 30 s for the container to be gone before deciding absence. Any other rm refusal is judged as before, and a container still present after the wait is not absent. Seen with Docker 29.2.1."
+  ]
+}

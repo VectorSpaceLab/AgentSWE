@@ -1,0 +1,392 @@
+{
+ "files": [
+  {
+   "path": "certifi/__init__.py",
+   "sha256": "7a52e5f4205f9b3d12a31898ceaa7e3f6837d19cc230700bcae1a9d91d1486c1"
+  },
+  {
+   "path": "certifi/__main__.py",
+   "sha256": "c410688fdd394d45812d118034e71fee88ba7beddd30fe1c1281bd3b232cd758"
+  },
+  {
+   "path": "certifi/cacert.pem",
+   "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f"
+  },
+  {
+   "path": "certifi/core.py",
+   "sha256": "5c55f2727746e697f7edac9e17c377d8752e0da7ecca191531b3b80403d61dad"
+  },
+  {
+   "path": "certifi/py.typed",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "certifi/tests/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "certifi/tests/test_certify.py",
+   "sha256": "7c179d1edf37f7e912b133663735fb46c6338d5d0e5f8915d11c3bc287d227b8"
+  },
+  {
+   "path": "charset_normalizer/__init__.py",
+   "sha256": "38a47146fd99867aa4d34b6a90dd1cd41b498e6d7ae5f5972f2744e7620ab877"
+  },
+  {
+   "path": "charset_normalizer/__main__.py",
+   "sha256": "cb3631311f8884a44763071295abc4bfca06770c6c47cf66af65f4f6a5c6769b"
+  },
+  {
+   "path": "charset_normalizer/api.py",
+   "sha256": "91784595934c8bafe9d1885b4de193b30a0afc367aa1e01da6b3f113c178c9f3"
+  },
+  {
+   "path": "charset_normalizer/cd.py",
+   "sha256": "e9d24e66f774aeb1045af931e78900132f6a00ffee22e8963008b9c17f0e66c6"
+  },
+  {
+   "path": "charset_normalizer/cli/__init__.py",
+   "sha256": "0fc23cea5164dbea72e3926fab19e24e2ad28ffb05c84eac8da63fd3e1b5b217"
+  },
+  {
+   "path": "charset_normalizer/cli/__main__.py",
+   "sha256": "34f2b7c980245d713b52fb3a22a8a39206734ba1ba7e0b9116e297ce0a5ff147"
+  },
+  {
+   "path": "charset_normalizer/constant.py",
+   "sha256": "be9f47bdaa26a5c712ef50573d993c9556a1a2790f6c1a5e544dcdcca65edac9"
+  },
+  {
+   "path": "charset_normalizer/legacy.py",
+   "sha256": "6e091d12fb9b4c238f94c28ecee10d5c73226ab877e956866d1bd64a522bd4a0"
+  },
+  {
+   "path": "charset_normalizer/md.py",
+   "sha256": "6f00f5f28db12e41b1064b8cd473e76142ec2c1ccd55ed3d8fbdbb4e7836b49c"
+  },
+  {
+   "path": "charset_normalizer/models.py",
+   "sha256": "040620b8010d8922816fb99fdc32b3637aa0aa3ae305e3f47724829904a27971"
+  },
+  {
+   "path": "charset_normalizer/py.typed",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "charset_normalizer/utils.py",
+   "sha256": "7cc0a38095f33057a0c8efa05fe3449598b5ae6745d72d716b1d98f95d9eb9da"
+  },
+  {
+   "path": "charset_normalizer/version.py",
+   "sha256": "1544286910af196ff1c02a1eb20b064f0cde90b4e50a4009afb762369bfe80f2"
+  },
+  {
+   "path": "idna/__init__.py",
+   "sha256": "30fa8d0cb65b5ea19a35d5f1005862a853ca1105e3bb68cd42109ecbafb97893"
+  },
+  {
+   "path": "idna/__main__.py",
+   "sha256": "e0930aeba5a3e2e2d94ca6c5fac4f72c0c4eb2be9bba283becf98e909091471c"
+  },
+  {
+   "path": "idna/cli.py",
+   "sha256": "b30a892cc35cf14ceceb42b388da5b5a71eeaa51b75914302526e8e27f310c0a"
+  },
+  {
+   "path": "idna/codec.py",
+   "sha256": "2516e8f9fee91242dd59e887f3d67bd94478541621bca0c5ad005e357eac4431"
+  },
+  {
+   "path": "idna/compat.py",
+   "sha256": "01ea40dfd71e447c647c73f8d7e16f296e4a8be7f83df519f7445432508d766a"
+  },
+  {
+   "path": "idna/core.py",
+   "sha256": "49f3abd713b73e8134443631edb31c8809e38b28c93db3f0ffddc007921460ec"
+  },
+  {
+   "path": "idna/idnadata.py",
+   "sha256": "01ffa6a3c5819a48402ba4f25ca3901fcf0e5f49903432ad74bed45ad429a699"
+  },
+  {
+   "path": "idna/intranges.py",
+   "sha256": "838f6c70b4a4a89b4084b98e3836bb8551eb8928e66fad2d893b04a287097412"
+  },
+  {
+   "path": "idna/package_data.py",
+   "sha256": "4de23de04a8014015a5df049c2c38f50c2e7dbdebdba2acf6be0da79a71e0325"
+  },
+  {
+   "path": "idna/py.typed",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "idna/uts46data.py",
+   "sha256": "8ee8cdcf942a58c7097fe5d82efe17d6306f6f9165234b7af9ed6620bb206cf9"
+  },
+  {
+   "path": "requests/__init__.py",
+   "sha256": "311157e7fa4aa9166c827d5237e6fd694eeb5ca549ee40e2e90f89f21abcd56e"
+  },
+  {
+   "path": "requests/__version__.py",
+   "sha256": "abba90670b0370a3dc40d97c2dea46a35d4bec941ff10d7c3cf3098ef04a17f9"
+  },
+  {
+   "path": "requests/_internal_utils.py",
+   "sha256": "4c7d8d132c9898fc7d715e473f3ac74785ddc4ab96d2c9240f87835dc6d981ff"
+  },
+  {
+   "path": "requests/_types.py",
+   "sha256": "d06df79f54a279c0cc3faec596c446246d5ad14edfd529eb328defbd62a44a89"
+  },
+  {
+   "path": "requests/adapters.py",
+   "sha256": "647eabd4453de232aa40b55ff033d6f19778910b7e7069c51fdf63076fc77493"
+  },
+  {
+   "path": "requests/api.py",
+   "sha256": "4d15480ac046f089209798e8650476ef4a28ebe6f81b400758f8ef42ec6b5509"
+  },
+  {
+   "path": "requests/auth.py",
+   "sha256": "e93951a552d4c3c5fd9b84a5e1d49b03caaba4723c4ff112da6053600ec85a65"
+  },
+  {
+   "path": "requests/certs.py",
+   "sha256": "fd9c6b83359cef90ff6c4eeeab8dcc2388da382ebca7d00a499b3c0b434a87e4"
+  },
+  {
+   "path": "requests/compat.py",
+   "sha256": "5d79ba289690b5015044341a1f7bc7d24134fc13a2db3efcf852515bf9aa18b4"
+  },
+  {
+   "path": "requests/cookies.py",
+   "sha256": "0a1ce6140f2b9420522c5080e356e689fa796c2522f55ca10826f5ed8e0a723c"
+  },
+  {
+   "path": "requests/exceptions.py",
+   "sha256": "c5e18f3352454968e337bb3056f0867df2f37c0a0d2c1a77dc05e7e0b3c0411b"
+  },
+  {
+   "path": "requests/help.py",
+   "sha256": "723519bb1884da18d84f6b2fb78f7ebf7fb57f732070b6025ae071dac6a2d179"
+  },
+  {
+   "path": "requests/hooks.py",
+   "sha256": "ebd8a02475d31a0e473a8f553e9501ff43645b9563885ad52844e7a63f0d76ab"
+  },
+  {
+   "path": "requests/models.py",
+   "sha256": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace"
+  },
+  {
+   "path": "requests/packages.py",
+   "sha256": "fe0d2067af355320252874631fa91a9db6a8c71d9e01beaacdc5e2383c932287"
+  },
+  {
+   "path": "requests/py.typed",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "requests/sessions.py",
+   "sha256": "96fbb30bbbf06a59a5268d13b57885149756aa3f31695b5c15e41dd7bb2f67a6"
+  },
+  {
+   "path": "requests/status_codes.py",
+   "sha256": "1950f47c89cf18019787e07d8ce48f66d6b38e622f7d94d70a90247fee6c040e"
+  },
+  {
+   "path": "requests/structures.py",
+   "sha256": "ba9460c39078f25e6f1d2a24ac941ac6f8d2ee97197fa8c8d0c262d8a1e67a02"
+  },
+  {
+   "path": "requests/utils.py",
+   "sha256": "657fd02343b2586bbd138a4ec0f03ceeb7610c2712f96ac54f28a708bf7d079c"
+  },
+  {
+   "path": "urllib3/__init__.py",
+   "sha256": "24ca35b60d67215d40789daf10d0bf4f17e5d1ee61e86ce5f43195935ad645ba"
+  },
+  {
+   "path": "urllib3/_base_connection.py",
+   "sha256": "1f37121077b1803ad152beb48cd9e20762908ddc3ded279d0f996e45f1ed0978"
+  },
+  {
+   "path": "urllib3/_collections.py",
+   "sha256": "68e566da62a296fbaf4f579f006b6403ba62eb90b5342dc725fa45c6f6014bc0"
+  },
+  {
+   "path": "urllib3/_request_methods.py",
+   "sha256": "802785f3948efd45385a83f0607228cffb70f9e33f1153a42c5a7c385b02ec30"
+  },
+  {
+   "path": "urllib3/_version.py",
+   "sha256": "fa032b2a1b0f88e8f45f351ecd515ae7d7754ba4204222a0413e601a0c8cf3ec"
+  },
+  {
+   "path": "urllib3/connection.py",
+   "sha256": "668b37ab12835bdf8643a695a9f050551339b280742231f163fc575a925a1532"
+  },
+  {
+   "path": "urllib3/connectionpool.py",
+   "sha256": "b0616775d5d8c25c7b282e0908fd602af74d18b34af984c22437460021a3dd8f"
+  },
+  {
+   "path": "urllib3/contrib/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "urllib3/contrib/emscripten/__init__.py",
+   "sha256": "c325ef7bcae6a97eecd8aa91401c43e56978f23cd63e7e7ed6efd7a100442d57"
+  },
+  {
+   "path": "urllib3/contrib/emscripten/connection.py",
+   "sha256": "822125b01a14b0a55445b6736fc182ac99aa5b6dd79ef8f668dc90545e36b258"
+  },
+  {
+   "path": "urllib3/contrib/emscripten/emscripten_fetch_worker.js",
+   "sha256": "cf5937cd9e3f84329ddfeb4def0cf3f0b1e31c2da9c4dfeebbc07793d0fd0377"
+  },
+  {
+   "path": "urllib3/contrib/emscripten/fetch.py",
+   "sha256": "e7171dfbebe217165dda7072d1a2bbdddb49f53b21d7261953f4945f09f089b9"
+  },
+  {
+   "path": "urllib3/contrib/emscripten/request.py",
+   "sha256": "98bdbcb33cb52af137349856a2be633666aba7c830a650d4fbb8301996398344"
+  },
+  {
+   "path": "urllib3/contrib/emscripten/response.py",
+   "sha256": "083a58d0616896e47723110290cda01f9b837d80ccd042f5156afb07beb0b603"
+  },
+  {
+   "path": "urllib3/contrib/pyopenssl.py",
+   "sha256": "5d963e433c93eecf1de37aa2b00e28f9e49960178890fc8131986d8f69242d9b"
+  },
+  {
+   "path": "urllib3/contrib/socks.py",
+   "sha256": "ad2ba495f85ae3ebeda3ef2a48b8523e67f996644f218baa740c4a7bd6e0d910"
+  },
+  {
+   "path": "urllib3/exceptions.py",
+   "sha256": "8503c7a2aa38cb0e3a7ac3525647225505d5520031580825b21e8c6f242d6be4"
+  },
+  {
+   "path": "urllib3/fields.py",
+   "sha256": "6862c5015669554f856c996596f7b8021834fa91fd659050d88cfb95fa648e43"
+  },
+  {
+   "path": "urllib3/filepost.py",
+   "sha256": "53c78d67e9a928a1e1ae56c7104893c7180ad7a21e8e111aeeecf8db2a80fdd2"
+  },
+  {
+   "path": "urllib3/http2/__init__.py",
+   "sha256": "c73ac0487ed1e4035190f24ea2de651a70133aadca2aec97cc8e36adc9f09aab"
+  },
+  {
+   "path": "urllib3/http2/connection.py",
+   "sha256": "6c7307e9f36f6adc173eb2aaadc9fbe32037a5459ca8f0e9a672b52dc2826cff"
+  },
+  {
+   "path": "urllib3/http2/probe.py",
+   "sha256": "9e7024a9b8406a43a217be6bcfb5b4b9d677f047a1fee0fc7e357be0def71442"
+  },
+  {
+   "path": "urllib3/poolmanager.py",
+   "sha256": "734ae1d2b7140b5b79b431ae51e188800ce512b6ac3cec16c0b881ebb957f293"
+  },
+  {
+   "path": "urllib3/py.typed",
+   "sha256": "51a0ae3c56b71fc5006a46edfb91bc48f69c95d4ce1af26fd7ca4f8d42798036"
+  },
+  {
+   "path": "urllib3/response.py",
+   "sha256": "f525f806491da0b82cc759deea1a6dfb93e772b9c3ccfcdea82d4369285273e3"
+  },
+  {
+   "path": "urllib3/util/__init__.py",
+   "sha256": "faa792d1071e8af6b3bc110a0cd142008fba00271d0ce1384ccbe8ed22cd9404"
+  },
+  {
+   "path": "urllib3/util/connection.py",
+   "sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74"
+  },
+  {
+   "path": "urllib3/util/proxy.py",
+   "sha256": "b1e3fcf90e41e9b07474cb703e3f98719650df4bc7b8ba91bbeb48d096767f3b"
+  },
+  {
+   "path": "urllib3/util/request.py",
+   "sha256": "8ada670bcba0ec3e2755f0e6194091325824011510d77aff5ccc529f34f09a91"
+  },
+  {
+   "path": "urllib3/util/response.py",
+   "sha256": "bd013adfdba81218f5be98c4771bb994d22124249466477ba6a965508d0164e0"
+  },
+  {
+   "path": "urllib3/util/retry.py",
+   "sha256": "d989d25fefc579c312843eb5331e6cebc274fdbb541d9aeb73f064155452d4fe"
+  },
+  {
+   "path": "urllib3/util/ssl_.py",
+   "sha256": "3aa7b7ac88545377b7195819a1bda1c6647c43464386b84448f94f3ff18b6954"
+  },
+  {
+   "path": "urllib3/util/ssl_match_hostname.py",
+   "sha256": "16de38289cd3cc632629f7ff6573fdd658b65785a19af132d7a3ca05cbf8bd99"
+  },
+  {
+   "path": "urllib3/util/ssltransport.py",
+   "sha256": "133e0ef2947fbd3f1d6a7fc5bea0584ba7600df05710c7d57ebcdc754a167e2e"
+  },
+  {
+   "path": "urllib3/util/timeout.py",
+   "sha256": "e1e4f5155799654ee1ee6603d49ab639735ee1fc5e91d36f868594919bac4690"
+  },
+  {
+   "path": "urllib3/util/url.py",
+   "sha256": "59187e4cc617a2c9a0a7c9bc953e07e6ca681f0e7252395c3027d4e77024a00b"
+  },
+  {
+   "path": "urllib3/util/util.py",
+   "sha256": "8f795b64ad633f28b00f7e13f08809cdd5846554fee04fb4bd82098bd52378d0"
+  },
+  {
+   "path": "urllib3/util/wait.py",
+   "sha256": "fe987c22b511deca8faa2d0ea29420254947e30ce419e3390a2c80ed7186b662"
+  }
+ ],
+ "packages": [
+  {
+   "distribution": "requests",
+   "module": "requests",
+   "version": "2.34.2",
+   "binary_extensions_excluded": true
+  },
+  {
+   "distribution": "certifi",
+   "module": "certifi",
+   "version": "2026.7.22",
+   "binary_extensions_excluded": true
+  },
+  {
+   "distribution": "charset-normalizer",
+   "module": "charset_normalizer",
+   "version": "3.4.9",
+   "binary_extensions_excluded": true
+  },
+  {
+   "distribution": "idna",
+   "module": "idna",
+   "version": "3.18",
+   "binary_extensions_excluded": true
+  },
+  {
+   "distribution": "urllib3",
+   "module": "urllib3",
+   "version": "2.7.0",
+   "binary_extensions_excluded": true
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+AgentSWE
+Copyright 2026 The AgentSWE Authors
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes third-party software; see THIRD_PARTY.md for the
+components, their licenses, and how they are used. Files under
+third_party/harbor/ are patches to Harbor 0.20.0 (Apache License 2.0) and
+keep their original license notices. Upstream systems behind each task are
+not redistributed; they are fetched by pinned commit and remain under their
+own licenses (listed per task in tasks/*/*/task.json under "upstream").

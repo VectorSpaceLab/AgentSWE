@@ -1,0 +1,143 @@
+{
+  "id": "openwiki-change-impact",
+  "family": "editing",
+  "short": "openwiki",
+  "title": "OpenWiki change-impact documentation",
+  "version": "20-edit-openwiki-change-impact-agentloop-v1",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "editing_agentloop_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe"
+  ],
+  "envs": [
+    "openwiki-runtime-v1"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": true,
+    "systemd_delegation": true,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "bwrap",
+      "curl",
+      "g++",
+      "git",
+      "make",
+      "openssl",
+      "python3",
+      "systemd-run",
+      "xz"
+    ],
+    "disk_gb": 10
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 5,
+    "builder_session_sec": 18000,
+    "score": "Result only (Code axis skipped_by_policy)",
+    "runtime_model": "deepseek-flash/high",
+    "judge": "deepseek-flash/max, max_output_tokens 64000",
+    "early_stop_resample": "formal only, 1 extra logical request",
+    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+  },
+  "smoke": {
+    "profile": "single-dev-two-round-hidden-smoke-v1",
+    "accepted_dev_rounds": 2,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 28800,
+    "note": "this is the readiness/admission run; scores are not comparable"
+  },
+  "upstream": {
+    "repo": "https://github.com/langchain-ai/openwiki",
+    "commit": "630eb9ec3fa22a4bed2d347fc3ea3a6a3bd22abc",
+    "git_tree": "d998e8759e885f51daf8fe0ff57d79bfc7d011f0",
+    "license": "MIT",
+    "redistribute_a0": false
+  },
+  "runner_config": {
+    "tree": "tree",
+    "legacy_tree_name": "20-edit-openwiki-change-impact-agentloop-v1",
+    "a0": {
+      "fetch": "a0/fetch.sh",
+      "dest": "tree/input/repository",
+      "lang_options": [
+        "en-upstream"
+      ],
+      "evaluator_digest_pins": [
+        [
+          "dev_cases/harness_support.py",
+          "PINNED_SOURCE_TREE_HASH",
+          "092844ed148d028bf7205ce5d98aff2a77ff4d80842326ab249e7bc5182bcc68",
+          "re-pinned to the en-upstream a0 (dev_cases/harness_support.tree_hash); paper as-run zh a0 value 9f89b2c56a072f2e5c63d3b60bd6e7c7e9f56861ee1500e0925603ab938e1160"
+        ]
+      ]
+    },
+    "hidden_issued": null,
+    "formal_extra_flags": [],
+    "task_environment": {},
+    "render_tokens": "see staging README: every @@AGENTSWE_*@@ token must be rendered to an absolute path at setup",
+    "harbor_profile": "site"
+  },
+  "language": {
+    "task_docs_as_run": "zh (machine translation of 2026-08-19 + later zh edits)",
+    "a0_as_run": "zh (machine-translated docs/fixtures in a0)",
+    "a0_functional_risk_files": 0,
+    "english_task_docs": "lang/en-backtranslation/ (zh->en back-translation made for the anonymous repo)",
+    "paper_as_run": {
+      "task_docs": "zh (machine translation of 2026-08-19 + later zh edits)",
+      "a0": "zh (machine-translated docs/fixtures in a0)"
+    },
+    "release_language": "en",
+    "release_task_docs": "English backtranslation under lang/en-backtranslation/ where present; native English otherwise",
+    "release_a0": "en-upstream",
+    "release_cjk_check": "tools/scan.py --release"
+  },
+  "paper": {
+    "columns": [
+      "DeepSeek-V4-Pro",
+      "GPT-5.6-Sol",
+      "GPT-5.5",
+      "DeepSeek-V4-Flash",
+      "Qwen3.6-35B-A3B"
+    ],
+    "result": [
+      14.0,
+      0,
+      8.5,
+      12.83,
+      0
+    ]
+  },
+  "notes": [
+    "images: the tree references only the Builder image (create-agent-builder-codex, retargeted to builder-codex); Harbor's egress-control sidecar is built FROM egress-sidecar-base and probes with harbor-kernel-probe, so both are pulled by digest as for DeepTutor. edit-candidate-runtime (a legacy image no current tree uses) was dropped.",
+    "envs: openwiki-runtime-v1 is the evaluator-owned .runtime (node 22.12.0, pnpm 10.33.2 and 11.15.1, the a0 lockfile's offline node_modules), built on the host by env/build-host.sh from pinned inputs and linked at <tree>/.runtime; its parity with the paper-era .runtime was checked.",
+    "Runnable: under AGENTSWE_PROFILE=lite-v1.1 readiness admits the task (hidden test_001 Result 38, valid contract, candidate-side loss) and the formal-gate dry run passes; the paper and lite-v1.1 renders of the tree are identical (429/429 files).",
+    "Release change (2026-10-09): agentloop/evaluator/lower_agent_launcher.py tolerates a Candidate reply disconnect, next to the existing deadline-kill attribution. When the product exited by itself under a valid transport preflight, the only relay errors are BrokenPipe/ConnectionReset on the reply write (with the incomplete observation that disconnect leaves), the relay observation holds the broker's complete HTTP 200 answer, and the broker ledger shows the case window completed with no failure or pending call, the case stays a Candidate outcome; the tolerated errors are recorded as candidate_reply_disconnect, and the judge-evidence checks (agentloop/evaluator/execution_evidence.py prepare_evidence, evaluator/formal_axes.py) accept a broker observation that is incomplete only through those tolerated exchanges. Anything else stays evaluator_failure, and a deadline kill keeps the deadline-kill attribution. Example: the product aborted its own model call after 30 s; the broker completed it at 34.05 s.",
+    "Release change (2026-10-10): Docker 29 removes an exited or stopped --rm container asynchronously: for several seconds `docker inspect` still shows it and `docker rm -f` answers \"removal of container ... is already in progress\" (exit 1); Docker 24 has removed it by then. agentloop/evaluator/broker.py close(): when the stopped --rm broker's removal outlasts the client's 5 s wait, rm answered \"already in progress\" and became a cleanup error; it is now recorded as removal_in_progress_at_rm and close waits up to 30 s for the container to be gone before inspect decides container_absent. harbor/formal_one_stop.py remove_owned_container waits the same way. Any other rm refusal is judged as before, and a container still present after the wait is not absent. Seen with Docker 29.2.1."
+  ]
+}

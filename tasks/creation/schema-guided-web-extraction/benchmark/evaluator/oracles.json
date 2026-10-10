@@ -1,0 +1,2949 @@
+{
+  "version": 4,
+  "cases": {
+    "dev_001": {
+      "case_id": "dev_001",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "asset_id",
+          "name",
+          "price_usd",
+          "material",
+          "mass_g",
+          "stock",
+          "warehouse"
+        ],
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "pattern": "^AU-[0-9]{4}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price_usd": {
+            "type": "number"
+          },
+          "material": {
+            "type": "string"
+          },
+          "mass_g": {
+            "type": "integer"
+          },
+          "stock": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "warehouse": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "asset_id",
+      "records": [
+        {
+          "asset_id": "AU-2001",
+          "name": "Aurora Beacon 01",
+          "price_usd": 18.75,
+          "material": "anodized aluminum",
+          "mass_g": 360,
+          "stock": 0,
+          "warehouse": "Reno"
+        },
+        {
+          "asset_id": "AU-2002",
+          "name": "Cinder Sampler 02",
+          "price_usd": 21.1,
+          "material": "cork composite",
+          "mass_g": 397,
+          "stock": 7,
+          "warehouse": "Albany"
+        },
+        {
+          "asset_id": "AU-2003",
+          "name": "Delta Compass 03",
+          "price_usd": 23.45,
+          "material": "powder-coated steel",
+          "mass_g": 434,
+          "stock": 14,
+          "warehouse": "Boise"
+        },
+        {
+          "asset_id": "AU-2004",
+          "name": "Frost Gauge 04",
+          "price_usd": 25.8,
+          "material": "ash wood",
+          "mass_g": 471,
+          "stock": 21,
+          "warehouse": "Tacoma"
+        },
+        {
+          "asset_id": "AU-2005",
+          "name": "Harbor Meter 05",
+          "price_usd": 28.15,
+          "material": "recycled nylon",
+          "mass_g": 508,
+          "stock": 28,
+          "warehouse": "Reno"
+        },
+        {
+          "asset_id": "AU-2006",
+          "name": "Juniper Housing 06",
+          "price_usd": 30.5,
+          "material": "borosilicate glass",
+          "mass_g": 545,
+          "stock": 6,
+          "warehouse": "Albany"
+        },
+        {
+          "asset_id": "AU-2007",
+          "name": "Aurora Tripod 07",
+          "price_usd": 33.25,
+          "material": "anodized aluminum",
+          "mass_g": 582,
+          "stock": 13,
+          "warehouse": "Boise"
+        },
+        {
+          "asset_id": "AU-2008",
+          "name": "Cinder Probe 08",
+          "price_usd": 35.2,
+          "material": "cork composite",
+          "mass_g": 619,
+          "stock": 20,
+          "warehouse": "Tacoma"
+        },
+        {
+          "asset_id": "AU-2009",
+          "name": "Delta Beacon 09",
+          "price_usd": 37.55,
+          "material": "powder-coated steel",
+          "mass_g": 656,
+          "stock": 27,
+          "warehouse": "Reno"
+        },
+        {
+          "asset_id": "AU-2010",
+          "name": "Frost Sampler 10",
+          "price_usd": 39.9,
+          "material": "ash wood",
+          "mass_g": 693,
+          "stock": 5,
+          "warehouse": "Albany"
+        },
+        {
+          "asset_id": "AU-2011",
+          "name": "Harbor Compass 11",
+          "price_usd": 42.25,
+          "material": "recycled nylon",
+          "mass_g": 730,
+          "stock": 12,
+          "warehouse": "Boise"
+        },
+        {
+          "asset_id": "AU-2012",
+          "name": "Juniper Gauge 12",
+          "price_usd": 44.6,
+          "material": "borosilicate glass",
+          "mass_g": 767,
+          "stock": 19,
+          "warehouse": "Tacoma"
+        },
+        {
+          "asset_id": "AU-2013",
+          "name": "Aurora Meter 13",
+          "price_usd": 46.95,
+          "material": "anodized aluminum",
+          "mass_g": 804,
+          "stock": 26,
+          "warehouse": "Reno"
+        },
+        {
+          "asset_id": "AU-2014",
+          "name": "Cinder Housing 14",
+          "price_usd": 47.0,
+          "material": "cork composite",
+          "mass_g": 841,
+          "stock": 4,
+          "warehouse": "Albany"
+        },
+        {
+          "asset_id": "AU-2015",
+          "name": "Delta Tripod 15",
+          "price_usd": 51.65,
+          "material": "powder-coated steel",
+          "mass_g": 878,
+          "stock": 11,
+          "warehouse": "Boise"
+        },
+        {
+          "asset_id": "AU-2016",
+          "name": "Frost Probe 16",
+          "price_usd": 54.0,
+          "material": "ash wood",
+          "mass_g": 915,
+          "stock": 18,
+          "warehouse": "Tacoma"
+        },
+        {
+          "asset_id": "AU-2017",
+          "name": "Harbor Beacon 17",
+          "price_usd": 56.35,
+          "material": "recycled nylon",
+          "mass_g": 952,
+          "stock": 25,
+          "warehouse": "Reno"
+        },
+        {
+          "asset_id": "AU-2018",
+          "name": "Juniper Sampler 18",
+          "price_usd": 58.7,
+          "material": "borosilicate glass",
+          "mass_g": 989,
+          "stock": 3,
+          "warehouse": "Albany"
+        },
+        {
+          "asset_id": "AU-2019",
+          "name": "Aurora Compass 19",
+          "price_usd": 61.05,
+          "material": "anodized aluminum",
+          "mass_g": 1026,
+          "stock": 10,
+          "warehouse": "Boise"
+        },
+        {
+          "asset_id": "AU-2020",
+          "name": "Cinder Gauge 20",
+          "price_usd": 63.4,
+          "material": "cork composite",
+          "mass_g": 1063,
+          "stock": 17,
+          "warehouse": "Tacoma"
+        },
+        {
+          "asset_id": "AU-2021",
+          "name": "Delta Meter 21",
+          "price_usd": 66.95,
+          "material": "powder-coated steel",
+          "mass_g": 1100,
+          "stock": 24,
+          "warehouse": "Reno"
+        },
+        {
+          "asset_id": "AU-2022",
+          "name": "Frost Housing 22",
+          "price_usd": 68.1,
+          "material": "ash wood",
+          "mass_g": 1137,
+          "stock": 2,
+          "warehouse": "Albany"
+        },
+        {
+          "asset_id": "AU-2023",
+          "name": "Harbor Tripod 23",
+          "price_usd": 70.45,
+          "material": "recycled nylon",
+          "mass_g": 1174,
+          "stock": 9,
+          "warehouse": "Boise"
+        },
+        {
+          "asset_id": "AU-2024",
+          "name": "Juniper Probe 24",
+          "price_usd": 72.8,
+          "material": "borosilicate glass",
+          "mass_g": 1211,
+          "stock": 16,
+          "warehouse": "Tacoma"
+        }
+      ],
+      "workflow": {
+        "browser": true,
+        "required_action_counts": {
+          "open": 1,
+          "load_more": 3,
+          "visit_detail": 24,
+          "read_local": 4
+        },
+        "required_states": [
+          "catalog:1",
+          "catalog:2",
+          "catalog:3",
+          "catalog:4"
+        ],
+        "screenshots_min": 4,
+        "max_local_reads": 80
+      },
+      "ocr_fields": []
+    },
+    "dev_002": {
+      "case_id": "dev_002",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "person_id",
+          "canonical_name",
+          "role",
+          "city",
+          "affiliation",
+          "aliases"
+        ],
+        "properties": {
+          "person_id": {
+            "type": "string",
+            "pattern": "^RG-[0-9]{3}$"
+          },
+          "canonical_name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "affiliation": {
+            "type": "string"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "person_id",
+      "records": [
+        {
+          "person_id": "RG-301",
+          "canonical_name": "Avery Chen",
+          "role": "Designer",
+          "city": "Oslo",
+          "affiliation": "Lumen Works",
+          "aliases": [
+            "A. Chen"
+          ]
+        },
+        {
+          "person_id": "RG-302",
+          "canonical_name": "Mina Chen",
+          "role": "Editor",
+          "city": "Kyoto",
+          "affiliation": "North Annex",
+          "aliases": [
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "RG-303",
+          "canonical_name": "Noor Kim",
+          "role": "Engineer",
+          "city": "Tallinn",
+          "affiliation": "Harbor Lab",
+          "aliases": [
+            "N. Kim"
+          ]
+        },
+        {
+          "person_id": "RG-304",
+          "canonical_name": "Riley Park",
+          "role": "Researcher",
+          "city": "Accra",
+          "affiliation": "Field Notes",
+          "aliases": [
+            "R. Park",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "RG-305",
+          "canonical_name": "Sasha Morgan",
+          "role": "Photographer",
+          "city": "Lima",
+          "affiliation": "Civic Loom",
+          "aliases": [
+            "S. Morgan"
+          ]
+        },
+        {
+          "person_id": "RG-306",
+          "canonical_name": "Tomas Ibrahim",
+          "role": "Designer",
+          "city": "Taipei",
+          "affiliation": "Lumen Works",
+          "aliases": [
+            "T. Ibrahim"
+          ]
+        },
+        {
+          "person_id": "RG-307",
+          "canonical_name": "Yara Singh",
+          "role": "Editor",
+          "city": "Oslo",
+          "affiliation": "North Annex",
+          "aliases": [
+            "Y. Singh"
+          ]
+        },
+        {
+          "person_id": "RG-308",
+          "canonical_name": "Zhen Patel",
+          "role": "Engineer",
+          "city": "Kyoto",
+          "affiliation": "Harbor Lab",
+          "aliases": [
+            "Z. Patel"
+          ]
+        },
+        {
+          "person_id": "RG-309",
+          "canonical_name": "Iris Lopez",
+          "role": "Researcher",
+          "city": "Tallinn",
+          "affiliation": "Field Notes",
+          "aliases": [
+            "I. Lopez"
+          ]
+        },
+        {
+          "person_id": "RG-310",
+          "canonical_name": "Owen Morgan",
+          "role": "Photographer",
+          "city": "Accra",
+          "affiliation": "Civic Loom",
+          "aliases": [
+            "O. Morgan"
+          ]
+        },
+        {
+          "person_id": "RG-311",
+          "canonical_name": "Avery Chen",
+          "role": "Designer",
+          "city": "Lima",
+          "affiliation": "Lumen Works",
+          "aliases": [
+            "A. Chen"
+          ]
+        },
+        {
+          "person_id": "RG-312",
+          "canonical_name": "Mina Chen",
+          "role": "Editor",
+          "city": "Taipei",
+          "affiliation": "North Annex",
+          "aliases": [
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "RG-313",
+          "canonical_name": "Noor Kim",
+          "role": "Engineer",
+          "city": "Oslo",
+          "affiliation": "Harbor Lab",
+          "aliases": [
+            "N. Kim"
+          ]
+        },
+        {
+          "person_id": "RG-314",
+          "canonical_name": "Riley Park",
+          "role": "Researcher",
+          "city": "Kyoto",
+          "affiliation": "Field Notes",
+          "aliases": [
+            "R. Park"
+          ]
+        },
+        {
+          "person_id": "RG-315",
+          "canonical_name": "Sasha Morgan",
+          "role": "Photographer",
+          "city": "Tallinn",
+          "affiliation": "Civic Loom",
+          "aliases": [
+            "S. Morgan"
+          ]
+        },
+        {
+          "person_id": "RG-316",
+          "canonical_name": "Tomas Ibrahim",
+          "role": "Designer",
+          "city": "Accra",
+          "affiliation": "Lumen Works",
+          "aliases": [
+            "T. Ibrahim"
+          ]
+        },
+        {
+          "person_id": "RG-317",
+          "canonical_name": "Yara Singh",
+          "role": "Editor",
+          "city": "Lima",
+          "affiliation": "North Annex",
+          "aliases": [
+            "Y. Singh"
+          ]
+        },
+        {
+          "person_id": "RG-318",
+          "canonical_name": "Zhen Patel",
+          "role": "Engineer",
+          "city": "Taipei",
+          "affiliation": "Harbor Lab",
+          "aliases": [
+            "Z. Patel"
+          ]
+        },
+        {
+          "person_id": "RG-319",
+          "canonical_name": "Iris Lopez",
+          "role": "Researcher",
+          "city": "Oslo",
+          "affiliation": "Field Notes",
+          "aliases": [
+            "I. Lopez"
+          ]
+        },
+        {
+          "person_id": "RG-320",
+          "canonical_name": "Owen Morgan",
+          "role": "Photographer",
+          "city": "Kyoto",
+          "affiliation": "Civic Loom",
+          "aliases": [
+            "O. Morgan"
+          ]
+        }
+      ],
+      "workflow": {
+        "browser": true,
+        "required_action_counts": {
+          "open": 1,
+          "load_more": 3,
+          "visit_detail": 20
+        },
+        "required_states": [
+          "directory:1",
+          "directory:2",
+          "directory:3",
+          "directory:4"
+        ],
+        "screenshots_min": 4,
+        "max_local_reads": 70
+      },
+      "ocr_fields": []
+    },
+    "test_001": {
+      "case_id": "test_001",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "record_ref",
+          "name",
+          "price_usd",
+          "material",
+          "lot_code",
+          "net_weight_g"
+        ],
+        "properties": {
+          "record_ref": {
+            "type": "string",
+            "pattern": "^QL-[0-9]{4}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price_usd": {
+            "type": "number"
+          },
+          "material": {
+            "type": "string"
+          },
+          "lot_code": {
+            "type": "string"
+          },
+          "net_weight_g": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "record_ref",
+      "records": [
+        {
+          "record_ref": "QL-5101",
+          "name": "Amber Valve",
+          "price_usd": 44.25,
+          "material": "titanium",
+          "lot_code": "A3K-410",
+          "net_weight_g": 275
+        },
+        {
+          "record_ref": "QL-5102",
+          "name": "Cobalt Sleeve",
+          "price_usd": 42.33,
+          "material": "ceramic",
+          "lot_code": "B0L-411",
+          "net_weight_g": 304
+        },
+        {
+          "record_ref": "QL-5103",
+          "name": "Fern Coupler",
+          "price_usd": 47.71,
+          "material": "polycarbonate",
+          "lot_code": "C7M-412",
+          "net_weight_g": 333
+        },
+        {
+          "record_ref": "QL-5104",
+          "name": "Ivory Sensor",
+          "price_usd": 45.79,
+          "material": "stainless steel",
+          "lot_code": "D4N-413",
+          "net_weight_g": 362
+        },
+        {
+          "record_ref": "QL-5105",
+          "name": "Juniper Relay",
+          "price_usd": 51.17,
+          "material": "silicone",
+          "lot_code": "E1O-414",
+          "net_weight_g": 391
+        },
+        {
+          "record_ref": "QL-5106",
+          "name": "Kestrel Rotor",
+          "price_usd": 53.25,
+          "material": "brass",
+          "lot_code": "F8P-415",
+          "net_weight_g": 420
+        },
+        {
+          "record_ref": "QL-5107",
+          "name": "Lunar Bracket",
+          "price_usd": 54.63,
+          "material": "titanium",
+          "lot_code": "G5Q-416",
+          "net_weight_g": 449
+        },
+        {
+          "record_ref": "QL-5108",
+          "name": "Mica Nozzle",
+          "price_usd": 52.71,
+          "material": "ceramic",
+          "lot_code": "H2R-417",
+          "net_weight_g": 478
+        },
+        {
+          "record_ref": "QL-5109",
+          "name": "Amber Valve",
+          "price_usd": 58.09,
+          "material": "polycarbonate",
+          "lot_code": "I9S-418",
+          "net_weight_g": 507
+        },
+        {
+          "record_ref": "QL-5110",
+          "name": "Cobalt Sleeve",
+          "price_usd": 56.17,
+          "material": "stainless steel",
+          "lot_code": "J6T-419",
+          "net_weight_g": 536
+        },
+        {
+          "record_ref": "QL-5111",
+          "name": "Fern Coupler",
+          "price_usd": 61.55,
+          "material": "silicone",
+          "lot_code": "K3U-420",
+          "net_weight_g": 565
+        },
+        {
+          "record_ref": "QL-5112",
+          "name": "Ivory Sensor",
+          "price_usd": 63.63,
+          "material": "brass",
+          "lot_code": "L0K-421",
+          "net_weight_g": 594
+        },
+        {
+          "record_ref": "QL-5113",
+          "name": "Juniper Relay",
+          "price_usd": 65.01,
+          "material": "titanium",
+          "lot_code": "M7L-422",
+          "net_weight_g": 623
+        },
+        {
+          "record_ref": "QL-5114",
+          "name": "Kestrel Rotor",
+          "price_usd": 63.09,
+          "material": "ceramic",
+          "lot_code": "N4M-423",
+          "net_weight_g": 652
+        },
+        {
+          "record_ref": "QL-5115",
+          "name": "Lunar Bracket",
+          "price_usd": 68.47,
+          "material": "polycarbonate",
+          "lot_code": "O1N-424",
+          "net_weight_g": 681
+        },
+        {
+          "record_ref": "QL-5116",
+          "name": "Mica Nozzle",
+          "price_usd": 66.55,
+          "material": "stainless steel",
+          "lot_code": "P8O-425",
+          "net_weight_g": 710
+        },
+        {
+          "record_ref": "QL-5117",
+          "name": "Amber Valve",
+          "price_usd": 71.93,
+          "material": "silicone",
+          "lot_code": "Q5P-426",
+          "net_weight_g": 739
+        },
+        {
+          "record_ref": "QL-5118",
+          "name": "Cobalt Sleeve",
+          "price_usd": 74.01,
+          "material": "brass",
+          "lot_code": "R2Q-427",
+          "net_weight_g": 768
+        },
+        {
+          "record_ref": "QL-5119",
+          "name": "Fern Coupler",
+          "price_usd": 75.39,
+          "material": "titanium",
+          "lot_code": "S9R-428",
+          "net_weight_g": 797
+        },
+        {
+          "record_ref": "QL-5120",
+          "name": "Ivory Sensor",
+          "price_usd": 73.47,
+          "material": "ceramic",
+          "lot_code": "T6S-429",
+          "net_weight_g": 826
+        },
+        {
+          "record_ref": "QL-5121",
+          "name": "Juniper Relay",
+          "price_usd": 78.85,
+          "material": "polycarbonate",
+          "lot_code": "A3T-430",
+          "net_weight_g": 855
+        },
+        {
+          "record_ref": "QL-5122",
+          "name": "Kestrel Rotor",
+          "price_usd": 76.93,
+          "material": "stainless steel",
+          "lot_code": "B0U-431",
+          "net_weight_g": 884
+        },
+        {
+          "record_ref": "QL-5123",
+          "name": "Lunar Bracket",
+          "price_usd": 82.31,
+          "material": "silicone",
+          "lot_code": "C7K-432",
+          "net_weight_g": 913
+        },
+        {
+          "record_ref": "QL-5124",
+          "name": "Mica Nozzle",
+          "price_usd": 84.39,
+          "material": "brass",
+          "lot_code": "D4L-433",
+          "net_weight_g": 942
+        },
+        {
+          "record_ref": "QL-5125",
+          "name": "Amber Valve",
+          "price_usd": 85.77,
+          "material": "titanium",
+          "lot_code": "E1M-434",
+          "net_weight_g": 971
+        },
+        {
+          "record_ref": "QL-5126",
+          "name": "Cobalt Sleeve",
+          "price_usd": 83.85,
+          "material": "ceramic",
+          "lot_code": "F8N-435",
+          "net_weight_g": 1000
+        },
+        {
+          "record_ref": "QL-5127",
+          "name": "Fern Coupler",
+          "price_usd": 89.23,
+          "material": "polycarbonate",
+          "lot_code": "G5O-436",
+          "net_weight_g": 1029
+        },
+        {
+          "record_ref": "QL-5128",
+          "name": "Ivory Sensor",
+          "price_usd": 87.31,
+          "material": "stainless steel",
+          "lot_code": "H2P-437",
+          "net_weight_g": 1058
+        },
+        {
+          "record_ref": "QL-5129",
+          "name": "Juniper Relay",
+          "price_usd": 92.69,
+          "material": "silicone",
+          "lot_code": "I9Q-438",
+          "net_weight_g": 1087
+        },
+        {
+          "record_ref": "QL-5130",
+          "name": "Kestrel Rotor",
+          "price_usd": 94.77,
+          "material": "brass",
+          "lot_code": "J6R-439",
+          "net_weight_g": 1116
+        },
+        {
+          "record_ref": "QL-5131",
+          "name": "Lunar Bracket",
+          "price_usd": 96.15,
+          "material": "titanium",
+          "lot_code": "K3S-440",
+          "net_weight_g": 1145
+        },
+        {
+          "record_ref": "QL-5132",
+          "name": "Mica Nozzle",
+          "price_usd": 94.23,
+          "material": "ceramic",
+          "lot_code": "L0T-441",
+          "net_weight_g": 1174
+        }
+      ],
+      "workflow": {
+        "browser": true,
+        "required_action_counts": {
+          "open": 1,
+          "set_mode": 1,
+          "load_more": 4,
+          "visit_detail": 32,
+          "read_local": 2,
+          "ocr": 32
+        },
+        "required_states": [
+          "mode:current",
+          "mode:all/page:1",
+          "mode:all/page:2",
+          "mode:all/page:3",
+          "mode:all/page:4",
+          "mode:all/page:5"
+        ],
+        "screenshots_min": 6,
+        "max_local_reads": 120
+      },
+      "ocr_fields": [
+        {
+          "record_id": "QL-5101",
+          "field": "/lot_code",
+          "image": "labels/seal-ebf4bda3983f.png",
+          "sha256": "a744e55af7f4ac32e1fafb24c0dd10c5b8a4505caefb012c6ee052ddb597188b"
+        },
+        {
+          "record_id": "QL-5101",
+          "field": "/net_weight_g",
+          "image": "labels/seal-ebf4bda3983f.png",
+          "sha256": "a744e55af7f4ac32e1fafb24c0dd10c5b8a4505caefb012c6ee052ddb597188b"
+        },
+        {
+          "record_id": "QL-5102",
+          "field": "/lot_code",
+          "image": "labels/seal-ac5e70fb2931.png",
+          "sha256": "63689e1a830e73695b865abc1c121d62156bfa7f6d3d35f4a8e6e040311ef5b5"
+        },
+        {
+          "record_id": "QL-5102",
+          "field": "/net_weight_g",
+          "image": "labels/seal-ac5e70fb2931.png",
+          "sha256": "63689e1a830e73695b865abc1c121d62156bfa7f6d3d35f4a8e6e040311ef5b5"
+        },
+        {
+          "record_id": "QL-5103",
+          "field": "/lot_code",
+          "image": "labels/seal-1146d98316b2.png",
+          "sha256": "12bc03f7a187aa55d28f8a3d12e75f0fc791faff694856d2276e3b5968fa69c6"
+        },
+        {
+          "record_id": "QL-5103",
+          "field": "/net_weight_g",
+          "image": "labels/seal-1146d98316b2.png",
+          "sha256": "12bc03f7a187aa55d28f8a3d12e75f0fc791faff694856d2276e3b5968fa69c6"
+        },
+        {
+          "record_id": "QL-5104",
+          "field": "/lot_code",
+          "image": "labels/seal-b257e72e9a2b.png",
+          "sha256": "8487417734618896fbb77784efb9d762f76a51578f06062cf3175547c3b47ec1"
+        },
+        {
+          "record_id": "QL-5104",
+          "field": "/net_weight_g",
+          "image": "labels/seal-b257e72e9a2b.png",
+          "sha256": "8487417734618896fbb77784efb9d762f76a51578f06062cf3175547c3b47ec1"
+        },
+        {
+          "record_id": "QL-5105",
+          "field": "/lot_code",
+          "image": "labels/seal-20dfac381fbd.png",
+          "sha256": "495cef1f2932abb5ba0dd82694afb282454fb56fbe30abb3366d572d2fbcb5b7"
+        },
+        {
+          "record_id": "QL-5105",
+          "field": "/net_weight_g",
+          "image": "labels/seal-20dfac381fbd.png",
+          "sha256": "495cef1f2932abb5ba0dd82694afb282454fb56fbe30abb3366d572d2fbcb5b7"
+        },
+        {
+          "record_id": "QL-5106",
+          "field": "/lot_code",
+          "image": "labels/seal-a181f4cde6ed.png",
+          "sha256": "12dc87910c7459270fd63031cc8c5146bd2f1af92f9bdee53bee6d4241d4f8a0"
+        },
+        {
+          "record_id": "QL-5106",
+          "field": "/net_weight_g",
+          "image": "labels/seal-a181f4cde6ed.png",
+          "sha256": "12dc87910c7459270fd63031cc8c5146bd2f1af92f9bdee53bee6d4241d4f8a0"
+        },
+        {
+          "record_id": "QL-5107",
+          "field": "/lot_code",
+          "image": "labels/seal-12cf1d69af04.png",
+          "sha256": "3a56d1c4f6ac42272ec9fd91df6f3b627fbb762820c6f8a3eed3c1027e708f27"
+        },
+        {
+          "record_id": "QL-5107",
+          "field": "/net_weight_g",
+          "image": "labels/seal-12cf1d69af04.png",
+          "sha256": "3a56d1c4f6ac42272ec9fd91df6f3b627fbb762820c6f8a3eed3c1027e708f27"
+        },
+        {
+          "record_id": "QL-5108",
+          "field": "/lot_code",
+          "image": "labels/seal-161c3debb0ef.png",
+          "sha256": "fec6c7c0f1b39a04c3ecb822378c71bb805855569100a77b42afac4a56105962"
+        },
+        {
+          "record_id": "QL-5108",
+          "field": "/net_weight_g",
+          "image": "labels/seal-161c3debb0ef.png",
+          "sha256": "fec6c7c0f1b39a04c3ecb822378c71bb805855569100a77b42afac4a56105962"
+        },
+        {
+          "record_id": "QL-5109",
+          "field": "/lot_code",
+          "image": "labels/seal-b7c15acd6f42.png",
+          "sha256": "b99c847b9c189037cfd6de94bd913fcda5fce0d6e7d029db832d4278f762fe44"
+        },
+        {
+          "record_id": "QL-5109",
+          "field": "/net_weight_g",
+          "image": "labels/seal-b7c15acd6f42.png",
+          "sha256": "b99c847b9c189037cfd6de94bd913fcda5fce0d6e7d029db832d4278f762fe44"
+        },
+        {
+          "record_id": "QL-5110",
+          "field": "/lot_code",
+          "image": "labels/seal-1834de3a0b41.png",
+          "sha256": "1d3146fa48fb3121e3036f942365f830658f01c3b4f934402e44a58763cafbeb"
+        },
+        {
+          "record_id": "QL-5110",
+          "field": "/net_weight_g",
+          "image": "labels/seal-1834de3a0b41.png",
+          "sha256": "1d3146fa48fb3121e3036f942365f830658f01c3b4f934402e44a58763cafbeb"
+        },
+        {
+          "record_id": "QL-5111",
+          "field": "/lot_code",
+          "image": "labels/seal-37f181e3d47b.png",
+          "sha256": "209b2915b4947b11a54f5ef931a76acbbd198ec69b409f18ac6284030b8b30b8"
+        },
+        {
+          "record_id": "QL-5111",
+          "field": "/net_weight_g",
+          "image": "labels/seal-37f181e3d47b.png",
+          "sha256": "209b2915b4947b11a54f5ef931a76acbbd198ec69b409f18ac6284030b8b30b8"
+        },
+        {
+          "record_id": "QL-5112",
+          "field": "/lot_code",
+          "image": "labels/seal-cb35cc61a081.png",
+          "sha256": "91b68a86361f0e1ab6e2618ab0b60b176acbb1fde8a6c8142bbf3f800a14830d"
+        },
+        {
+          "record_id": "QL-5112",
+          "field": "/net_weight_g",
+          "image": "labels/seal-cb35cc61a081.png",
+          "sha256": "91b68a86361f0e1ab6e2618ab0b60b176acbb1fde8a6c8142bbf3f800a14830d"
+        },
+        {
+          "record_id": "QL-5113",
+          "field": "/lot_code",
+          "image": "labels/seal-df65e3fbe789.png",
+          "sha256": "f919e64003b534d42384f9434ab21ffc3e2ee1c61f9130c203b42074d5761535"
+        },
+        {
+          "record_id": "QL-5113",
+          "field": "/net_weight_g",
+          "image": "labels/seal-df65e3fbe789.png",
+          "sha256": "f919e64003b534d42384f9434ab21ffc3e2ee1c61f9130c203b42074d5761535"
+        },
+        {
+          "record_id": "QL-5114",
+          "field": "/lot_code",
+          "image": "labels/seal-9d09ff6bed8a.png",
+          "sha256": "e8a8edcc76ea491363879ef664eefe01adb88dc7dbc278cc23849ec01b1b4c9f"
+        },
+        {
+          "record_id": "QL-5114",
+          "field": "/net_weight_g",
+          "image": "labels/seal-9d09ff6bed8a.png",
+          "sha256": "e8a8edcc76ea491363879ef664eefe01adb88dc7dbc278cc23849ec01b1b4c9f"
+        },
+        {
+          "record_id": "QL-5115",
+          "field": "/lot_code",
+          "image": "labels/seal-30ea63e5d92f.png",
+          "sha256": "c0298534210942b20c8648fc929a111e5790b1a7014b285c722288c783e56dc3"
+        },
+        {
+          "record_id": "QL-5115",
+          "field": "/net_weight_g",
+          "image": "labels/seal-30ea63e5d92f.png",
+          "sha256": "c0298534210942b20c8648fc929a111e5790b1a7014b285c722288c783e56dc3"
+        },
+        {
+          "record_id": "QL-5116",
+          "field": "/lot_code",
+          "image": "labels/seal-c388aaab917b.png",
+          "sha256": "9d0369814f722cc2586459be6399acd6edbe54be2e325332b742307402458ebb"
+        },
+        {
+          "record_id": "QL-5116",
+          "field": "/net_weight_g",
+          "image": "labels/seal-c388aaab917b.png",
+          "sha256": "9d0369814f722cc2586459be6399acd6edbe54be2e325332b742307402458ebb"
+        },
+        {
+          "record_id": "QL-5117",
+          "field": "/lot_code",
+          "image": "labels/seal-dcd9943c4994.png",
+          "sha256": "521dd79ef8fa1441ed42b7a23cde7f2bd4d584b279035e41a2527967857b16d7"
+        },
+        {
+          "record_id": "QL-5117",
+          "field": "/net_weight_g",
+          "image": "labels/seal-dcd9943c4994.png",
+          "sha256": "521dd79ef8fa1441ed42b7a23cde7f2bd4d584b279035e41a2527967857b16d7"
+        },
+        {
+          "record_id": "QL-5118",
+          "field": "/lot_code",
+          "image": "labels/seal-11aac42d3f50.png",
+          "sha256": "ec20fc4f9c35781ef996efbc4ca85832bd1df0d3b004eb6c4c5183846aa58f6d"
+        },
+        {
+          "record_id": "QL-5118",
+          "field": "/net_weight_g",
+          "image": "labels/seal-11aac42d3f50.png",
+          "sha256": "ec20fc4f9c35781ef996efbc4ca85832bd1df0d3b004eb6c4c5183846aa58f6d"
+        },
+        {
+          "record_id": "QL-5119",
+          "field": "/lot_code",
+          "image": "labels/seal-7d6e206f53d4.png",
+          "sha256": "2dad44d41b7df1331f4afdd9827540e0afe7c88d94813ad1725068514c5754f5"
+        },
+        {
+          "record_id": "QL-5119",
+          "field": "/net_weight_g",
+          "image": "labels/seal-7d6e206f53d4.png",
+          "sha256": "2dad44d41b7df1331f4afdd9827540e0afe7c88d94813ad1725068514c5754f5"
+        },
+        {
+          "record_id": "QL-5120",
+          "field": "/lot_code",
+          "image": "labels/seal-39f951e5f651.png",
+          "sha256": "ec133e89e252e69fcf3655375cde4c94200df8d1073c48d737241bb0513ee36e"
+        },
+        {
+          "record_id": "QL-5120",
+          "field": "/net_weight_g",
+          "image": "labels/seal-39f951e5f651.png",
+          "sha256": "ec133e89e252e69fcf3655375cde4c94200df8d1073c48d737241bb0513ee36e"
+        },
+        {
+          "record_id": "QL-5121",
+          "field": "/lot_code",
+          "image": "labels/seal-a9964938c5be.png",
+          "sha256": "9f64b9c7ff56334c4049847a41dd8c2148fdffbdbc5e49ca6ab7d006a2b55f95"
+        },
+        {
+          "record_id": "QL-5121",
+          "field": "/net_weight_g",
+          "image": "labels/seal-a9964938c5be.png",
+          "sha256": "9f64b9c7ff56334c4049847a41dd8c2148fdffbdbc5e49ca6ab7d006a2b55f95"
+        },
+        {
+          "record_id": "QL-5122",
+          "field": "/lot_code",
+          "image": "labels/seal-56cf85f32235.png",
+          "sha256": "fd0165dc274c6a9106d92295975675ca9c0ba1332ad708cd45d1c9497487cdc0"
+        },
+        {
+          "record_id": "QL-5122",
+          "field": "/net_weight_g",
+          "image": "labels/seal-56cf85f32235.png",
+          "sha256": "fd0165dc274c6a9106d92295975675ca9c0ba1332ad708cd45d1c9497487cdc0"
+        },
+        {
+          "record_id": "QL-5123",
+          "field": "/lot_code",
+          "image": "labels/seal-1b7bd68a5c34.png",
+          "sha256": "357426293985b2265502bb8aff6fb09ae6efee92e2779faa7a8e1d900a4c12df"
+        },
+        {
+          "record_id": "QL-5123",
+          "field": "/net_weight_g",
+          "image": "labels/seal-1b7bd68a5c34.png",
+          "sha256": "357426293985b2265502bb8aff6fb09ae6efee92e2779faa7a8e1d900a4c12df"
+        },
+        {
+          "record_id": "QL-5124",
+          "field": "/lot_code",
+          "image": "labels/seal-e746fae72720.png",
+          "sha256": "b38e2e14607d7cc5fc72caae038e7590e2fcebd49aeec6840b8fcc3c91302d59"
+        },
+        {
+          "record_id": "QL-5124",
+          "field": "/net_weight_g",
+          "image": "labels/seal-e746fae72720.png",
+          "sha256": "b38e2e14607d7cc5fc72caae038e7590e2fcebd49aeec6840b8fcc3c91302d59"
+        },
+        {
+          "record_id": "QL-5125",
+          "field": "/lot_code",
+          "image": "labels/seal-d3c6339d3546.png",
+          "sha256": "7ccdfa4650186127f0c17508829ee362a788421816a9203a0ae596a25d61b4a6"
+        },
+        {
+          "record_id": "QL-5125",
+          "field": "/net_weight_g",
+          "image": "labels/seal-d3c6339d3546.png",
+          "sha256": "7ccdfa4650186127f0c17508829ee362a788421816a9203a0ae596a25d61b4a6"
+        },
+        {
+          "record_id": "QL-5126",
+          "field": "/lot_code",
+          "image": "labels/seal-09a7792784de.png",
+          "sha256": "b340794a4eec643c2cfb6b11a1711a9910968deff3e23fc5a84879088de442c3"
+        },
+        {
+          "record_id": "QL-5126",
+          "field": "/net_weight_g",
+          "image": "labels/seal-09a7792784de.png",
+          "sha256": "b340794a4eec643c2cfb6b11a1711a9910968deff3e23fc5a84879088de442c3"
+        },
+        {
+          "record_id": "QL-5127",
+          "field": "/lot_code",
+          "image": "labels/seal-68e81c491bb9.png",
+          "sha256": "6777cb3520083fe00b5dd8de8d1fccd1455c19649a50ca11198f2adbd25ce0c9"
+        },
+        {
+          "record_id": "QL-5127",
+          "field": "/net_weight_g",
+          "image": "labels/seal-68e81c491bb9.png",
+          "sha256": "6777cb3520083fe00b5dd8de8d1fccd1455c19649a50ca11198f2adbd25ce0c9"
+        },
+        {
+          "record_id": "QL-5128",
+          "field": "/lot_code",
+          "image": "labels/seal-f86666b931c0.png",
+          "sha256": "d07c36c23dd7a33c0d463c095eab957ef24fa06b6a1189f55e931770f9d84b61"
+        },
+        {
+          "record_id": "QL-5128",
+          "field": "/net_weight_g",
+          "image": "labels/seal-f86666b931c0.png",
+          "sha256": "d07c36c23dd7a33c0d463c095eab957ef24fa06b6a1189f55e931770f9d84b61"
+        },
+        {
+          "record_id": "QL-5129",
+          "field": "/lot_code",
+          "image": "labels/seal-7286c81a8ce9.png",
+          "sha256": "6d78602ab867425cc9f146590b3a5630cbea27905b9e7079ee66eee7e6c49ec9"
+        },
+        {
+          "record_id": "QL-5129",
+          "field": "/net_weight_g",
+          "image": "labels/seal-7286c81a8ce9.png",
+          "sha256": "6d78602ab867425cc9f146590b3a5630cbea27905b9e7079ee66eee7e6c49ec9"
+        },
+        {
+          "record_id": "QL-5130",
+          "field": "/lot_code",
+          "image": "labels/seal-896b38327909.png",
+          "sha256": "bb1aad293097165277e53ca03af9133ae65051c1f0f0da93a2006b4e3a98029f"
+        },
+        {
+          "record_id": "QL-5130",
+          "field": "/net_weight_g",
+          "image": "labels/seal-896b38327909.png",
+          "sha256": "bb1aad293097165277e53ca03af9133ae65051c1f0f0da93a2006b4e3a98029f"
+        },
+        {
+          "record_id": "QL-5131",
+          "field": "/lot_code",
+          "image": "labels/seal-e892567de3ff.png",
+          "sha256": "ae3ffa5a3cb1776460a415b8bb48020198c8953d94616b8a513160a14753aacf"
+        },
+        {
+          "record_id": "QL-5131",
+          "field": "/net_weight_g",
+          "image": "labels/seal-e892567de3ff.png",
+          "sha256": "ae3ffa5a3cb1776460a415b8bb48020198c8953d94616b8a513160a14753aacf"
+        },
+        {
+          "record_id": "QL-5132",
+          "field": "/lot_code",
+          "image": "labels/seal-0d03cf12b82a.png",
+          "sha256": "382c6484a8c47a55e78b80c1ad329357b4b1da8cd47e7bdb3e8a2c517eea6d37"
+        },
+        {
+          "record_id": "QL-5132",
+          "field": "/net_weight_g",
+          "image": "labels/seal-0d03cf12b82a.png",
+          "sha256": "382c6484a8c47a55e78b80c1ad329357b4b1da8cd47e7bdb3e8a2c517eea6d37"
+        }
+      ]
+    },
+    "test_002": {
+      "case_id": "test_002",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "person_id",
+          "canonical_name",
+          "role",
+          "city",
+          "affiliation",
+          "aliases"
+        ],
+        "properties": {
+          "person_id": {
+            "type": "string",
+            "pattern": "^PX-[0-9]{4}$"
+          },
+          "canonical_name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "affiliation": {
+            "type": "string"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "person_id",
+      "records": [
+        {
+          "person_id": "PX-7001",
+          "canonical_name": "Mina Chen",
+          "role": "Curator",
+          "city": "Oslo",
+          "affiliation": "Atlas Unit",
+          "aliases": [
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7002",
+          "canonical_name": "Ming Silva",
+          "role": "Coordinator",
+          "city": "Lima",
+          "affiliation": "Estuary Group",
+          "aliases": [
+            "M. Silva",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7003",
+          "canonical_name": "Alex Patel",
+          "role": "Researcher",
+          "city": "Perth",
+          "affiliation": "Drift Studio",
+          "aliases": [
+            "A. Patel",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7004",
+          "canonical_name": "Sam Chen",
+          "role": "Engineer",
+          "city": "Dakar",
+          "affiliation": "Canal Archive",
+          "aliases": [
+            "S. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7005",
+          "canonical_name": "Jordan Chen",
+          "role": "Archivist",
+          "city": "Seoul",
+          "affiliation": "Birch Lab",
+          "aliases": [
+            "J. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7006",
+          "canonical_name": "Taylor Morgan",
+          "role": "Analyst",
+          "city": "Taipei",
+          "affiliation": "Atlas Unit",
+          "aliases": [
+            "T. Morgan"
+          ]
+        },
+        {
+          "person_id": "PX-7007",
+          "canonical_name": "Robin Rivera",
+          "role": "Curator",
+          "city": "Riga",
+          "affiliation": "Estuary Group",
+          "aliases": [
+            "R. Rivera"
+          ]
+        },
+        {
+          "person_id": "PX-7008",
+          "canonical_name": "Casey Morgan",
+          "role": "Coordinator",
+          "city": "Oslo",
+          "affiliation": "Drift Studio",
+          "aliases": [
+            "C. Morgan"
+          ]
+        },
+        {
+          "person_id": "PX-7009",
+          "canonical_name": "Ari Kim",
+          "role": "Researcher",
+          "city": "Lima",
+          "affiliation": "Canal Archive",
+          "aliases": [
+            "A. Kim"
+          ]
+        },
+        {
+          "person_id": "PX-7010",
+          "canonical_name": "Lee Okafor",
+          "role": "Engineer",
+          "city": "Perth",
+          "affiliation": "Birch Lab",
+          "aliases": [
+            "L. Okafor",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7011",
+          "canonical_name": "Mina Chen",
+          "role": "Archivist",
+          "city": "Dakar",
+          "affiliation": "Atlas Unit",
+          "aliases": [
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7012",
+          "canonical_name": "Ming Silva",
+          "role": "Analyst",
+          "city": "Seoul",
+          "affiliation": "Estuary Group",
+          "aliases": [
+            "M. Silva",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7013",
+          "canonical_name": "Alex Patel",
+          "role": "Curator",
+          "city": "Taipei",
+          "affiliation": "Drift Studio",
+          "aliases": [
+            "A. Patel"
+          ]
+        },
+        {
+          "person_id": "PX-7014",
+          "canonical_name": "Sam Chen",
+          "role": "Coordinator",
+          "city": "Riga",
+          "affiliation": "Canal Archive",
+          "aliases": [
+            "S. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7015",
+          "canonical_name": "Jordan Chen",
+          "role": "Researcher",
+          "city": "Oslo",
+          "affiliation": "Birch Lab",
+          "aliases": [
+            "J. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7016",
+          "canonical_name": "Taylor Morgan",
+          "role": "Engineer",
+          "city": "Lima",
+          "affiliation": "Atlas Unit",
+          "aliases": [
+            "T. Morgan"
+          ]
+        },
+        {
+          "person_id": "PX-7017",
+          "canonical_name": "Robin Rivera",
+          "role": "Archivist",
+          "city": "Perth",
+          "affiliation": "Estuary Group",
+          "aliases": [
+            "R. Rivera"
+          ]
+        },
+        {
+          "person_id": "PX-7018",
+          "canonical_name": "Casey Morgan",
+          "role": "Analyst",
+          "city": "Dakar",
+          "affiliation": "Drift Studio",
+          "aliases": [
+            "C. Morgan"
+          ]
+        },
+        {
+          "person_id": "PX-7019",
+          "canonical_name": "Ari Kim",
+          "role": "Curator",
+          "city": "Seoul",
+          "affiliation": "Canal Archive",
+          "aliases": [
+            "A. Kim",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7020",
+          "canonical_name": "Lee Okafor",
+          "role": "Coordinator",
+          "city": "Taipei",
+          "affiliation": "Birch Lab",
+          "aliases": [
+            "L. Okafor",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7021",
+          "canonical_name": "Mina Chen",
+          "role": "Researcher",
+          "city": "Riga",
+          "affiliation": "Atlas Unit",
+          "aliases": [
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7022",
+          "canonical_name": "Ming Silva",
+          "role": "Engineer",
+          "city": "Oslo",
+          "affiliation": "Estuary Group",
+          "aliases": [
+            "M. Silva"
+          ]
+        },
+        {
+          "person_id": "PX-7023",
+          "canonical_name": "Alex Patel",
+          "role": "Archivist",
+          "city": "Lima",
+          "affiliation": "Drift Studio",
+          "aliases": [
+            "A. Patel"
+          ]
+        },
+        {
+          "person_id": "PX-7024",
+          "canonical_name": "Sam Chen",
+          "role": "Analyst",
+          "city": "Perth",
+          "affiliation": "Canal Archive",
+          "aliases": [
+            "S. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7025",
+          "canonical_name": "Jordan Chen",
+          "role": "Curator",
+          "city": "Dakar",
+          "affiliation": "Birch Lab",
+          "aliases": [
+            "J. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7026",
+          "canonical_name": "Taylor Morgan",
+          "role": "Coordinator",
+          "city": "Seoul",
+          "affiliation": "Atlas Unit",
+          "aliases": [
+            "T. Morgan"
+          ]
+        },
+        {
+          "person_id": "PX-7027",
+          "canonical_name": "Robin Rivera",
+          "role": "Researcher",
+          "city": "Taipei",
+          "affiliation": "Estuary Group",
+          "aliases": [
+            "R. Rivera"
+          ]
+        },
+        {
+          "person_id": "PX-7028",
+          "canonical_name": "Casey Morgan",
+          "role": "Engineer",
+          "city": "Riga",
+          "affiliation": "Drift Studio",
+          "aliases": [
+            "C. Morgan",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7029",
+          "canonical_name": "Ari Kim",
+          "role": "Archivist",
+          "city": "Oslo",
+          "affiliation": "Canal Archive",
+          "aliases": [
+            "A. Kim",
+            "M. Chen"
+          ]
+        },
+        {
+          "person_id": "PX-7030",
+          "canonical_name": "Lee Okafor",
+          "role": "Analyst",
+          "city": "Lima",
+          "affiliation": "Birch Lab",
+          "aliases": [
+            "L. Okafor",
+            "M. Chen"
+          ]
+        }
+      ],
+      "workflow": {
+        "browser": true,
+        "required_action_counts": {
+          "open": 1,
+          "load_more": 3,
+          "visit_detail": 38
+        },
+        "required_states": [
+          "batch:1",
+          "batch:2",
+          "batch:3",
+          "batch:4"
+        ],
+        "screenshots_min": 4,
+        "max_local_reads": 100
+      },
+      "ocr_fields": []
+    },
+    "test_003": {
+      "case_id": "test_003",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "permit_id",
+          "operator",
+          "district",
+          "status",
+          "capacity_mw",
+          "filed_at"
+        ],
+        "properties": {
+          "permit_id": {
+            "type": "string",
+            "pattern": "^PM-[0-9]{4}$"
+          },
+          "operator": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "pending",
+              "suspended"
+            ]
+          },
+          "capacity_mw": {
+            "type": "number"
+          },
+          "filed_at": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "permit_id",
+      "records": [
+        {
+          "permit_id": "PM-8801",
+          "operator": "Arc Wind 1",
+          "district": "North",
+          "status": "suspended",
+          "capacity_mw": 6.0,
+          "filed_at": "2026-07-10"
+        },
+        {
+          "permit_id": "PM-8802",
+          "operator": "Blue Mesa 1",
+          "district": "Plateau",
+          "status": "pending",
+          "capacity_mw": 5.77,
+          "filed_at": "2026-03-03"
+        },
+        {
+          "permit_id": "PM-8803",
+          "operator": "Civic Solar 1",
+          "district": "Coastal",
+          "status": "suspended",
+          "capacity_mw": 7.04,
+          "filed_at": "2026-04-04"
+        },
+        {
+          "permit_id": "PM-8804",
+          "operator": "Drift Hydro 1",
+          "district": "South",
+          "status": "approved",
+          "capacity_mw": 8.31,
+          "filed_at": "2026-05-05"
+        },
+        {
+          "permit_id": "PM-8805",
+          "operator": "Elm Storage 1",
+          "district": "North",
+          "status": "pending",
+          "capacity_mw": 9.58,
+          "filed_at": "2026-06-06"
+        },
+        {
+          "permit_id": "PM-8806",
+          "operator": "Arc Wind 2",
+          "district": "Plateau",
+          "status": "suspended",
+          "capacity_mw": 10.85,
+          "filed_at": "2026-07-07"
+        },
+        {
+          "permit_id": "PM-8807",
+          "operator": "Blue Mesa 2",
+          "district": "Coastal",
+          "status": "suspended",
+          "capacity_mw": 13.62,
+          "filed_at": "2026-07-16"
+        },
+        {
+          "permit_id": "PM-8808",
+          "operator": "Civic Solar 2",
+          "district": "South",
+          "status": "pending",
+          "capacity_mw": 13.39,
+          "filed_at": "2026-03-09"
+        },
+        {
+          "permit_id": "PM-8809",
+          "operator": "Drift Hydro 2",
+          "district": "North",
+          "status": "suspended",
+          "capacity_mw": 14.66,
+          "filed_at": "2026-04-10"
+        },
+        {
+          "permit_id": "PM-8810",
+          "operator": "Elm Storage 2",
+          "district": "Plateau",
+          "status": "approved",
+          "capacity_mw": 15.93,
+          "filed_at": "2026-05-11"
+        },
+        {
+          "permit_id": "PM-8811",
+          "operator": "Arc Wind 3",
+          "district": "Coastal",
+          "status": "pending",
+          "capacity_mw": 17.2,
+          "filed_at": "2026-06-12"
+        },
+        {
+          "permit_id": "PM-8812",
+          "operator": "Blue Mesa 3",
+          "district": "South",
+          "status": "suspended",
+          "capacity_mw": 18.47,
+          "filed_at": "2026-07-13"
+        },
+        {
+          "permit_id": "PM-8813",
+          "operator": "Civic Solar 3",
+          "district": "North",
+          "status": "suspended",
+          "capacity_mw": 21.24,
+          "filed_at": "2026-07-12"
+        },
+        {
+          "permit_id": "PM-8814",
+          "operator": "Drift Hydro 3",
+          "district": "Plateau",
+          "status": "pending",
+          "capacity_mw": 21.01,
+          "filed_at": "2026-03-15"
+        },
+        {
+          "permit_id": "PM-8815",
+          "operator": "Elm Storage 3",
+          "district": "Coastal",
+          "status": "suspended",
+          "capacity_mw": 22.28,
+          "filed_at": "2026-04-16"
+        },
+        {
+          "permit_id": "PM-8816",
+          "operator": "Arc Wind 4",
+          "district": "South",
+          "status": "approved",
+          "capacity_mw": 23.55,
+          "filed_at": "2026-05-17"
+        },
+        {
+          "permit_id": "PM-8817",
+          "operator": "Blue Mesa 4",
+          "district": "North",
+          "status": "pending",
+          "capacity_mw": 24.82,
+          "filed_at": "2026-06-18"
+        },
+        {
+          "permit_id": "PM-8818",
+          "operator": "Civic Solar 4",
+          "district": "Plateau",
+          "status": "suspended",
+          "capacity_mw": 26.09,
+          "filed_at": "2026-07-19"
+        },
+        {
+          "permit_id": "PM-8819",
+          "operator": "Drift Hydro 4",
+          "district": "Coastal",
+          "status": "suspended",
+          "capacity_mw": 28.86,
+          "filed_at": "2026-07-18"
+        },
+        {
+          "permit_id": "PM-8820",
+          "operator": "Elm Storage 4",
+          "district": "South",
+          "status": "pending",
+          "capacity_mw": 28.63,
+          "filed_at": "2026-03-21"
+        },
+        {
+          "permit_id": "PM-8821",
+          "operator": "Arc Wind 5",
+          "district": "North",
+          "status": "suspended",
+          "capacity_mw": 29.9,
+          "filed_at": "2026-04-22"
+        },
+        {
+          "permit_id": "PM-8822",
+          "operator": "Blue Mesa 5",
+          "district": "Plateau",
+          "status": "approved",
+          "capacity_mw": 31.17,
+          "filed_at": "2026-05-23"
+        },
+        {
+          "permit_id": "PM-8823",
+          "operator": "Civic Solar 5",
+          "district": "Coastal",
+          "status": "pending",
+          "capacity_mw": 32.44,
+          "filed_at": "2026-06-24"
+        },
+        {
+          "permit_id": "PM-8824",
+          "operator": "Drift Hydro 5",
+          "district": "South",
+          "status": "suspended",
+          "capacity_mw": 33.71,
+          "filed_at": "2026-07-25"
+        },
+        {
+          "permit_id": "PM-8825",
+          "operator": "Elm Storage 5",
+          "district": "North",
+          "status": "suspended",
+          "capacity_mw": 36.48,
+          "filed_at": "2026-07-14"
+        }
+      ],
+      "workflow": {
+        "browser": true,
+        "required_action_counts": {
+          "open": 1,
+          "set_mode": 1,
+          "load_more": 3,
+          "visit_detail": 25,
+          "read_local": 1,
+          "apply_update": 10
+        },
+        "required_states": [
+          "quarter:current",
+          "periods:all/page:1",
+          "periods:all/page:2",
+          "periods:all/page:3",
+          "periods:all/page:4"
+        ],
+        "screenshots_min": 5,
+        "max_local_reads": 85
+      },
+      "ocr_fields": []
+    },
+    "test_004": {
+      "case_id": "test_004",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "sensor_id",
+          "serial",
+          "reading",
+          "status",
+          "location",
+          "observed_at"
+        ],
+        "properties": {
+          "sensor_id": {
+            "type": "string",
+            "pattern": "^SN-[0-9]{4}$"
+          },
+          "serial": {
+            "type": "string"
+          },
+          "reading": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "const": "active"
+          },
+          "location": {
+            "type": "string"
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "sensor_id",
+      "records": [
+        {
+          "sensor_id": "SN-9001",
+          "serial": "SERIAL-70000",
+          "reading": 12.02,
+          "status": "active",
+          "location": "Snapshot Roof A",
+          "observed_at": "2026-07-08T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9002",
+          "serial": "SERIAL-70001",
+          "reading": 10.73,
+          "status": "active",
+          "location": "Tunnel 3",
+          "observed_at": "2026-07-09T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9003",
+          "serial": "SERIAL-70002",
+          "reading": 13.24,
+          "status": "active",
+          "location": "Pier 2",
+          "observed_at": "2026-07-10T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9004",
+          "serial": "SERIAL-70003",
+          "reading": 11.95,
+          "status": "active",
+          "location": "Lab West",
+          "observed_at": "2026-07-11T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9005",
+          "serial": "SERIAL-70004",
+          "reading": 13.36,
+          "status": "active",
+          "location": "Field 9",
+          "observed_at": "2026-06-21T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9006",
+          "serial": "SERIAL-70005",
+          "reading": 13.17,
+          "status": "active",
+          "location": "Roof A",
+          "observed_at": "2026-07-13T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9008",
+          "serial": "SERIAL-70007",
+          "reading": 14.39,
+          "status": "active",
+          "location": "Snapshot Pier 2",
+          "observed_at": "2026-07-15T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9009",
+          "serial": "SERIAL-70008",
+          "reading": 16.9,
+          "status": "active",
+          "location": "Lab West",
+          "observed_at": "2026-07-16T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9010",
+          "serial": "SERIAL-70009",
+          "reading": 16.41,
+          "status": "active",
+          "location": "Field 9",
+          "observed_at": "2026-06-13T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9011",
+          "serial": "SERIAL-70010",
+          "reading": 18.12,
+          "status": "active",
+          "location": "Roof A",
+          "observed_at": "2026-07-18T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9012",
+          "serial": "SERIAL-70011",
+          "reading": 16.83,
+          "status": "active",
+          "location": "Tunnel 3",
+          "observed_at": "2026-07-19T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9013",
+          "serial": "SERIAL-70012",
+          "reading": 19.34,
+          "status": "active",
+          "location": "Pier 2",
+          "observed_at": "2026-07-20T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9014",
+          "serial": "SERIAL-70013",
+          "reading": 18.05,
+          "status": "active",
+          "location": "Lab West",
+          "observed_at": "2026-07-21T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9015",
+          "serial": "SERIAL-70014",
+          "reading": 19.46,
+          "status": "active",
+          "location": "Snapshot Field 9",
+          "observed_at": "2026-06-05T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9016",
+          "serial": "SERIAL-70015",
+          "reading": 19.27,
+          "status": "active",
+          "location": "Roof A",
+          "observed_at": "2026-07-08T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9017",
+          "serial": "SERIAL-70016",
+          "reading": 21.78,
+          "status": "active",
+          "location": "Tunnel 3",
+          "observed_at": "2026-07-09T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9018",
+          "serial": "SERIAL-70017",
+          "reading": 20.49,
+          "status": "active",
+          "location": "Pier 2",
+          "observed_at": "2026-07-10T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9019",
+          "serial": "SERIAL-70018",
+          "reading": 23.0,
+          "status": "active",
+          "location": "Lab West",
+          "observed_at": "2026-07-11T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9020",
+          "serial": "SERIAL-70019",
+          "reading": 22.51,
+          "status": "active",
+          "location": "Field 9",
+          "observed_at": "2026-06-20T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9021",
+          "serial": "SERIAL-70020",
+          "reading": 24.22,
+          "status": "active",
+          "location": "Roof A",
+          "observed_at": "2026-07-13T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9022",
+          "serial": "SERIAL-70021",
+          "reading": 22.93,
+          "status": "active",
+          "location": "Snapshot Tunnel 3",
+          "observed_at": "2026-07-14T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9023",
+          "serial": "SERIAL-70022",
+          "reading": 25.44,
+          "status": "active",
+          "location": "Pier 2",
+          "observed_at": "2026-07-15T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9024",
+          "serial": "SERIAL-70023",
+          "reading": 24.15,
+          "status": "active",
+          "location": "Lab West",
+          "observed_at": "2026-07-16T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9025",
+          "serial": "SERIAL-70024",
+          "reading": 25.56,
+          "status": "active",
+          "location": "Field 9",
+          "observed_at": "2026-06-12T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9026",
+          "serial": "SERIAL-70025",
+          "reading": 25.37,
+          "status": "active",
+          "location": "Roof A",
+          "observed_at": "2026-07-18T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9027",
+          "serial": "SERIAL-70026",
+          "reading": 27.88,
+          "status": "active",
+          "location": "Tunnel 3",
+          "observed_at": "2026-07-19T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9029",
+          "serial": "SERIAL-70028",
+          "reading": 29.1,
+          "status": "active",
+          "location": "Snapshot Lab West",
+          "observed_at": "2026-07-21T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9030",
+          "serial": "SERIAL-70029",
+          "reading": 28.61,
+          "status": "active",
+          "location": "Field 9",
+          "observed_at": "2026-06-27T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9031",
+          "serial": "SERIAL-70030",
+          "reading": 30.32,
+          "status": "active",
+          "location": "Roof A",
+          "observed_at": "2026-07-08T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9032",
+          "serial": "SERIAL-70031",
+          "reading": 29.03,
+          "status": "active",
+          "location": "Tunnel 3",
+          "observed_at": "2026-07-09T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9033",
+          "serial": "SERIAL-70032",
+          "reading": 31.54,
+          "status": "active",
+          "location": "Pier 2",
+          "observed_at": "2026-07-10T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9034",
+          "serial": "SERIAL-70033",
+          "reading": 30.25,
+          "status": "active",
+          "location": "Lab West",
+          "observed_at": "2026-07-11T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9035",
+          "serial": "SERIAL-70034",
+          "reading": 31.66,
+          "status": "active",
+          "location": "Field 9",
+          "observed_at": "2026-06-19T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9036",
+          "serial": "SERIAL-70035",
+          "reading": 31.47,
+          "status": "active",
+          "location": "Snapshot Roof A",
+          "observed_at": "2026-07-13T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9037",
+          "serial": "SERIAL-70036",
+          "reading": 33.98,
+          "status": "active",
+          "location": "Tunnel 3",
+          "observed_at": "2026-07-14T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9038",
+          "serial": "SERIAL-70037",
+          "reading": 32.69,
+          "status": "active",
+          "location": "Pier 2",
+          "observed_at": "2026-07-15T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9039",
+          "serial": "SERIAL-70038",
+          "reading": 35.2,
+          "status": "active",
+          "location": "Lab West",
+          "observed_at": "2026-07-16T12:00:00Z"
+        },
+        {
+          "sensor_id": "SN-9040",
+          "serial": "SERIAL-70039",
+          "reading": 34.71,
+          "status": "active",
+          "location": "Field 9",
+          "observed_at": "2026-06-11T12:00:00Z"
+        }
+      ],
+      "workflow": {
+        "browser": false,
+        "required_action_counts": {
+          "read_local": 8,
+          "merge": 40,
+          "exclude": 4
+        },
+        "required_states": [
+          "snapshots:read",
+          "identity:resolved",
+          "temporal:merged",
+          "certification:applied"
+        ],
+        "screenshots_min": 0,
+        "max_local_reads": 20
+      },
+      "ocr_fields": []
+    },
+    "test_005": {
+      "case_id": "test_005",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "package_id",
+          "name",
+          "price_usd",
+          "quantity",
+          "updated_at"
+        ],
+        "properties": {
+          "package_id": {
+            "type": "string",
+            "pattern": "^RC-[0-9]{4}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price_usd": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "package_id",
+      "records": [
+        {
+          "package_id": "RC-6101",
+          "name": "Recovery parcel 01",
+          "price_usd": 12.5,
+          "quantity": 1,
+          "updated_at": "2026-07-01T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6102",
+          "name": "Recovery parcel 02",
+          "price_usd": 13.67,
+          "quantity": 6,
+          "updated_at": "2026-07-02T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6103",
+          "name": "Recovery parcel 03",
+          "price_usd": 14.84,
+          "quantity": 11,
+          "updated_at": "2026-07-03T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6104",
+          "name": "Recovery parcel 04",
+          "price_usd": 16.01,
+          "quantity": 16,
+          "updated_at": "2026-07-04T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6105",
+          "name": "Recovery parcel 05",
+          "price_usd": 17.18,
+          "quantity": 4,
+          "updated_at": "2026-07-05T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6106",
+          "name": "Recovery parcel 06",
+          "price_usd": 18.35,
+          "quantity": 9,
+          "updated_at": "2026-07-06T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6107",
+          "name": "Recovery parcel 07",
+          "price_usd": 19.52,
+          "quantity": 14,
+          "updated_at": "2026-07-07T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6108",
+          "name": "Recovery parcel 08",
+          "price_usd": 20.69,
+          "quantity": 2,
+          "updated_at": "2026-07-08T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6109",
+          "name": "Recovery parcel 09",
+          "price_usd": 25.75,
+          "quantity": 7,
+          "updated_at": "2026-08-01T10:00:00Z"
+        },
+        {
+          "package_id": "RC-6110",
+          "name": "Recovery parcel 10",
+          "price_usd": 23.03,
+          "quantity": 12,
+          "updated_at": "2026-07-10T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6111",
+          "name": "Recovery parcel 11 revised",
+          "price_usd": 24.2,
+          "quantity": 17,
+          "updated_at": "2026-08-02T10:00:00Z"
+        },
+        {
+          "package_id": "RC-6112",
+          "name": "Recovery parcel 12",
+          "price_usd": 25.37,
+          "quantity": 5,
+          "updated_at": "2026-07-12T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6113",
+          "name": "Recovery parcel 13",
+          "price_usd": 26.54,
+          "quantity": 10,
+          "updated_at": "2026-07-13T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6114",
+          "name": "Recovery parcel 14",
+          "price_usd": 27.71,
+          "quantity": 9,
+          "updated_at": "2026-08-03T10:00:00Z"
+        },
+        {
+          "package_id": "RC-6115",
+          "name": "Recovery parcel 15",
+          "price_usd": 28.88,
+          "quantity": 3,
+          "updated_at": "2026-07-15T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6116",
+          "name": "Recovery parcel 16",
+          "price_usd": 30.05,
+          "quantity": 8,
+          "updated_at": "2026-07-16T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6117",
+          "name": "Recovery parcel 17",
+          "price_usd": 31.22,
+          "quantity": 13,
+          "updated_at": "2026-07-17T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6118",
+          "name": "Recovery parcel 18",
+          "price_usd": 32.39,
+          "quantity": 1,
+          "updated_at": "2026-07-18T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6119",
+          "name": "Recovery parcel 19",
+          "price_usd": 33.56,
+          "quantity": 6,
+          "updated_at": "2026-07-19T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6120",
+          "name": "Recovery parcel 20",
+          "price_usd": 34.73,
+          "quantity": 11,
+          "updated_at": "2026-07-20T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6121",
+          "name": "Recovery parcel 21",
+          "price_usd": 35.9,
+          "quantity": 16,
+          "updated_at": "2026-07-21T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6122",
+          "name": "Recovery parcel 22",
+          "price_usd": 37.07,
+          "quantity": 4,
+          "updated_at": "2026-07-01T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6123",
+          "name": "Recovery parcel 23",
+          "price_usd": 38.24,
+          "quantity": 9,
+          "updated_at": "2026-07-02T09:00:00Z"
+        },
+        {
+          "package_id": "RC-6124",
+          "name": "Recovery parcel 24",
+          "price_usd": 39.41,
+          "quantity": 14,
+          "updated_at": "2026-07-03T09:00:00Z"
+        }
+      ],
+      "workflow": {
+        "browser": false,
+        "required_action_counts": {
+          "read_local": 6,
+          "parse_failure": 1,
+          "checksum": 1,
+          "apply_patch": 3,
+          "policy_block": 1,
+          "merge": 3
+        },
+        "required_states": [
+          "primary:degraded",
+          "fallback:verified",
+          "journal:applied",
+          "dataset:complete"
+        ],
+        "screenshots_min": 0,
+        "max_local_reads": 9
+      },
+      "ocr_fields": []
+    },
+    "test_006": {
+      "case_id": "test_006",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": [
+          "accession_id",
+          "title",
+          "category",
+          "insured_usd",
+          "condition_code",
+          "storage_zone",
+          "seal_code"
+        ],
+        "properties": {
+          "accession_id": {
+            "type": "string",
+            "pattern": "^MX-[0-9]{4}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "drawing",
+              "model",
+              "textile",
+              "photograph"
+            ]
+          },
+          "insured_usd": {
+            "type": "number"
+          },
+          "condition_code": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          "storage_zone": {
+            "type": "string"
+          },
+          "seal_code": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "identity_field": "accession_id",
+      "records": [
+        {
+          "accession_id": "MX-3301",
+          "title": "River Study 01",
+          "category": "drawing",
+          "insured_usd": 1500.0,
+          "condition_code": "A",
+          "storage_zone": "Z-1A",
+          "seal_code": "SA-700"
+        },
+        {
+          "accession_id": "MX-3302",
+          "title": "Night Transit 02",
+          "category": "photograph",
+          "insured_usd": 1637.5,
+          "condition_code": "C",
+          "storage_zone": "Z-2B",
+          "seal_code": "SB-701"
+        },
+        {
+          "accession_id": "MX-3303",
+          "title": "Salt Diagram 03",
+          "category": "textile",
+          "insured_usd": 1775.0,
+          "condition_code": "B",
+          "storage_zone": "Z-3C",
+          "seal_code": "SC-702"
+        },
+        {
+          "accession_id": "MX-3304",
+          "title": "Cloud Index 04",
+          "category": "model",
+          "insured_usd": 1692.5,
+          "condition_code": "A",
+          "storage_zone": "Z-4D",
+          "seal_code": "SD-703"
+        },
+        {
+          "accession_id": "MX-3305",
+          "title": "Cedar Map 05",
+          "category": "drawing",
+          "insured_usd": 2050.0,
+          "condition_code": "C",
+          "storage_zone": "Z-5A",
+          "seal_code": "SE-704"
+        },
+        {
+          "accession_id": "MX-3306",
+          "title": "Quiet Engine 06",
+          "category": "photograph",
+          "insured_usd": 2187.5,
+          "condition_code": "B",
+          "storage_zone": "Z-6B",
+          "seal_code": "SF-705"
+        },
+        {
+          "accession_id": "MX-3307",
+          "title": "Tidal Notes 07",
+          "category": "textile",
+          "insured_usd": 2325.0,
+          "condition_code": "A",
+          "storage_zone": "Z-1C",
+          "seal_code": "SG-706"
+        },
+        {
+          "accession_id": "MX-3308",
+          "title": "Glass Horizon 08",
+          "category": "model",
+          "insured_usd": 2462.5,
+          "condition_code": "C",
+          "storage_zone": "Z-2D",
+          "seal_code": "SH-707"
+        },
+        {
+          "accession_id": "MX-3309",
+          "title": "Signal Garden 09",
+          "category": "drawing",
+          "insured_usd": 2910.0,
+          "condition_code": "B",
+          "storage_zone": "Z-3A",
+          "seal_code": "SI-708"
+        },
+        {
+          "accession_id": "MX-3310",
+          "title": "River Study 10",
+          "category": "photograph",
+          "insured_usd": 2737.5,
+          "condition_code": "A",
+          "storage_zone": "Z-4B",
+          "seal_code": "SJ-709"
+        },
+        {
+          "accession_id": "MX-3311",
+          "title": "Night Transit 11",
+          "category": "textile",
+          "insured_usd": 2875.0,
+          "condition_code": "C",
+          "storage_zone": "Z-5C",
+          "seal_code": "SK-710"
+        },
+        {
+          "accession_id": "MX-3312",
+          "title": "Salt Diagram 12",
+          "category": "model",
+          "insured_usd": 3012.5,
+          "condition_code": "B",
+          "storage_zone": "Z-6D",
+          "seal_code": "SL-711"
+        },
+        {
+          "accession_id": "MX-3313",
+          "title": "Cloud Index 13",
+          "category": "drawing",
+          "insured_usd": 3150.0,
+          "condition_code": "A",
+          "storage_zone": "Z-1A",
+          "seal_code": "SM-712"
+        },
+        {
+          "accession_id": "MX-3314",
+          "title": "Cedar Map 14",
+          "category": "photograph",
+          "insured_usd": 3067.5,
+          "condition_code": "C",
+          "storage_zone": "Z-2B",
+          "seal_code": "SN-713"
+        },
+        {
+          "accession_id": "MX-3315",
+          "title": "Quiet Engine 15",
+          "category": "textile",
+          "insured_usd": 3425.0,
+          "condition_code": "B",
+          "storage_zone": "Z-3C",
+          "seal_code": "SO-714"
+        },
+        {
+          "accession_id": "MX-3316",
+          "title": "Tidal Notes 16",
+          "category": "model",
+          "insured_usd": 3562.5,
+          "condition_code": "A",
+          "storage_zone": "Z-4D",
+          "seal_code": "SP-715"
+        },
+        {
+          "accession_id": "MX-3317",
+          "title": "Glass Horizon 17",
+          "category": "drawing",
+          "insured_usd": 3700.0,
+          "condition_code": "C",
+          "storage_zone": "Z-5A",
+          "seal_code": "SQ-716"
+        },
+        {
+          "accession_id": "MX-3318",
+          "title": "Signal Garden 18",
+          "category": "photograph",
+          "insured_usd": 3837.5,
+          "condition_code": "B",
+          "storage_zone": "Z-6B",
+          "seal_code": "SR-717"
+        },
+        {
+          "accession_id": "MX-3319",
+          "title": "River Study 19",
+          "category": "textile",
+          "insured_usd": 4285.0,
+          "condition_code": "A",
+          "storage_zone": "Z-1C",
+          "seal_code": "SS-718"
+        },
+        {
+          "accession_id": "MX-3320",
+          "title": "Night Transit 20",
+          "category": "model",
+          "insured_usd": 4112.5,
+          "condition_code": "C",
+          "storage_zone": "Z-2D",
+          "seal_code": "ST-719"
+        },
+        {
+          "accession_id": "MX-3321",
+          "title": "Salt Diagram 21",
+          "category": "drawing",
+          "insured_usd": 4250.0,
+          "condition_code": "B",
+          "storage_zone": "Z-3A",
+          "seal_code": "SA-720"
+        },
+        {
+          "accession_id": "MX-3322",
+          "title": "Cloud Index 22",
+          "category": "photograph",
+          "insured_usd": 4387.5,
+          "condition_code": "A",
+          "storage_zone": "Z-4B",
+          "seal_code": "SB-721"
+        },
+        {
+          "accession_id": "MX-3323",
+          "title": "Cedar Map 23",
+          "category": "textile",
+          "insured_usd": 4525.0,
+          "condition_code": "C",
+          "storage_zone": "Z-5C",
+          "seal_code": "SC-722"
+        },
+        {
+          "accession_id": "MX-3324",
+          "title": "Quiet Engine 24",
+          "category": "model",
+          "insured_usd": 4442.5,
+          "condition_code": "B",
+          "storage_zone": "Z-6D",
+          "seal_code": "SD-723"
+        },
+        {
+          "accession_id": "MX-3325",
+          "title": "Tidal Notes 25",
+          "category": "drawing",
+          "insured_usd": 4800.0,
+          "condition_code": "A",
+          "storage_zone": "Z-1A",
+          "seal_code": "SE-724"
+        },
+        {
+          "accession_id": "MX-3326",
+          "title": "Glass Horizon 26",
+          "category": "photograph",
+          "insured_usd": 4937.5,
+          "condition_code": "C",
+          "storage_zone": "Z-2B",
+          "seal_code": "SF-725"
+        },
+        {
+          "accession_id": "MX-3327",
+          "title": "Signal Garden 27",
+          "category": "textile",
+          "insured_usd": 5075.0,
+          "condition_code": "B",
+          "storage_zone": "Z-3C",
+          "seal_code": "SG-726"
+        },
+        {
+          "accession_id": "MX-3328",
+          "title": "River Study 28",
+          "category": "model",
+          "insured_usd": 5212.5,
+          "condition_code": "A",
+          "storage_zone": "Z-4D",
+          "seal_code": "SH-727"
+        },
+        {
+          "accession_id": "MX-3329",
+          "title": "Night Transit 29",
+          "category": "drawing",
+          "insured_usd": 5660.0,
+          "condition_code": "C",
+          "storage_zone": "Z-5A",
+          "seal_code": "SI-728"
+        },
+        {
+          "accession_id": "MX-3330",
+          "title": "Salt Diagram 30",
+          "category": "photograph",
+          "insured_usd": 5487.5,
+          "condition_code": "B",
+          "storage_zone": "Z-6B",
+          "seal_code": "SJ-729"
+        },
+        {
+          "accession_id": "MX-3331",
+          "title": "Cloud Index 31",
+          "category": "textile",
+          "insured_usd": 5625.0,
+          "condition_code": "A",
+          "storage_zone": "Z-1C",
+          "seal_code": "SK-730"
+        },
+        {
+          "accession_id": "MX-3332",
+          "title": "Cedar Map 32",
+          "category": "model",
+          "insured_usd": 5762.5,
+          "condition_code": "C",
+          "storage_zone": "Z-2D",
+          "seal_code": "SL-731"
+        },
+        {
+          "accession_id": "MX-3333",
+          "title": "Quiet Engine 33",
+          "category": "drawing",
+          "insured_usd": 5900.0,
+          "condition_code": "B",
+          "storage_zone": "Z-3A",
+          "seal_code": "SM-732"
+        },
+        {
+          "accession_id": "MX-3334",
+          "title": "Tidal Notes 34",
+          "category": "photograph",
+          "insured_usd": 5817.5,
+          "condition_code": "A",
+          "storage_zone": "Z-4B",
+          "seal_code": "SN-733"
+        },
+        {
+          "accession_id": "MX-3335",
+          "title": "Glass Horizon 35",
+          "category": "textile",
+          "insured_usd": 6175.0,
+          "condition_code": "C",
+          "storage_zone": "Z-5C",
+          "seal_code": "SO-734"
+        },
+        {
+          "accession_id": "MX-3336",
+          "title": "Signal Garden 36",
+          "category": "model",
+          "insured_usd": 6312.5,
+          "condition_code": "B",
+          "storage_zone": "Z-6D",
+          "seal_code": "SP-735"
+        }
+      ],
+      "workflow": {
+        "browser": true,
+        "required_action_counts": {
+          "open": 1,
+          "load_more": 3,
+          "set_mode": 1,
+          "visit_detail": 36,
+          "read_local": 5,
+          "ocr": 12
+        },
+        "required_states": [
+          "primary:1",
+          "primary:2",
+          "primary:3",
+          "primary:4",
+          "annex:included"
+        ],
+        "screenshots_min": 6,
+        "max_local_reads": 140
+      },
+      "ocr_fields": [
+        {
+          "record_id": "MX-3301",
+          "field": "/seal_code",
+          "image": "marks/mark-a316af2d31.png",
+          "sha256": "9fe2670dc58344baab681d111ea7b6e9c25240cf319ea6e024c76817736f51eb"
+        },
+        {
+          "record_id": "MX-3304",
+          "field": "/seal_code",
+          "image": "marks/mark-7dd0f120d2.png",
+          "sha256": "a0b695e01dc31cf0f113f22838e7cbe3f78703598b112c3f1fee972c2223a876"
+        },
+        {
+          "record_id": "MX-3307",
+          "field": "/seal_code",
+          "image": "marks/mark-3422e00def.png",
+          "sha256": "015ae7f92bd51f168c44dabd2a366af8c2c42bded9732c1559a06391af995d17"
+        },
+        {
+          "record_id": "MX-3310",
+          "field": "/seal_code",
+          "image": "marks/mark-4411391a22.png",
+          "sha256": "a3929125bc017b418a2069af9db408a936ba432d0639c26a3892320504745ce0"
+        },
+        {
+          "record_id": "MX-3313",
+          "field": "/seal_code",
+          "image": "marks/mark-972adbad1f.png",
+          "sha256": "2dc8d03d85a4ff95d2c326a184ec1155d3ff9a0ada515b5247b639adbab8a1f9"
+        },
+        {
+          "record_id": "MX-3316",
+          "field": "/seal_code",
+          "image": "marks/mark-ea482ee261.png",
+          "sha256": "1643fc3ab97d8e6007a8cd6bed48fc0e4a59c299b8596ceb4d78f366ba8efcf6"
+        },
+        {
+          "record_id": "MX-3319",
+          "field": "/seal_code",
+          "image": "marks/mark-f1ca3b622c.png",
+          "sha256": "9ca52eecfbf2471f132bc099d7e3571ed585a2347427d5d720ba636ca82df0cd"
+        },
+        {
+          "record_id": "MX-3322",
+          "field": "/seal_code",
+          "image": "marks/mark-c3783f5f50.png",
+          "sha256": "18951988a3f10b0919bff5ae6b953d3ea41a13fea2206e4d2d128925ec8ba160"
+        },
+        {
+          "record_id": "MX-3325",
+          "field": "/seal_code",
+          "image": "marks/mark-255dde9598.png",
+          "sha256": "f6209c0772abae83e9cfbe3d671adbdab65e30f5fc98b426648ef46489fef0a0"
+        },
+        {
+          "record_id": "MX-3328",
+          "field": "/seal_code",
+          "image": "marks/mark-c64f67bb93.png",
+          "sha256": "44f0075b5bb51537d20eb0c576c2dac313f65b364d1f3b848e85dd5cd471a7f0"
+        },
+        {
+          "record_id": "MX-3331",
+          "field": "/seal_code",
+          "image": "marks/mark-eb6fa2ed46.png",
+          "sha256": "cbb22b0bcd74f9b33da7821a1390b419fe3e101f1b1fdd26be826020ef6b2dc5"
+        },
+        {
+          "record_id": "MX-3334",
+          "field": "/seal_code",
+          "image": "marks/mark-d7172b89a1.png",
+          "sha256": "d05d255d7fa90fd0994c553b9bced4c72fa2017305b36511bcf8ad0d6ea8c0b6"
+        }
+      ]
+    }
+  }
+}

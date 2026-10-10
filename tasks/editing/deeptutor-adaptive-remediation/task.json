@@ -1,0 +1,148 @@
+{
+  "id": "deeptutor-adaptive-remediation",
+  "family": "editing",
+  "short": "deeptutor",
+  "title": "DeepTutor adaptive remediation",
+  "version": "18-edit-deeptutor-adaptive-remediation-v5-agentloop-v1",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "editing_agentloop_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe"
+  ],
+  "envs": [
+    "deeptutor-task-env-v1"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": true,
+    "systemd_delegation": true,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "bwrap",
+      "git",
+      "systemd-run"
+    ],
+    "disk_gb": 10
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 5,
+    "builder_session_sec": 18000,
+    "score": "Result only (Code axis skipped_by_policy)",
+    "runtime_model": "deepseek-flash/high",
+    "judge": "deepseek-flash/max, max_output_tokens 64000",
+    "early_stop_resample": "formal only, 1 extra logical request",
+    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+  },
+  "smoke": {
+    "profile": "single-dev-two-round-hidden-smoke-v1",
+    "accepted_dev_rounds": 2,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 28800,
+    "note": "this is the readiness/admission run; scores are not comparable"
+  },
+  "upstream": {
+    "repo": "https://github.com/HKUDS/DeepTutor",
+    "commit": "37c3db6df7e886aee4f61c97ec5e618b8ab379e8",
+    "git_tree": "bf3d5d1a2234ebd704dfe2a2530bd83bd8d3f36e",
+    "license": "see upstream (no LICENSE in snapshot)",
+    "redistribute_a0": false
+  },
+  "runner_config": {
+    "tree": "tree",
+    "legacy_tree_name": "18-edit-deeptutor-adaptive-remediation-v5-agentloop-v1",
+    "a0": {
+      "fetch": "a0/fetch.sh",
+      "dest": "a0src/input/repository",
+      "lang_options": [
+        "en-upstream"
+      ],
+      "evaluator_digest_pins": [
+        [
+          "agentloop/protocol.py",
+          "AUTHORITATIVE_SOURCE_DIGEST",
+          "1dda8c9737d0997b5efc9fa7a85348f96b05b73e67d5f5b8ac7625cd4eae57bc",
+          "re-pinned to the en-upstream a0 subset (protocol.tree_digest, ec2d5bb); paper as-run zh a0 value 56d107ba0798b0c2f0f852db4af6b8860c75b08f2f43e8d2971ad15e8202c862"
+        ]
+      ]
+    },
+    "hidden_issued": null,
+    "formal_extra_flags": [],
+    "task_environment": {
+      "AGENTSWE_DEEPTUTOR_PRIOR_PRODUCT_GUARD": "@@AGENTSWE_EDITING_STATE@@/deeptutor-prior-product-guard.json (+ _SHA256)"
+    },
+    "render_tokens": "see staging README: every @@AGENTSWE_*@@ token must be rendered to an absolute path at setup",
+    "harbor_profile": "site"
+  },
+  "language": {
+    "task_docs_as_run": "en (input/05_mastery_tool_contract.md zh)",
+    "a0_as_run": "zh (machine-translated docs/fixtures in a0)",
+    "a0_functional_risk_files": 9,
+    "english_task_docs": "lang/en-backtranslation/ (zh->en back-translation made for the anonymous repo)",
+    "paper_as_run": {
+      "task_docs": "en (input/05_mastery_tool_contract.md zh)",
+      "a0": "zh (machine-translated docs/fixtures in a0)"
+    },
+    "release_language": "en",
+    "release_task_docs": "English backtranslation under lang/en-backtranslation/ where present; native English otherwise",
+    "release_a0": "en-upstream",
+    "release_cjk_check": "tools/scan.py --release"
+  },
+  "paper": {
+    "columns": [
+      "DeepSeek-V4-Pro",
+      "GPT-5.6-Sol",
+      "GPT-5.5",
+      "DeepSeek-V4-Flash",
+      "Qwen3.6-35B-A3B"
+    ],
+    "result": [
+      31.0,
+      54.17,
+      14.33,
+      25.67,
+      0
+    ]
+  },
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "runs": [
+      32.67,
+      50.0,
+      0.0
+    ],
+    "mean_at_3": 27.56,
+    "sd": 25.39
+  },
+  "notes": [
+    "Runtime images: there is no candidate image. The lower agent runs the frozen product from the host venv deeptutor-task-env-v1 (env/build-host.sh: pinned CPython 3.12.13 and requirements.lock) inside bubblewrap; the Builder runs in the builder-codex image that setup builds from this repository. A fresh setup builds only builder-codex.",
+    "Release change: the prior-product guard accepts an explicit fresh_install guard with no prior runs or products (a new installation has dispatched none); it blocks nothing in that case.",
+    "Release change (2026-10-09): agentloop/lower_transport.py records a relay error that happened after the broker's whole response was read as phase reply_write (with the upstream status and bytes), and agentloop/lower_agent_entry.py tolerates such Candidate reply disconnects (BrokenPipe/ConnectionReset, upstream 200) when the product exited by itself under a valid transport preflight, no other relay or broker event failed, and the broker ledger records every request of the case context completed; the tolerated events are recorded as candidate_reply_disconnect. Anything else stays evaluator_infrastructure_error; the deadline path is unchanged and never read relay events.",
+    "Release change (2026-10-10): Docker 29 removes an exited or stopped --rm container asynchronously: for several seconds `docker inspect` still shows it and `docker rm -f` answers \"removal of container ... is already in progress\" (exit 1); Docker 24 has removed it by then. harbor/formal_one_stop.py BrokerProcess.stop: when the stopped --rm broker's removal outlasts the client's 10 s wait, rm answers \"already in progress\"; stop now records that and waits up to 30 s for the container to be gone before deciding absent_after_cleanup. Any other rm refusal is judged as before, and a container still present after the wait is not absent. Seen with Docker 29.2.1."
+  ]
+}

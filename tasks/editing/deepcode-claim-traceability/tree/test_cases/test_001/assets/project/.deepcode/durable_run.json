@@ -1,0 +1,1 @@
+{"schema_version":"1.0","tenant_id":"decay-team","idempotency_key":"decay-broadcast-v1","store_path":".deepcode/traceability_runs","output_path":".deepcode/durable_capsule"}

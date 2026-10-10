@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "case_id", "status", "summary", "artifacts"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "case_id": {"type": "string"},
+    "status": {"type": "string"},
+    "summary": {"type": "string"},
+    "artifacts": {"type": "object"}
+  }
+}

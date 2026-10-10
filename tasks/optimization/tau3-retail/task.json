@@ -1,0 +1,88 @@
+{
+  "id": "tau3-retail",
+  "family": "optimization",
+  "short": "tau3",
+  "title": "tau3 retail tool agent optimization",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "optimization_native_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "opt-python312",
+    "opt-tau3-runtime"
+  ],
+  "envs": [
+    "optimization-python311"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [],
+    "disk_gb": 20
+  },
+  "upstream": {
+    "repo": "https://github.com/sierra-research/tau2-bench",
+    "commit": "668d3bcd135c02aa3438f987ef45735b7c163ee3",
+    "license": "MIT",
+    "redistribute_a0": true
+  },
+  "notes": [
+    "User simulator and NL judge use the JUDGE role.",
+    "Per-host guard: at most 4 concurrent Optimization runs.",
+    "Evaluator brokers reach the RUNTIME provider directly (Responses wire) with a key file mounted only into them, as in the paper's Lite runs; Chat-only runtime providers need the unified broker here."
+  ],
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "S": [
+      17.39,
+      4.35,
+      17.39
+    ],
+    "mean_at_3": 13.04,
+    "sd": 7.53
+  },
+  "runner_config": {
+    "benchmark_name": "tau3-tool-agent-optimization-v1",
+    "python_runtime_env": "optimization-python311",
+    "harbor_profile": "site",
+    "n_concurrent": 4,
+    "agent_import_path": "resumable_provider_codex_agent:ResumableDeepSeekCodex",
+    "host_exports": [
+      {
+        "image": "opt-python312",
+        "path": "/python",
+        "dest": "tools/cpython-3.12"
+      },
+      {
+        "image": "opt-tau3-runtime",
+        "path": "/tau2",
+        "dest": "snapshots/tau2-bench"
+      }
+    ]
+  },
+  "protocol": {
+    "dev_rounds": 5,
+    "max_dev_rounds": 5,
+    "builder_session_sec": 57600,
+    "score": "S = 100*min(1, (J(candidate)-J(a0)) / (100-J(a0))) on the held-out split"
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "dev_cases_n": 1,
+    "heldout_cases_n": 2,
+    "builder_session_sec": 3600
+  }
+}

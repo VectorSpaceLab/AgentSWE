@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Evaluator-side schema for a combined in-memory view of the five required JSON artifacts. Case-specific record schemas and semantic source/action truth are applied separately by validate_case.py.",
+  "type": "object",
+  "required": ["records", "evidence", "interaction_trace", "session_summary", "run_report"],
+  "properties": {
+    "records": {"type": "array", "items": {"type": "object"}},
+    "evidence": {
+      "type": "object",
+      "required": ["sources", "records", "field_evidence", "conflicts", "uncertainties"],
+      "properties": {
+        "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+        "records": {"type": "array", "items": {"type": "object", "required": ["record_id"], "properties": {"record_id": {"type": "string", "minLength": 1}}, "additionalProperties": false}},
+        "field_evidence": {"type": "array", "items": {"$ref": "#/$defs/fieldEvidence"}},
+        "conflicts": {"type": "array", "items": {"$ref": "#/$defs/conflict"}},
+        "uncertainties": {"type": "array", "items": {"type": "object"}}
+      },
+      "additionalProperties": false
+    },
+    "interaction_trace": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/event"}},
+    "session_summary": {
+      "type": "object",
+      "required": ["case_id", "workflow_mode", "completed", "completed_states", "reached_record_ids", "excluded_observations", "limitations"],
+      "properties": {
+        "case_id": {"type": "string", "minLength": 1},
+        "workflow_mode": {"enum": ["browser", "local_file"]},
+        "completed": {"const": true},
+        "completed_states": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "reached_record_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "excluded_observations": {"type": "array"},
+        "limitations": {"type": "array"}
+      },
+      "additionalProperties": false
+    },
+    "run_report": {
+      "type": "object",
+      "required": ["status", "artifact_paths", "errors", "usage", "retries", "elapsed_seconds", "local_reads", "browser_navigations"],
+      "properties": {
+        "status": {"enum": ["ok", "error"]},
+        "artifact_paths": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "errors": {"type": "array"},
+        "usage": {"$ref": "#/$defs/usage"},
+        "retries": {"type": "integer", "minimum": 0},
+        "elapsed_seconds": {"type": "number", "minimum": 0, "maximum": 600},
+        "local_reads": {"type": "integer", "minimum": 0},
+        "browser_navigations": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["source_id", "path", "access_depth", "content_sha256"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "access_depth": {"enum": ["local_file", "browser_rendered", "partial_page", "full_page"]},
+        "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "fieldEvidence": {
+      "type": "object",
+      "required": ["record_id", "field", "value", "source_id", "locator", "access_depth", "method", "action_id"],
+      "properties": {
+        "record_id": {"type": "string", "minLength": 1},
+        "field": {"type": "string", "pattern": "^/"},
+        "value": {},
+        "source_id": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "minLength": 1},
+        "access_depth": {"enum": ["local_file", "browser_rendered", "partial_page", "full_page"]},
+        "method": {"enum": ["dom", "json", "vcard", "ocr", "join", "inferred"]},
+        "action_id": {"type": "string", "minLength": 1},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": true
+    },
+    "conflict": {
+      "type": "object",
+      "required": ["conflict_id", "record_id", "field", "observations", "selected", "reason", "action_id"],
+      "properties": {
+        "conflict_id": {"type": "string", "minLength": 1},
+        "record_id": {"type": "string", "minLength": 1},
+        "field": {"type": "string", "pattern": "^/"},
+        "observations": {"type": "array", "minItems": 2, "items": {"type": "object", "required": ["source_id", "value"], "properties": {"source_id": {"type": "string", "minLength": 1}, "value": {}, "observed_at": {"type": "string"}, "sequence": {"type": "integer"}, "validity": {"type": "string"}, "status": {"type": "string"}}, "additionalProperties": true}},
+        "selected": {},
+        "reason": {"type": "string", "minLength": 1},
+        "action_id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "usage": {
+      "type": "object",
+      "required": ["gateway", "gateway_image", "serper", "web_retrieval"],
+      "properties": {"gateway": {"type": "integer", "minimum": 0}, "gateway_image": {"type": "integer", "minimum": 0}, "serper": {"type": "integer", "minimum": 0}, "web_retrieval": {"type": "integer", "minimum": 0}},
+      "additionalProperties": false
+    },
+    "counters": {
+      "type": "object",
+      "required": ["local_reads", "browser_navigations", "gateway", "gateway_image", "serper", "web_retrieval", "retries"],
+      "properties": {"local_reads": {"type": "integer", "minimum": 0}, "browser_navigations": {"type": "integer", "minimum": 0}, "gateway": {"type": "integer", "minimum": 0}, "gateway_image": {"type": "integer", "minimum": 0}, "serper": {"type": "integer", "minimum": 0}, "web_retrieval": {"type": "integer", "minimum": 0}, "retries": {"type": "integer", "minimum": 0}},
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "required": ["seq", "action_id", "action", "locator", "outcome", "state", "counters"],
+      "properties": {
+        "seq": {"type": "integer", "minimum": 1},
+        "action_id": {"type": "string", "minLength": 1},
+        "action": {"enum": ["open", "set_mode", "load_more", "visit_detail", "read_local", "ocr", "merge", "apply_update", "parse_failure", "checksum", "apply_patch", "policy_block", "exclude", "state_check"]},
+        "locator": {"type": "string", "minLength": 1},
+        "outcome": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "minLength": 1},
+        "counters": {"$ref": "#/$defs/counters"},
+        "screenshot": {"type": "string", "pattern": "^screenshots/"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

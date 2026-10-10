@@ -1,0 +1,52 @@
+{
+ "task": "ai-scientist-reproducibility-gate",
+ "upstream": {
+  "repo": "https://github.com/SakanaAI/AI-Scientist-v2",
+  "commit": "96bd51617cfdbb494a9fc283af00fe090edfae48",
+  "git_tree": "3ff187965e78b1192659b061e43164c29741ccfe",
+  "license": "LicenseRef-AI-Scientist-Source-Code-License-1.0",
+  "redistribute_a0": false
+ },
+ "note": null,
+ "layers": {
+  "upstream_to_english_source": {
+   "added": 0,
+   "removed_from_upstream": 0,
+   "modified": 0,
+   "meaning": "English source package a0 == pinned upstream (subset for deeptutor); no local functional edits"
+  },
+  "english_source_to_asrun": {
+   "files": 6,
+   "summary": {
+    "doc/translated": 2,
+    "data/fixture/program-text/translated": 3,
+    "dependency-manifest/translated": 1
+   },
+   "meaning": "2026-08-19 machine translation of the package (0818-benchmark-cn) + any later edit; see private migration/zh-asrun-changes.json"
+  }
+ },
+ "language": {
+  "as_run": "zh (machine-translated docs/fixtures in a0)",
+  "functional_risk_files": [
+   "ai_scientist/fewshot_examples/132_automated_relational.txt",
+   "ai_scientist/fewshot_examples/2_carpe_diem.txt",
+   "ai_scientist/fewshot_examples/attention.txt",
+   "requirements.txt"
+  ],
+  "functional_risk_count": 4
+ },
+ "evaluator_digest_pins_on_asrun_a0": [
+  [
+   "dev_cases/public_harness.py",
+   "SOURCE_TREE_SHA256",
+   "ea87e48ce5da9e883f150eb9d56b31e4064a1897321f282e5d7001b65b87c960",
+   "re-pinned to the en-upstream a0 (public_harness.snapshot_source_hash(), 1d01a3e); paper as-run zh a0 value 31c19b2305e3398f53cc99918f6d41579c19dd883ff5868d0b1f2a4f220386e7. run_hidden only records the match in its preflight (no gate); evaluator/tests/test_harness.py asserts it"
+  ]
+ ],
+ "files": {
+  "fetch": "fetch.sh",
+  "en_manifest": "en-upstream.sha256",
+  "subset": null,
+  "private_zh_asrun_dir": "migration/private/zh-asrun/ai-scientist-reproducibility-gate"
+ }
+}

@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+"""Submit or poll an authoritative AgentSWE dev evaluation."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import socket
+import sys
+import time
+
+
+def request(action: str, submission_id: str | None = None) -> tuple[int, dict]:
+    socket_path = os.environ.get("AGENTSWE_DEV_CONTROLLER_SOCKET", "")
+    token = os.environ.get("AGENTSWE_DEV_CONTROLLER_TOKEN", "")
+    if not socket_path or not token:
+        raise RuntimeError("dev controller environment is missing")
+    payload = {"token": token, "action": action}
+    if submission_id is not None:
+        payload["submission_id"] = submission_id
+    encoded = json.dumps(payload).encode("utf-8") + b"\n"
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+        client.settimeout(30)
+        client.connect(socket_path)
+        client.sendall(encoded)
+        chunks: list[bytes] = []
+        while True:
+            chunk = client.recv(65536)
+            if not chunk:
+                break
+            chunks.append(chunk)
+            if b"\n" in chunk:
+                break
+    response = json.loads(b"".join(chunks).decode("utf-8"))
+    return int(response["status"]), response["payload"]
+
+
+def show(status: int, payload: dict) -> None:
+    print(json.dumps({"http_status": status, **payload}, indent=2, ensure_ascii=False))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--status", metavar="SUBMISSION_ID")
+    group.add_argument("--wait", metavar="SUBMISSION_ID")
+    parser.add_argument("--poll-seconds", type=float, default=20.0)
+    args = parser.parse_args()
+    if args.poll_seconds < 1:
+        parser.error("--poll-seconds must be at least 1")
+
+    if args.status:
+        status, payload = request("status", args.status)
+        show(status, payload)
+        return 0 if status == 200 else 1
+    if args.wait:
+        while True:
+            status, payload = request("status", args.wait)
+            show(status, payload)
+            if status != 200:
+                return 1
+            if payload.get("state") != "running":
+                return 0 if payload.get("state") == "completed" else 2
+            time.sleep(args.poll_seconds)
+
+    status, payload = request("submit")
+    show(status, payload)
+    return 0 if status in (200, 202) else 1
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"submit_dev_candidate: {exc}", file=sys.stderr)
+        raise SystemExit(2)

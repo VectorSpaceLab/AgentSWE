@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "run_id": "run-phi-006",
+  "project_id": "project-cancel",
+  "replay": {"command": ["python", "replay.py"], "working_directory": ".", "timeout_seconds": 10, "script_path": "replay.py", "script_sha256": "8310d9123fdde520ee42c75b378b8759ad14ebf8c38f224a9dca1d953edaec7b"},
+  "workers": [{"worker_id": "phi-fjord", "experiment_id": "exp-fjord", "seed": 12, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "f56a8eb5faa5d822df5c3fb7a19403cda0c0a8f7c078310e5a82aae8e2e2f8c9"}],
+  "failure_policy": {"allow_partial": false, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "lab-phi/release-p6/cancel-first", "global_process_scan": false}
+}

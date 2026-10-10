@@ -1,0 +1,95 @@
+{
+  "id": "browsecomp",
+  "family": "optimization",
+  "short": "browsecomp",
+  "title": "BrowseComp search agent optimization",
+  "tier": "T2",
+  "lite": false,
+  "status": "runnable",
+  "runner": "optimization_native_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [
+    "search"
+  ],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "ubuntu-pinned"
+  ],
+  "envs": [
+    "optimization-python311"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [],
+    "disk_gb": 20,
+    "egress": "the per-case broker sidecar needs direct HTTPS to the RUNTIME provider, the SEARCH provider and the public web (page visits); the Candidate itself has no internet"
+  },
+  "upstream": {
+    "repo": "https://github.com/openai/simple-evals",
+    "commit": "652c89d0ca9df547706735883097e9537d40dc47",
+    "license": "MIT",
+    "redistribute_a0": true
+  },
+  "notes": [
+    "Benchmark package is the paper's byte-for-byte (adapter benchmark digest 0a3642fe7fdbc76fcf036addfab634fc84a7a7e83efbec80936fb9078867861a before scrubbing; scrubbing renamed three builder-visible GATEWAY_* aliases and one provenance path).",
+    "Each Candidate case runs next to an evaluator-owned broker sidecar (runners/optimization/optimization_native/browsecomp_broker.py) that locks the RUNTIME model and effort, enforces 20 model calls, 20 searches and 20 page visits per row, and is the only holder of the RUNTIME and SEARCH keys. The Candidate sees placeholders only.",
+    "The fixed grader (simple-evals BrowseComp template) uses the RUNTIME provider and model with the JUDGE effort, as the paper grader used the runtime model.",
+    "Search: AGENTSWE_SEARCH_WIRE=legacy-proxy posts the paper's {query,page,search_type,token} body to AGENTSWE_SEARCH_BASE_URL as given (the paper's search proxy); AGENTSWE_SEARCH_WIRE=serper posts {q,page} to <base>/search with X-API-KEY (google.serper.dev). Different search backends are not comparable.",
+    "Paper profile: RUNTIME gpt-5.6-sol at effort medium for both the Candidate model and the grader; the builder-visible text names that model.",
+    "Page visits to sites unreachable from the host fail as ordinary tool errors (HTTP 422 to the Candidate), not as infrastructure failures.",
+    "Data: the 150 dev/test rows and their gold answers are kept encrypted in encrypted/browsecomp_rows.json, as upstream BrowseComp (simple-evals browse_comp_test_set.csv) ships them: the upstream ciphertext and canary, byte for byte. agentswe decrypts them into the staged benchmark under $AGENTSWE_HOME (dev_cases/*/input.md, test_cases/*/input.md, evaluator/gold.json), checked against recorded sha256s; the decrypted package is identical to the paper package (same adapter tree digest). Do not commit or publish the plaintext.",
+    "Per-host guard: at most 4 concurrent Optimization runs."
+  ],
+  "runner_config": {
+    "benchmark_name": "browsecomp-search-agent-optimization-v1",
+    "python_runtime_env": "optimization-python311",
+    "harbor_profile": "site",
+    "n_concurrent": 4,
+    "agent_import_path": "resumable_provider_codex_agent:ResumableDeepSeekCodex"
+  },
+  "protocol": {
+    "dev_rounds": 5,
+    "max_dev_rounds": 5,
+    "builder_session_sec": 57600,
+    "score": "S = 100*min(1, (J(candidate)-J(a0)) / (100-J(a0))) on the held-out split"
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "dev_cases_n": 2,
+    "heldout_cases_n": 4,
+    "builder_session_sec": 3600
+  },
+  "smoke_reference": {
+    "roles": "deepseek-flash for builder, runtime and judge; search legacy-proxy",
+    "S": 50.0,
+    "candidate_heldout": [
+      0,
+      0,
+      100,
+      100
+    ],
+    "initial_heldout": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "dev_round_1": 50.0,
+    "note": "all 12 evaluated rows official (no infrastructure failure); a0 zeros: 3 rows answer the provider's tool-call markup, 1 wrong answer; candidate zeros: wrong answers after full search budget; smoke scores are not comparable with the paper"
+  },
+  "encrypted_rows": {
+    "sub": "benchmark",
+    "bundle": "encrypted/browsecomp_rows.json"
+  }
+}

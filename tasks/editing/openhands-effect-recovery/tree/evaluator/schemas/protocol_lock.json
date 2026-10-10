@@ -1,0 +1,11 @@
+{
+  "schema_version": "agentswe-edit-protocol-lock/v1",
+  "benchmark_id": "openhands-effect-recovery-agentloop-v1",
+  "builder": {"product": "Codex", "model": "deepseek-flash", "reasoning_effort": "xhigh", "session": "single-continuous"},
+  "lower_agent": {"product": "patched OpenHands Agent Canvas", "model": "deepseek-flash", "reasoning_effort": "medium", "transport": "evaluator-owned-responses-broker"},
+  "candidate": {"rounds": "up_to_10", "max_dev_rounds": 10, "revision_count": "fresh_after_each_acceptance", "distinct_digest_required": true, "dev_passed_is_automatic_freeze": false},
+  "cases": {"public_dev": ["dev_001", "dev_002"], "hidden": ["test_001", "test_002", "test_003", "test_004", "test_005", "test_006"], "hidden_strictly_after_freeze": true},
+  "visibility": {"builder_mounts": ["input", "dev_cases"], "candidate_sees_placeholder_credential": true, "hidden_oracle_outside_candidate": true},
+  "result_axis": "agent-loop behavior only; legacy native suite is auxiliary",
+  "code_axis": "independent fixed eight-dimensional rubric"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "policy_id": "integrity-hidden",
+  "policy_epoch": 1,
+  "previous_policy_snapshot_digest": null,
+  "revision": "integrity-hidden-v1",
+  "mode": "enforce",
+  "default_decision": "deny",
+  "tools": {"Read": "allow", "Write": "allow", "Bash": "allow"},
+  "paths": {"allow": ["**"], "deny": []},
+  "commands": {"allow": ["printf", "bash", "sh", "cat"], "deny": [], "audit_only": [], "rewrites": []},
+  "network": {"allow_hosts": [], "deny_hosts": []},
+  "mcp": {},
+  "integrity": {
+    "protected_paths": [".claude/policy-provenance.json", ".claude/policy-provenance-ledger-state/**"],
+    "seal_plugin_files": true
+  }
+}

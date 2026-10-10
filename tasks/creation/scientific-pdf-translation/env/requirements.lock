@@ -1,0 +1,19 @@
+# generated from the installed dist-info (name, version, wheel tag) + PyPI file hashes
+charset-normalizer==3.4.9 \
+    --hash=sha256:5e226f6218febc71f6c1fc2fafb91c226f75bdc1d8fb12d66823716e891608fd
+greenlet==3.5.4 \
+    --hash=sha256:f88193799d43dbf8c8a806d6405c9c52fe2af40bf75072a606357b33cc336c7f
+pillow==12.3.0 \
+    --hash=sha256:78cb2c6865a35ab8ff8b75fd122f6033b92a62c82801110e48ddd6c936a45d91
+playwright==1.54.0 \
+    --hash=sha256:09919f45cc74c64afb5432646d7fef0d19fff50990c862cb8d9b0577093f40cc
+pyee==13.0.1 \
+    --hash=sha256:af2f8fede4171ef667dfded53f96e2ed0d6e6bd7ee3bb46437f77e3b57689228
+PyMuPDF==1.26.3 \
+    --hash=sha256:454f38c8cf07eb333eb4646dca10517b6e90f57ce2daa2265a78064109d85555
+pypdf==5.8.0 \
+    --hash=sha256:bfe861285cd2f79cceecefde2d46901e4ee992a9f4b42c56548c4a6e9236a0d1
+reportlab==4.4.3 \
+    --hash=sha256:df905dc5ec5ddaae91fc9cb3371af863311271d555236410954961c5ee6ee1b5
+typing_extensions==4.16.0 \
+    --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8

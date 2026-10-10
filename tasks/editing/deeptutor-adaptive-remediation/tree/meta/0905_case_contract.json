@@ -1,0 +1,306 @@
+{
+  "schema_version": "0905-edit-case-contract-v1",
+  "task": "deeptutor",
+  "sibling": "@@AGENTSWE_EDITING_TASKS@@/deeptutor-adaptive-remediation/tree",
+  "dev_cases": [
+    "dev_001",
+    "dev_002"
+  ],
+  "hidden_cases": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "primary_user_goal_by_case": {
+    "test_001": "reconcile a lost remediation claim",
+    "test_002": "preserve the accepted review reschedule",
+    "test_003": "verify snapshot provenance before restore",
+    "test_004": "resolve an opaque handle without crossing learner paths",
+    "test_005": "resume independent subscribers",
+    "test_006": "recover an interrupted remediation honestly"
+  },
+  "primary_failure_axis_by_case": {
+    "test_001": "lease takeover and stale acknowledgement",
+    "test_002": "concurrent revision conflict",
+    "test_003": "tampered snapshot/witness digest",
+    "test_004": "cross-path handle isolation",
+    "test_005": "subscriber checkpoint divergence",
+    "test_006": "restart with partial evidence"
+  },
+  "secondary_failure_axes_by_case": {
+    "test_001": [
+      "review/event/snapshot provenance"
+    ],
+    "test_002": [
+      "checkpoint independence"
+    ],
+    "test_003": [
+      "read-only recovery"
+    ],
+    "test_004": [
+      "nondisclosure"
+    ],
+    "test_005": [
+      "retry idempotency"
+    ],
+    "test_006": [
+      "conservative learner plan"
+    ]
+  },
+  "dynamic_facts": {
+    "test_001": [
+      "owner",
+      "generation",
+      "lease expiry",
+      "chain head"
+    ],
+    "test_002": [
+      "review revision",
+      "due time",
+      "event and snapshot checkpoints"
+    ],
+    "test_003": [
+      "snapshot digest",
+      "witness digest",
+      "chain head"
+    ],
+    "test_004": [
+      "learner path",
+      "opaque handle",
+      "revision"
+    ],
+    "test_005": [
+      "event high-water",
+      "snapshot revision",
+      "subscriber id"
+    ],
+    "test_006": [
+      "accepted evidence revision",
+      "interrupted operation",
+      "chain digest"
+    ]
+  },
+  "candidate_visible_inputs": {
+    "test_001": [
+      "natural task",
+      "product state"
+    ],
+    "test_002": [
+      "natural task",
+      "typed mastery tools"
+    ],
+    "test_003": [
+      "presented proof",
+      "verification tools"
+    ],
+    "test_004": [
+      "current learner path",
+      "opaque handle"
+    ],
+    "test_005": [
+      "subscriber checkpoints",
+      "product feeds"
+    ],
+    "test_006": [
+      "current objective",
+      "product state"
+    ]
+  },
+  "evaluator_only_oracle": {
+    "test_001": [
+      "accepted owner/generation",
+      "stale acknowledgement result"
+    ],
+    "test_002": [
+      "accepted due time",
+      "single event identity"
+    ],
+    "test_003": [
+      "tampered component",
+      "unchanged state"
+    ],
+    "test_004": [
+      "owning path",
+      "non-disclosure response"
+    ],
+    "test_005": [
+      "event sequence",
+      "snapshot sequence"
+    ],
+    "test_006": [
+      "accepted evidence boundary",
+      "safe next action"
+    ]
+  },
+  "real_lower_entry": "agentloop/lower_agent_launcher.py",
+  "product_api_entry": "agentloop/lower_agent_entry.py",
+  "broker_model": "deepseek-flash",
+  "broker_effort": "high",
+  "agent_authored_artifact": "hidden/cases/<case>/agent_result.json written by the patched product from the model final JSON; required fields schema_version/case_id/status/summary/artifacts",
+  "result_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+  "code_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+  "formal_one_stop_entry": "harbor/formal_one_stop.py",
+  "known_overlap_or_leakage": [
+    "topics retained; hidden evaluator cases and provenance oracle remain evaluator-only"
+  ],
+  "inventory": {
+    "dev": [
+      "dev_001",
+      "dev_002"
+    ],
+    "hidden": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ]
+  },
+  "cases": {
+    "test_001": {
+      "natural_user_goal": "reconcile a lost remediation-claim response and produce the next learner plan",
+      "primary_failure_axis": "lease takeover and stale acknowledgement",
+      "secondary_axes": [
+        "review/event/snapshot provenance"
+      ],
+      "meaningful_dynamic_facts": [
+        "owner",
+        "generation",
+        "lease expiry",
+        "chain head"
+      ],
+      "candidate_visible_inputs": [
+        "natural task",
+        "learner state through product tools"
+      ],
+      "evaluator_only_oracle": [
+        "accepted owner/generation",
+        "stale acknowledgement result"
+      ]
+    },
+    "test_002": {
+      "natural_user_goal": "preserve the accepted review reschedule and guide the stale client",
+      "primary_failure_axis": "concurrent revision conflict",
+      "secondary_axes": [
+        "checkpoint independence"
+      ],
+      "meaningful_dynamic_facts": [
+        "review revision",
+        "due time",
+        "event checkpoint",
+        "snapshot checkpoint"
+      ],
+      "candidate_visible_inputs": [
+        "natural task",
+        "typed mastery tools"
+      ],
+      "evaluator_only_oracle": [
+        "accepted due time",
+        "single event identity"
+      ]
+    },
+    "test_003": {
+      "natural_user_goal": "verify snapshot provenance before restoring learner context",
+      "primary_failure_axis": "tampered snapshot/witness digest",
+      "secondary_axes": [
+        "read-only recovery"
+      ],
+      "meaningful_dynamic_facts": [
+        "snapshot digest",
+        "witness digest",
+        "chain head"
+      ],
+      "candidate_visible_inputs": [
+        "presented proof",
+        "verification tools"
+      ],
+      "evaluator_only_oracle": [
+        "tampered component",
+        "unchanged learning state"
+      ]
+    },
+    "test_004": {
+      "natural_user_goal": "resolve an opaque handle without crossing learner paths",
+      "primary_failure_axis": "cross-path handle isolation",
+      "secondary_axes": [
+        "nondisclosure"
+      ],
+      "meaningful_dynamic_facts": [
+        "learner path",
+        "opaque handle",
+        "revision"
+      ],
+      "candidate_visible_inputs": [
+        "current learner path",
+        "opaque handle"
+      ],
+      "evaluator_only_oracle": [
+        "owning path",
+        "non-disclosure response"
+      ]
+    },
+    "test_005": {
+      "natural_user_goal": "resume independent subscribers without losing or duplicating learning events",
+      "primary_failure_axis": "subscriber checkpoint divergence",
+      "secondary_axes": [
+        "retry idempotency"
+      ],
+      "meaningful_dynamic_facts": [
+        "event high-water",
+        "snapshot revision",
+        "subscriber id"
+      ],
+      "candidate_visible_inputs": [
+        "subscriber checkpoints",
+        "product feeds"
+      ],
+      "evaluator_only_oracle": [
+        "event sequence",
+        "snapshot sequence"
+      ]
+    },
+    "test_006": {
+      "natural_user_goal": "recover an interrupted remediation without overstating mastery",
+      "primary_failure_axis": "restart with partial evidence",
+      "secondary_axes": [
+        "honest conservative plan"
+      ],
+      "meaningful_dynamic_facts": [
+        "accepted evidence revision",
+        "interrupted operation",
+        "chain digest"
+      ],
+      "candidate_visible_inputs": [
+        "current objective and product state"
+      ],
+      "evaluator_only_oracle": [
+        "accepted evidence boundary",
+        "safe next action"
+      ]
+    }
+  },
+  "real_product_lower_entry": "agentloop/lower_agent_launcher.py -> DeepTutor mastery/provider tools",
+  "native_harness_role": "dynamic provenance, validity, broker and immutable-state evidence only",
+  "formal_entry": "harbor/formal_one_stop.py --run-formal",
+  "artifact": "agent_result.json authored by the model-driven DeepTutor product run, never synthesized by evaluator code",
+  "result_judge": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py once per scoreable hidden",
+  "code_judge": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py once per frozen Candidate",
+  "leakage_list": [
+    "evaluator/cases hidden oracle",
+    "hidden inventory",
+    "judge prompt",
+    "real credential"
+  ],
+  "readiness": "REPAIR",
+  "remaining_blocker": "current 0905 real hidden smoke evidence is missing or incomplete",
+  "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/deeptutor/latest_smoke_manifest.json",
+  "smoke_run": "@@AGENTSWE_EDITING_RUNS@@/smoke/deeptutor/0905-smoke-current-001",
+  "smoke_result_classification": "candidate_capability_gap",
+  "smoke_result_score": 0,
+  "smoke_result_judge_logical_requests": 1,
+  "smoke_cleanup_complete": true
+}

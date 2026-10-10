@@ -1,0 +1,1 @@
+{"schema_version":3,"guards":["repository-alias","foreign-admission","corrupt-global-decision","postdecision-obstruction","within-participant-mixture","status-under-ref-lock"],"compatibility":["aider-version","hook-filter-commit","recursive-submodule-status","worktree-lifecycle"]}

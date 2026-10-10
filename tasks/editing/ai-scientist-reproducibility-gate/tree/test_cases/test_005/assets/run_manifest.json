@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "run_id": "run-alpha-005",
+  "project_id": "project-alpha",
+  "replay": {"command": ["python", "replay.py"], "working_directory": ".", "timeout_seconds": 10, "script_path": "replay.py", "script_sha256": "b9a3b26f86683e79169503b2ebf8414c45a3bde168007ada7dfd2f029b247b93"},
+  "workers": [{"worker_id": "alpha-ember", "experiment_id": "exp-ember-stats", "seed": 10, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "fb4935e94d57b1887e9f6fecda7c17c02b6f9d16ff2dc9188494e88ea6c72427"}],
+  "failure_policy": {"allow_partial": false, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "tenant-alpha/shared-release/shared-request", "global_process_scan": false}
+}

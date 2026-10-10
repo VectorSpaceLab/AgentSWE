@@ -1,0 +1,19 @@
+# Public case 1: governed release and lost response
+
+The committed response must also contain a content-bound attestation and one durable notification event; retrying the lost response recovers byte for byte.
+
+Verify the supplied magnitude study, correct the exaggerated improvement, keep its scope statement, and commit a portable reproducibility capsule under project `public-repro`. Use request `publish-001`, owner `worker-a`, generation `1`, and the supplied capsule, usage, and budget policies.
+
+Under policy `public-2026-01`, the charge of the usage statement is exactly `9000` micro-dollars. The atomic `verify` must publish the three scientific files plus `reproducibility_capsule.zip`, settle exactly `9000`, and expose verifiable receipts. The capsule must contain exactly the policy-selected evidence and the committed release files.
+
+The runner then treats the response as lost, deletes its output copies, and retries the identical request through `launch_scientist_bfts.py`. The retry must recover byte-identical artifacts with the same commit, capsule, and settlement IDs without replaying or charging again. Status must show `reserved_micros: 0`, `settled_micros: 9000`, and no information from other projects.
+
+The supplied `run_manifest.json` is the source of execution truth for this release. Verify its project/run identity, relative replay argv, working directory, timeout, script SHA-256, and the experiment, seed, and result digests of the three successful workers. Produce the deterministic `reproducibility_run.json` provenance journal: it must bind the manifest digest, record the `complete` decision and the successful/failed worker lists, and keep the manifest's run-scoped cleanup `scope_id`, `global_process_scan: false`, and `unrelated_processes_preserved: true`; unrelated processes must be neither scanned nor terminated.
+
+That journal is the fifth release artifact; it must enter the capsule as a release member and be included in the release digest of the content-bound attestation. The bytes of the same journal ID must be exactly identical across the first commit, the durable committed copy, the launcher's lost-response retry, and subsequent status recovery; recovery must not re-run the replay, recompute worker decisions, or create a second attestation/notification event.
+
+In addition, the governed output must have a canonical v3 `science_gate`. It must be recomputed from the current evidence manifest/policy and the actual bytes of the three scientific files, recording the final decision and the gate digest; the same digest must appear in the transaction receipt, the capsule manifest, the attestation, and the notification. The public program recomputes and compares these bytes from durable state after deleting the response copies.
+
+```bash
+python dev_cases/run_public.py --submission <delivery_dir> --case dev_001 --work-dir <temporary_dir>
+```

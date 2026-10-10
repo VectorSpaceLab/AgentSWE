@@ -1,0 +1,75 @@
+{
+  "schema_version": "0905-edit-changed-files-v1",
+  "task": "aider",
+  "files": [
+    "evaluator/formal_finalize.py",
+    "evaluator/harness/run_lower_agent_case.py",
+    "evaluator/harness/score_agent_case.py",
+    "test_cases/test_001/input.md",
+    "test_cases/test_002/input.md",
+    "test_cases/test_003/input.md",
+    "test_cases/test_004/input.md",
+    "test_cases/test_005/input.md",
+    "test_cases/test_006/input.md",
+    "harbor/agentloop_controller.py",
+    "harbor/formal_one_stop.py",
+    "infra/self_test.py",
+    "protocol_lock.json",
+    "meta/0905_case_contract.json",
+    "meta/0905_changed_files.json",
+    "meta/0905_migration_note.md",
+    "evaluator/harness/test_0906_contract.py"
+  ],
+  "last_static_repair_files": ["test_cases/test_001/input.md", "test_cases/test_002/input.md", "test_cases/test_003/input.md", "test_cases/test_004/input.md", "test_cases/test_005/input.md", "test_cases/test_006/input.md", "meta/0905_case_contract.json", "harbor/formal_one_stop.py", "evaluator/harness/run_lower_agent_case.py", "evaluator/harness/test_0906_contract.py", "infra/self_test.py"],
+  "last_static_repair_commands": ["PYTHONPYCACHEPREFIX=/tmp/0906-aider-pycache python3 -m py_compile harbor/formal_one_stop.py evaluator/harness/run_lower_agent_case.py evaluator/harness/test_0906_contract.py", "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python3 evaluator/harness/test_0906_contract.py", "PYTHONDONTWRITEBYTECODE=1 python3 infra/self_test.py", "python3 harbor/formal_one_stop.py --self-test", "python3 -m unittest -v evaluator.harness.test_0906_contract"],
+  "last_static_repair_result": "Aider lower launcher now removes --yes-always and runs one initial model turn plus up to 11 evaluator-owned restore-chat-history continuation turns; model-selected commands remain unchanged and product workspace authorship is checked after exit. Provider-free checks pass; current-023 reached 8 Builder calls (7 completed successfully) but timed out before Candidate delivery, so the continuation path still has no valid provider-backed lower evidence",
+  "provider_calls": 235,
+  "heavy_containers_started": true,
+  "readiness": "REPAIR",
+  "current_smoke_attempts": [
+    {
+      "run_id": "0908-smoke-current-018",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "Builder timed out after 900 seconds with 64 successful broker calls and zero accepted Candidate submissions; public and hidden lower execution did not start"
+    },
+    {
+      "run_id": "0908-smoke-current-019",
+      "status": "pilot_infrastructure_invalid",
+      "publishable": false,
+      "reason": "Builder compose network could not be created because Docker exhausted its default non-overlapping IPv4 address pools; zero provider/public/hidden calls"
+    },
+    {
+      "run_id": "0908-smoke-current-020",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "Builder made 38 broker calls (37 completed successfully) and modified the adapter, but timed out after 900 seconds before writing a submission; public and hidden lower execution did not start"
+    },
+    {
+      "run_id": "0908-smoke-current-021",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "Builder accepted and froze two distinct Candidates after 36 successful Builder calls, but both public lower attempts used the pre-continuation single-turn launcher, exited 1 after only the model-selected inspect action, produced no result artifact, and did not qualify for hidden execution"
+    },
+    {
+      "run_id": "0908-smoke-current-022",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "Builder made 74 successful calls and accepted Candidate 1; the old lower launcher then consumed 12 continuation attempts all repeating inspect, produced no artifact, and Builder exited during the Candidate 2 submission phase. Public lower made 13 calls, hidden did not start, and the run is not readiness evidence"
+    },
+    {
+      "run_id": "0908-smoke-current-023",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "The first smoke started after the bounded multi-turn launcher repair, but the Builder timed out at 1800 seconds after 8 Builder broker calls (7 completed successfully and 1 in flight) before Candidate delivery; public and hidden lower execution did not start"
+    }
+  ],
+  "repair_delta": [
+    "evaluator-owned Aider lower launcher removes --yes-always and supplies bounded affirmative stdin for explicit product confirmations without changing model-selected commands",
+    "Builder instruction bounds local fixture diagnostics when the evaluator-only runtime environment is unavailable, preventing repeated package installation, import shims, and unbounded fixture reruns",
+    "current-018 confirmed Builder integration timeout rather than provider failure; current-019 was blocked before the Builder container started by host Docker network-pool exhaustion",
+    "Aider --message-file performs one model reply and exits, so the lower runner now uses a bounded initial turn followed by evaluator-owned --restore-chat-history continuation turns in the same product workspace and chat history; the evaluator never chooses the next action",
+    "current-020 confirmed the Builder diagnostic guard still timed out before delivery; current-021 and current-022 confirmed the old single-turn lower launcher could execute inspect but could not reach the required follow-up action or product-authored artifact",
+    "current-023 loaded the repaired multi-turn launcher but timed out in the Builder stage before a Candidate was delivered, so it supplies no lower-path evidence and the sibling remains REPAIR"
+  ]
+}

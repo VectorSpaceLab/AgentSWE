@@ -1,0 +1,11 @@
+{
+  "upstream_source_hashes": {
+    "builder_request_ledger.py": "a9ffafed39310e9ac7d21d2310fe386637f4734e234817107a79233710231925",
+    "responses_stream.py": "bca96fe31b342702a27f99274ddbce212816d732f5b2937b828db2447697309a",
+    "builder_broker_runtime.py": "85e8dfd377bca2addae8efc2cc28ccbb1408ca341c38b76ab53bd39d0770c97c",
+    "test_builder_single_request.py": "f6f5914dfb5a8c08e11faec35b7827c7b4803afc88f1a7505d39452286f4601a",
+    "builder_broker_xhigh.py": "eb241eaa890a4d5f4f6c299ddfb2f82c82a3bea57fb9013b1d6fc2dddffd38e2"
+  },
+  "scope": "Task-owned medium transport, one durable request identity, Aider nonstream text Chat conversion; Codex Responses SSE passthrough. Shared optimization_native unchanged.",
+  "max_call_seconds": 180
+}

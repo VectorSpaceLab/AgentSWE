@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "title": "DeepCode product-specific medium lower broker",
+      "type": "object",
+      "required": ["schema_version", "protocol", "runtime", "calls", "failures", "tokens"],
+      "properties": {
+        "schema_version": {"const": "deepcode-agentloop-broker-stats-v1"},
+        "protocol": {"type": "object", "required": ["model", "reasoning_effort", "credential_owner"]},
+        "runtime": {"type": "object", "required": ["calls", "failures", "successful_calls", "started_at", "provider_failures", "credential_failures", "protocol_failures", "broker_failures"]},
+        "calls": {"type": "array"},
+        "failures": {"type": "array"},
+        "tokens": {"type": "object", "required": ["input", "output", "total"]}
+      },
+      "additionalProperties": false
+    },
+    {
+      "title": "Validated shared Builder xhigh Responses broker",
+      "type": "object",
+      "required": ["runtime", "judge"],
+      "properties": {
+        "runtime": {
+          "type": "object",
+          "required": ["calls", "tokens", "failures", "upstream_failures", "delivery_failures", "budget_exceeded"]
+        },
+        "judge": {"type": "object"},
+        "max_runtime_calls": {"type": "integer", "minimum": 0},
+        "max_runtime_tokens": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  ]
+}

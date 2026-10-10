@@ -1,0 +1,404 @@
+{
+  "case_manifest_sha256": "51597f589fceae1958772c2a72e66fffce1b624201a07b06262769ff4bc92684",
+  "dev_count": 10,
+  "dev_upstream_ids": [
+    "bb5e4c0d-f964-439c-97b6-bdb9747de3f4",
+    "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3",
+    "35253b65-1c19-4304-8aa4-6884b8218fc0",
+    "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+    "357ef137-7eeb-4c80-a3bb-0951f26a8aff",
+    "5d901039-a89c-4bfb-967b-bf66f4df075e",
+    "0810415c-bde4-4443-9047-d5f70165a697",
+    "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+    "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57",
+    "0ed39f63-6049-43d4-ba4d-5fa2fe04a951"
+  ],
+  "excluded_upstream_ids": [
+    "46407397-a7d5-4c6b-92c6-dbe038b1457b",
+    "4e9f0faf-2ecc-4ae8-a804-28c9a75d1ddc",
+    "897e3b53-5d4d-444b-85cb-2cdc8a97d903",
+    "a96b564e-dbe9-42c3-9ccf-b4498073438a"
+  ],
+  "fixture_manifest_sha256": "e3b22f71896226d84d3e3ae24e22e36810d08e1154e40f1b2c855d11d51e1332",
+  "fixture_rows": [
+    {
+      "cache_name": "3a1c1464-1dbf-561b-b53c-a16343233e7d_woman_sitting_by_the_tree.png",
+      "role": "setup",
+      "sha256": "4acbf30f243b4098fe571534d67f3b71f3aa17fe0abebbeba27db9fc79c52367",
+      "size": 1038965,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/3a1c1464-1dbf-561b-b53c-a16343233e7d_woman_sitting_by_the_tree.png",
+      "task_id": "7a4deb26-d57d-4ea9-9a73-630f66a7b568"
+    },
+    {
+      "cache_name": "a66c11dd-4a0f-504c-9b8f-cb8a23da4b60_Multiply_Time_Number.xlsx",
+      "role": "setup",
+      "sha256": "a6f792dd99a2251bf7f2ed1f55896e3588718a4a53d291ecc5db25a5b3ac8b17",
+      "size": 10246,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/a66c11dd-4a0f-504c-9b8f-cb8a23da4b60_Multiply_Time_Number.xlsx",
+      "task_id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff"
+    },
+    {
+      "cache_name": "09ff0a87-5b02-5c87-ae69-7724f379703c_CPD_Background_Investigation_Process.pptx",
+      "role": "setup",
+      "sha256": "2f7644c666168178f7017b3fa47ba2f3c15bda2ae33740d11d9817169b7e469d",
+      "size": 4564224,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/09ff0a87-5b02-5c87-ae69-7724f379703c_CPD_Background_Investigation_Process.pptx",
+      "task_id": "5d901039-a89c-4bfb-967b-bf66f4df075e"
+    },
+    {
+      "cache_name": "5dde5146-e83d-5ecf-b67a-3bdb3c218a53_Novels_Intro_Packet.docx",
+      "role": "setup",
+      "sha256": "9e615941ced6d491c595f9904d50213c6b6447a8bc6391f052d3745104ded5ed",
+      "size": 11734,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/5dde5146-e83d-5ecf-b67a-3bdb3c218a53_Novels_Intro_Packet.docx",
+      "task_id": "0810415c-bde4-4443-9047-d5f70165a697"
+    },
+    {
+      "cache_name": "b25753c3-ec45-5811-ad10-e169ee2f2a38_helloExtension.zip",
+      "role": "setup",
+      "sha256": "2e6de0ae59acb3f54949e0777a0263584261ecc3f08c09192160a2e814cb6809",
+      "size": 4025,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/b25753c3-ec45-5811-ad10-e169ee2f2a38_helloExtension.zip",
+      "task_id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a"
+    },
+    {
+      "cache_name": "12ddc05f-27ca-58b4-8794-440c38d55142_poster_party_night.webp",
+      "role": "setup",
+      "sha256": "36ad3069b90c7e3968b355aa655368e0a4078bffb6459621bc6ad9f15662a607",
+      "size": 181662,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/12ddc05f-27ca-58b4-8794-440c38d55142_poster_party_night.webp",
+      "task_id": "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57"
+    },
+    {
+      "cache_name": "0dfbdfc5-61ae-5d28-87a2-1f126737b2ff_vscode_replace_text.txt",
+      "role": "setup",
+      "sha256": "fddd104baad484309a4dec480879bfa5ea452e6aef9131024f06132a931cfd58",
+      "size": 637,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/0dfbdfc5-61ae-5d28-87a2-1f126737b2ff_vscode_replace_text.txt",
+      "task_id": "0ed39f63-6049-43d4-ba4d-5fa2fe04a951"
+    },
+    {
+      "cache_name": "7a1ec2c9-9051-5284-a8c6-9c21fb0aea5c_woman_sitting_by_the_tree2.png",
+      "role": "setup",
+      "sha256": "4acbf30f243b4098fe571534d67f3b71f3aa17fe0abebbeba27db9fc79c52367",
+      "size": 1038965,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/7a1ec2c9-9051-5284-a8c6-9c21fb0aea5c_woman_sitting_by_the_tree2.png",
+      "task_id": "554785e9-4523-4e7a-b8e1-8016f565f56a"
+    },
+    {
+      "cache_name": "a90cab28-89c6-5add-bd28-7a17246619ca_NetIncome.xlsx",
+      "role": "setup",
+      "sha256": "4bf3c94407240969c2dc55b098d2fab6b247f3b530fe48bae0f39a923b397300",
+      "size": 9201,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/a90cab28-89c6-5add-bd28-7a17246619ca_NetIncome.xlsx",
+      "task_id": "42e0a640-4f19-4b28-973d-729602b5a4a7"
+    },
+    {
+      "cache_name": "295ea472-cfbb-5e85-a54f-c52bcb14727b_Names_Duplicate_Unique.xlsx",
+      "role": "setup",
+      "sha256": "0b4de861a9ad5caa5564d1a840abd1644cb4877766eae53ad13185a3df93563b",
+      "size": 5200,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/295ea472-cfbb-5e85-a54f-c52bcb14727b_Names_Duplicate_Unique.xlsx",
+      "task_id": "abed40dc-063f-4598-8ba5-9fe749c0615d"
+    },
+    {
+      "cache_name": "1ffa83cb-fec0-5bfe-a93e-33a2adefafa3_New_Club_Spring_2018_Training.pptx",
+      "role": "setup",
+      "sha256": "676f878effc61b0b29075ac43114266c956afce6ed210f6c957bdc96fffae5dd",
+      "size": 168672,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/1ffa83cb-fec0-5bfe-a93e-33a2adefafa3_New_Club_Spring_2018_Training.pptx",
+      "task_id": "550ce7e7-747b-495f-b122-acdc4d0b8e54"
+    },
+    {
+      "cache_name": "84737a5f-8863-59df-abd2-29430b657ef2_04 CHIN9505 EBook Purchasing info 2021 Jan.docx",
+      "role": "setup",
+      "sha256": "efe354c69b84d33e87696922afb7b397a18167d19dbe8fabc64ff6931693f101",
+      "size": 13163,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/84737a5f-8863-59df-abd2-29430b657ef2_04 CHIN9505 EBook Purchasing info 2021 Jan.docx",
+      "task_id": "0a0faba3-5580-44df-965d-f562a99b291c"
+    },
+    {
+      "cache_name": "7b9b352c-623f-5161-a864-e0d0e96686fe_researchers.xlsx",
+      "role": "setup",
+      "sha256": "a2c93e61aeead49311125131c38106f0a77744686e89eae92a51bc04eb0d0b27",
+      "size": 9809,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/7b9b352c-623f-5161-a864-e0d0e96686fe_researchers.xlsx",
+      "task_id": "5990457f-2adb-467b-a4af-5c857c92d762"
+    },
+    {
+      "cache_name": "dc8130ba-73a7-5cf9-a1c1-75544aa7ea49_15-MB-docx-file-download.docx",
+      "role": "setup",
+      "sha256": "ae2cef007d681624ef0f00b7c745bda52f76f7b5a31a55001e20d630d94a2278",
+      "size": 33702734,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/dc8130ba-73a7-5cf9-a1c1-75544aa7ea49_15-MB-docx-file-download.docx",
+      "task_id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908"
+    },
+    {
+      "cache_name": "bb5707bc-cf3e-504e-865d-6496af062379_vscodeEvalExtension.zip",
+      "role": "setup",
+      "sha256": "2c091c00bb63c1fc8724bbbf3fa407429b8e46c6dfe771f7a2656c65b1f88a97",
+      "size": 3954880,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/bb5707bc-cf3e-504e-865d-6496af062379_vscodeEvalExtension.zip",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "220b744f-0494-51a8-ae56-7eeb0c72c90c_main.py",
+      "role": "setup",
+      "sha256": "64e5822301cd230ece61946075bebb2d149c101c9102ea1149415ed92fc69ee1",
+      "size": 92,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/220b744f-0494-51a8-ae56-7eeb0c72c90c_main.py",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "fb0d3abb-9e70-5403-8776-12d96c7d5d32_README.md",
+      "role": "setup",
+      "sha256": "94c262278cbe09e8f4bd8f99a9d989dc6c69e8dfc39ca67c53f20ed24c1fb80a",
+      "size": 95,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/fb0d3abb-9e70-5403-8776-12d96c7d5d32_README.md",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "083a9117-6dc2-517e-910a-0bc7a72b44cf_settings.json",
+      "role": "setup",
+      "sha256": "4ee65ae16e56fe8427ce16368295c4cd0077450756e24374be1a1156cda35efb",
+      "size": 200,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/083a9117-6dc2-517e-910a-0bc7a72b44cf_settings.json",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "7c7e3c3e-1de4-51a0-baeb-ab25f41dd5ba_thunderbird-profile.tar.gz",
+      "role": "setup",
+      "sha256": "4d10a477a4d78ea7b6b52e418703973da76bdcccce027ec9ab670c911e6b1911",
+      "size": 2252023,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/7c7e3c3e-1de4-51a0-baeb-ab25f41dd5ba_thunderbird-profile.tar.gz",
+      "task_id": "c867c42d-a52d-4a24-8ae3-f75d256b5618"
+    },
+    {
+      "cache_name": "3f2c7efc-d261-592d-adb4-1ea7a81fef96_zhang_appagent.pdf",
+      "role": "setup",
+      "sha256": "ce9840204e13889f899e326def62005ed9871a0a6ab5d44f716343c4142ef045",
+      "size": 3797687,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/3f2c7efc-d261-592d-adb4-1ea7a81fef96_zhang_appagent.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "e6063008-e308-52e8-a07d-b3eeb61429f0_niu_screenagent.pdf",
+      "role": "setup",
+      "sha256": "a44180f3bad8ce54553007e721deb8bbb31be6779e1ee6bf80ab257765e7bff4",
+      "size": 8580433,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/e6063008-e308-52e8-a07d-b3eeb61429f0_niu_screenagent.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "3c3aafc6-7303-5d93-b898-e4ff50d3250b_koh_visualwebarena.pdf",
+      "role": "setup",
+      "sha256": "8674b4ae17290bb797e5988706f765c75a3310a4e9d14cbd32497e40235ff795",
+      "size": 4564902,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/3c3aafc6-7303-5d93-b898-e4ff50d3250b_koh_visualwebarena.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "ffdfa57f-bf15-5842-bc5d-ba859adbaa79_deng_mind2web.pdf",
+      "role": "setup",
+      "sha256": "c281b1c4460c807c33cc242d2c1d0d175c3454e01abc9c2ec03aff761c0c0a57",
+      "size": 7563781,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/ffdfa57f-bf15-5842-bc5d-ba859adbaa79_deng_mind2web.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "e65f6e34-980a-56a8-955d-a14d481da23f_lecture1-2021-with-ink.pptx",
+      "role": "setup",
+      "sha256": "ab4b65d92b40ad172f01f2ca5d7decd72fb1e970dc6ff2f7e8d25b09c7b57b44",
+      "size": 118598,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/e65f6e34-980a-56a8-955d-a14d481da23f_lecture1-2021-with-ink.pptx",
+      "task_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a"
+    },
+    {
+      "cache_name": "71e86b07-ef85-5832-9e46-152f1422fb0c_notes.docx",
+      "role": "setup",
+      "sha256": "2374d7b73e04d5d0fa3f3b8a5001da0ce17ee0318ec49d2280d6aad68f2efc32",
+      "size": 7377,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/71e86b07-ef85-5832-9e46-152f1422fb0c_notes.docx",
+      "task_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a"
+    },
+    {
+      "cache_name": "6250d611-bf60-5715-92e4-0cd6d6e4d009_restaurants.txt",
+      "role": "setup",
+      "sha256": "9c76c729e04c7e7bf1c495013221d764db68f18fc359844d1a91ae7bc1e953d4",
+      "size": 77,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/6250d611-bf60-5715-92e4-0cd6d6e4d009_restaurants.txt",
+      "task_id": "d1acdb87-bb67-4f30-84aa-990e56a09c92"
+    },
+    {
+      "cache_name": "e2b87b1c-dd4e-5742-96d8-3661df551275_MUST_VISIT.xlsx",
+      "role": "setup",
+      "sha256": "986743e746dcfc3683eea8fffabb820217021a29689d8ae7909b31a0eee75207",
+      "size": 11615,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/e2b87b1c-dd4e-5742-96d8-3661df551275_MUST_VISIT.xlsx",
+      "task_id": "d1acdb87-bb67-4f30-84aa-990e56a09c92"
+    },
+    {
+      "cache_name": "5815ead9-078a-5eb7-8119-fb84abc8c05f_New Large Language Models.xlsx",
+      "role": "setup",
+      "sha256": "dc6161d9953ae979d02e00ee3a28cdbec0b3f4b42c5a4ef525f0b8b70bb4dace",
+      "size": 4972,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/5815ead9-078a-5eb7-8119-fb84abc8c05f_New Large Language Models.xlsx",
+      "task_id": "deec51c9-3b1e-4b9e-993c-4776f20e8bb2"
+    },
+    {
+      "cache_name": "a8e97ba8-8030-57de-95c5-dc0d3d3d1713_my_bookkeeping.xlsx",
+      "role": "setup",
+      "sha256": "6791db3e5410ed6b54e10e591e542d431d331e83b7e893512f18e45c85569e10",
+      "size": 6232,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/a8e97ba8-8030-57de-95c5-dc0d3d3d1713_my_bookkeeping.xlsx",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "3e1a288f-b716-57c2-ae28-9843a0d937a4_receipt_0.jpeg",
+      "role": "setup",
+      "sha256": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+      "size": 341035,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/3e1a288f-b716-57c2-ae28-9843a0d937a4_receipt_0.jpeg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "376af331-440d-500f-9528-9c2a1862375b_receipt_1.jpg",
+      "role": "setup",
+      "sha256": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+      "size": 21661,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/376af331-440d-500f-9528-9c2a1862375b_receipt_1.jpg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "2417921b-e739-5fd3-9a2d-dbfae9003119_receipt_2.jpg",
+      "role": "setup",
+      "sha256": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+      "size": 27794,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/2417921b-e739-5fd3-9a2d-dbfae9003119_receipt_2.jpg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "6b1b9520-24cf-502b-a5cb-34aa92961a5e_receipt_3.pdf",
+      "role": "setup",
+      "sha256": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+      "size": 40263,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/6b1b9520-24cf-502b-a5cb-34aa92961a5e_receipt_3.pdf",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "b460b95b-7800-5218-b5f3-0d4b368c2904_receipt_4.jpg",
+      "role": "setup",
+      "sha256": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d",
+      "size": 72779,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/b460b95b-7800-5218-b5f3-0d4b368c2904_receipt_4.jpg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "0b43d328-7eb4-577c-bb8d-d63e6d021ed0_secret.docx",
+      "role": "setup",
+      "sha256": "4c7d705e6e7f335fd569efd248106efdf051e21d09f415c9246208d922e09e51",
+      "size": 12177,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/0b43d328-7eb4-577c-bb8d-d63e6d021ed0_secret.docx",
+      "task_id": "716a6079-22da-47f1-ba73-c9d58f986a38"
+    },
+    {
+      "cache_name": "951cf1e8-ec72-5e19-9d5a-31be0fd4b3df_thunderbird-profile.tar.gz",
+      "role": "setup",
+      "sha256": "8a714a4102d6f3aa604c0fd2bb96e63ba51594485977ed5c8dd19af846ae07e8",
+      "size": 2125862,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/951cf1e8-ec72-5e19-9d5a-31be0fd4b3df_thunderbird-profile.tar.gz",
+      "task_id": "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397"
+    },
+    {
+      "cache_name": "8f99e671-e826-5b68-a738-0f86ae2ef48a_thunderbird-profile-blank.tar.gz",
+      "role": "setup",
+      "sha256": "84fd9a5d979d487df620b17f061a7f2cda5a1975161e120d3784ce3c15ad1136",
+      "size": 115739,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/8f99e671-e826-5b68-a738-0f86ae2ef48a_thunderbird-profile-blank.tar.gz",
+      "task_id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e"
+    },
+    {
+      "cache_name": "1ae2aceb-de6f-58d6-b675-f23abf4fac2c_Rick Astley - Never Gonna Give You Up (Official Music Video).mp4",
+      "role": "setup",
+      "sha256": "2ce569323956383d1b0f48406d510e03e4b14d8d09066adae0f095ff82002382",
+      "size": 9098063,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/1ae2aceb-de6f-58d6-b675-f23abf4fac2c_Rick Astley - Never Gonna Give You Up (Official Music Video).mp4",
+      "task_id": "59f21cfb-0120-4326-b255-a5b827b38967"
+    },
+    {
+      "cache_name": "3e627622-52f2-5491-b1d6-d90f200d39ca_Baby Justin Bieber.mp4",
+      "role": "setup",
+      "sha256": "b1c90b75d950875962f324c2224d62cc251c60925cd049f04571d6c07d6ac2cd",
+      "size": 12600781,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/3e627622-52f2-5491-b1d6-d90f200d39ca_Baby Justin Bieber.mp4",
+      "task_id": "8f080098-ddb1-424c-b438-4e96e5e4786e"
+    },
+    {
+      "cache_name": "5bef5a2d-4529-550d-a6d7-d74f3d03edb0_vscodeEvalExtension.zip",
+      "role": "setup",
+      "sha256": "2c091c00bb63c1fc8724bbbf3fa407429b8e46c6dfe771f7a2656c65b1f88a97",
+      "size": 3954880,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/5bef5a2d-4529-550d-a6d7-d74f3d03edb0_vscodeEvalExtension.zip",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    },
+    {
+      "cache_name": "8f31139f-5e86-5bdb-8183-a408e2b1e17d_main.py",
+      "role": "setup",
+      "sha256": "64e5822301cd230ece61946075bebb2d149c101c9102ea1149415ed92fc69ee1",
+      "size": 92,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/8f31139f-5e86-5bdb-8183-a408e2b1e17d_main.py",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    },
+    {
+      "cache_name": "a4071361-32ee-58d5-952e-6e0ec4fc6207_README.md",
+      "role": "setup",
+      "sha256": "94c262278cbe09e8f4bd8f99a9d989dc6c69e8dfc39ca67c53f20ed24c1fb80a",
+      "size": 95,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/a4071361-32ee-58d5-952e-6e0ec4fc6207_README.md",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    },
+    {
+      "cache_name": "4978e0c6-394c-5b98-ad8e-a4c76ee2675c_settings.json",
+      "role": "setup",
+      "sha256": "4ee65ae16e56fe8427ce16368295c4cd0077450756e24374be1a1156cda35efb",
+      "size": 200,
+      "source_path": "<paper-host>/osworld-runtime-assets-0814/fixture-downloads/4978e0c6-394c-5b98-ad8e-a4c76ee2675c_settings.json",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    }
+  ],
+  "hidden_count": 25,
+  "hidden_upstream_ids": [
+    "554785e9-4523-4e7a-b8e1-8016f565f56a",
+    "42e0a640-4f19-4b28-973d-729602b5a4a7",
+    "abed40dc-063f-4598-8ba5-9fe749c0615d",
+    "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+    "0a0faba3-5580-44df-965d-f562a99b291c",
+    "5990457f-2adb-467b-a4af-5c857c92d762",
+    "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+    "510f64c8-9bcc-4be1-8d30-638705850618",
+    "c867c42d-a52d-4a24-8ae3-f75d256b5618",
+    "74d5859f-ed66-4d3e-aa0e-93d7a592ce41",
+    "b5062e3e-641c-4e3a-907b-ac864d2e7652",
+    "48d05431-6cd5-4e76-82eb-12b60d823f7d",
+    "eb303e01-261e-4972-8c07-c9b4e7a4922a",
+    "d1acdb87-bb67-4f30-84aa-990e56a09c92",
+    "deec51c9-3b1e-4b9e-993c-4776f20e8bb2",
+    "8e116af7-7db7-4e35-a68b-b0939c066c78",
+    "716a6079-22da-47f1-ba73-c9d58f986a38",
+    "2373b66a-092d-44cb-bfd7-82e86e7a3b4d",
+    "5812b315-e7bd-4265-b51f-863c02174c28",
+    "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+    "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+    "59f21cfb-0120-4326-b255-a5b827b38967",
+    "8f080098-ddb1-424c-b438-4e96e5e4786e",
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+    "276cc624-87ea-4f08-ab93-f770e3790175"
+  ],
+  "network_manifest_sha256": "0e6342da7214fceeadbfb66b85dd91dfcb106b821fd0320baf4314bbd865bc90",
+  "schema_version": "1.0",
+  "selected_task_count": 35,
+  "source_commit": "091f5ef1d5544bc74953c77875d5feb5bed30108",
+  "source_split": "<paper-host>/optimization-source-snapshots-0812/osworld/evaluation_examples/test_small.json",
+  "source_task_count": 39,
+  "task_metadata_sha256": "e7c577823fbcd1e503a1375219084dee8a48baf9f0537e9871588812f04f18ce"
+}

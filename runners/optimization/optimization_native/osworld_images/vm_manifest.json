@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "dataset": "xlangai/ubuntu_osworld",
+    "revision": "a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133",
+    "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip"
+  },
+  "archive": {
+    "path": "Ubuntu.qcow2.zip",
+    "size": 12273896463,
+    "sha256": "b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712",
+    "zip_crc_verified": true,
+    "members": [
+      "Ubuntu.qcow2"
+    ]
+  },
+  "qcow2": {
+    "path": "Ubuntu.qcow2",
+    "size": 24460197888,
+    "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313"
+  },
+  "boot_assets": {
+    "kernel": {
+      "path": "vmlinuz-6.5.0-15-generic",
+      "size": 14230216,
+      "sha256": "5295b0e0a9fed7af5694b6f4e98ae2caacc0cf1e0c40734b75ac872960becb70"
+    },
+    "initrd": {
+      "path": "initrd.img-6.5.0-15-generic",
+      "size": 70085339,
+      "sha256": "df4bed1b9798f55e2134c29a3da806c8741ca26ab3141a18fad856bf7c902d6f"
+    },
+    "entrypoint": {
+      "path": "uefi_entry.sh",
+      "size": 287,
+      "sha256": "f5655dc4469ecf7e20e5b17b432183efee9814dab900b8800407f416394eba32"
+    }
+  },
+  "provider": {
+    "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+    "pull_image": "docker.io/happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+    "digest": "sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+    "local_image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+    "pull_verified": true,
+    "boot_mode": "kvm-uefi",
+    "kvm_device_available": true,
+    "kvm_uefi_boot_verified": true,
+    "tcg_boot_verified": true,
+    "tcg_virtio_scanout_verified": false,
+    "screenshot_verified": true,
+    "visible_screenshot_sha256": "85e3ba78821797325182bde087609124ec306fb337b915335ab38d961825ef71",
+    "action_roundtrip_verified": true,
+    "cleanup_verified": true
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "run_id": "public-stability-run",
+  "calls": [
+    {"call_id": "analysis-1", "model": "gpt-5.6-sol", "prompt_tokens": 1500, "completion_tokens": 250}
+  ]
+}

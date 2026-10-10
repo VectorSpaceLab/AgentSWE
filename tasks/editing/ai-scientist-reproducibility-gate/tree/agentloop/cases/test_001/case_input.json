@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "case_id": "test_001",
+  "scenario": "hidden_release_gate_after_freeze",
+  "evaluator_nonce": "runtime-generated",
+  "oracle": "evaluator-private"
+}

@@ -1,0 +1,7 @@
+{
+  "case_id": "test_005",
+  "scenario": "tamper_rejection",
+  "required_actions": ["tamper_seed"],
+  "max_action_invocations": 1,
+  "spill": false
+}

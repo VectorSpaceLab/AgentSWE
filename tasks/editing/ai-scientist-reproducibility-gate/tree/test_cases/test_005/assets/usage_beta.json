@@ -1,0 +1,1 @@
+{"schema_version":1,"run_id":"beta-run","calls":[{"call_id":"same-call","model":"gpt-5.6-sol","prompt_tokens":700,"completion_tokens":120}]}

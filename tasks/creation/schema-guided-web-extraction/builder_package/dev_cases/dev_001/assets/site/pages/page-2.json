@@ -1,0 +1,38 @@
+[
+  {
+    "asset_id": "AU-2007",
+    "name": "Aurora Tripod 07",
+    "detail": "details/d-07.html",
+    "catalog_price": 32.1
+  },
+  {
+    "asset_id": "AU-2008",
+    "name": "Cinder Probe 08",
+    "detail": "details/d-08.html",
+    "catalog_price": 34.45
+  },
+  {
+    "asset_id": "AU-2009",
+    "name": "Delta Beacon 09",
+    "detail": "details/d-09.html",
+    "catalog_price": 36.8
+  },
+  {
+    "asset_id": "AU-2010",
+    "name": "Frost Sampler 10",
+    "detail": "details/d-10.html",
+    "catalog_price": 39.15
+  },
+  {
+    "asset_id": "AU-2011",
+    "name": "Harbor Compass 11",
+    "detail": "details/d-11.html",
+    "catalog_price": 41.5
+  },
+  {
+    "asset_id": "AU-2012",
+    "name": "Juniper Gauge 12",
+    "detail": "details/d-12.html",
+    "catalog_price": 43.85
+  }
+]

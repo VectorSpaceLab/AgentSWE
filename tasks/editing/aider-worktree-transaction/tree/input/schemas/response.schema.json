@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aider-repository-set-response-v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation", "plan_id", "transaction_id", "state", "reason", "repo", "coordination", "repositories", "subtasks", "integration_tests", "decision", "publication", "cleanup", "ledger", "errors"],
+  "properties": {
+    "schema_version": {"const": 3},
+    "operation": {"enum": ["create", "status", "run", "recover", "rollback"]},
+    "plan_id": {"type": "string"},
+    "transaction_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "state": {"enum": ["created", "running", "prepared", "decided", "blocked", "failed", "interrupted", "committed", "rolling_back", "rolled_back"]},
+    "reason": {"type": ["string", "null"], "maxLength": 4096},
+    "repo": {"type": "string"},
+    "coordination": {"$ref": "#/$defs/coordination"},
+    "repositories": {"type": "array", "items": {"$ref": "#/$defs/repository"}},
+    "subtasks": {"type": "array", "items": {"$ref": "#/$defs/subtask"}},
+    "integration_tests": {"type": "array", "items": {"$ref": "#/$defs/integration_test"}},
+    "decision": {"$ref": "#/$defs/decision"},
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "targets"],
+      "properties": {
+        "state": {"enum": ["pending", "prepared", "decided", "committed", "aborted", "obstructed", "rolling_back", "rolled_back"]},
+        "targets": {"type": "array", "items": {"$ref": "#/$defs/target"}}
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "remaining_worktrees", "remaining_branches", "admissions_released"],
+      "properties": {
+        "state": {"enum": ["pending", "complete", "preserved"]},
+        "remaining_worktrees": {"type": "array", "items": {"type": "string"}},
+        "remaining_branches": {"type": "array", "items": {"type": "string"}},
+        "admissions_released": {"type": "boolean"}
+      }
+    },
+    "ledger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "generation", "event_count", "digest"],
+      "properties": {
+        "schema_version": {"const": 3},
+        "generation": {"type": "integer", "minimum": 1},
+        "event_count": {"type": "integer", "minimum": 1},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "errors": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["code", "message"], "properties": {"code": {"type": "string"}, "message": {"type": "string"}}}}
+  },
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest", "entry_count", "total_bytes"],
+      "properties": {
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "entry_count": {"type": "integer", "minimum": 0},
+        "total_bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "test": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argv", "state", "exit_code", "stdout_bytes", "stderr_bytes", "stdout_sha256", "stderr_sha256"],
+      "properties": {
+        "argv": {"type": "array", "items": {"type": "string"}},
+        "state": {"enum": ["pending", "passed", "failed"]},
+        "exit_code": {"type": ["integer", "null"]},
+        "stdout_bytes": {"type": "integer", "minimum": 0},
+        "stderr_bytes": {"type": "integer", "minimum": 0},
+        "stdout_sha256": {"type": ["string", "null"]},
+        "stderr_sha256": {"type": ["string", "null"]}
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository_id", "identity", "state", "fence", "expires_at_unix_ms"],
+      "properties": {
+        "repository_id": {"type": "string"},
+        "identity": {"type": "string", "minLength": 1},
+        "state": {"enum": ["active", "expired", "released"]},
+        "fence": {"type": "integer", "minimum": 1},
+        "expires_at_unix_ms": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "coordination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner_id", "lease_token", "fence", "lease_state", "expires_at_unix_ms", "admissions"],
+      "properties": {
+        "owner_id": {"type": ["string", "null"]},
+        "lease_token": {"type": ["string", "null"]},
+        "fence": {"type": "integer", "minimum": 1},
+        "lease_state": {"enum": ["active", "expired", "released"]},
+        "expires_at_unix_ms": {"type": ["integer", "null"], "minimum": 0},
+        "admissions": {"type": "array", "items": {"$ref": "#/$defs/admission"}}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "repo", "base_revision", "base_snapshot", "state", "candidate_commit", "tree_oid", "prepare_digest", "quarantine_digest", "objects_promoted"],
+      "properties": {
+        "id": {"type": "string"},
+        "repo": {"type": "string"},
+        "base_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "base_snapshot": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/snapshot"}]},
+        "state": {"enum": ["pending", "running", "prepared", "promoted", "committed", "blocked", "rolling_back", "rolled_back"]},
+        "candidate_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "tree_oid": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "prepare_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "quarantine_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "objects_promoted": {"type": "boolean"}
+      }
+    },
+    "subtask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "repository_id", "state", "depends_on", "branch", "worktree", "snapshot", "commit", "test", "reason"],
+      "properties": {
+        "id": {"type": "string"},
+        "repository_id": {"type": "string"},
+        "state": {"enum": ["pending", "ready", "running", "worker_finished", "snapshotted", "committed", "tested", "merged", "blocked", "failed", "cleaned", "rolled_back"]},
+        "depends_on": {"type": "array", "items": {"type": "string"}},
+        "branch": {"type": ["string", "null"]},
+        "worktree": {"type": ["string", "null"]},
+        "snapshot": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/snapshot"}]},
+        "commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "test": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/test"}]},
+        "reason": {"type": ["string", "null"]}
+      }
+    },
+    "integration_test": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository_id", "result"],
+      "properties": {
+        "repository_id": {"type": "string"},
+        "result": {"$ref": "#/$defs/test"}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "digest", "participant_order", "completed_participants"],
+      "properties": {
+        "state": {"enum": ["none", "prepared", "commit", "rollback", "aborted", "obstructed", "complete"]},
+        "digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "participant_order": {"type": "array", "items": {"type": "string"}},
+        "completed_participants": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository_id", "ref", "expected_oid", "observed_oid", "final_oid", "state"],
+      "properties": {
+        "repository_id": {"type": "string"},
+        "ref": {"type": "string", "pattern": "^refs/heads/"},
+        "expected_oid": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "observed_oid": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "final_oid": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "state": {"enum": ["pending", "prepared", "committed", "drifted", "obstructed", "rolling_back", "rolled_back"]}
+      }
+    }
+  }
+}

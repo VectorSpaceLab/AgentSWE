@@ -1,0 +1,1 @@
+{"schema_version":1,"run_id":"corrupt-capsule","calls":[{"call_id":"archive","model":"gpt-5.6-sol","prompt_tokens":901,"completion_tokens":201}]}

@@ -1,0 +1,72 @@
+[
+  {
+    "registry_hint": "PX-7024",
+    "display": "Sam Chen",
+    "role": "Analyst",
+    "observed_at": "2026-07-19T10:00:00Z",
+    "profile": "profiles/k540-current.vcf"
+  },
+  {
+    "registry_hint": "PX-7019",
+    "display": "Ari Kim",
+    "role": "Curator",
+    "observed_at": "2026-07-14T10:00:00Z",
+    "profile": "profiles/k425-current.json"
+  },
+  {
+    "registry_hint": "PX-7017",
+    "display": "Robin Rivera old",
+    "role": "Former Archivist",
+    "observed_at": "2025-12-17T09:00:00Z",
+    "profile": "profiles/k379-zz-old.json"
+  },
+  {
+    "registry_hint": "PX-7001",
+    "display": "Mina Chen old",
+    "role": "Former Curator",
+    "observed_at": "2025-12-01T09:00:00Z",
+    "profile": "profiles/k011-zz-old.json"
+  },
+  {
+    "registry_hint": "PX-7025",
+    "display": "J. Chen",
+    "role": "Curator",
+    "observed_at": "2026-07-20T10:00:00Z",
+    "profile": "profiles/k563-current.json"
+  },
+  {
+    "registry_hint": "PX-7021",
+    "display": "M. Chen",
+    "role": "Researcher",
+    "observed_at": "2026-07-16T10:00:00Z",
+    "profile": "profiles/k471-current.vcf"
+  },
+  {
+    "registry_hint": "PX-7025",
+    "display": "Jordan Chen old",
+    "role": "Former Curator",
+    "observed_at": "2025-12-05T09:00:00Z",
+    "profile": "profiles/k563-zz-old.json"
+  },
+  {
+    "registry_hint": "PX-7009",
+    "display": "Ari Kim old",
+    "role": "Former Researcher",
+    "observed_at": "2025-12-09T09:00:00Z",
+    "profile": "profiles/k195-zz-old.json"
+  },
+  {
+    "registry_hint": "PX-7005",
+    "display": "Jordan Chen old",
+    "role": "Former Archivist",
+    "observed_at": "2025-12-05T09:00:00Z",
+    "profile": "profiles/k103-zz-old.json"
+  },
+  {
+    "registry_hint": "PX-7028",
+    "display": "Casey Morgan",
+    "role": "Engineer",
+    "observed_at": "2026-07-23T10:00:00Z",
+    "profile": "profiles/k632-current.json"
+  }
+]

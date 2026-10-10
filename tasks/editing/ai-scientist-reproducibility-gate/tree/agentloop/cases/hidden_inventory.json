@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_count": 6,
+  "cases": [
+    {"case_id":"test_001","focus":"science fence and evidence-attestation binding under a changed raw artifact"},
+    {"case_id":"test_002","focus":"durable prepare/commit with response loss and exactly-once settlement"},
+    {"case_id":"test_003","focus":"partial worker recovery versus fatal pool integrity failure"},
+    {"case_id":"test_004","focus":"policy migration, takeover and scoped cleanup provenance"},
+    {"case_id":"test_005","focus":"project isolation, unauthorized participant and notification retry"},
+    {"case_id":"test_006","focus":"journal byte stability, manifest drift and safe cancellation"}
+  ],
+  "oracle_disclosure": "none; dynamic facts, schedules, exact values and expected decisions are evaluator-private"
+}

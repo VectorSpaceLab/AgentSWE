@@ -1,0 +1,4 @@
+[
+  {"session_id":"maintenance","hook_event_name":"PreToolUse","tool_name":"Write","tool_use_id":"maintenance-template","tool_input":{"file_path":"src/item.txt","content":"ok"}},
+  {"session_id":"maintenance","hook_event_name":"PostToolUse","tool_name":"Write","tool_use_id":"maintenance-template","tool_input":{"file_path":"src/item.txt","content":"ok"},"tool_response":{"status":"ok"}}
+]

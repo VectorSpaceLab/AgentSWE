@@ -1,0 +1,1 @@
+{"schema_version":1,"run_id":"cancel-reenter","calls":[{"call_id":"plot","model":"gpt-5.6-sol","prompt_tokens":999,"completion_tokens":333}]}

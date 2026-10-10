@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "run_id": "run-public-001",
+  "project_id": "public-repro",
+  "replay": {
+    "command": ["python", "replay.py"],
+    "working_directory": ".",
+    "timeout_seconds": 10,
+    "script_path": "replay.py",
+    "script_sha256": "dbe867ffd4350a5c34b8b2bbb838960bf03a5e7359a92d3a583b70e51ca5d55b"
+  },
+  "workers": [
+    {"worker_id": "w-baseline-11", "experiment_id": "exp-baseline-001", "seed": 11, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "3e73087562719d74db851d006dc2c45afdb64c89a07864e0afe091e6a8423be6"},
+    {"worker_id": "w-baseline-22", "experiment_id": "exp-baseline-001", "seed": 22, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "3e73087562719d74db851d006dc2c45afdb64c89a07864e0afe091e6a8423be6"},
+    {"worker_id": "w-nova-11", "experiment_id": "exp-nova-001", "seed": 11, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "3e73087562719d74db851d006dc2c45afdb64c89a07864e0afe091e6a8423be6"}
+  ],
+  "failure_policy": {"allow_partial": false, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "public-lab/magnitude-study/publish-001", "global_process_scan": false}
+}

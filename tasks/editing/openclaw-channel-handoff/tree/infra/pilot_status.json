@@ -1,0 +1,14 @@
+{
+  "status": "PARTIAL",
+  "phase": "B-simple-pilot",
+  "smoke_started": true,
+  "formal_started": false,
+  "real_lower_agent_executed": true,
+  "successful_broker_calls": 0,
+  "reason": "No upstream Responses endpoint/key was present; broker recorded real provider_unconfigured failures.",
+  "evidence": {
+    "lower": "@@AGENTSWE_EDITING_TASKS@@/openclaw-channel-handoff/tree/artifacts/minimal-pilot/dev_001",
+    "broker_stats": "@@AGENTSWE_EDITING_TASKS@@/openclaw-channel-handoff/tree/artifacts/minimal-pilot/broker_stats.json"
+  },
+  "promotion_requirement": "Successful evaluator-owned gpt-5.6-sol/medium broker calls plus a completed real lower-agent dev case before READY."
+}

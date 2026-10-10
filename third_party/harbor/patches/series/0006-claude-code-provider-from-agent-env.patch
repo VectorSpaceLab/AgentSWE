@@ -1,0 +1,30 @@
+Subject: [PATCH 0006] Claude Code: take ANTHROPIC_BASE_URL / ANTHROPIC_MODEL from the agent env
+
+Applies on top of profile 'pristine'.
+
+--- a/harbor/agents/installed/claude_code.py
++++ b/harbor/agents/installed/claude_code.py
+@@ -1390,7 +1390,10 @@
+         env = {
+             # "" when forced, then dropped by the empty-value filter below.
+             "ANTHROPIC_API_KEY": api_key,
+-            "ANTHROPIC_BASE_URL": os.environ.get("ANTHROPIC_BASE_URL", None),
++            "ANTHROPIC_BASE_URL": (
++                self._get_env("ANTHROPIC_BASE_URL")
++                or os.environ.get("ANTHROPIC_BASE_URL", None)
++            ),
+             "CLAUDE_CODE_OAUTH_TOKEN": oauth_token,
+             "CLAUDE_CODE_MAX_OUTPUT_TOKENS": os.environ.get(
+                 "CLAUDE_CODE_MAX_OUTPUT_TOKENS", None
+@@ -1438,7 +1441,10 @@
+         env = {k: v for k, v in env.items() if v}
+ 
+         # Handle model name based on whether using custom API base or Bedrock
+-        if self.model_name:
++        configured_model = self._get_env("ANTHROPIC_MODEL")
++        if configured_model:
++            env["ANTHROPIC_MODEL"] = configured_model
++        elif self.model_name:
+             if use_bedrock:
+                 # Bedrock model IDs (e.g. global.anthropic.claude-sonnet-4-5-20250929-v1:0)
+                 # or ARNs should be passed through as-is; strip the provider prefix only

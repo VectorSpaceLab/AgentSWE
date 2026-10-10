@@ -1,0 +1,522 @@
+{
+  "schema_version": "agentswe-edit-preflight-smoke-plan-v1",
+  "generated_at": "2026-09-13T08:01:37.183583+00:00",
+  "provider_calls_started": false,
+  "formal_launch_authorized": false,
+  "source_unchanged": true,
+  "gate_snapshot": {
+    "ready_count": 0,
+    "expected_count": 10,
+    "formal_ready": false,
+    "formal_launch_authorized": false,
+    "formal_evaluation_started": false
+  },
+  "execution_policy": [
+    "Use one fresh bounded smoke per task at a time after GATEWAY recovery.",
+    "Bind every manifest to the current sibling_digest and current repair matrix.",
+    "Require real lower-agent product entry, evaluator-owned medium broker, model-authored artifact, trajectory, private oracle evidence, independent xhigh Result judge, Code judge and cleanup.",
+    "Preserve historical and infrastructure-invalid attempts; do not resample provider refusals or unrecoverable sessions.",
+    "Do not run formal launch until the readiness gate explicitly authorizes it."
+  ],
+  "required_evidence": [
+    "accepted_candidate",
+    "lower_medium_broker_usage",
+    "real_product_actions",
+    "agent_authored_artifact",
+    "trajectory",
+    "private_oracle_and_deterministic_validity",
+    "independent_xhigh_result_judge",
+    "frozen_candidate_code_judge",
+    "owned_cleanup"
+  ],
+  "tasks": [
+    {
+      "priority": 1,
+      "task": "deeptutor",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/deeptutor-adaptive-remediation/tree",
+      "sibling_digest": "7bd4224cd99dd231cc656b1f682a8876446f3ccfd7477bd46cf9c759c0b6440c",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "agentloop/lower_agent_launcher.py",
+      "product_api_entry": "agentloop/lower_agent_entry.py",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "evaluator/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/deeptutor/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "current 0905 real hidden smoke evidence is missing or incomplete",
+        "current 0905 real hidden smoke evidence missing or incomplete"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 2,
+      "task": "deepcode",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/deepcode-claim-traceability/tree",
+      "sibling_digest": "d48acc39eafad879083146867ec7a6ab34efcfc1c3f9465bdf40077af39bd531",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "evaluator/harness/deepcode_lower_agent.py",
+      "product_api_entry": "input/repository/deepcode.py",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "evaluator/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/deepcode/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "The live controller now supports 1..10 accepted submissions, exact prior-feedback acknowledgement, latest-accepted freeze, and dynamic source-submission binding in hidden attestations. Readiness remains blocked on a current publishable 0905 real hidden smoke and evaluator-owned broker/judge cleanup attestation.",
+        "current 0905 real hidden smoke evidence missing or incomplete",
+        "smoke requires at least 1 distinct hidden case(s) for this task"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 3,
+      "task": "aider",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/aider-worktree-transaction/tree",
+      "sibling_digest": "22d4168282754af270fd22105cd6d563159b010191f144defaf2e63ee56479e1",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "evaluator/harness/run_lower_agent_case.py",
+      "product_api_entry": "input/repository/aider/__main__.py",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests": 1,
+        "expected_frozen_digest": true,
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "meta/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/aider/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "current 0905 real hidden smoke evidence missing or incomplete",
+        "smoke requires at least 1 distinct hidden case(s) for this task"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 4,
+      "task": "openhands",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/openhands-effect-recovery/tree",
+      "sibling_digest": "a5fee1e241bdcf5f851f99229a3341e496fffc3d501f297e0d0d3cceede7fed7",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "lower_agent/openhands_lower_agent.py",
+      "product_api_entry": "input/repository/src/api/conversation-service/conversation-service.api.ts -> Candidate recovery adapter/dispatcher/sync/workspace modules",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "evaluator/code_axis/code_rubric.json"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/openhands/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "Run a fresh two-hidden smoke against the current sibling digest with real medium lower-product calls, model-authored artifacts, one independent xhigh Result judgment for each scoreable case, and verified owned-container cleanup.",
+        "current 0905 real hidden smoke evidence missing or incomplete"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 5,
+      "task": "openclaw",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/openclaw-channel-handoff/tree",
+      "sibling_digest": "c1e9dd2c1b421f1f1e756d49d10ae68dae5ce565c92b50e00f91c033e7daf17d",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "lower_agent/launcher.py",
+      "product_api_entry": "input/repository/openclaw.mjs",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "evaluator/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/openclaw/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "current 0905 real hidden smoke evidence missing or incomplete",
+        "smoke requires at least 1 distinct hidden case(s) for this task"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 6,
+      "task": "claude",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/claude-policy-provenance/tree",
+      "sibling_digest": "74d4db4cc8d65cc69774b641b088d9c6be9e8421e3c18a5ccbf9ee423d2d1772",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "agentloop/evaluator/lower_agent_launcher.py",
+      "product_api_entry": "candidate plugins/policy-provenance-ledger/hooks/policy_hook.py and bin/policy-ledger-inspect",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "task_local_rubric": true,
+        "completed_responses_required": 1
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "rubric": "evaluator/code_rubric.md",
+        "independent_from_result": true,
+        "candidate_level_evaluations": 1
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/claude/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "current 0905 real hidden smoke evidence missing or incomplete",
+        "smoke requires at least 1 distinct hidden case(s) for this task"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 7,
+      "task": "codex",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/codex-execution-residual/tree",
+      "sibling_digest": "49b2832b47cb98506023e820b1ba693072c09be6642855506d4117dc02c8b3f7",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "evaluator/harness/run_lower_agent_case.py",
+      "product_api_entry": "frozen patched Codex binary mounted read-only at /opt/codex-under-test and invoked as codex exec --json",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests": 1,
+        "expected_frozen_digest": true,
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "evaluator/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/codex/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "current 0905 real hidden smoke evidence missing or incomplete",
+        "smoke requires at least 1 distinct hidden case(s) for this task"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 8,
+      "task": "ai-scientist",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/ai-scientist-reproducibility-gate/tree",
+      "sibling_digest": "1ed1eb691a7a2d606ee9043d082b069292a88d5b48e8bfb532e276fd3f604850",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "agentloop/lower_agent_launcher.py",
+      "product_api_entry": "input/repository/launch_scientist_bfts.py",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "evaluator/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/ai-scientist/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "Obtain a fresh publishable real smoke against the current two-call lower loop: at least one scoreable hidden case must complete the lower gpt-5.6-sol/medium path, produce the model-authored agent_result.json, receive exactly one independent gpt-5.6-sol/xhigh Result judgment, and finish with evaluator-owned container absence; reference-003 and reference-004 are retained as non-publishable infrastructure/integration evidence.",
+        "current 0905 real hidden smoke evidence missing or incomplete"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 9,
+      "task": "dyad",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/dyad-acceptance-driven/tree",
+      "sibling_digest": "e6636dca3bd84f9b079714113b1ba65260f8ef021fd8ecf6c7ea6d1422de2b22",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "adapters/lower_agent_launcher.py",
+      "product_api_entry": "environment/headless_chat_flow.py",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "evaluator/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/dyad/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "Provider-free contracts now dispatch six distinct model-selected scenarios and route exact executed tasks to Result judging. Readiness remains REPAIR because no authorized provider/Docker/formal six-hidden run has demonstrated that a real model and Candidate complete those action contracts or scenario outcomes.",
+        "current 0905 real hidden smoke evidence missing or incomplete",
+        "smoke requires at least 1 distinct hidden case(s) for this task"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    },
+    {
+      "priority": 10,
+      "task": "openwiki",
+      "sibling": "@@AGENTSWE_EDITING_TASKS@@/openwiki-change-impact/tree",
+      "sibling_digest": "b41c60a96f1e6d62e42e50b9d03b66a922eedbf3c726d6421f6578aff404b966",
+      "formal_entry": "harbor/formal_one_stop.py",
+      "real_lower_entry": "agentloop/evaluator/lower_agent_launcher.py",
+      "product_api_entry": "input/repository/src/agent/index.ts",
+      "dev_cases": [
+        "dev_001",
+        "dev_002"
+      ],
+      "hidden_cases": [
+        "test_001",
+        "test_002",
+        "test_003",
+        "test_004",
+        "test_005",
+        "test_006"
+      ],
+      "broker": {
+        "model": "deepseek-flash",
+        "effort": "high"
+      },
+      "result_judge": {
+        "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "logical_requests_per_scoreable_hidden": 1,
+        "completed_responses_required": 1,
+        "task_local_rubric": true
+      },
+      "code_judge": {
+        "entry": "@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/code_eval.py",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "candidate_level_evaluations": 1,
+        "independent_from_result": true,
+        "rubric": "agentloop/evaluator/code_rubric.md"
+      },
+      "smoke_manifest": "@@AGENTSWE_EDITING_RUNS@@/smoke/openwiki/latest_smoke_manifest.json",
+      "readiness": "REPAIR",
+      "blockers": [
+        "The live Builder bridge uses the generalized accepted-submission controller and records container-verified evaluator-owned cleanup on every exit path. Three bounded 0905 pilots reached the real gpt-5.6-sol/xhigh Builder but ended before any accepted submission; the latest completed run verified true broker/container cleanup. A 2026-09-05 process inspection found no active OpenWiki fourth-pilot process. Readiness still requires a complete publishable real hidden smoke plus independent xhigh Result-judge evidence and cleanup.",
+        "current 0905 real hidden smoke evidence missing or incomplete",
+        "smoke requires at least 1 distinct hidden case(s) for this task"
+      ],
+      "first_action": "bounded current-digest smoke; inspect/retain all evidence before any retry"
+    }
+  ],
+  "scope": "Preflight plan only; real attempt evidence is maintained in run-local manifests."
+}

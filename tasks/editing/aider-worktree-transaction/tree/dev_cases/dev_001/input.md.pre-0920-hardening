@@ -1,0 +1,20 @@
+# Public case: quarantined superproject/submodule publication
+
+Use `assets/manifest.json` through the public schema-v3 adapter. The runner
+creates a root repository with a registered local `vendor/core` submodule.
+Independent workers edit the root and the component in separate linked
+worktrees. The component candidate is composed first; the root candidate
+binds its `160000 vendor/core` entry to that exact component commit.
+
+Exit cooperatively after the durable federation prepare. At that boundary all
+four root/component target refs remain at their declared bases, and neither
+candidate is readable from the corresponding ordinary object database, while
+both are readable from the verified transaction quarantine. Recovery under
+the same owner records the commit decision, promotes each closure, and
+publishes the component before the root. The runner verifies every ref, the
+candidate parent/tree/gitlink, the supplied checkouts, command counts,
+cleanup/admission release, and stable status.
+
+This case demonstrates the complete success path and the authority rules.
+Run `run.sh` after installing the candidate; do not special-case public
+paths, IDs, repository counts, content, or OIDs.

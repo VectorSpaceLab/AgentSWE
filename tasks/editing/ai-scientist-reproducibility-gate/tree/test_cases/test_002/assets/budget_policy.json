@@ -1,0 +1,1 @@
+{"schema_version":1,"project_id":"project-race","policy_version":"race-1","currency":"USD","limit_micros":9000,"rates":{"gpt-5.6-sol":{"prompt_micros_per_million":3000000,"completion_micros_per_million":9000000}},"permissions":{"prepare":["worker-one","worker-two"],"commit":["worker-one","worker-two"],"status":["worker-one","worker-two"],"cancel":["worker-one","worker-two"]}}

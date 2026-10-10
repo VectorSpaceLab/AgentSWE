@@ -1,0 +1,50 @@
+{
+    "schema_version": 2,
+    "policy_id": "hidden-maintenance",
+    "policy_epoch": 5,
+    "previous_policy_snapshot_digest": null,
+    "revision": "maintenance-v2",
+    "mode": "enforce",
+    "default_decision": "deny",
+    "tools": {
+        "Write": "allow"
+    },
+    "paths": {
+        "allow": [
+            "src/**"
+        ],
+        "deny": [
+            ".env",
+            "secrets/**"
+        ]
+    },
+    "commands": {
+        "allow": [],
+        "deny": [],
+        "audit_only": [],
+        "rewrites": []
+    },
+    "network": {
+        "allow_hosts": [],
+        "deny_hosts": []
+    },
+    "mcp": {},
+    "reservation": {
+        "max_inflight": 2,
+        "max_session_inflight": 1,
+        "lease_seconds": 1,
+        "reclaim_expired": true
+    },
+    "approval": {
+        "threshold": 2,
+        "ticket_seconds": 3,
+        "principals": ["maint-a", "maint-b", "maint-c"],
+        "tools": ["Write"],
+        "principal_groups": {"maint-a":"release", "maint-b":"security", "maint-c":"release"},
+        "required_groups": ["release", "security"]
+    },
+    "ownership": {"handoff_seconds": 3, "allowed_targets": ["maint-recovery", "maint-spare"]},
+    "delivery": {"claim_seconds": 2, "max_pending": 10, "require_completion": true},
+    "repair": {"max_quarantine_bytes": 1048576, "required_verifiers": 2, "verifiers": ["maint-repair-a", "maint-repair-b"]},
+    "continuation": {"token_seconds": 2, "max_pending": 2, "tools": ["Write"]}
+}

@@ -1,0 +1,329 @@
+{
+  "benchmark_id": "terminalbench-code-agent-optimization-v1",
+  "contamination_policy": {
+    "answers_or_solutions_forbidden": true,
+    "hidden_or_evaluator_material_forbidden": true,
+    "static_terminalbench_solver_forbidden": true,
+    "task_id_branches_forbidden": true
+  },
+  "editable_space": [
+    "run_harness.py",
+    "agent_policy.py"
+  ],
+  "evaluation": {
+    "cli": "python run_harness.py --input <input.jsonl> --output <predictions.jsonl> --run-dir <run_dir>",
+    "infrastructure_failure": "not official, not cached as zero, and does not consume a dev round",
+    "ordinary_candidate_failure": "official zero and consumes a dev round",
+    "primary_metric": "official mean score over rows",
+    "relative_improvement_definition": "(candidate_score-baseline_score)/abs(baseline_score); null when baseline_score is zero",
+    "reported_metrics": [
+      "baseline_score",
+      "candidate_score",
+      "absolute_improvement",
+      "relative_improvement"
+    ],
+    "same_evaluator_runtime_model_and_budget": true,
+    "same_path_for_baseline_and_candidate": true,
+    "score_only_final_task_outcomes": true
+  },
+  "fixed_space": {
+    "budgets": {
+      "max_turns": 20,
+      "model_calls": 20,
+      "runtime_seconds": 900
+    },
+    "evaluator": "Terminal-Bench/Harbor official task tests and reward",
+    "forbidden": [
+      "static task solvers",
+      "solution.sh",
+      "bundled answers",
+      "task-id branches"
+    ],
+    "model": "gpt-5.6-sol through evaluator-owned broker",
+    "runtime": "Harbor official Terminus2 live tmux loop"
+  },
+  "initial_artifact": {
+    "digest": "ceffd7c37bbdfbfff2a3dfdc0432239816a84430ec3c6a17d671efa72449b641",
+    "entrypoint": "run_harness.py",
+    "kind": "starter_harness",
+    "name": "Clean Live Terminus-2",
+    "path": "starter_harness"
+  },
+  "schema_version": "3.0",
+  "splits": {
+    "dev": {
+      "cases": [
+        {
+          "case_id": "dev_001",
+          "native_task_digest": "44e0022b8a63821b798312fa34a44d3129f07df73d11d274d43f700ea2c37321",
+          "upstream_id": "write-compressor"
+        },
+        {
+          "case_id": "dev_002",
+          "native_task_digest": "3a707967076f8423c97aafcae56cdf2f2d1e2a6b557ca319ea561be161a42452",
+          "upstream_id": "financial-document-processor"
+        },
+        {
+          "case_id": "dev_003",
+          "native_task_digest": "0e3f65931e3718c4de8c840441850e4cf4c52adba788732b9214d6f3aec5d77d",
+          "upstream_id": "hf-model-inference"
+        },
+        {
+          "case_id": "dev_004",
+          "native_task_digest": "8704f03204ac11bbe922afed9d29c703a7548d5c85d8687b805dac5322fcad47",
+          "upstream_id": "hello-world"
+        },
+        {
+          "case_id": "dev_005",
+          "native_task_digest": "650729b0cbfd7f5c76fcbc935dff3d16c8fcbf9baa727dddb34b5cb6bfc7075a",
+          "upstream_id": "sqlite-db-truncate"
+        },
+        {
+          "case_id": "dev_006",
+          "native_task_digest": "f0dea72754d52edf50030da6b05470e62d32b5a95a4d35d7074bb4bdf81d0110",
+          "upstream_id": "break-filter-js-from-html"
+        },
+        {
+          "case_id": "dev_007",
+          "native_task_digest": "4f402f191916342aa70981ef0d5324a72551dddca3af8e892f8e69ed5f2c463b",
+          "upstream_id": "sanitize-git-repo"
+        },
+        {
+          "case_id": "dev_008",
+          "native_task_digest": "0b35d406d90d38367dfd70a9d9936436dcd9ab792667b3389255b7c15ae08f79",
+          "upstream_id": "count-dataset-tokens"
+        },
+        {
+          "case_id": "dev_009",
+          "native_task_digest": "692e49f1b4f5756a27b80b9ac9e9420898a42c271a9087cdb6bbd600b35072fa",
+          "upstream_id": "gpt2-codegolf"
+        },
+        {
+          "case_id": "dev_010",
+          "native_task_digest": "a4967c4d9afd12930bae0840dc9e1ef86350b2c89df556cc7a1060fb36343d6f",
+          "upstream_id": "train-fasttext"
+        }
+      ],
+      "count": 10
+    },
+    "hidden": {
+      "cases": [
+        {
+          "case_id": "test_001",
+          "native_task_digest": "da21f82f23af1c156dbebf41dd13b93eff99bb570351492d94016a140d4f7803",
+          "upstream_id": "compile-compcert"
+        },
+        {
+          "case_id": "test_002",
+          "native_task_digest": "9d013603cfa05dc5fee191679a02acc25564d73dd2752e3ad281554bd3113f1c",
+          "upstream_id": "qemu-startup"
+        },
+        {
+          "case_id": "test_003",
+          "native_task_digest": "181698279d088621b3466d23e40be807224f58da8ff1ac2b796c00e6f21a576c",
+          "upstream_id": "torch-pipeline-parallelism"
+        },
+        {
+          "case_id": "test_004",
+          "native_task_digest": "9b0e683678854405d7a911411f64d3a1463a07443c026948ffb3639cf5e69843",
+          "upstream_id": "custom-memory-heap-crash"
+        },
+        {
+          "case_id": "test_005",
+          "native_task_digest": "23d0bd734e288b69b82807f29e665224c8f96290d7c6ac7d4f8403a9943ba441",
+          "upstream_id": "make-mips-interpreter"
+        },
+        {
+          "case_id": "test_006",
+          "native_task_digest": "86726a7b38789474501040ac48b66ce71f8f91f846d4d6292bd24bf4cbb3afa0",
+          "upstream_id": "torch-tensor-parallelism"
+        },
+        {
+          "case_id": "test_007",
+          "native_task_digest": "c17107c8e2cb476c35dc3e59e2a0f61c015df5c465dbc5c52f91238298e735d7",
+          "upstream_id": "qemu-alpine-ssh"
+        },
+        {
+          "case_id": "test_008",
+          "native_task_digest": "fc75d6f01fc2d8657096e74a0d9291f32737447f5ec0f5e9833531c3ec543daa",
+          "upstream_id": "gcode-to-text"
+        },
+        {
+          "case_id": "test_009",
+          "native_task_digest": "645dbd31b399bb2bd998dfec53e56eaed988de66966073e42a6193ef41e09913",
+          "upstream_id": "prove-plus-comm"
+        },
+        {
+          "case_id": "test_010",
+          "native_task_digest": "f0475b5494bf262cca3f862f8eecd4570ab9b97bd3bada44a620404d6ad7159f",
+          "upstream_id": "dna-insert"
+        },
+        {
+          "case_id": "test_011",
+          "native_task_digest": "1bfa942239541623b91535631df587562b966f2bd39b2530296bc8d9367bab03",
+          "upstream_id": "configure-git-webserver"
+        },
+        {
+          "case_id": "test_012",
+          "native_task_digest": "fcafcaf3a75b0e326ce276eb06d8c782e6b33460b3a68593a52294e6102ec305",
+          "upstream_id": "fix-ocaml-gc"
+        },
+        {
+          "case_id": "test_013",
+          "native_task_digest": "b6129a0a9ffefaeaf88871cf537736b2bec94448de0eeff217ec37b528c179cb",
+          "upstream_id": "cobol-modernization"
+        },
+        {
+          "case_id": "test_014",
+          "native_task_digest": "8decb48279832c03ff9229aaffacdbe041606c57f3e3bfd0b0dc9ec9471c809c",
+          "upstream_id": "git-leak-recovery"
+        },
+        {
+          "case_id": "test_015",
+          "native_task_digest": "a1116321909ce3e9b7d5095a2bab642a60169d2e95355588f4d8af9eb8483ed2",
+          "upstream_id": "circuit-fibsqrt"
+        },
+        {
+          "case_id": "test_016",
+          "native_task_digest": "72feaba70b36078cff13e01b1648c5137a8d4cbb9f6113ecc47434b92f57f6f7",
+          "upstream_id": "chess-best-move"
+        },
+        {
+          "case_id": "test_017",
+          "native_task_digest": "6a6b88904da23fd9a56f0dbd87c792eb7e663fad90c196e2f33ef7f692059911",
+          "upstream_id": "rstan-to-pystan"
+        },
+        {
+          "case_id": "test_018",
+          "native_task_digest": "f13de3261482141ccef546b408157f6e6a62f846afdcadb791a4b3c74b4665d5",
+          "upstream_id": "db-wal-recovery"
+        },
+        {
+          "case_id": "test_019",
+          "native_task_digest": "8c87d25387398d30ce5f1cf1d65456d40008c1e039d3f09c096f49ef1aed1727",
+          "upstream_id": "mteb-leaderboard"
+        },
+        {
+          "case_id": "test_020",
+          "native_task_digest": "6dad789e0c9b46c1ea24e66dba5038478ddb6dfe2cec1479bf8d4f3991d6463b",
+          "upstream_id": "crack-7z-hash"
+        },
+        {
+          "case_id": "test_021",
+          "native_task_digest": "b759bc6df6914773f82e511599c9028bb7f44bd358257c315e5fb95c6a055b3b",
+          "upstream_id": "vulnerable-secret"
+        },
+        {
+          "case_id": "test_022",
+          "native_task_digest": "da623146b43ea443baebecd3cfe9a0b38078feb65f19c627fd087263b9db278b",
+          "upstream_id": "log-summary-date-ranges"
+        },
+        {
+          "case_id": "test_023",
+          "native_task_digest": "36e0a5fa50a6afe17d90368d3704af26fb2299cb17828ecd8406ac8b9fee9d89",
+          "upstream_id": "fix-code-vulnerability"
+        },
+        {
+          "case_id": "test_024",
+          "native_task_digest": "642f503ffd62cae15a07ba4260ff55a46a627e6a6f238b95594758923c76c839",
+          "upstream_id": "sparql-university"
+        },
+        {
+          "case_id": "test_025",
+          "native_task_digest": "1b5669ff0a74166ed6346dbc947ff4a120a5a6e4a85dc3e20c4de272df1b30b7",
+          "upstream_id": "nginx-request-logging"
+        },
+        {
+          "case_id": "test_026",
+          "native_task_digest": "322dad58db79dff3dc3d2da2d7ebe6c977bfac7bb6d10501b413d28055119214",
+          "upstream_id": "overfull-hbox"
+        },
+        {
+          "case_id": "test_027",
+          "native_task_digest": "7ce2decad5b7edc3382bcffc367e4e7e6b65177564ec98cd92a8fec74c83285b",
+          "upstream_id": "sam-cell-seg"
+        },
+        {
+          "case_id": "test_028",
+          "native_task_digest": "028cfd822762fe50151891fa379c68cafaec689d3aba4dc88c5f57d012ac05b9",
+          "upstream_id": "mcmc-sampling-stan"
+        },
+        {
+          "case_id": "test_029",
+          "native_task_digest": "e35b83ee06f5847b027591b17c6f07a2db20dbe212cf528936dcf7e9975b291a",
+          "upstream_id": "schemelike-metacircular-eval"
+        },
+        {
+          "case_id": "test_030",
+          "native_task_digest": "938be044b2953c4edf89b600df5104051f278b3cb62c94b52042bb633ecd31bc",
+          "upstream_id": "build-pmars"
+        },
+        {
+          "case_id": "test_031",
+          "native_task_digest": "00985181e40d049d72bc27bbdeba6589fea7abcea2cfbb7707617675d59a03fa",
+          "upstream_id": "password-recovery"
+        },
+        {
+          "case_id": "test_032",
+          "native_task_digest": "55783950a8c745352f99ac5b9469b06bb14e3d3936f0c7414617072935e85c36",
+          "upstream_id": "regex-log"
+        },
+        {
+          "case_id": "test_033",
+          "native_task_digest": "be48351f3acf79208d7dab325f4f3fe6bf05dabf4932aea8089fc9d451913806",
+          "upstream_id": "dna-assembly"
+        },
+        {
+          "case_id": "test_034",
+          "native_task_digest": "9d416e0bc90339f37305b4c9dde771077efab236302ed525eee9b37efc8dd70c",
+          "upstream_id": "install-windows-3.11"
+        },
+        {
+          "case_id": "test_035",
+          "native_task_digest": "d10aeff424516db95e4b8f37c8139f1baf7cf92aff208d27aa0760b1e5990af7",
+          "upstream_id": "llm-inference-batching-scheduler"
+        },
+        {
+          "case_id": "test_036",
+          "native_task_digest": "7c88ddff639a3d7fc732fb0b7f3b1dbc169cc6f4ef54fabfea1b9b48f6c4bd1f",
+          "upstream_id": "adaptive-rejection-sampler"
+        },
+        {
+          "case_id": "test_037",
+          "native_task_digest": "5a9bd6c870941be44174e5416b6d4762f9a43ce9b015ca3c462c9d2c89460a17",
+          "upstream_id": "pypi-server"
+        },
+        {
+          "case_id": "test_038",
+          "native_task_digest": "0ebcdb0be281c6f6294ff6f0acb756ede29b841c99102e73d00b1de8b4149688",
+          "upstream_id": "extract-moves-from-video"
+        },
+        {
+          "case_id": "test_039",
+          "native_task_digest": "321053ce5ea3600e5976335691fb5e101059acb0a143d8f347dbf97157907406",
+          "upstream_id": "path-tracing"
+        },
+        {
+          "case_id": "test_040",
+          "native_task_digest": "f5a90b577ddea9577ec4604a92c6ce878a1b353f47796f47ceec5082c9393502",
+          "upstream_id": "cancel-async-tasks"
+        }
+      ],
+      "count": 40
+    }
+  },
+  "track_semantics": "optimize a runnable initial agent; do not build from an empty submission",
+  "upstream": {
+    "dev_size": 10,
+    "hidden_size": 40,
+    "preflight": "meta/terminalbench_preflight.json",
+    "seed": 20260515,
+    "source": "Arena Track A code_agent_family 10/40 split over pinned official task snapshot",
+    "source_manifest": "<paper-host>/arena-src/AutonomousOptimizationArena-TrackA-main/tracks/track_a_harness_engineering/code_agent_family/data/manifest.json",
+    "split_deviation": {
+      "missing_upstream_task": "headless-terminal",
+      "reason": "The pinned local official-task snapshot contains 49/50 Arena rows; hello-world is an unselected official task from the same snapshot and passes structural preflight.",
+      "replacement_task": "hello-world"
+    }
+  }
+}

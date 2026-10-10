@@ -1,0 +1,11 @@
+{
+  "case_id": "dev_002",
+  "visibility": "public",
+  "seed_mode": "mixed_evidence_stale_client",
+  "prompt_file": "dev_cases/dev_002/input.md",
+  "required_tools_any": ["mastery_status", "mastery_review_plan", "mastery_learning_events", "mastery_learner_snapshot"],
+  "provenance_tools_any": ["mastery_learning_checkpoint", "mastery_learner_snapshot_checkpoint"],
+  "max_model_calls": 12,
+  "max_tool_calls": 22,
+  "require_safe_refusal": true
+}

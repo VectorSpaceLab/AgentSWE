@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "16-edit-ai-scientist-reproducibility-gate-v5-agentloop-v1",
+  "owner": "owner-16 / AI Scientist reproducibility gate",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/16-edit-ai-scientist-reproducibility-gate-v5",
+  "authoritative_manifest_source_digest": "56b892a40afa68a5e0115f5f9a3592de8fa1b1bb31bae96b6ff1252f5ae98e38",
+  "authoritative_source_tree_digest_agentloop_protocol": "bb033797517fe05332b211a675c3541eb1a49a8d2c69c6aeb78f0d5b62e722b6",
+  "copied_repository_tree_digest_agentloop_protocol": "031b4fe9a29e71ae4e232248673f1ca00bef0c95202ec8bce90b1cc15a4569bf",
+  "authoritative_source_read_only": true,
+  "copied_source_layout": "input/, dev_cases/, test_cases/, evaluator/, meta/, README.md",
+  "migration_files_are_additive": true,
+  "reference_staging_read_only": "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2",
+  "legacy_formal_runs_read_only": true,
+  "generated_at": "2026-09-02",
+  "source_tree_digest_note": "Computed at audit time by agentloop.protocol.tree_digest; refresh only in this sibling if source provenance is re-audited."
+}

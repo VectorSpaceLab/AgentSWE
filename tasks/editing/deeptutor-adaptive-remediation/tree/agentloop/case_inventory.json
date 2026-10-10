@@ -1,0 +1,49 @@
+{
+  "schema_version": "agentswe-deeptutor-agentloop-inventory/v1",
+  "public_dev": [
+    {
+      "case_id": "dev_001",
+      "title": "persistent misconception to verified review plan",
+      "coverage": ["adaptive_diagnosis", "review_plan", "snapshot", "attestation", "witness", "chain_audit"]
+    },
+    {
+      "case_id": "dev_002",
+      "title": "conservative diagnosis and stale-client recovery",
+      "coverage": ["conservative_threshold", "stale_revision", "event_checkpoint", "snapshot_checkpoint", "honest_recovery"]
+    }
+  ],
+  "hidden": [
+    {
+      "case_id": "test_001",
+      "title": "lost claim response and lease takeover",
+      "unseen_variation": "lease expiry, fenced owner takeover, stale acknowledgement"
+    },
+    {
+      "case_id": "test_002",
+      "title": "concurrent review reschedule",
+      "unseen_variation": "two writers, accepted revision preservation, event correlation"
+    },
+    {
+      "case_id": "test_003",
+      "title": "tampered snapshot proof",
+      "unseen_variation": "proof mismatch, no-side-effect refusal, bounded recovery"
+    },
+    {
+      "case_id": "test_004",
+      "title": "cross-path opaque handle probe",
+      "unseen_variation": "foreign task/handoff/witness handles and non-disclosure"
+    },
+    {
+      "case_id": "test_005",
+      "title": "reset/redo lifecycle",
+      "unseen_variation": "terminal cancellation, stale lease rejection, new lineage"
+    },
+    {
+      "case_id": "test_006",
+      "title": "stale witness head after new evidence",
+      "unseen_variation": "head invalidation, current-chain audit, no rollback"
+    }
+  ],
+  "counts": {"public_dev": 2, "hidden": 6},
+  "codex_residual_byte_stream_cases_copied": false
+}

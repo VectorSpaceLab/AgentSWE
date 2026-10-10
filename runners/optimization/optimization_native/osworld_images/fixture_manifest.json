@@ -1,0 +1,549 @@
+{
+  "files": [
+    {
+      "cache_name": "3a1c1464-1dbf-561b-b53c-a16343233e7d_woman_sitting_by_the_tree.png",
+      "role": "setup",
+      "sha256": "4acbf30f243b4098fe571534d67f3b71f3aa17fe0abebbeba27db9fc79c52367",
+      "size": 1038965,
+      "source_path": "fixture-downloads/3a1c1464-1dbf-561b-b53c-a16343233e7d_woman_sitting_by_the_tree.png",
+      "task_id": "7a4deb26-d57d-4ea9-9a73-630f66a7b568"
+    },
+    {
+      "cache_name": "a66c11dd-4a0f-504c-9b8f-cb8a23da4b60_Multiply_Time_Number.xlsx",
+      "role": "setup",
+      "sha256": "a6f792dd99a2251bf7f2ed1f55896e3588718a4a53d291ecc5db25a5b3ac8b17",
+      "size": 10246,
+      "source_path": "fixture-downloads/a66c11dd-4a0f-504c-9b8f-cb8a23da4b60_Multiply_Time_Number.xlsx",
+      "task_id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff"
+    },
+    {
+      "cache_name": "09ff0a87-5b02-5c87-ae69-7724f379703c_CPD_Background_Investigation_Process.pptx",
+      "role": "setup",
+      "sha256": "2f7644c666168178f7017b3fa47ba2f3c15bda2ae33740d11d9817169b7e469d",
+      "size": 4564224,
+      "source_path": "fixture-downloads/09ff0a87-5b02-5c87-ae69-7724f379703c_CPD_Background_Investigation_Process.pptx",
+      "task_id": "5d901039-a89c-4bfb-967b-bf66f4df075e"
+    },
+    {
+      "cache_name": "5dde5146-e83d-5ecf-b67a-3bdb3c218a53_Novels_Intro_Packet.docx",
+      "role": "setup",
+      "sha256": "9e615941ced6d491c595f9904d50213c6b6447a8bc6391f052d3745104ded5ed",
+      "size": 11734,
+      "source_path": "fixture-downloads/5dde5146-e83d-5ecf-b67a-3bdb3c218a53_Novels_Intro_Packet.docx",
+      "task_id": "0810415c-bde4-4443-9047-d5f70165a697"
+    },
+    {
+      "cache_name": "b25753c3-ec45-5811-ad10-e169ee2f2a38_helloExtension.zip",
+      "role": "setup",
+      "sha256": "2e6de0ae59acb3f54949e0777a0263584261ecc3f08c09192160a2e814cb6809",
+      "size": 4025,
+      "source_path": "fixture-downloads/b25753c3-ec45-5811-ad10-e169ee2f2a38_helloExtension.zip",
+      "task_id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a"
+    },
+    {
+      "cache_name": "12ddc05f-27ca-58b4-8794-440c38d55142_poster_party_night.webp",
+      "role": "setup",
+      "sha256": "36ad3069b90c7e3968b355aa655368e0a4078bffb6459621bc6ad9f15662a607",
+      "size": 181662,
+      "source_path": "fixture-downloads/12ddc05f-27ca-58b4-8794-440c38d55142_poster_party_night.webp",
+      "task_id": "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57"
+    },
+    {
+      "cache_name": "0dfbdfc5-61ae-5d28-87a2-1f126737b2ff_vscode_replace_text.txt",
+      "role": "setup",
+      "sha256": "fddd104baad484309a4dec480879bfa5ea452e6aef9131024f06132a931cfd58",
+      "size": 637,
+      "source_path": "fixture-downloads/0dfbdfc5-61ae-5d28-87a2-1f126737b2ff_vscode_replace_text.txt",
+      "task_id": "0ed39f63-6049-43d4-ba4d-5fa2fe04a951"
+    },
+    {
+      "cache_name": "7a1ec2c9-9051-5284-a8c6-9c21fb0aea5c_woman_sitting_by_the_tree2.png",
+      "role": "setup",
+      "sha256": "4acbf30f243b4098fe571534d67f3b71f3aa17fe0abebbeba27db9fc79c52367",
+      "size": 1038965,
+      "source_path": "fixture-downloads/7a1ec2c9-9051-5284-a8c6-9c21fb0aea5c_woman_sitting_by_the_tree2.png",
+      "task_id": "554785e9-4523-4e7a-b8e1-8016f565f56a"
+    },
+    {
+      "cache_name": "a90cab28-89c6-5add-bd28-7a17246619ca_NetIncome.xlsx",
+      "role": "setup",
+      "sha256": "4bf3c94407240969c2dc55b098d2fab6b247f3b530fe48bae0f39a923b397300",
+      "size": 9201,
+      "source_path": "fixture-downloads/a90cab28-89c6-5add-bd28-7a17246619ca_NetIncome.xlsx",
+      "task_id": "42e0a640-4f19-4b28-973d-729602b5a4a7"
+    },
+    {
+      "cache_name": "295ea472-cfbb-5e85-a54f-c52bcb14727b_Names_Duplicate_Unique.xlsx",
+      "role": "setup",
+      "sha256": "0b4de861a9ad5caa5564d1a840abd1644cb4877766eae53ad13185a3df93563b",
+      "size": 5200,
+      "source_path": "fixture-downloads/295ea472-cfbb-5e85-a54f-c52bcb14727b_Names_Duplicate_Unique.xlsx",
+      "task_id": "abed40dc-063f-4598-8ba5-9fe749c0615d"
+    },
+    {
+      "cache_name": "1ffa83cb-fec0-5bfe-a93e-33a2adefafa3_New_Club_Spring_2018_Training.pptx",
+      "role": "setup",
+      "sha256": "676f878effc61b0b29075ac43114266c956afce6ed210f6c957bdc96fffae5dd",
+      "size": 168672,
+      "source_path": "fixture-downloads/1ffa83cb-fec0-5bfe-a93e-33a2adefafa3_New_Club_Spring_2018_Training.pptx",
+      "task_id": "550ce7e7-747b-495f-b122-acdc4d0b8e54"
+    },
+    {
+      "cache_name": "84737a5f-8863-59df-abd2-29430b657ef2_04 CHIN9505 EBook Purchasing info 2021 Jan.docx",
+      "role": "setup",
+      "sha256": "efe354c69b84d33e87696922afb7b397a18167d19dbe8fabc64ff6931693f101",
+      "size": 13163,
+      "source_path": "fixture-downloads/84737a5f-8863-59df-abd2-29430b657ef2_04 CHIN9505 EBook Purchasing info 2021 Jan.docx",
+      "task_id": "0a0faba3-5580-44df-965d-f562a99b291c"
+    },
+    {
+      "cache_name": "7b9b352c-623f-5161-a864-e0d0e96686fe_researchers.xlsx",
+      "role": "setup",
+      "sha256": "a2c93e61aeead49311125131c38106f0a77744686e89eae92a51bc04eb0d0b27",
+      "size": 9809,
+      "source_path": "fixture-downloads/7b9b352c-623f-5161-a864-e0d0e96686fe_researchers.xlsx",
+      "task_id": "5990457f-2adb-467b-a4af-5c857c92d762"
+    },
+    {
+      "cache_name": "dc8130ba-73a7-5cf9-a1c1-75544aa7ea49_15-MB-docx-file-download.docx",
+      "role": "setup",
+      "sha256": "ae2cef007d681624ef0f00b7c745bda52f76f7b5a31a55001e20d630d94a2278",
+      "size": 33702734,
+      "source_path": "fixture-downloads/dc8130ba-73a7-5cf9-a1c1-75544aa7ea49_15-MB-docx-file-download.docx",
+      "task_id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908"
+    },
+    {
+      "cache_name": "bb5707bc-cf3e-504e-865d-6496af062379_vscodeEvalExtension.zip",
+      "role": "setup",
+      "sha256": "2c091c00bb63c1fc8724bbbf3fa407429b8e46c6dfe771f7a2656c65b1f88a97",
+      "size": 3954880,
+      "source_path": "fixture-downloads/bb5707bc-cf3e-504e-865d-6496af062379_vscodeEvalExtension.zip",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "220b744f-0494-51a8-ae56-7eeb0c72c90c_main.py",
+      "role": "setup",
+      "sha256": "64e5822301cd230ece61946075bebb2d149c101c9102ea1149415ed92fc69ee1",
+      "size": 92,
+      "source_path": "fixture-downloads/220b744f-0494-51a8-ae56-7eeb0c72c90c_main.py",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "fb0d3abb-9e70-5403-8776-12d96c7d5d32_README.md",
+      "role": "setup",
+      "sha256": "94c262278cbe09e8f4bd8f99a9d989dc6c69e8dfc39ca67c53f20ed24c1fb80a",
+      "size": 95,
+      "source_path": "fixture-downloads/fb0d3abb-9e70-5403-8776-12d96c7d5d32_README.md",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "083a9117-6dc2-517e-910a-0bc7a72b44cf_settings.json",
+      "role": "setup",
+      "sha256": "4ee65ae16e56fe8427ce16368295c4cd0077450756e24374be1a1156cda35efb",
+      "size": 200,
+      "source_path": "fixture-downloads/083a9117-6dc2-517e-910a-0bc7a72b44cf_settings.json",
+      "task_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+    },
+    {
+      "cache_name": "7c7e3c3e-1de4-51a0-baeb-ab25f41dd5ba_thunderbird-profile.tar.gz",
+      "role": "setup",
+      "sha256": "4d10a477a4d78ea7b6b52e418703973da76bdcccce027ec9ab670c911e6b1911",
+      "size": 2252023,
+      "source_path": "fixture-downloads/7c7e3c3e-1de4-51a0-baeb-ab25f41dd5ba_thunderbird-profile.tar.gz",
+      "task_id": "c867c42d-a52d-4a24-8ae3-f75d256b5618"
+    },
+    {
+      "cache_name": "3f2c7efc-d261-592d-adb4-1ea7a81fef96_zhang_appagent.pdf",
+      "role": "setup",
+      "sha256": "ce9840204e13889f899e326def62005ed9871a0a6ab5d44f716343c4142ef045",
+      "size": 3797687,
+      "source_path": "fixture-downloads/3f2c7efc-d261-592d-adb4-1ea7a81fef96_zhang_appagent.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "e6063008-e308-52e8-a07d-b3eeb61429f0_niu_screenagent.pdf",
+      "role": "setup",
+      "sha256": "a44180f3bad8ce54553007e721deb8bbb31be6779e1ee6bf80ab257765e7bff4",
+      "size": 8580433,
+      "source_path": "fixture-downloads/e6063008-e308-52e8-a07d-b3eeb61429f0_niu_screenagent.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "3c3aafc6-7303-5d93-b898-e4ff50d3250b_koh_visualwebarena.pdf",
+      "role": "setup",
+      "sha256": "8674b4ae17290bb797e5988706f765c75a3310a4e9d14cbd32497e40235ff795",
+      "size": 4564902,
+      "source_path": "fixture-downloads/3c3aafc6-7303-5d93-b898-e4ff50d3250b_koh_visualwebarena.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "ffdfa57f-bf15-5842-bc5d-ba859adbaa79_deng_mind2web.pdf",
+      "role": "setup",
+      "sha256": "c281b1c4460c807c33cc242d2c1d0d175c3454e01abc9c2ec03aff761c0c0a57",
+      "size": 7563781,
+      "source_path": "fixture-downloads/ffdfa57f-bf15-5842-bc5d-ba859adbaa79_deng_mind2web.pdf",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "e65f6e34-980a-56a8-955d-a14d481da23f_lecture1-2021-with-ink.pptx",
+      "role": "setup",
+      "sha256": "ab4b65d92b40ad172f01f2ca5d7decd72fb1e970dc6ff2f7e8d25b09c7b57b44",
+      "size": 118598,
+      "source_path": "fixture-downloads/e65f6e34-980a-56a8-955d-a14d481da23f_lecture1-2021-with-ink.pptx",
+      "task_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a"
+    },
+    {
+      "cache_name": "71e86b07-ef85-5832-9e46-152f1422fb0c_notes.docx",
+      "role": "setup",
+      "sha256": "2374d7b73e04d5d0fa3f3b8a5001da0ce17ee0318ec49d2280d6aad68f2efc32",
+      "size": 7377,
+      "source_path": "fixture-downloads/71e86b07-ef85-5832-9e46-152f1422fb0c_notes.docx",
+      "task_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a"
+    },
+    {
+      "cache_name": "6250d611-bf60-5715-92e4-0cd6d6e4d009_restaurants.txt",
+      "role": "setup",
+      "sha256": "9c76c729e04c7e7bf1c495013221d764db68f18fc359844d1a91ae7bc1e953d4",
+      "size": 77,
+      "source_path": "fixture-downloads/6250d611-bf60-5715-92e4-0cd6d6e4d009_restaurants.txt",
+      "task_id": "d1acdb87-bb67-4f30-84aa-990e56a09c92"
+    },
+    {
+      "cache_name": "e2b87b1c-dd4e-5742-96d8-3661df551275_MUST_VISIT.xlsx",
+      "role": "setup",
+      "sha256": "986743e746dcfc3683eea8fffabb820217021a29689d8ae7909b31a0eee75207",
+      "size": 11615,
+      "source_path": "fixture-downloads/e2b87b1c-dd4e-5742-96d8-3661df551275_MUST_VISIT.xlsx",
+      "task_id": "d1acdb87-bb67-4f30-84aa-990e56a09c92"
+    },
+    {
+      "cache_name": "5815ead9-078a-5eb7-8119-fb84abc8c05f_New Large Language Models.xlsx",
+      "role": "setup",
+      "sha256": "dc6161d9953ae979d02e00ee3a28cdbec0b3f4b42c5a4ef525f0b8b70bb4dace",
+      "size": 4972,
+      "source_path": "fixture-downloads/5815ead9-078a-5eb7-8119-fb84abc8c05f_New Large Language Models.xlsx",
+      "task_id": "deec51c9-3b1e-4b9e-993c-4776f20e8bb2"
+    },
+    {
+      "cache_name": "a8e97ba8-8030-57de-95c5-dc0d3d3d1713_my_bookkeeping.xlsx",
+      "role": "setup",
+      "sha256": "6791db3e5410ed6b54e10e591e542d431d331e83b7e893512f18e45c85569e10",
+      "size": 6232,
+      "source_path": "fixture-downloads/a8e97ba8-8030-57de-95c5-dc0d3d3d1713_my_bookkeeping.xlsx",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "3e1a288f-b716-57c2-ae28-9843a0d937a4_receipt_0.jpeg",
+      "role": "setup",
+      "sha256": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+      "size": 341035,
+      "source_path": "fixture-downloads/3e1a288f-b716-57c2-ae28-9843a0d937a4_receipt_0.jpeg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "376af331-440d-500f-9528-9c2a1862375b_receipt_1.jpg",
+      "role": "setup",
+      "sha256": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+      "size": 21661,
+      "source_path": "fixture-downloads/376af331-440d-500f-9528-9c2a1862375b_receipt_1.jpg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "2417921b-e739-5fd3-9a2d-dbfae9003119_receipt_2.jpg",
+      "role": "setup",
+      "sha256": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+      "size": 27794,
+      "source_path": "fixture-downloads/2417921b-e739-5fd3-9a2d-dbfae9003119_receipt_2.jpg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "6b1b9520-24cf-502b-a5cb-34aa92961a5e_receipt_3.pdf",
+      "role": "setup",
+      "sha256": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+      "size": 40263,
+      "source_path": "fixture-downloads/6b1b9520-24cf-502b-a5cb-34aa92961a5e_receipt_3.pdf",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "b460b95b-7800-5218-b5f3-0d4b368c2904_receipt_4.jpg",
+      "role": "setup",
+      "sha256": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d",
+      "size": 72779,
+      "source_path": "fixture-downloads/b460b95b-7800-5218-b5f3-0d4b368c2904_receipt_4.jpg",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "0b43d328-7eb4-577c-bb8d-d63e6d021ed0_secret.docx",
+      "role": "setup",
+      "sha256": "4c7d705e6e7f335fd569efd248106efdf051e21d09f415c9246208d922e09e51",
+      "size": 12177,
+      "source_path": "fixture-downloads/0b43d328-7eb4-577c-bb8d-d63e6d021ed0_secret.docx",
+      "task_id": "716a6079-22da-47f1-ba73-c9d58f986a38"
+    },
+    {
+      "cache_name": "951cf1e8-ec72-5e19-9d5a-31be0fd4b3df_thunderbird-profile.tar.gz",
+      "role": "setup",
+      "sha256": "8a714a4102d6f3aa604c0fd2bb96e63ba51594485977ed5c8dd19af846ae07e8",
+      "size": 2125862,
+      "source_path": "fixture-downloads/951cf1e8-ec72-5e19-9d5a-31be0fd4b3df_thunderbird-profile.tar.gz",
+      "task_id": "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397"
+    },
+    {
+      "cache_name": "8f99e671-e826-5b68-a738-0f86ae2ef48a_thunderbird-profile-blank.tar.gz",
+      "role": "setup",
+      "sha256": "84fd9a5d979d487df620b17f061a7f2cda5a1975161e120d3784ce3c15ad1136",
+      "size": 115739,
+      "source_path": "fixture-downloads/8f99e671-e826-5b68-a738-0f86ae2ef48a_thunderbird-profile-blank.tar.gz",
+      "task_id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e"
+    },
+    {
+      "cache_name": "1ae2aceb-de6f-58d6-b675-f23abf4fac2c_Rick Astley - Never Gonna Give You Up (Official Music Video).mp4",
+      "role": "setup",
+      "sha256": "2ce569323956383d1b0f48406d510e03e4b14d8d09066adae0f095ff82002382",
+      "size": 9098063,
+      "source_path": "fixture-downloads/1ae2aceb-de6f-58d6-b675-f23abf4fac2c_Rick Astley - Never Gonna Give You Up (Official Music Video).mp4",
+      "task_id": "59f21cfb-0120-4326-b255-a5b827b38967"
+    },
+    {
+      "cache_name": "3e627622-52f2-5491-b1d6-d90f200d39ca_Baby Justin Bieber.mp4",
+      "role": "setup",
+      "sha256": "b1c90b75d950875962f324c2224d62cc251c60925cd049f04571d6c07d6ac2cd",
+      "size": 12600781,
+      "source_path": "fixture-downloads/3e627622-52f2-5491-b1d6-d90f200d39ca_Baby Justin Bieber.mp4",
+      "task_id": "8f080098-ddb1-424c-b438-4e96e5e4786e"
+    },
+    {
+      "cache_name": "5bef5a2d-4529-550d-a6d7-d74f3d03edb0_vscodeEvalExtension.zip",
+      "role": "setup",
+      "sha256": "2c091c00bb63c1fc8724bbbf3fa407429b8e46c6dfe771f7a2656c65b1f88a97",
+      "size": 3954880,
+      "source_path": "fixture-downloads/5bef5a2d-4529-550d-a6d7-d74f3d03edb0_vscodeEvalExtension.zip",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    },
+    {
+      "cache_name": "8f31139f-5e86-5bdb-8183-a408e2b1e17d_main.py",
+      "role": "setup",
+      "sha256": "64e5822301cd230ece61946075bebb2d149c101c9102ea1149415ed92fc69ee1",
+      "size": 92,
+      "source_path": "fixture-downloads/8f31139f-5e86-5bdb-8183-a408e2b1e17d_main.py",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    },
+    {
+      "cache_name": "a4071361-32ee-58d5-952e-6e0ec4fc6207_README.md",
+      "role": "setup",
+      "sha256": "94c262278cbe09e8f4bd8f99a9d989dc6c69e8dfc39ca67c53f20ed24c1fb80a",
+      "size": 95,
+      "source_path": "fixture-downloads/a4071361-32ee-58d5-952e-6e0ec4fc6207_README.md",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    },
+    {
+      "cache_name": "4978e0c6-394c-5b98-ad8e-a4c76ee2675c_settings.json",
+      "role": "setup",
+      "sha256": "4ee65ae16e56fe8427ce16368295c4cd0077450756e24374be1a1156cda35efb",
+      "size": 200,
+      "source_path": "fixture-downloads/4978e0c6-394c-5b98-ad8e-a4c76ee2675c_settings.json",
+      "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    },
+    {
+      "cache_name": "woman_sitting_by_the_tree.png",
+      "role": "eval",
+      "sha256": "4acbf30f243b4098fe571534d67f3b71f3aa17fe0abebbeba27db9fc79c52367",
+      "size": 1038965,
+      "source_path": "fixture-downloads/eval/7a4deb26-d57d-4ea9-9a73-630f66a7b568/woman_sitting_by_the_tree.png",
+      "task_id": "7a4deb26-d57d-4ea9-9a73-630f66a7b568"
+    },
+    {
+      "cache_name": "CPD_Background_Investigation_Process_Original.pptx",
+      "role": "eval",
+      "sha256": "2f7644c666168178f7017b3fa47ba2f3c15bda2ae33740d11d9817169b7e469d",
+      "size": 4564224,
+      "source_path": "fixture-downloads/eval/5d901039-a89c-4bfb-967b-bf66f4df075e/CPD_Background_Investigation_Process_Original.pptx",
+      "task_id": "5d901039-a89c-4bfb-967b-bf66f4df075e"
+    },
+    {
+      "cache_name": "Novels_Intro_Packet_Gold.docx",
+      "role": "eval",
+      "sha256": "fe7f236ee2810829b29a119fb37d6ad08520594a36827076eeb62e7a7b0c66e8",
+      "size": 12066,
+      "source_path": "fixture-downloads/eval/0810415c-bde4-4443-9047-d5f70165a697/Novels_Intro_Packet_Gold.docx",
+      "task_id": "0810415c-bde4-4443-9047-d5f70165a697"
+    },
+    {
+      "cache_name": "Novels_Intro_Packet_Gold_2.docx",
+      "role": "eval",
+      "sha256": "4452ed6553122a838536c66d2d561a4819b08d63f112b5b8e3c7f40173b6158b",
+      "size": 12068,
+      "source_path": "fixture-downloads/eval/0810415c-bde4-4443-9047-d5f70165a697/Novels_Intro_Packet_Gold_2.docx",
+      "task_id": "0810415c-bde4-4443-9047-d5f70165a697"
+    },
+    {
+      "cache_name": "vscode_replace_text_gold.txt",
+      "role": "eval",
+      "sha256": "8dad55e80d4f415f90affbb2ca44efdbef153f54ff4b21c21e903743aeaed93d",
+      "size": 637,
+      "source_path": "fixture-downloads/eval/0ed39f63-6049-43d4-ba4d-5fa2fe04a951/vscode_replace_text_gold.txt",
+      "task_id": "0ed39f63-6049-43d4-ba4d-5fa2fe04a951"
+    },
+    {
+      "cache_name": "woman_sitting_by_the_tree2.png",
+      "role": "eval",
+      "sha256": "4acbf30f243b4098fe571534d67f3b71f3aa17fe0abebbeba27db9fc79c52367",
+      "size": 1038965,
+      "source_path": "fixture-downloads/eval/554785e9-4523-4e7a-b8e1-8016f565f56a/woman_sitting_by_the_tree2.png",
+      "task_id": "554785e9-4523-4e7a-b8e1-8016f565f56a"
+    },
+    {
+      "cache_name": "2_NetIncome_gt1.xlsx",
+      "role": "eval",
+      "sha256": "568de5273d0bad1752d93bbfc80f3db104db1ddf8fb0feaea7bfe028970a9935",
+      "size": 9800,
+      "source_path": "fixture-downloads/eval/42e0a640-4f19-4b28-973d-729602b5a4a7/2_NetIncome_gt1.xlsx",
+      "task_id": "42e0a640-4f19-4b28-973d-729602b5a4a7"
+    },
+    {
+      "cache_name": "Names_Duplicate_Unique_gold.xlsx",
+      "role": "eval",
+      "sha256": "c5016d9487a680a3ebdbc68e7cda8ba2d5544bf3f6189048e1a63ad0cc9fa95f",
+      "size": 5639,
+      "source_path": "fixture-downloads/eval/abed40dc-063f-4598-8ba5-9fe749c0615d/Names_Duplicate_Unique_gold.xlsx",
+      "task_id": "abed40dc-063f-4598-8ba5-9fe749c0615d"
+    },
+    {
+      "cache_name": "New_Club_Spring_2018_Training_Gold.pptx",
+      "role": "eval",
+      "sha256": "8382628642c922dc8a092ccb42f1a2958e9ca9b699bfe5c509a280111a0a11a4",
+      "size": 168787,
+      "source_path": "fixture-downloads/eval/550ce7e7-747b-495f-b122-acdc4d0b8e54/New_Club_Spring_2018_Training_Gold.pptx",
+      "task_id": "550ce7e7-747b-495f-b122-acdc4d0b8e54"
+    },
+    {
+      "cache_name": "New_Club_Spring_2018_Training_Gold_all_fonts_1.pptx",
+      "role": "eval",
+      "sha256": "7f11fe1048a41bd4391d9aa4d0c48f7f98310d86e640eb369b8983ee1b62afaf",
+      "size": 189690,
+      "source_path": "fixture-downloads/eval/550ce7e7-747b-495f-b122-acdc4d0b8e54/New_Club_Spring_2018_Training_Gold_all_fonts_1.pptx",
+      "task_id": "550ce7e7-747b-495f-b122-acdc4d0b8e54"
+    },
+    {
+      "cache_name": "04 CHIN9505 EBook Purchasing info 2021 Jan_Gold.docx",
+      "role": "eval",
+      "sha256": "4f065eed64e18c6cf7b6194acc4ed25ee27e8982e889507fdfdf95aae223bee6",
+      "size": 9784,
+      "source_path": "fixture-downloads/eval/0a0faba3-5580-44df-965d-f562a99b291c/04 CHIN9505 EBook Purchasing info 2021 Jan_Gold.docx",
+      "task_id": "0a0faba3-5580-44df-965d-f562a99b291c"
+    },
+    {
+      "cache_name": "contacts_gold.csv",
+      "role": "eval",
+      "sha256": "beb4c4e09458c8401e2c20ad90d5b550f57bb2ed79afb3719e18305bbe039b3a",
+      "size": 5743,
+      "source_path": "fixture-downloads/eval/c867c42d-a52d-4a24-8ae3-f75d256b5618/contacts_gold.csv",
+      "task_id": "c867c42d-a52d-4a24-8ae3-f75d256b5618"
+    },
+    {
+      "cache_name": "contacts_gold.xlsx",
+      "role": "eval",
+      "sha256": "03f0ace868032e61119d6b6dc2ad8cdd12d90a3c2817c7477fd62acd432aaea6",
+      "size": 9799,
+      "source_path": "fixture-downloads/eval/c867c42d-a52d-4a24-8ae3-f75d256b5618/contacts_gold.xlsx",
+      "task_id": "c867c42d-a52d-4a24-8ae3-f75d256b5618"
+    },
+    {
+      "cache_name": "background_script.js",
+      "role": "eval",
+      "sha256": "e02841f6b3699dac2088206cf8c54047134c4c8762bb443b035419930fa34a08",
+      "size": 2430,
+      "source_path": "fixture-downloads/eval/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/background_script.js",
+      "task_id": "74d5859f-ed66-4d3e-aa0e-93d7a592ce41"
+    },
+    {
+      "cache_name": "index.html",
+      "role": "eval",
+      "sha256": "30012d1ee6048d112d7dbd9660926712387795eb5020c72604d2021c721cb29c",
+      "size": 230,
+      "source_path": "fixture-downloads/eval/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/index.html",
+      "task_id": "74d5859f-ed66-4d3e-aa0e-93d7a592ce41"
+    },
+    {
+      "cache_name": "style.css",
+      "role": "eval",
+      "sha256": "b4257e1e0441b04b45f98193e2f8ca528923f6d45b9f3a22918c38d91704ca90",
+      "size": 29,
+      "source_path": "fixture-downloads/eval/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/style.css",
+      "task_id": "74d5859f-ed66-4d3e-aa0e-93d7a592ce41"
+    },
+    {
+      "cache_name": "script.js",
+      "role": "eval",
+      "sha256": "7130d5f9c6157ae9a802da32a85566fecd133acbcac6331581a51ccb11783cc5",
+      "size": 2419,
+      "source_path": "fixture-downloads/eval/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/script.js",
+      "task_id": "74d5859f-ed66-4d3e-aa0e-93d7a592ce41"
+    },
+    {
+      "cache_name": "authors-gt.xlsx",
+      "role": "eval",
+      "sha256": "d834c5bd4649dfdd36df63dea19fd5b38e15e7e855ae4a4f285bd44ad765bd3c",
+      "size": 10025,
+      "source_path": "fixture-downloads/eval/b5062e3e-641c-4e3a-907b-ac864d2e7652/authors-gt.xlsx",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "cache_name": "lecture1-2021-with-ink_Gold.pptx",
+      "role": "eval",
+      "sha256": "dbefcaa98ecf1511016ac3063cba1c2ca70ac7e51d5e590d773afa95cb7591e0",
+      "size": 119034,
+      "source_path": "fixture-downloads/eval/eb303e01-261e-4972-8c07-c9b4e7a4922a/lecture1-2021-with-ink_Gold.pptx",
+      "task_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a"
+    },
+    {
+      "cache_name": "MUST_VISIT-gt.xlsx",
+      "role": "eval",
+      "sha256": "fd60eecfc60cac1be90b81aa83c5a3322f321e39ac1e516bc023d967195bdd54",
+      "size": 12620,
+      "source_path": "fixture-downloads/eval/d1acdb87-bb67-4f30-84aa-990e56a09c92/MUST_VISIT-gt.xlsx",
+      "task_id": "d1acdb87-bb67-4f30-84aa-990e56a09c92"
+    },
+    {
+      "cache_name": "New Large Language Models Gold.xlsx",
+      "role": "eval",
+      "sha256": "987ada3caca9919dfaf6543a351b3a25d5e46afbca46be273e73157db75562d1",
+      "size": 5186,
+      "source_path": "fixture-downloads/eval/deec51c9-3b1e-4b9e-993c-4776f20e8bb2/New Large Language Models Gold.xlsx",
+      "task_id": "deec51c9-3b1e-4b9e-993c-4776f20e8bb2"
+    },
+    {
+      "cache_name": "my_bookkeeping_gold.xlsx",
+      "role": "eval",
+      "sha256": "d4d458fbaff92e92657e7860379454a1376635c6bb29ae1e4c68a028465423ca",
+      "size": 9438,
+      "source_path": "fixture-downloads/eval/8e116af7-7db7-4e35-a68b-b0939c066c78/my_bookkeeping_gold.xlsx",
+      "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+    },
+    {
+      "cache_name": "06882800-042a-5c1f-8cc2-992505093038_check_password.sh",
+      "role": "eval",
+      "sha256": "fc645b23f28b3d30fd7bd0df67a8afd7b340b3a8a2d3813955dd154e91f0a97c",
+      "size": 551,
+      "source_path": "fixture-downloads/eval/5812b315-e7bd-4265-b51f-863c02174c28/06882800-042a-5c1f-8cc2-992505093038_check_password.sh",
+      "task_id": "5812b315-e7bd-4265-b51f-863c02174c28"
+    },
+    {
+      "cache_name": "98deb900-ebde-5f59-ba61-07c82c1b9a57_firefox_decrypt.py",
+      "role": "eval",
+      "sha256": "1bb98fd3725c2cfa8fb8c0c7f83471a06df35ef6f0feec6ab650ff4043f43538",
+      "size": 39242,
+      "source_path": "fixture-downloads/eval/dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397/98deb900-ebde-5f59-ba61-07c82c1b9a57_firefox_decrypt.py",
+      "task_id": "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397"
+    },
+    {
+      "cache_name": "baby_gold.mp3",
+      "role": "eval",
+      "sha256": "d79d63242cb7c0d4392df0da28b32cd757234115d8b1f6ccfa39ef64f5a062a4",
+      "size": 3504169,
+      "source_path": "fixture-downloads/eval/8f080098-ddb1-424c-b438-4e96e5e4786e/baby_gold.mp3",
+      "task_id": "8f080098-ddb1-424c-b438-4e96e5e4786e"
+    }
+  ],
+  "schema_version": "1.0"
+}

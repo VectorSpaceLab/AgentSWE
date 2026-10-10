@@ -1,0 +1,16 @@
+{
+  "schema_version": "agentswe-edit-provenance-v1",
+  "benchmark_id": "openclaw-channel-handoff-agentloop-v1",
+  "owner": "owner-14",
+  "topic": "OpenClaw channel handoff",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/14-edit-openclaw-channel-handoff",
+  "authoritative_source_commit": "9bd66b7f62cbe3866857be4bbbfa4302e378fdad",
+  "authoritative_source_digest_from_0830_manifest": "5a0ff94d584c03380cb3600e0335030a4dc2cfd0c6f4ab677b0d8e10c1a44f46",
+  "observed_input_repository_digest_2026-09-02": "01c4bdf1646af1fe10cc8fd3466ffcae5173eafd9ad1049b5d2dce1e17a59a80",
+  "observed_digest_algorithm": "sha256(sorted relative path records; path length + path + kind + payload length + payload)",
+  "source_status_note": "The source snapshot has pre-existing working-tree modifications; they were not changed. The 0830 manifest digest and observed digest are both retained.",
+  "license": "MIT",
+  "builder_visibility": ["input", "dev_cases"],
+  "hidden_visibility": [],
+  "credential_values_recorded": false
+}

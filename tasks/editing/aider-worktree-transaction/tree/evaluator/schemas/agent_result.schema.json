@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "case_id", "observations", "integrity", "decision", "safety"],
+  "properties": {
+    "schema_version": {"const": "agentswe-aider-agent-result/v1"},
+    "case_id": {"type": "string", "pattern": "^(dev|test)_[0-9]{3}$"},
+    "observations": {"type": "array", "maxItems": 32},
+    "integrity": {"type": "object"},
+    "decision": {
+      "type": "object",
+      "required": ["completion_claim", "next_action", "rationale"],
+      "properties": {
+        "completion_claim": {"enum": ["complete", "partial", "untrusted"]},
+        "trust_omitted_bytes": {"type": "boolean"},
+        "next_action": {"type": "string", "maxLength": 240},
+        "rationale": {"type": "string", "maxLength": 2400}
+      },
+      "additionalProperties": true
+    },
+    "safety": {"type": "object", "additionalProperties": true}
+  },
+  "additionalProperties": true
+}

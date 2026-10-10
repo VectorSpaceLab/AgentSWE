@@ -1,0 +1,3311 @@
+{
+  "0810415c-bde4-4443-9047-d5f70165a697": {
+    "app": "libreoffice_writer",
+    "id": "0810415c-bde4-4443-9047-d5f70165a697",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/Novels_Intro_Packet.docx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/0810415c-bde4-4443-9047-d5f70165a697/Novels_Intro_Packet.docx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/Novels_Intro_Packet.docx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "conj": "or",
+        "expected": [
+          {
+            "dest": "Novels_Intro_Packet_Gold.docx",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/0810415c-bde4-4443-9047-d5f70165a697/Novels_Intro_Packet_Gold.docx",
+            "type": "cloud_file"
+          },
+          {
+            "dest": "Novels_Intro_Packet_Gold_2.docx",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/0810415c-bde4-4443-9047-d5f70165a697/Novels_Intro_Packet_Gold_2.docx",
+            "type": "cloud_file"
+          }
+        ],
+        "func": [
+          "compare_line_spacing",
+          "compare_line_spacing"
+        ],
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "Novels_Intro_Packet.docx - LibreOffice Writer"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; import time; pyautogui.hotkey('ctrl', 's'); time.sleep(0.5); "
+              ]
+            },
+            "type": "execute"
+          }
+        ],
+        "result": [
+          {
+            "dest": "Novels_Intro_Packet.docx",
+            "path": "/home/user/Desktop/Novels_Intro_Packet.docx",
+            "type": "vm_file"
+          },
+          {
+            "dest": "Novels_Intro_Packet.docx",
+            "path": "/home/user/Desktop/Novels_Intro_Packet.docx",
+            "type": "vm_file"
+          }
+        ]
+      },
+      "fixed_ip": false,
+      "id": "0810415c-bde4-4443-9047-d5f70165a697",
+      "instruction": "Make the line spacing of first two paragraph into double line spacing",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_writer"
+      ],
+      "snapshot": "libreoffice_writer",
+      "source": "https://www.youtube.com/watch?v=Q_AaL6ljudU",
+      "trajectory": "trajectories/"
+    }
+  },
+  "0a0faba3-5580-44df-965d-f562a99b291c": {
+    "app": "libreoffice_writer",
+    "id": "0a0faba3-5580-44df-965d-f562a99b291c",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/04 CHIN9505 EBook Purchasing info 2021 Jan.docx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/0a0faba3-5580-44df-965d-f562a99b291c/04%20CHIN9505%20EBook%20Purchasing%20info%202021%20Jan.docx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/04 CHIN9505 EBook Purchasing info 2021 Jan.docx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "04 CHIN9505 EBook Purchasing info 2021 Jan_Gold.docx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/0a0faba3-5580-44df-965d-f562a99b291c/04%20CHIN9505%20EBook%20Purchasing%20info%202021%20Jan_Gold.docx",
+          "type": "cloud_file"
+        },
+        "func": "check_tabstops",
+        "options": {
+          "index": 0,
+          "word_number_split_by_tabstop": 3
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "04 CHIN9505 EBook Purchasing info 2021 Jan.docx - LibreOffice Writer"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; import time; pyautogui.hotkey('ctrl', 's'); time.sleep(0.5); "
+              ]
+            },
+            "type": "execute"
+          }
+        ],
+        "result": {
+          "dest": "04 CHIN9505 EBook Purchasing info 2021 Jan.docx",
+          "path": "/home/user/Desktop/04 CHIN9505 EBook Purchasing info 2021 Jan.docx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "0a0faba3-5580-44df-965d-f562a99b291c",
+      "instruction": "I would like to make the first three words of the sentence left-aligned and the rest right-aligned. I basically want to have some empty space in the middle to add some photos. Assume that every sentence will have at least three words. Could you help me on alignment for me using tabstops?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_writer"
+      ],
+      "snapshot": "libreoffice_writer",
+      "source": "https://stackoverflow.com/questions/64528055/how-to-make-part-of-my-sentence-left-aligned-and-rest-as-right-aligned",
+      "trajectory": "trajectories/"
+    }
+  },
+  "0ed39f63-6049-43d4-ba4d-5fa2fe04a951": {
+    "app": "vs_code",
+    "id": "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/vscode_replace_text.txt",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vs_code/0ed39f63-6049-43d4-ba4d-5fa2fe04a951/vscode_replace_text.txt"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "code",
+              "/home/user/Desktop/vscode_replace_text.txt"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "window_name": "Visual Studio Code"
+          },
+          "type": "activate_window"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "vscode_replace_text_gold.txt",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vs_code/0ed39f63-6049-43d4-ba4d-5fa2fe04a951/vscode_replace_text_gold.txt",
+          "type": "cloud_file"
+        },
+        "func": "compare_text_file",
+        "postconfig": [
+          {
+            "parameters": {
+              "window_name": "Visual Studio Code"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; pyautogui.hotkey('ctrl', 's');"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "vscode_replace_text.txt",
+          "path": "/home/user/Desktop/vscode_replace_text.txt",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+      "instruction": "Please help me change all the places in this document that say \"text\" to \"test\".",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "vscode"
+      ],
+      "snapshot": "vscode",
+      "source": "https://www.quora.com/How-do-you-find-and-replace-text-in-Visual-Studio-Code",
+      "trajectory": "trajectories/"
+    }
+  },
+  "15c3b339-88f7-4a86-ab16-e71c58dcb01e": {
+    "app": "thunderbird",
+    "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/thunderbird-profile-blank.tar.gz",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/15c3b339-88f7-4a86-ab16-e71c58dcb01e/thunderbird-profile-blank.tar.gz"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "tar",
+              "-xzv",
+              "-f",
+              "/home/user/Desktop/thunderbird-profile-blank.tar.gz",
+              "-C",
+              "/home/user/"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": [
+              "/usr/bin/thunderbird"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": [
+            {
+              "xpath": "//application[@name='Thunderbird']//*[contains(text(), 'anonym-x2024@outlook.com') or contains(@name, 'anonym-x2024@outlook.com')]"
+            },
+            {
+              "xpath": "//application[@name='Thunderbird']//*[contains(@name, 'password') or contains(@name, 'Password')]"
+            }
+          ],
+          "type": "rule"
+        },
+        "func": "check_accessibility_tree",
+        "postconfig": [
+          {
+            "parameters": {
+              "seconds": 1.0
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "type": "accessibility_tree"
+        }
+      },
+      "fixed_ip": false,
+      "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+      "instruction": "Help me access my outlook account with address \"anonym-x2024@outlook.com\" and password 'password' (without ') in Thunderbird. Just fill in the information and stay on that page. I will check it manually later.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "thunderbird"
+      ],
+      "snapshot": "thunderbird",
+      "source": "https://www.wikihow.com/Access-Gmail-With-Mozilla-Thunderbird",
+      "trajectory": "trajectories/"
+    }
+  },
+  "2373b66a-092d-44cb-bfd7-82e86e7a3b4d": {
+    "app": "multi_apps",
+    "id": "2373b66a-092d-44cb-bfd7-82e86e7a3b4d",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": "echo {CLIENT_PASSWORD} | sudo -S apt-get update && echo {CLIENT_PASSWORD} | sudo -S apt-get install sysstat",
+            "shell": "true"
+          },
+          "type": "command"
+        }
+      ],
+      "evaluator": {
+        "expected": [
+          {
+            "rules": {
+              "expected": [
+                "CPU",
+                "%user",
+                "%nice",
+                "%system",
+                "%iowait",
+                "%steal",
+                "%idle"
+              ]
+            },
+            "type": "rule"
+          },
+          {
+            "rules": {
+              "expected": "31"
+            },
+            "type": "rule"
+          }
+        ],
+        "func": [
+          "file_contains",
+          "check_line_number"
+        ],
+        "result": [
+          {
+            "dest": "System_Resources_Report.txt",
+            "path": "/home/user/Desktop/System_Resources_Report.txt",
+            "type": "vm_file"
+          },
+          {
+            "dest": "System_Resources_Report.txt",
+            "path": "/home/user/Desktop/System_Resources_Report.txt",
+            "type": "vm_file"
+          }
+        ]
+      },
+      "fixed_ip": false,
+      "id": "2373b66a-092d-44cb-bfd7-82e86e7a3b4d",
+      "instruction": "Monitor Ubuntu system resource usage using the sar command from sysstat toolkit. Collect CPU statistics every second for 30 seconds and save the output to 'System_Resources_Report.txt' on Desktop.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "os",
+        "calc"
+      ],
+      "snapshot": "multiapps",
+      "source": "author",
+      "trajectory": "trajectories/"
+    }
+  },
+  "276cc624-87ea-4f08-ab93-f770e3790175": {
+    "app": "vs_code",
+    "id": "276cc624-87ea-4f08-ab93-f770e3790175",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "code"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "window_name": "Visual Studio Code"
+          },
+          "type": "activate_window"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "expected": {
+              "editor.wordWrapColumn": 50
+            }
+          },
+          "type": "rule"
+        },
+        "func": "check_json_settings",
+        "result": {
+          "dest": "settings.json",
+          "path": "/home/user/.config/Code/User/settings.json",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "276cc624-87ea-4f08-ab93-f770e3790175",
+      "instruction": "Please help me set the current user's line length for code wrapping to 50 characters in VS Code.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "vscode"
+      ],
+      "snapshot": "vscode",
+      "source": "https://www.quora.com/unanswered/How-do-you-set-the-line-length-in-Visual-Studio-Code",
+      "trajectory": "trajectories/"
+    }
+  },
+  "2b9493d7-49b8-493a-a71b-56cd1f4d6908": {
+    "app": "multi_apps",
+    "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/15-MB-docx-file-download.docx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/2b9493d7-49b8-493a-a71b-56cd1f4d6908/15-MB-docx-file-download.docx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/15-MB-docx-file-download.docx"
+          },
+          "type": "open"
+        },
+        {
+          "parameters": {
+            "command": [
+              "/bin/bash",
+              "-c",
+              "history -c && echo > ~/.bash_history && sleep 3"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": "export DBUS_SESSION_BUS_ADDRESS='unix:path=/run/user/1000/bus'\ngnome-terminal --maximize --working-directory=/home/user/",
+            "shell": true
+          },
+          "type": "execute"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "exclude": [
+              "libreoffice is still running",
+              "not killed from terminal"
+            ],
+            "include": [
+              "no libreoffice is running",
+              "killed from terminal"
+            ]
+          },
+          "type": "rule"
+        },
+        "func": "check_include_exclude",
+        "postconfig": [
+          {
+            "parameters": {
+              "command": [
+                "/bin/bash",
+                "-c",
+                "killall gnome-terminal-server"
+              ]
+            },
+            "type": "execute"
+          }
+        ],
+        "result": {
+          "command": [
+            "/bin/bash",
+            "-c",
+            "output=$(ps aux | grep \"[s]office\"]); if [ -z \"$output\" ]; then echo \"no libreoffice is running\"; else echo \"libreoffice is still running\"; fi; output=$(cat ~/.bash_history | grep \"[k]ill\"); if [ -z \"$output\" ]; then echo \"not killed from terminal\"; else echo \"killed from terminal\"; fi"
+          ],
+          "type": "vm_command_line"
+        }
+      },
+      "fixed_ip": false,
+      "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+      "instruction": "Hey, my LibreOffice Writer seems to have frozen and I can't get it to close normally. Can you help me force quit the application from the command line? I'm on Ubuntu and I don't want to restart my computer or lose any other work I have open.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_writer",
+        "terminal"
+      ],
+      "snapshot": "libreoffice_writer",
+      "source": "https://devicetests.com/kill-libreoffice-writer-command-line-ubuntu",
+      "trajectory": "trajectories/"
+    }
+  },
+  "35253b65-1c19-4304-8aa4-6884b8218fc0": {
+    "app": "chrome",
+    "id": "35253b65-1c19-4304-8aa4-6884b8218fc0",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "google-chrome",
+              "--remote-debugging-port=1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "socat",
+              "tcp-listen:9222,fork",
+              "tcp:localhost:1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "urls_to_open": [
+              "https://www.mathsisfun.com/games/2048.html"
+            ]
+          },
+          "type": "chrome_open_tabs"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "name": "Play Puzzle Game 2048",
+            "type": "name"
+          },
+          "type": "rule"
+        },
+        "func": "is_shortcut_on_desktop",
+        "result": {
+          "type": "shortcuts_on_desktop"
+        }
+      },
+      "fixed_ip": false,
+      "id": "35253b65-1c19-4304-8aa4-6884b8218fc0",
+      "instruction": "Hey, I need a quick way back to this site. Could you whip up a shortcut on my desktop for me using Chrome's built-in feature?",
+      "possibility_of_env_change": "low",
+      "proxy": true,
+      "related_apps": [
+        "chrome"
+      ],
+      "snapshot": "chrome",
+      "source": "https://www.laptopmag.com/articles/how-to-create-desktop-shortcuts-for-web-pages-using-chrome",
+      "trajectory": "trajectories/"
+    }
+  },
+  "357ef137-7eeb-4c80-a3bb-0951f26a8aff": {
+    "app": "libreoffice_calc",
+    "id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Multiply_Time_Number.xlsx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/357ef137-7eeb-4c80-a3bb-0951f26a8aff/Multiply_Time_Number.xlsx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Multiply_Time_Number.xlsx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "func": "compare_table",
+        "options": {
+          "rules": [
+            {
+              "coordinate": "E3",
+              "props": {
+                "value": {
+                  "method": "approx:0.001",
+                  "ref": 191.6667
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            }
+          ]
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "Multiply_Time_Number.xlsx - LibreOffice Calc"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "Multiply_Time_Number.xlsx",
+          "path": "/home/user/Multiply_Time_Number.xlsx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff",
+      "instruction": "I have calculated the total work hours from the everday hours. And I have an hourly rate. Now I want to multiply the total hours with the hourly rate to get a total earned amount. However, I can't get a correct answer by directly multiply the two cells. Here the \"total hours\" is of time and \"hourly rate\" is just a number. How can I get the correct product of them? Help me fill in the cell the correct answer. Don't touch irrelevant blank regions.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice calc"
+      ],
+      "snapshot": "libreoffice_calc",
+      "source": "https://www.reddit.com/r/excel/comments/17zny8u/calculating_total_amount_earned_from_total_hours/",
+      "trajectory": "trajectories/357ef137-7eeb-4c80-a3bb-0951f26a8aff"
+    }
+  },
+  "42e0a640-4f19-4b28-973d-729602b5a4a7": {
+    "app": "libreoffice_calc",
+    "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/NetIncome.xlsx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/1273e544-688f-496b-8d89-3e0f40aa0606/NetIncome.xlsx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/NetIncome.xlsx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "2_NetIncome_gt1.xlsx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/42e0a640-4f19-4b28-973d-729602b5a4a7/2_NetIncome_gt1.xlsx",
+          "type": "cloud_file"
+        },
+        "func": "compare_table",
+        "options": {
+          "rules": [
+            {
+              "sheet_idx0": "RNSheet2",
+              "sheet_idx1": "ENSheet2",
+              "type": "sheet_data"
+            }
+          ]
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "NetIncome.xlsx - LibreOffice Calc"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "NetIncome.xlsx",
+          "path": "/home/user/NetIncome.xlsx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+      "instruction": "Compute the sum of \"Revenue\" and \"Total Expenses\" and put the results under two columns named \"Total Revenue\" and \"Total Expenses\" of a new sheet (Sheet2)",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_calc"
+      ],
+      "snapshot": "libreoffice_calc",
+      "source": "SheetCopilot@122",
+      "trajectory": "trajectories/42e0a640-4f19-4b28-973d-729602b5a4a7"
+    }
+  },
+  "48d05431-6cd5-4e76-82eb-12b60d823f7d": {
+    "app": "multi_apps",
+    "id": "48d05431-6cd5-4e76-82eb-12b60d823f7d",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "google-chrome",
+              "--remote-debugging-port=1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "socat",
+              "tcp-listen:9222,fork",
+              "tcp:localhost:1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "python",
+              "-c",
+              "import pyautogui; import time; time.sleep(0.5); pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5); pyautogui.hotkey('ctrl', 'alt', 't'); time.sleep(0.5)"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "window_name": "Terminal"
+          },
+          "type": "activate_window"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "expected": "1\n"
+          },
+          "type": "rule"
+        },
+        "func": "exact_match",
+        "result": {
+          "command": "grep -q 'conda initialize' ~/.bashrc && echo 1 || echo 0",
+          "shell": true,
+          "type": "vm_command_line"
+        }
+      },
+      "fixed_ip": false,
+      "id": "48d05431-6cd5-4e76-82eb-12b60d823f7d",
+      "instruction": "When I ran \"conda install datasets\" in terminal, I got \"conda: command not found\". Could you help me solve it so that I can use conda command right away?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "os",
+        "chrome"
+      ],
+      "snapshot": "os",
+      "source": "authors",
+      "trajectory": "trajectories/48d05431-6cd5-4e76-82eb-12b60d823f7d"
+    }
+  },
+  "510f64c8-9bcc-4be1-8d30-638705850618": {
+    "app": "multi_apps",
+    "id": "510f64c8-9bcc-4be1-8d30-638705850618",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Downloads/vscodeEvalExtension.zip",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/510f64c8-9bcc-4be1-8d30-638705850618/vscodeEvalExtension.zip"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "/bin/bash",
+              "-c",
+              "cd /home/user/Downloads && unzip -q vscodeEvalExtension.zip && code --install-extension vscodeEvalExtension/eval-0.0.1.vsix && rm -rf vscodeEvalExtension vscodeEvalExtension.zip && mkdir -p ~/Desktop/project/.vscode && history -c && echo > ~/.bash_history"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/project/main.py",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/510f64c8-9bcc-4be1-8d30-638705850618/main.py"
+              },
+              {
+                "path": "/home/user/Desktop/project/README.md",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/510f64c8-9bcc-4be1-8d30-638705850618/README.md"
+              },
+              {
+                "path": "/home/user/Desktop/project/.vscode/settings.json",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/510f64c8-9bcc-4be1-8d30-638705850618/settings.json"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": "export DBUS_SESSION_BUS_ADDRESS='unix:path=/run/user/1000/bus'\ngnome-terminal --maximize --working-directory=/home/user",
+            "shell": true
+          },
+          "type": "execute"
+        }
+      ],
+      "evaluator": {
+        "expected": [
+          {
+            "rules": {
+              "include": [
+                "true"
+              ]
+            },
+            "type": "rule"
+          },
+          {
+            "rules": {
+              "expected": "project"
+            },
+            "type": "rule"
+          }
+        ],
+        "func": [
+          "check_include_exclude",
+          "compare_config"
+        ],
+        "postconfig": [
+          {
+            "parameters": {
+              "command": [
+                "/bin/bash",
+                "-c",
+                "killall gnome-terminal-server"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "window_name": "Visual Studio Code"
+            },
+            "type": "activate_window"
+          }
+        ],
+        "result": [
+          {
+            "command": [
+              "/bin/bash",
+              "-c",
+              "use_terminal=$(cat ~/.bash_history | grep \"[c]ode \"); if [ -z \"$use_terminal\" ]; then echo \"false\"; else echo \"true\"; fi"
+            ],
+            "type": "vm_command_line"
+          },
+          {
+            "dest": "OpenProject.txt",
+            "path": "/home/user/OpenProject.txt",
+            "type": "vscode_config",
+            "vscode_extension_command": "OpenProject"
+          }
+        ]
+      },
+      "fixed_ip": false,
+      "id": "510f64c8-9bcc-4be1-8d30-638705850618",
+      "instruction": "Could you start VS Code in folder ~/Desktop/project from the terminal?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "vscode",
+        "terminal"
+      ],
+      "snapshot": "vscode",
+      "source": "https://www.geeksforgeeks.org/how-to-start-vs-code-from-the-terminal-command-line/",
+      "trajectory": "trajectories/"
+    }
+  },
+  "53ad5833-3455-407b-bbc6-45b4c79ab8fb": {
+    "app": "vs_code",
+    "id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Downloads/vscodeEvalExtension.zip",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vs_code/53ad5833-3455-407b-bbc6-45b4c79ab8fb/vscodeEvalExtension.zip"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "/bin/bash",
+              "-c",
+              "cd /home/user/Downloads && unzip -q vscodeEvalExtension.zip && code --install-extension vscodeEvalExtension/eval-0.0.1.vsix && rm -rf vscodeEvalExtension vscodeEvalExtension.zip"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": [
+              "code"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "mkdir",
+              "-p",
+              "/home/user/project/.vscode"
+            ]
+          },
+          "type": "command"
+        },
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/project/main.py",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vs_code/5e2d93d8-8ad0-4435-b150-1692aacaa994/main.py"
+              },
+              {
+                "path": "/home/user/project/README.md",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vs_code/53ad5833-3455-407b-bbc6-45b4c79ab8fb/README.md"
+              },
+              {
+                "path": "/home/user/project/.vscode/settings.json",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vs_code/53ad5833-3455-407b-bbc6-45b4c79ab8fb/settings.json"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "window_name": "Visual Studio Code"
+          },
+          "type": "activate_window"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "expected": "project"
+          },
+          "type": "rule"
+        },
+        "func": "compare_config",
+        "postconfig": [
+          {
+            "parameters": {
+              "window_name": "Visual Studio Code"
+            },
+            "type": "activate_window"
+          }
+        ],
+        "result": {
+          "dest": "OpenProject.txt",
+          "path": "/home/user/OpenProject.txt",
+          "type": "vscode_config",
+          "vscode_extension_command": "OpenProject"
+        }
+      },
+      "fixed_ip": false,
+      "id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+      "instruction": "Please help me use VS Code to open the \"project\" in the \"user\" folder under \"home\".",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "vscode"
+      ],
+      "snapshot": "vscode",
+      "source": "https://www.youtube.com/watch?v=VqCgcpAypFQ",
+      "trajectory": "trajectories/53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+    }
+  },
+  "550ce7e7-747b-495f-b122-acdc4d0b8e54": {
+    "app": "libreoffice_impress",
+    "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/New_Club_Spring_2018_Training.pptx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/550ce7e7-747b-495f-b122-acdc4d0b8e54/New_Club_Spring_2018_Training.data"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/New_Club_Spring_2018_Training.pptx"
+          },
+          "type": "open"
+        },
+        {
+          "parameters": {
+            "seconds": 0.5
+          },
+          "type": "sleep"
+        },
+        {
+          "parameters": {
+            "command": [
+              "python",
+              "-c",
+              "import pyautogui; import time;  time.sleep(4); pyautogui.click(170, 250); time.sleep(1);pyautogui.press('down'); time.sleep(1); pyautogui.press('down'); time.sleep(1); pyautogui.press('down'); time.sleep(1); pyautogui.press('down'); time.sleep(1); "
+            ]
+          },
+          "type": "execute"
+        }
+      ],
+      "evaluator": {
+        "conj": "or",
+        "expected": [
+          {
+            "dest": "New_Club_Spring_2018_Training_Gold.pptx",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/550ce7e7-747b-495f-b122-acdc4d0b8e54/New_Club_Spring_2018_Training_with_strike.data",
+            "type": "cloud_file"
+          },
+          {
+            "dest": "New_Club_Spring_2018_Training_Gold_all_fonts_1.pptx",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/550ce7e7-747b-495f-b122-acdc4d0b8e54/New_Club_Spring_2018_Training_Gold_all_fonts_1.pptx",
+            "type": "cloud_file"
+          }
+        ],
+        "func": [
+          "compare_pptx_files",
+          "compare_pptx_files"
+        ],
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "New_Club_Spring_2018_Training.pptx - LibreOffice Impress"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; import time; pyautogui.hotkey('ctrl', 's'); time.sleep(0.5);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": [
+          {
+            "dest": "New_Club_Spring_2018_Training.pptx",
+            "path": "/home/user/Desktop/New_Club_Spring_2018_Training.pptx",
+            "type": "vm_file"
+          },
+          {
+            "dest": "New_Club_Spring_2018_Training.pptx",
+            "path": "/home/user/Desktop/New_Club_Spring_2018_Training.pptx",
+            "type": "vm_file"
+          }
+        ]
+      },
+      "fixed_ip": false,
+      "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+      "instruction": "I am checking our soccer club's to-do list for the last semester and adding strike-through sign on the line we have already accomplished. Could you help me add a strike-through on the first and second line?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_impress"
+      ],
+      "snapshot": "libreoffice_impress",
+      "source": "https://technical-tips.com/blog/software/text-in-libreoffice-strikethrough--6948#:~:text=To%20strikethrough%20Text%20in%20LibreOffice%201%20In%20your,effect%22%20can%20your%20additionally%2C%20for%20example%2C%20double%20underline.",
+      "trajectory": "trajectories/"
+    }
+  },
+  "554785e9-4523-4e7a-b8e1-8016f565f56a": {
+    "app": "gimp",
+    "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/woman_sitting_by_the_tree2.png",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/554785e9-4523-4e7a-b8e1-8016f565f56a/woman_sitting_by_the_tree2.png"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "gimp",
+              "/home/user/Desktop/woman_sitting_by_the_tree2.png"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "woman_sitting_by_the_tree2.png",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/554785e9-4523-4e7a-b8e1-8016f565f56a/woman_sitting_by_the_tree2.png",
+          "type": "cloud_file"
+        },
+        "func": "check_saturation_increase_and_structure_sim",
+        "postconfig": [
+          {
+            "parameters": {
+              "command": [
+                "python3",
+                "-c",
+                "import pyautogui; pyautogui.hotkey([\"shift\", \"ctrl\", \"e\"]);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python3",
+                "-c",
+                "import time; import pyautogui; time.sleep(1);pyautogui.write(\"edited_colorful\");time.sleep(1);pyautogui.press([\"enter\"]);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 2
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python3",
+                "-c",
+                "import pyautogui; pyautogui.press([\"enter\"]);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "edited_colorful.png",
+          "path": "/home/user/Desktop/edited_colorful.png",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+      "instruction": "Could you assist me in enhancing the color vibrancy of my photo?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "gimp"
+      ],
+      "snapshot": "gimp",
+      "source": "https://www.quora.com/How-do-I-edit-a-photo-in-GIMP",
+      "trajectory": "trajectories/"
+    }
+  },
+  "5812b315-e7bd-4265-b51f-863c02174c28": {
+    "app": "os",
+    "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": "mkdir /home/test1",
+            "shell": true
+          },
+          "type": "execute"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "exclude": [],
+            "include": [
+              "Password, home directory, and write permission check passed"
+            ]
+          },
+          "type": "rule"
+        },
+        "func": "check_include_exclude",
+        "postconfig": [
+          {
+            "parameters": {
+              "command": "echo {CLIENT_PASSWORD} | sudo -S apt-get install -y expect",
+              "shell": true
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "files": [
+                {
+                  "path": "check_password.sh",
+                  "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/5812b315-e7bd-4265-b51f-863c02174c28/check_password.sh"
+                }
+              ]
+            },
+            "type": "download"
+          },
+          {
+            "parameters": {
+              "command": "chmod +x check_password.sh",
+              "shell": true
+            },
+            "type": "execute"
+          }
+        ],
+        "result": {
+          "command": "USERNAME=\"charles\"; HOMEDIR=\"/home/test1\"; PASSWORD=\"Ex@mpleP@55w0rd!\"; ./check_password.sh \"$USERNAME\" \"$PASSWORD\" && [ \"$(getent passwd \"$USERNAME\" | cut -d: -f6)\" = \"$HOMEDIR\" ] && [ $(stat -c \"%A\" \"$HOMEDIR\" | cut -b 3) = \"w\" ] && echo \"Password, home directory, and write permission check passed\" || echo \"Check failed\"",
+          "shell": true,
+          "type": "vm_command_line"
+        }
+      },
+      "fixed_ip": false,
+      "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+      "instruction": "Please create an SSH user named \"charles\" with password \"Ex@mpleP@55w0rd!\" on Ubuntu who is only allowed to access the folder \"/home/test1\".",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "os"
+      ],
+      "snapshot": "os",
+      "source": "https://superuser.com/questions/149404/create-an-ssh-user-who-only-has-permission-to-access-specific-folders",
+      "trajectory": "trajectories/"
+    }
+  },
+  "5990457f-2adb-467b-a4af-5c857c92d762": {
+    "app": "multi_apps",
+    "id": "5990457f-2adb-467b-a4af-5c857c92d762",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "google-chrome",
+              "--remote-debugging-port=1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "socat",
+              "tcp-listen:9222,fork",
+              "tcp:localhost:1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/researchers.xlsx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/5990457f-2adb-467b-a4af-5c857c92d762/researchers.xlsx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "nautilus",
+              "/home/user/Desktop"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "backups": [
+            "Yann LeCun",
+            "345074",
+            "147",
+            "372",
+            "Deep learning",
+            "https://hal.science/hal-04206682/document"
+          ],
+          "infos": [
+            {
+              "action": "inner_text",
+              "selector": "#gsc_prf_in"
+            },
+            {
+              "action": "inner_text",
+              "selector": "#gsc_rsb_st > tbody > tr:nth-child(1) > td:nth-child(2)"
+            },
+            {
+              "action": "inner_text",
+              "selector": "#gsc_rsb_st > tbody > tr:nth-child(2) > td:nth-child(2)"
+            },
+            {
+              "action": "inner_text",
+              "selector": "#gsc_rsb_st > tbody > tr:nth-child(3) > td:nth-child(2)"
+            },
+            {
+              "action": "inner_text",
+              "selector": "#gsc_a_b > tr:nth-child(1) > td.gsc_a_t > a"
+            },
+            {
+              "action": "click_and_attribute",
+              "attribute": "href",
+              "selector": [
+                "#gsc_a_b > tr:nth-child(1) > td.gsc_a_t > a",
+                "#gsc_oci_title_gg > div:nth-child(1) > a"
+              ]
+            }
+          ],
+          "type": "info_from_website",
+          "url": "https://scholar.google.com/citations?user=WLN3QrAAAAAJ&hl=en"
+        },
+        "func": "literal_match",
+        "options": {
+          "ignore_case": true,
+          "type": "list"
+        },
+        "result": {
+          "file_content": "last_row",
+          "file_type": "xlsx",
+          "path": "/home/user/Desktop/researchers.xlsx",
+          "type": "content_from_vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "5990457f-2adb-467b-a4af-5c857c92d762",
+      "instruction": "Append one entry of AI researcher Yann LeCun from Google Scholar into an existing table researchers.xlsx.",
+      "possibility_of_env_change": "low",
+      "proxy": true,
+      "related_apps": [
+        "chrome",
+        "libreoffice_calc"
+      ],
+      "snapshot": "chrome",
+      "source": "authors",
+      "trajectory": "trajectories/"
+    }
+  },
+  "59f21cfb-0120-4326-b255-a5b827b38967": {
+    "app": "vlc",
+    "id": "59f21cfb-0120-4326-b255-a5b827b38967",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/Rick Astley - Never Gonna Give You Up (Official Music Video).mp4",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vlc/59f21cfb-0120-4326-b255-a5b827b38967/Rick%20Astley%20-%20Never%20Gonna%20Give%20You%20Up%20%28Official%20Music%20Video%29.mp4"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": "VLC_VERBOSE=-1 vlc --loop --no-audio --no-video-title-show",
+            "shell": true
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "python",
+              "-c",
+              "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+            ]
+          },
+          "type": "execute"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "file_name": "Rick Astley - Never Gonna Give You Up (Official Music Video).mp4",
+            "type": "file_name"
+          },
+          "type": "rule"
+        },
+        "func": "is_vlc_playing",
+        "result": {
+          "dest": "status.xml",
+          "type": "vlc_playing_info"
+        }
+      },
+      "fixed_ip": false,
+      "id": "59f21cfb-0120-4326-b255-a5b827b38967",
+      "instruction": "Could you play the music video that's saved on my desktop for me via vlc?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "vlc"
+      ],
+      "snapshot": "base_setup",
+      "source": "https://docs.videolan.me/vlc-user/desktop/3.0/en/basic/media.html#playing-a-file",
+      "trajectory": "trajectories/"
+    }
+  },
+  "5d901039-a89c-4bfb-967b-bf66f4df075e": {
+    "app": "libreoffice_impress",
+    "id": "5d901039-a89c-4bfb-967b-bf66f4df075e",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/CPD_Background_Investigation_Process.pptx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/5d901039-a89c-4bfb-967b-bf66f4df075e/CPD_Background_Investigation_Process.pptx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/CPD_Background_Investigation_Process.pptx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "CPD_Background_Investigation_Process_Original.pptx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/5d901039-a89c-4bfb-967b-bf66f4df075e/CPD_Background_Investigation_Process.pptx",
+          "type": "cloud_file"
+        },
+        "func": "check_image_stretch_and_center",
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "CPD_Background_Investigation_Process.pptx - LibreOffice Impress"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; import time; pyautogui.hotkey('ctrl', 's'); time.sleep(0.5);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "CPD_Background_Investigation_Process.pptx",
+          "path": "/home/user/Desktop/CPD_Background_Investigation_Process.pptx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "5d901039-a89c-4bfb-967b-bf66f4df075e",
+      "instruction": "I want to turn the rectangular image of Columbus on the first page into a cover page. Could you help me stretch this image to fill the entire page, keeping its proportion and centering the image?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_impress"
+      ],
+      "snapshot": "libreoffice_impress",
+      "source": "https://superuser.com/questions/986776/how-can-i-stretch-an-image-in-a-libreoffice-impress-presentation-to-fill-the-pag",
+      "trajectory": "trajectories/"
+    }
+  },
+  "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57": {
+    "app": "os",
+    "id": "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/poster_party_night.webp",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57/poster_party_night.webp"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": "gio trash /home/user/Desktop/poster_party_night.webp",
+            "shell": true
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": [
+              "python",
+              "-c",
+              "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+            ]
+          },
+          "type": "execute"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "expected": "File exists.\n"
+          },
+          "type": "rule"
+        },
+        "func": "exact_match",
+        "result": {
+          "command": "[ -f /home/user/Desktop/poster_party_night.webp ] && echo 'File exists.' || echo 'File does not exist.'",
+          "shell": true,
+          "type": "vm_command_line"
+        }
+      },
+      "fixed_ip": false,
+      "id": "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57",
+      "instruction": "I am currently using an Ubuntu system, and I have wrongly deleted a poster of party night. Could you help me recover it from the Trash?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "os"
+      ],
+      "snapshot": "os",
+      "source": "https://help.ubuntu.com/lts/ubuntu-help/files-recover.html.en",
+      "trajectory": "trajectories/"
+    }
+  },
+  "716a6079-22da-47f1-ba73-c9d58f986a38": {
+    "app": "multi_apps",
+    "id": "716a6079-22da-47f1-ba73-c9d58f986a38",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": "mkdir -p /home/user/Data1/List1 && mkdir -p /home/user/Data2/List2 && mkdir -p /home/user/Data3/List3 && mkdir -p /home/user/Data4/List4 && mkdir -p /home/user/Data5/List5",
+            "shell": "true"
+          },
+          "type": "command"
+        },
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Data3/List3/secret.docx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/716a6079-22da-47f1-ba73-c9d58f986a38/Secret%20document.docx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": "echo {CLIENT_PASSWORD} | sudo -S apt install xsel && xsel -bc",
+            "shell": "true"
+          },
+          "type": "command"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "command": "xsel --clipboard --output",
+          "shell": "true",
+          "type": "vm_command_line"
+        },
+        "func": "is_in_vm_clickboard",
+        "result": {
+          "rules": {
+            "expected": "/home/user/Data3/List3/secret.docx"
+          },
+          "type": "rule"
+        }
+      },
+      "fixed_ip": false,
+      "id": "716a6079-22da-47f1-ba73-c9d58f986a38",
+      "instruction": "I remember there is a file named \"secret.docx\" on this computer, but I can't remember where it is. Please find the path where this file is stored and copy it to the clipboard.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "os",
+        "terminal"
+      ],
+      "snapshot": "multiapps",
+      "source": "",
+      "trajectory": "trajectories/"
+    }
+  },
+  "74d5859f-ed66-4d3e-aa0e-93d7a592ce41": {
+    "app": "multi_apps",
+    "id": "74d5859f-ed66-4d3e-aa0e-93d7a592ce41",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "google-chrome",
+              "--remote-debugging-port=1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "socat",
+              "tcp-listen:9222,fork",
+              "tcp:localhost:1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "urls_to_open": [
+              "https://webext.eu"
+            ]
+          },
+          "type": "chrome_open_tabs"
+        },
+        {
+          "parameters": {
+            "command": [
+              "mkdir",
+              "-p",
+              "/home/user/Projects"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": [
+              "nautilus",
+              "/home/user/Projects"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": [
+          {
+            "rules": {
+              "expect": [
+                {
+                  "key": [
+                    "name"
+                  ],
+                  "method": "eq",
+                  "ref": "happy-extension"
+                },
+                {
+                  "key": [
+                    "version"
+                  ],
+                  "method": "eq",
+                  "ref": "0.0.1"
+                },
+                {
+                  "key": [
+                    "background",
+                    "scripts"
+                  ],
+                  "method": "eq",
+                  "ref": [
+                    "background_script.js"
+                  ]
+                },
+                {
+                  "key": [
+                    "browser_action",
+                    "default_icon"
+                  ],
+                  "method": "eq",
+                  "ref": {
+                    "64": "icons/icon.png"
+                  }
+                },
+                {
+                  "key": [
+                    "browser_action",
+                    "default_popup"
+                  ],
+                  "method": "eq",
+                  "ref": "browserAction/index.html"
+                },
+                {
+                  "key": [
+                    "browser_action",
+                    "default_title"
+                  ],
+                  "method": "eq",
+                  "ref": "happy-extension"
+                }
+              ]
+            },
+            "type": "rule"
+          },
+          {
+            "dest": "background_script.js",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/file_1t5Llhn6seDUXVs-eILu6CjwFEQL9Z5Qm.bin",
+            "type": "cloud_file"
+          },
+          {
+            "dest": "index.html",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/index.html",
+            "type": "cloud_file"
+          },
+          {
+            "dest": "style.css",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/style.css",
+            "type": "cloud_file"
+          },
+          {
+            "dest": "script.js",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/74d5859f-ed66-4d3e-aa0e-93d7a592ce41/file_14YYnhCfRtHQNk8M4fBPaUQeteoFMGBsA.bin",
+            "type": "cloud_file"
+          }
+        ],
+        "func": [
+          "check_json",
+          "diff_text_file",
+          "diff_text_file",
+          "diff_text_file",
+          "diff_text_file"
+        ],
+        "result": [
+          {
+            "dest": "manifest.json",
+            "path": "/home/user/Projects/happy-extension/manifest.json",
+            "type": "vm_file"
+          },
+          {
+            "dest": "background_script.js",
+            "path": "/home/user/Projects/happy-extension/background_script.js",
+            "type": "vm_file"
+          },
+          {
+            "dest": "index.html",
+            "path": "/home/user/Projects/happy-extension/browserAction/index.html",
+            "type": "vm_file"
+          },
+          {
+            "dest": "style.css",
+            "path": "/home/user/Projects/happy-extension/browserAction/style.css",
+            "type": "vm_file"
+          },
+          {
+            "dest": "script.js",
+            "path": "/home/user/Projects/happy-extension/browserAction/script.js",
+            "type": "vm_file"
+          }
+        ]
+      },
+      "fixed_ip": false,
+      "id": "74d5859f-ed66-4d3e-aa0e-93d7a592ce41",
+      "instruction": "Help me to set up an initial web extension project with help of the web tool, tagging it \"happy-extension v0.0.1\". Leave description blank for now. Include a background script and browser action, while other features are not required. Remember to unzip the auto-generated folder into \"~/Projects\".",
+      "possibility_of_env_change": "low",
+      "proxy": true,
+      "related_apps": [
+        "chrome",
+        "os"
+      ],
+      "snapshot": "chrome",
+      "source": "authors",
+      "trajectory": "trajectories/74d5859f-ed66-4d3e-aa0e-93d7a592ce41"
+    }
+  },
+  "7a4deb26-d57d-4ea9-9a73-630f66a7b568": {
+    "app": "gimp",
+    "id": "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/woman_sitting_by_the_tree.png",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/7a4deb26-d57d-4ea9-9a73-630f66a7b568/woman_sitting_by_the_tree.png"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "gimp",
+              "/home/user/Desktop/woman_sitting_by_the_tree.png"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "woman_sitting_by_the_tree.png",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/7a4deb26-d57d-4ea9-9a73-630f66a7b568/woman_sitting_by_the_tree.png",
+          "type": "cloud_file"
+        },
+        "func": "check_brightness_decrease_and_structure_sim",
+        "postconfig": [
+          {
+            "parameters": {
+              "command": [
+                "python3",
+                "-c",
+                "import time; import pyautogui; time.sleep(1);pyautogui.hotkey([\"shift\", \"ctrl\", \"e\"]);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python3",
+                "-c",
+                "import time; import pyautogui; time.sleep(1);pyautogui.write(\"edited_darker\");time.sleep(1);pyautogui.press([\"enter\"]);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 2
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python3",
+                "-c",
+                "import pyautogui; pyautogui.press([\"enter\"]);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "edited_darker.png",
+          "path": "/home/user/Desktop/edited_darker.png",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+      "instruction": "Could you tone down the brightness of my photo?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "gimp"
+      ],
+      "snapshot": "gimp",
+      "source": "https://www.quora.com/How-do-I-edit-a-photo-in-GIMP",
+      "trajectory": "trajectories/"
+    }
+  },
+  "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3": {
+    "app": "chrome",
+    "id": "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "google-chrome",
+              "--remote-debugging-port=1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "socat",
+              "tcp-listen:9222,fork",
+              "tcp:localhost:1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "urls_to_open": [
+              "https://www.amazon.com",
+              "https://www.amazon.com/s?k=huggingface+transformers+book"
+            ]
+          },
+          "type": "chrome_open_tabs"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "domains": [
+              ".amazon.com"
+            ],
+            "type": "domains"
+          },
+          "type": "rule"
+        },
+        "func": "is_cookie_deleted",
+        "result": {
+          "dest": "Cookies",
+          "type": "cookie_data"
+        }
+      },
+      "fixed_ip": false,
+      "id": "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3",
+      "instruction": "Can you help me clean up my computer by getting rid of all the tracking things that Amazon might have saved? I want to make sure my browsing is private and those sites don't remember me.",
+      "possibility_of_env_change": "low",
+      "proxy": true,
+      "related_apps": [
+        "chrome"
+      ],
+      "snapshot": "chrome",
+      "source": "https://support.google.com/chrome/answer/95647?hl=en&ref_topic=7438325&sjid=16867045591165135686-AP#zippy=%2Cdelete-cookies-from-a-site",
+      "trajectory": "trajectories/"
+    }
+  },
+  "8e116af7-7db7-4e35-a68b-b0939c066c78": {
+    "app": "multi_apps",
+    "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/my_bookkeeping.xlsx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/my_bookkeeping.xlsx"
+              },
+              {
+                "path": "/home/user/Desktop/receipt_0.jpeg",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_0.jpeg"
+              },
+              {
+                "path": "/home/user/Desktop/receipt_1.jpg",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_1.jpg"
+              },
+              {
+                "path": "/home/user/Desktop/receipt_2.jpg",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_2.jpg"
+              },
+              {
+                "path": "/home/user/Desktop/receipt_3.pdf",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_3.pdf"
+              },
+              {
+                "path": "/home/user/Desktop/receipt_4.jpg",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_4.jpg"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/my_bookkeeping.xlsx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "my_bookkeeping_gold.xlsx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/my_bookkeeping%20Gold.xlsx",
+          "type": "cloud_file"
+        },
+        "func": "compare_table",
+        "options": {
+          "rules": [
+            {
+              "rules": [
+                {
+                  "range": [
+                    "A1:A8",
+                    "B1:B8",
+                    "C1:C8",
+                    "D1:D8",
+                    "E1:E8"
+                  ],
+                  "type": "exact_match"
+                }
+              ],
+              "sheet_idx0": "RNSheet1",
+              "sheet_idx1": "ENSheet1",
+              "type": "sheet_fuzzy"
+            },
+            {
+              "rules": [
+                {
+                  "ignore_case": true,
+                  "range": [
+                    "C9:C13"
+                  ],
+                  "type": "exact_match"
+                }
+              ],
+              "sheet_idx0": "RNSheet1",
+              "sheet_idx1": "ENSheet1",
+              "type": "sheet_fuzzy"
+            },
+            {
+              "coordinate": "D9",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -186.93
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "D10",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -3670
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "D11",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -5.7
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "D12",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -154.06
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "D13",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -8.1
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "E9",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": 603.07
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "E10",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -3066.93
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "E11",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -3072.63
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "E12",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -3226.69
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            },
+            {
+              "coordinate": "E13",
+              "props": {
+                "value": {
+                  "method": "approx:0.1",
+                  "ref": -3234.79
+                }
+              },
+              "sheet_idx": 0,
+              "type": "check_cell"
+            }
+          ]
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "my_bookkeeping.xlsx - LibreOffice Calc"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 1.0
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "my_bookkeeping.xlsx",
+          "path": "/home/user/Desktop/my_bookkeeping.xlsx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+      "instruction": "Please update my bookkeeping sheet with the recent transactions from the provided folder, detailing my expenses over the past few days.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_calc",
+        "os",
+        "image",
+        "pdf"
+      ],
+      "snapshot": "libreoffice_calc",
+      "source": "authors",
+      "trajectory": "trajectories/8e116af7-7db7-4e35-a68b-b0939c066c78"
+    }
+  },
+  "8f080098-ddb1-424c-b438-4e96e5e4786e": {
+    "app": "vlc",
+    "id": "8f080098-ddb1-424c-b438-4e96e5e4786e",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/Baby Justin Bieber.mp4",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vlc/8f080098-ddb1-424c-b438-4e96e5e4786e/Baby%20Justin%20Bieber.mp4"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": "VLC_VERBOSE=-1 vlc --no-audio --no-video-title-show --start-time=73 '/home/user/Desktop/Baby Justin Bieber.mp4'",
+            "shell": true
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "python",
+              "-c",
+              "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+            ]
+          },
+          "type": "execute"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "baby_gold.mp3",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vlc/8f080098-ddb1-424c-b438-4e96e5e4786e/Baby%20Justin%20Bieber.mp3",
+          "type": "cloud_file"
+        },
+        "func": "compare_audios",
+        "result": {
+          "dest": "baby.mp3",
+          "path": "/home/user/Desktop/Baby Justin Bieber.mp3",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "8f080098-ddb1-424c-b438-4e96e5e4786e",
+      "instruction": "Could you convert the song from this music video as an MP3 file? I'd like to have it on my device to play whenever I want. Please save the file just on the desktop and title the file \"Baby Justin Bieber.mp3.\" I really appreciate your help!",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "vlc"
+      ],
+      "snapshot": "base_setup",
+      "source": "https://medium.com/@jetscribe_ai/how-to-extract-mp3-audio-from-videos-using-vlc-media-player-beeef644ebfb",
+      "trajectory": "trajectories/"
+    }
+  },
+  "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a": {
+    "app": "multi_apps",
+    "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/helloExtension.zip",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a/Hello%20Extension.zip"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": "echo {CLIENT_PASSWORD} | sudo -S apt-get update -y && echo {CLIENT_PASSWORD} | sudo -S apt-get install unzip -y && unzip /home/user/Desktop/helloExtension.zip -d /home/user/Desktop/ && rm /home/user/Desktop/helloExtension.zip",
+            "shell": true
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": [
+              "google-chrome",
+              "--remote-debugging-port=1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "socat",
+              "tcp-listen:9222,fork",
+              "tcp:localhost:1337"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "expected": "/home/user/Desktop/helloExtension"
+          },
+          "type": "rule"
+        },
+        "func": "is_in_list",
+        "result": {
+          "type": "find_unpacked_extension_path"
+        }
+      },
+      "fixed_ip": false,
+      "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+      "instruction": "I have developed a new Chrome extension myself, so it needs to be installed manually. Please help me install the extension located in the Desktop directory into the Chrome browser.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "chrome",
+        "os"
+      ],
+      "snapshot": "multiapps",
+      "source": "https://support.google.com/chrome/thread/205881926/it-s-possible-to-load-unpacked-extension-automatically-in-chrome?hl=en",
+      "trajectory": "trajectories/"
+    }
+  },
+  "abed40dc-063f-4598-8ba5-9fe749c0615d": {
+    "app": "libreoffice_calc",
+    "id": "abed40dc-063f-4598-8ba5-9fe749c0615d",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Names_Duplicate_Unique.xlsx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/abed40dc-063f-4598-8ba5-9fe749c0615d/Names_Duplicate_Unique.xlsx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Names_Duplicate_Unique.xlsx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "Names_Duplicate_Unique_gold.xlsx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/abed40dc-063f-4598-8ba5-9fe749c0615d/Names_Duplicate_Unique_gold.xlsx",
+          "type": "cloud_file"
+        },
+        "func": "compare_table",
+        "options": {
+          "rules": [
+            {
+              "sheet_idx0": 0,
+              "sheet_idx1": "EI0",
+              "type": "sheet_data"
+            }
+          ]
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "Names_Duplicate_Unique.xlsx - LibreOffice Calc"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "Names_Duplicate_Unique.xlsx",
+          "path": "/home/user/Names_Duplicate_Unique.xlsx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "abed40dc-063f-4598-8ba5-9fe749c0615d",
+      "instruction": "Check the names in column \"Names with duplicates\" and put the unique ones in column \"Unique Names\". Keep the original order of the first occurrences. Finish the work and don't touch irrelevant regions, even if they are blank.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice calc"
+      ],
+      "snapshot": "libreoffice_calc",
+      "source": "https://help.libreoffice.org/7.6/ro/text/scalc/guide/remove_duplicates.html?&DbPAR=SHARED&System=UNIX",
+      "trajectory": "trajectories/abed40dc-063f-4598-8ba5-9fe749c0615d"
+    }
+  },
+  "b5062e3e-641c-4e3a-907b-ac864d2e7652": {
+    "app": "multi_apps",
+    "id": "b5062e3e-641c-4e3a-907b-ac864d2e7652",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "mkdir",
+              "-p",
+              "/home/user/Documents/Papers"
+            ]
+          },
+          "type": "command"
+        },
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Documents/Papers/zhang_appagent.pdf",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/2312.13771.pdf"
+              },
+              {
+                "path": "/home/user/Documents/Papers/niu_screenagent.pdf",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/2402.07945.pdf"
+              },
+              {
+                "path": "/home/user/Documents/Papers/koh_visualwebarena.pdf",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/2401.13649.pdf"
+              },
+              {
+                "path": "/home/user/Documents/Papers/deng_mind2web.pdf",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/5950bf290a1570ea401bf98882128160-Paper-Datasets_and_Benchmarks.pdf"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "nautilus",
+              "/home/user/Documents/Papers"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "authors-gt.xlsx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/authors-ground_truth.xlsx",
+          "type": "cloud_file"
+        },
+        "func": "compare_table",
+        "options": {
+          "rules": [
+            {
+              "rules": [
+                {
+                  "ignore_case": true,
+                  "range": [
+                    "A1:C1"
+                  ],
+                  "type": "includes"
+                },
+                {
+                  "range": [
+                    "A2:B5"
+                  ],
+                  "trim_leadings": " ",
+                  "trim_trailings": " ",
+                  "type": "exact_match"
+                },
+                {
+                  "ignore_case": true,
+                  "range": [
+                    "C2:C5"
+                  ],
+                  "trim_leadings": " ",
+                  "trim_trailings": " ",
+                  "type": "exact_match"
+                }
+              ],
+              "sheet_idx0": "RI0",
+              "sheet_idx1": "EI0",
+              "type": "sheet_fuzzy"
+            }
+          ]
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "command": [
+                "libreoffice",
+                "--convert-to",
+                "csv:Text - txt - csv (StarCalc):44,34,UTF-8,,,,false,true,true,false,false,1",
+                "--outdir",
+                "/home/user",
+                "/home/user/authors.xlsx"
+              ]
+            },
+            "type": "execute"
+          }
+        ],
+        "result": {
+          "dest": "authors.xlsx",
+          "path": "/home/user/authors.xlsx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "b5062e3e-641c-4e3a-907b-ac864d2e7652",
+      "instruction": "Please help me to extract the name, e-mail, and affiliation of the first author from each paper in the folder and organize them in an Excel table. Include headers for each field. Sort the authors by their full names alphabetically and save the table as \"~/authors.xlsx\".",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_calc",
+        "os"
+      ],
+      "snapshot": "libreoffice_calc",
+      "source": "authors",
+      "trajectory": "trajectories/b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    }
+  },
+  "bb5e4c0d-f964-439c-97b6-bdb9747de3f4": {
+    "app": "chrome",
+    "id": "bb5e4c0d-f964-439c-97b6-bdb9747de3f4",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "google-chrome",
+              "--remote-debugging-port=1337"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "command": [
+              "socat",
+              "tcp-listen:9222,fork",
+              "tcp:localhost:1337"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "expected": [
+              "Microsoft Bing",
+              "Bing"
+            ]
+          },
+          "type": "rule"
+        },
+        "func": "match_in_list",
+        "postconfig": [
+          {
+            "parameters": {
+              "command": [
+                "pkill",
+                "chrome"
+              ]
+            },
+            "type": "launch"
+          },
+          {
+            "parameters": {
+              "command": [
+                "google-chrome",
+                "--remote-debugging-port=1337"
+              ]
+            },
+            "type": "launch"
+          },
+          {
+            "parameters": {
+              "seconds": 3
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "type": "default_search_engine"
+        }
+      },
+      "fixed_ip": false,
+      "id": "bb5e4c0d-f964-439c-97b6-bdb9747de3f4",
+      "instruction": "Can you make Bing the main search engine when I look stuff up on the internet?",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "chrome"
+      ],
+      "snapshot": "chrome",
+      "source": "https://support.google.com/chrome/answer/95426?sjid=16867045591165135686-AP",
+      "trajectory": "trajectories/"
+    }
+  },
+  "c867c42d-a52d-4a24-8ae3-f75d256b5618": {
+    "app": "multi_apps",
+    "id": "c867c42d-a52d-4a24-8ae3-f75d256b5618",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "command": [
+              "libreoffice",
+              "--calc"
+            ]
+          },
+          "type": "launch"
+        },
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/thunderbird-profile.tar.gz",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/c867c42d-a52d-4a24-8ae3-f75d256b5618/thunderbird.profile.tar.gz"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "tar",
+              "--recursive-unlink",
+              "-xz",
+              "-f",
+              "/home/user/thunderbird-profile.tar.gz",
+              "-C",
+              "/home/user/"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": [
+              "/usr/bin/thunderbird"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "conj": "and",
+        "expected": [
+          {
+            "dest": "contacts_gold.csv",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/c867c42d-a52d-4a24-8ae3-f75d256b5618/contacts.csv",
+            "type": "cloud_file"
+          },
+          {
+            "dest": "contacts_gold.xlsx",
+            "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/c867c42d-a52d-4a24-8ae3-f75d256b5618/contacts.xlsx",
+            "type": "cloud_file"
+          }
+        ],
+        "func": [
+          "compare_csv",
+          "compare_table"
+        ],
+        "options": [
+          {},
+          {
+            "rules": [
+              {
+                "sheet_idx0": "RI0",
+                "sheet_idx1": "EI0",
+                "type": "sheet_data"
+              }
+            ]
+          }
+        ],
+        "result": [
+          {
+            "dest": "contacts.csv",
+            "path": "/home/user/Desktop/contacts.csv",
+            "type": "vm_file"
+          },
+          {
+            "dest": "contacts.xlsx",
+            "path": "/home/user/Desktop/contacts.xlsx",
+            "type": "vm_file"
+          }
+        ]
+      },
+      "fixed_ip": false,
+      "id": "c867c42d-a52d-4a24-8ae3-f75d256b5618",
+      "instruction": "Please assist me in exporting my contacts of Personal Address Book from Thunderbird into contacts.csv file in the desktop and convert it to .xlsx with Libreoffice Calc.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "thunderbird",
+        "libreoffice_calc"
+      ],
+      "snapshot": "thunderbird",
+      "source": "https://www.sync.blue/en/sync/mozilla-thunderbird/google-sheets/",
+      "trajectory": "trajectories/"
+    }
+  },
+  "d1acdb87-bb67-4f30-84aa-990e56a09c92": {
+    "app": "multi_apps",
+    "id": "d1acdb87-bb67-4f30-84aa-990e56a09c92",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/restaurants.txt",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92/restaurants.txt"
+              },
+              {
+                "path": "/home/user/Desktop/MUST_VISIT.xlsx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92/MUST_VISIT.xlsx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/MUST_VISIT.xlsx"
+          },
+          "type": "open"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/restaurants.txt"
+          },
+          "type": "open"
+        },
+        {
+          "parameters": {
+            "seconds": 5
+          },
+          "type": "sleep"
+        },
+        {
+          "parameters": {
+            "strict": true,
+            "window_name": "restaurants.txt (~/Desktop) - gedit"
+          },
+          "type": "activate_window"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "MUST_VISIT-gt.xlsx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92/MUST_VISIT_gold.xlsx",
+          "type": "cloud_file"
+        },
+        "func": "compare_table",
+        "options": {
+          "rules": [
+            {
+              "rules": [
+                {
+                  "range": [
+                    "A1:A6"
+                  ],
+                  "type": "exact_match"
+                },
+                {
+                  "ignore_case": true,
+                  "ignore_chars": " ,/-",
+                  "normalization": [
+                    [
+                      "Rd",
+                      "Road"
+                    ],
+                    [
+                      "St",
+                      "Street"
+                    ]
+                  ],
+                  "range": [
+                    "B1:B6"
+                  ],
+                  "threshold": 55,
+                  "type": "fuzzy_match"
+                },
+                {
+                  "allow_missing_expected": true,
+                  "range": [
+                    "C1:C6"
+                  ],
+                  "type": "phone_match"
+                },
+                {
+                  "range": [
+                    "D1:D6"
+                  ],
+                  "type": "domain_match"
+                }
+              ],
+              "sheet_idx0": "RNSheet1",
+              "sheet_idx1": "ENSheet1",
+              "type": "sheet_fuzzy"
+            }
+          ]
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "MUST_VISIT.xlsx - LibreOffice Calc"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 1.0
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "MUST_VISIT.xlsx",
+          "path": "/home/user/Desktop/MUST_VISIT.xlsx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "d1acdb87-bb67-4f30-84aa-990e56a09c92",
+      "instruction": "Hello! I'm eagerly planning a culinary adventure to Hong Kong and have curated a list of must-visit restaurants that I've been longing to explore. However, I could use some assistance in compiling a few essential details about these establishments. Would you be so kind as to help me out? It would be fantastic if you could search for these restaurants on Google Maps. I'm particularly interested in obtaining their addresses, any available websites, and contact phone numbers. If you could gather this information and input it into my form file, I would be immensely grateful. Many thanks in advance!",
+      "possibility_of_env_change": "low",
+      "proxy": true,
+      "related_apps": [
+        "os",
+        "chrome",
+        "libreoffice_calc"
+      ],
+      "snapshot": "libreoffice_calc",
+      "source": "authors",
+      "trajectory": "trajectories/d1acdb87-bb67-4f30-84aa-990e56a09c92"
+    }
+  },
+  "deec51c9-3b1e-4b9e-993c-4776f20e8bb2": {
+    "app": "multi_apps",
+    "id": "deec51c9-3b1e-4b9e-993c-4776f20e8bb2",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/New Large Language Models.xlsx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/deec51c9-3b1e-4b9e-993c-4776f20e8bb2/New%20Large%20Language%20Models.xlsx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/New Large Language Models.xlsx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "New Large Language Models Gold.xlsx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/deec51c9-3b1e-4b9e-993c-4776f20e8bb2/New%20Large%20Language%20Models%20Gold.xlsx",
+          "type": "cloud_file"
+        },
+        "func": "compare_table",
+        "options": {
+          "rules": [
+            {
+              "rules": [
+                {
+                  "range": [
+                    "C2:C3"
+                  ],
+                  "type": "exact_match"
+                },
+                {
+                  "ignore_case": true,
+                  "range": [
+                    "A2:A3",
+                    "B2:B3"
+                  ],
+                  "threshold": 90,
+                  "type": "fuzzy_match"
+                }
+              ],
+              "sheet_idx0": "RNSheet1",
+              "sheet_idx1": "ENSheet1",
+              "type": "sheet_fuzzy"
+            }
+          ]
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "New Large Language Models.xlsx - LibreOffice Calc"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; pyautogui.hotkey(\"ctrl\", \"s\");"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 1.0
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "New Large Language Models.xlsx",
+          "path": "/home/user/Desktop/New Large Language Models.xlsx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "deec51c9-3b1e-4b9e-993c-4776f20e8bb2",
+      "instruction": "Find a paper list of all the new foundation language models issued on 11st Oct. 2023 via arxivdaily, and organize it into the sheet I opened.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_calc",
+        "chrome",
+        "os"
+      ],
+      "snapshot": "libreoffice_calc",
+      "source": "authors",
+      "trajectory": "trajectories/deec51c9-3b1e-4b9e-993c-4776f20e8bb2"
+    }
+  },
+  "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397": {
+    "app": "thunderbird",
+    "id": "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/thunderbird-profile.tar.gz",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "command": [
+              "tar",
+              "-xzv",
+              "-f",
+              "/home/user/Desktop/thunderbird-profile.tar.gz",
+              "-C",
+              "/home/user/"
+            ]
+          },
+          "type": "execute"
+        },
+        {
+          "parameters": {
+            "command": [
+              "/usr/bin/thunderbird"
+            ]
+          },
+          "type": "launch"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "rules": {
+            "unexpect": [
+              {
+                "url": "imap://outlook.office365.com",
+                "user": "anonym-x2024@outlook.com"
+              }
+            ]
+          },
+          "type": "rule"
+        },
+        "func": "check_csv",
+        "postconfig": [
+          {
+            "parameters": {
+              "files": [
+                {
+                  "path": "/home/user/Desktop/firefox_decrypt.py",
+                  "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397/firefox_decrypt.py"
+                }
+              ]
+            },
+            "type": "download"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python3",
+                "/home/user/Desktop/firefox_decrypt.py",
+                "/home/user/.thunderbird",
+                "-n",
+                "-c",
+                "2",
+                "-f",
+                "csv",
+                "-d",
+                ","
+              ],
+              "stdout": "thunderbird-accounts.csv"
+            },
+            "type": "execute"
+          }
+        ],
+        "result": {
+          "path": "thunderbird-accounts.csv",
+          "type": "cache_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+      "instruction": "Help me to remove the account \"anonym-x2024@outlook.com\"",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "thunderbird"
+      ],
+      "snapshot": "thunderbird",
+      "source": "https://www.wikihow.com/Remove-an-Email-Account-from-Thunderbird",
+      "trajectory": "trajectories/"
+    }
+  },
+  "eb303e01-261e-4972-8c07-c9b4e7a4922a": {
+    "app": "multi_apps",
+    "id": "eb303e01-261e-4972-8c07-c9b4e7a4922a",
+    "task": {
+      "config": [
+        {
+          "parameters": {
+            "files": [
+              {
+                "path": "/home/user/Desktop/lecture1-2021-with-ink.pptx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/eb303e01-261e-4972-8c07-c9b4e7a4922a/lecture1-2021-with-ink.pptx"
+              },
+              {
+                "path": "/home/user/Desktop/notes.docx",
+                "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/eb303e01-261e-4972-8c07-c9b4e7a4922a/notes.docx"
+              }
+            ]
+          },
+          "type": "download"
+        },
+        {
+          "parameters": {
+            "path": "/home/user/Desktop/lecture1-2021-with-ink.pptx"
+          },
+          "type": "open"
+        }
+      ],
+      "evaluator": {
+        "expected": {
+          "dest": "lecture1-2021-with-ink_Gold.pptx",
+          "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/eb303e01-261e-4972-8c07-c9b4e7a4922a/lecture1-2021-with-ink_Gold.pptx",
+          "type": "cloud_file"
+        },
+        "func": "compare_pptx_files",
+        "options": {
+          "examine_bullets": false,
+          "examine_shape": false
+        },
+        "postconfig": [
+          {
+            "parameters": {
+              "strict": true,
+              "window_name": "lecture1-2021-with-ink.pptx - LibreOffice Impress"
+            },
+            "type": "activate_window"
+          },
+          {
+            "parameters": {
+              "seconds": 5
+            },
+            "type": "sleep"
+          },
+          {
+            "parameters": {
+              "command": [
+                "python",
+                "-c",
+                "import pyautogui; import time; pyautogui.hotkey('ctrl', 's'); time.sleep(0.5);"
+              ]
+            },
+            "type": "execute"
+          },
+          {
+            "parameters": {
+              "seconds": 0.5
+            },
+            "type": "sleep"
+          }
+        ],
+        "result": {
+          "dest": "lecture1-2021-with-ink.pptx",
+          "path": "/home/user/Desktop/lecture1-2021-with-ink.pptx",
+          "type": "vm_file"
+        }
+      },
+      "fixed_ip": false,
+      "id": "eb303e01-261e-4972-8c07-c9b4e7a4922a",
+      "instruction": "Tomorrow, I'm scheduled to deliver a talk, and my PowerPoint slides and speaking notes are saved on the desktop. Help me insert my planned remarks for each slide into the \"note\" section of the PowerPoint as a reminder. I've completed this task for some slides; assist me in completing the remaining part.",
+      "possibility_of_env_change": "low",
+      "proxy": false,
+      "related_apps": [
+        "libreoffice_impress",
+        "libreoffice_writer"
+      ],
+      "snapshot": "libreoffice_impress",
+      "source": "authors",
+      "trajectory": "trajectories/eb303e01-261e-4972-8c07-c9b4e7a4922a"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+# Corrected evaluator-owned requirements for the pinned DeepCode runtime.
+# The public copied requirements.txt is translation-corrupted. This file is
+# used only for task-local environment preparation and is not mounted into a
+# Candidate workspace.
+aiofiles>=0.8.0
+aiohttp>=3.14.1
+anthropic>=0.40.0
+asyncio-mqtt
+google-genai
+httpx>=0.27.0
+json-repair>=0.30.0
+loguru>=0.7.0
+mcp>=1.29,<2
+mcp-server-git
+nest_asyncio
+openai>=1.55.0
+openapi
+pathlib2
+prompt_toolkit>=3.0.0
+pydantic-settings>=2.14.2
+pypdf>=6.14.2
+PyYAML>=6.0
+reportlab>=3.5.0
+rich>=13.0.0
+pytest>=8.0
+pytest-asyncio>=0.23

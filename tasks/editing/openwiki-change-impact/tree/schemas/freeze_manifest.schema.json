@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "source_submission", "source_submission_id", "accepted_submission_count", "max_dev_rounds", "accepted_candidate_digests", "candidate_digest", "repository_digest", "repository_digest_algorithm", "candidate_path", "builder_session_id", "feedback_digest", "feedback_consumed", "feedback_chain_complete", "frozen_at", "hidden_started_at", "hidden_allowed", "dev_evaluated", "immutable_repository", "credential_mounted_to_candidate", "hidden_case_inventory"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "source_submission": {"type": "integer", "minimum": 1, "maximum": 10},
+    "source_submission_id": {"type": "string", "minLength": 1},
+    "accepted_submission_count": {"type": "integer", "minimum": 1, "maximum": 10},
+    "max_dev_rounds": {"type": "integer", "minimum": 1, "maximum": 10},
+    "accepted_candidate_digests": {"type": "array", "minItems": 1, "maxItems": 10, "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "candidate_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "repository_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "repository_digest_algorithm": {"const": "sha256-tree-v1"},
+    "candidate_path": {"type": "string", "minLength": 1},
+    "builder_session_id": {"type": "string", "minLength": 1},
+    "feedback_digest": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "feedback_consumed": {"const": true},
+    "feedback_chain_complete": {"const": true},
+    "frozen_at": {"type": "string", "minLength": 1},
+    "hidden_started_at": {"const": null},
+    "hidden_allowed": {"const": true},
+    "dev_evaluated": {"const": true},
+    "immutable_repository": {"const": true},
+    "credential_mounted_to_candidate": {"const": false},
+    "hidden_case_inventory": {"type": "array", "const": ["test_001", "test_002", "test_003", "test_004", "test_005", "test_006"]}
+  }
+}

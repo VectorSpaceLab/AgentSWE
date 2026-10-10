@@ -1,0 +1,87 @@
+{
+  "schema_version": "agentswe-edit-formal-readiness-gate-v2",
+  "profile": "single-dev-two-round-hidden-smoke-v1",
+  "score_threshold": null,
+  "generated_at": "2026-09-30T20:24:12.096567+00:00",
+  "ready_count": 3,
+  "expected_count": 10,
+  "formal_ready": false,
+  "source_unchanged": true,
+  "source_differences": [],
+  "tasks": [
+    {
+      "task": "claude",
+      "readiness": "REPAIR",
+      "errors": [
+        "current v2 evaluator-owned two-round readiness evidence missing or incomplete",
+        "v2 evidence rejected: current source/contract/registry/task binding mismatch"
+      ]
+    },
+    {
+      "task": "aider",
+      "readiness": "READY",
+      "errors": []
+    },
+    {
+      "task": "openhands",
+      "readiness": "REPAIR",
+      "errors": [
+        "current v2 evaluator-owned two-round readiness evidence missing or incomplete",
+        "v2 evidence rejected: current source/contract/registry/task binding mismatch"
+      ]
+    },
+    {
+      "task": "openclaw",
+      "readiness": "REPAIR",
+      "errors": [
+        "current v2 evaluator-owned two-round readiness evidence missing or incomplete",
+        "v2 evidence rejected: current source/contract/registry/task binding mismatch"
+      ]
+    },
+    {
+      "task": "codex",
+      "readiness": "REPAIR",
+      "errors": [
+        "current v2 evaluator-owned two-round readiness evidence missing or incomplete",
+        "v2 evidence rejected: current source/contract/registry/task binding mismatch"
+      ]
+    },
+    {
+      "task": "ai-scientist",
+      "readiness": "READY",
+      "errors": []
+    },
+    {
+      "task": "deepcode",
+      "readiness": "REPAIR",
+      "errors": [
+        "current v2 evaluator-owned two-round readiness evidence missing or incomplete",
+        "admission source drift"
+      ]
+    },
+    {
+      "task": "deeptutor",
+      "readiness": "READY",
+      "errors": []
+    },
+    {
+      "task": "dyad",
+      "readiness": "REPAIR",
+      "errors": [
+        "current v2 evaluator-owned two-round readiness evidence missing or incomplete",
+        "v2 evidence rejected: current source/contract/registry/task binding mismatch"
+      ]
+    },
+    {
+      "task": "openwiki",
+      "readiness": "REPAIR",
+      "errors": [
+        "current v2 evaluator-owned two-round readiness evidence missing or incomplete",
+        "admission source drift"
+      ]
+    }
+  ],
+  "formal_launch_authorized_by_gate": false,
+  "formal_launch_authorized": false,
+  "formal_evaluation_started": false
+}

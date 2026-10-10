@@ -1,0 +1,13 @@
+{
+  "schema_version": "agentswe-deeptutor-protocol-lock/v1",
+  "builder_model": "deepseek-flash",
+  "builder_reasoning_effort": "max",
+  "lower_model": "deepseek-flash",
+  "lower_reasoning_effort": "high",
+  "transport": "evaluator-owned-responses-broker",
+  "candidate_credential": "broker-only-placeholder",
+  "public_cases": ["dev_001", "dev_002"],
+  "hidden_cases": ["test_001", "test_002", "test_003", "test_004", "test_005", "test_006"],
+  "lifecycle": ["accepted_candidate_1..10", "dev_001+dev_002_after_each_acceptance", "feedback_after_each_acceptance", "freeze_latest_after_builder_exit_or_max_rounds", "hidden_after_freeze"],
+  "hidden_requires_freeze": true
+}

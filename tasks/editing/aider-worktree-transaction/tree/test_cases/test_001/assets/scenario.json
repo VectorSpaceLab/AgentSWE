@@ -1,0 +1,1 @@
+{"schema_version":3,"repositories":["root","component-a","component-b"],"phase":"participant_ref_prepared","max_workers":3,"admission":"overlap-block-disjoint-admit","takeover":true}

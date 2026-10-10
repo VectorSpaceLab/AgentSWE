@@ -1,0 +1,55 @@
+Subject: [PATCH 0007] Docker: no resources-override cpus for a main service whose task compose sets cpu_quota/cpu_period
+
+Applies on top of profile 'pristine'.
+
+--- a/harbor/environments/docker/docker.py
++++ b/harbor/environments/docker/docker.py
+@@ -452,6 +452,31 @@
+         self._mounts_compose_temp_dir = tempfile.TemporaryDirectory()
+         path = Path(self._mounts_compose_temp_dir.name) / "docker-compose-mounts.json"
+         return write_mounts_compose_file(path, list(self._mounts))
++
++    def _task_compose_sets_cpu_quota(self) -> bool:
++        """AgentSWE 0007: whether a task-authored compose file gives ``main`` its own
++        ``cpu_quota`` or ``cpu_period``.
++
++        The resources override expresses a CPU limit as ``cpus``. Docker Compose
++        releases that map ``cpus`` to NanoCPUs (2.40 does; v2.5.0 ignored the
++        field) send it next to the task's CpuPeriod, and the Docker daemon refuses
++        the container ("Conflicting options: Nano CPUs and CPU Period cannot both
++        be set"). A task that sets its own quota/period keeps exactly that limit.
++        """
++        compose_paths = []
++        if self._environment_docker_compose_path.exists():
++            compose_paths.append(self._environment_docker_compose_path)
++        compose_paths.extend(self.extra_docker_compose_paths)
++        for compose_path in compose_paths:
++            try:
++                document = yaml.safe_load(Path(compose_path).read_text())
++            except (OSError, yaml.YAMLError):
++                continue
++            services = document.get("services") if isinstance(document, dict) else None
++            main = services.get(MAIN_SERVICE_NAME) if isinstance(services, dict) else None
++            if isinstance(main, dict) and ("cpu_quota" in main or "cpu_period" in main):
++                return True
++        return False
+ 
+     def _write_resources_compose_file(self) -> Path | None:
+         """Write the trial resource policy compose override."""
+@@ -461,12 +486,15 @@
+             Path(self._resources_compose_temp_dir.name)
+             / f"{self.session_id}-{RESOURCES_COMPOSE_NAME}"
+         )
++        cpu_limit = self._resource_limit_value("cpu", auto_mode=ResourceMode.LIMIT)
++        if cpu_limit is not None and self._task_compose_sets_cpu_quota():
++            cpu_limit = None  # AgentSWE 0007: the task's cpu_quota/cpu_period is the limit
+         return write_resources_compose_file(
+             path,
+             cpu_request=self._resource_request_value(
+                 "cpu", auto_mode=ResourceMode.LIMIT
+             ),
+-            cpu_limit=self._resource_limit_value("cpu", auto_mode=ResourceMode.LIMIT),
++            cpu_limit=cpu_limit,
+             memory_request_mb=self._resource_request_value(
+                 "memory", auto_mode=ResourceMode.LIMIT
+             ),

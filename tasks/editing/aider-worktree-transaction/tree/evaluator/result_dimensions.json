@@ -1,0 +1,7 @@
+{
+  "transaction_outcome_correctness": 30,
+  "atomicity_and_ownership_integrity": 25,
+  "exactly_once_and_idempotency": 20,
+  "evidence_binding_and_provenance": 15,
+  "fail_closed_honesty": 10
+}

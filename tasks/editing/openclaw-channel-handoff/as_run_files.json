@@ -1,0 +1,35 @@
+{
+  "schema_version": "agentswe-as-run-files/v1",
+  "files": [
+    {
+      "path": "tasks/editing/openclaw-channel-handoff/tree/dev_cases/dev_001/input.md.pre-0920-hardening",
+      "sha256": "390a820e0188227ebf2195619de4595fd80b247c4ac18462bbefb6d019569478",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openclaw-channel-handoff/tree/dev_cases/dev_002/input.md.pre-0920-hardening",
+      "sha256": "7c604409a994a50f3d437cd6c3154790f02cdc9ba0e4187511bbc9f05248ee5f",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openclaw-channel-handoff/tree/input/02_interface_and_delivery.md.pre-0920-hardening",
+      "sha256": "e08a04497a55e56870de6e42a7905a45b4ba993bd7099160c44e38db99f0f1a4",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openclaw-channel-handoff/tree/input/03_requirements_and_constraints.md.pre-0920-hardening",
+      "sha256": "91111e40ae2704bb92c0746bc8902c9b60b7ee1a98b2e2410b7f02edd78ef949",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openclaw-channel-handoff/tree/input/03_requirements_and_constraints.md.pre-0921-case-clock",
+      "sha256": "fa3b833723e75225d293a6bd4cfdde03f78d6ab5b74473c24aee3f89722d1a4b",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/openclaw-channel-handoff/tree/input/04_resources.md.pre-0921-case-clock",
+      "sha256": "3918540161c2f9975ab880099443778a6afa85b59ade92c29450adc6105684b8",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    }
+  ]
+}

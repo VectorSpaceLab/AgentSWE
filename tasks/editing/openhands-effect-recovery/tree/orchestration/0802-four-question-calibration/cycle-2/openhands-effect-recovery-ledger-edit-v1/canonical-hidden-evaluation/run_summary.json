@@ -1,0 +1,20 @@
+{
+  "valid": false,
+  "validity": {},
+  "commands": [],
+  "delivery_reports": {},
+  "cases": {},
+  "score": {
+    "mean_case_score": 0,
+    "zero_rule": "validity gate"
+  },
+  "errors": [
+    {
+      "type": "HarnessError",
+      "message": "solution.patch is missing, empty, or oversized"
+    }
+  ],
+  "duration_seconds": 0.001,
+  "peak_tree_memory_mb": 0,
+  "memory_limit_mb": 8192
+}

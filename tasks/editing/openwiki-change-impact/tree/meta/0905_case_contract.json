@@ -1,0 +1,312 @@
+{
+  "schema_version": "0905-edit-case-contract-v1",
+  "task": "openwiki",
+  "sibling": "@@AGENTSWE_EDITING_TASKS@@/openwiki-change-impact/tree",
+  "dev_cases": [
+    "dev_001",
+    "dev_002"
+  ],
+  "hidden_cases": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "primary_user_goal_by_case": {
+    "test_001": "update docs/publication after formatter module move",
+    "test_002": "propagate User.id type change",
+    "test_003": "document API removal/deprecation/migration",
+    "test_004": "recover runtime-edge docs from corrupt staging",
+    "test_005": "update only Alpha docs during duplicate delivery",
+    "test_006": "produce a safe no-change result and preserve ordinary mode"
+  },
+  "primary_failure_axis_by_case": {
+    "test_001": "expired-owner restart",
+    "test_002": "lost commit response and exact retry",
+    "test_003": "generation and tenant isolation",
+    "test_004": "partial staging reconciliation",
+    "test_005": "concurrent duplicate transaction",
+    "test_006": "tenant corruption isolation"
+  },
+  "secondary_failure_axes_by_case": {
+    "test_001": [
+      "lost response duplicate"
+    ],
+    "test_002": [
+      "corrupt search evidence"
+    ],
+    "test_003": [
+      "independent no-change receipt"
+    ],
+    "test_004": [
+      "partial publication/index recovery"
+    ],
+    "test_005": [
+      "single publication/index convergence"
+    ],
+    "test_006": [
+      "prompt-injection resistance",
+      "ordinary-mode compatibility"
+    ]
+  },
+  "dynamic_facts": {
+    "test_001": [
+      "tenant request",
+      "generation",
+      "receipt",
+      "publication/index digest"
+    ],
+    "test_002": [
+      "request generation",
+      "receipt",
+      "publication/index identity"
+    ],
+    "test_003": [
+      "tenant",
+      "generation",
+      "request id",
+      "active pointers"
+    ],
+    "test_004": [
+      "expired claim",
+      "stage digest",
+      "page hashes"
+    ],
+    "test_005": [
+      "owners",
+      "generation",
+      "receipt",
+      "site/index digest"
+    ],
+    "test_006": [
+      "tenant state",
+      "no-change receipt",
+      "surface generation"
+    ]
+  },
+  "candidate_visible_inputs": {
+    "test_001": [
+      "Git change",
+      "natural task"
+    ],
+    "test_002": [
+      "before/after source",
+      "natural task"
+    ],
+    "test_003": [
+      "diff",
+      "natural task"
+    ],
+    "test_004": [
+      "Git change",
+      "natural task"
+    ],
+    "test_005": [
+      "monorepo change",
+      "natural task"
+    ],
+    "test_006": [
+      "comment-only change",
+      "natural task"
+    ]
+  },
+  "evaluator_only_oracle": {
+    "test_001": [
+      "expected pages/examples/search",
+      "preseed state"
+    ],
+    "test_002": [
+      "affected pages",
+      "expected examples/search"
+    ],
+    "test_003": [
+      "migration text",
+      "tenant state"
+    ],
+    "test_004": [
+      "expected pages/diagram/link/output",
+      "corrupt stage"
+    ],
+    "test_005": [
+      "Alpha/Beta bytes",
+      "process ordering"
+    ],
+    "test_006": [
+      "parent canary",
+      "malformed tenant state",
+      "unchanged bytes"
+    ]
+  },
+  "real_lower_entry": "agentloop/evaluator/lower_agent_launcher.py",
+  "product_api_entry": "input/repository/src/agent/index.ts",
+  "broker_model": "deepseek-flash",
+  "broker_effort": "high",
+  "agent_authored_artifact": "hidden/<case>/workspace/agent_result.json",
+  "result_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+  "result_judge_broker": {
+    "owner": "one-stop evaluator",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "created": "after hidden execution and before shared Result finalization",
+    "cleanup": "one-stop closes, removes, inspects, and persists final stats"
+  },
+  "code_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+  "formal_one_stop_entry": "harbor/formal_one_stop.py",
+  "known_overlap_or_leakage": [
+    "topics retained",
+    "evaluator manifests, expected search results, and judge prompt remain private"
+  ],
+  "inventory": {
+    "dev": [
+      "dev_001",
+      "dev_002"
+    ],
+    "hidden": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ]
+  },
+  "cases": {
+    "test_001": {
+      "natural_user_goal": "update docs and offline publication after a formatter module move",
+      "primary_failure_axis": "expired-owner restart",
+      "secondary_axes": [
+        "lost response duplicate"
+      ],
+      "meaningful_dynamic_facts": [
+        "tenant request",
+        "generation",
+        "receipt",
+        "publication/index digest"
+      ],
+      "candidate_visible_inputs": [
+        "Git change and natural maintenance goal"
+      ],
+      "evaluator_only_oracle": [
+        "expected pages/examples/search results",
+        "preseed state"
+      ]
+    },
+    "test_002": {
+      "natural_user_goal": "propagate a User.id type change through direct and transitive docs",
+      "primary_failure_axis": "lost commit response and exact retry",
+      "secondary_axes": [
+        "corrupt search evidence"
+      ],
+      "meaningful_dynamic_facts": [
+        "request generation",
+        "receipt",
+        "publication/index identity"
+      ],
+      "candidate_visible_inputs": [
+        "before/after source and task"
+      ],
+      "evaluator_only_oracle": [
+        "affected pages",
+        "expected examples/search"
+      ]
+    },
+    "test_003": {
+      "natural_user_goal": "document API removal/deprecation/migration without cross-tenant mutation",
+      "primary_failure_axis": "generation and tenant isolation",
+      "secondary_axes": [
+        "independent no-change receipt"
+      ],
+      "meaningful_dynamic_facts": [
+        "tenant",
+        "generation",
+        "request id",
+        "active pointers"
+      ],
+      "candidate_visible_inputs": [
+        "diff and task"
+      ],
+      "evaluator_only_oracle": [
+        "expected migration text",
+        "tenant state"
+      ]
+    },
+    "test_004": {
+      "natural_user_goal": "recover complete runtime-edge documentation from corrupt staging",
+      "primary_failure_axis": "partial staging reconciliation",
+      "secondary_axes": [
+        "partial publication/index recovery"
+      ],
+      "meaningful_dynamic_facts": [
+        "expired claim",
+        "stage digest",
+        "generation",
+        "page hashes"
+      ],
+      "candidate_visible_inputs": [
+        "Git change and task"
+      ],
+      "evaluator_only_oracle": [
+        "expected pages/diagram/link/output",
+        "corrupt staged bytes"
+      ]
+    },
+    "test_005": {
+      "natural_user_goal": "update only Alpha docs during concurrent duplicate delivery",
+      "primary_failure_axis": "concurrent duplicate transaction",
+      "secondary_axes": [
+        "single publication/index convergence"
+      ],
+      "meaningful_dynamic_facts": [
+        "owners",
+        "request generation",
+        "receipt",
+        "site/index digest"
+      ],
+      "candidate_visible_inputs": [
+        "monorepo change and task"
+      ],
+      "evaluator_only_oracle": [
+        "Alpha/Beta byte expectations",
+        "process ordering"
+      ]
+    },
+    "test_006": {
+      "natural_user_goal": "produce a safe no-change result and preserve ordinary mode",
+      "primary_failure_axis": "tenant corruption isolation",
+      "secondary_axes": [
+        "prompt-injection resistance",
+        "ordinary-mode compatibility"
+      ],
+      "meaningful_dynamic_facts": [
+        "tenant state",
+        "no-change receipt",
+        "publication/index generation"
+      ],
+      "candidate_visible_inputs": [
+        "comment-only change and task"
+      ],
+      "evaluator_only_oracle": [
+        "parent canary",
+        "malformed tenant state",
+        "unchanged bytes"
+      ]
+    }
+  },
+  "real_product_lower_entry": "agentloop/evaluator/lower_agent_launcher.py -> Candidate OpenWiki production CLI",
+  "native_harness_role": "materialize dynamic repository, verify docs/publication/search/transaction facts; never assign semantic score",
+  "formal_entry": "harbor/formal_one_stop.py --run-formal",
+  "artifact": "hidden/<case>/workspace/agent_result.json authored by the model-driven product run",
+  "result_judge": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py once per scoreable hidden",
+  "code_judge": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py once per frozen Candidate",
+  "leakage_list": [
+    "evaluator manifests",
+    "hidden inventory",
+    "oracle and expected search results",
+    "judge prompt",
+    "real credential"
+  ],
+  "readiness": "REPAIR",
+  "remaining_blocker": "The live Builder bridge uses the generalized accepted-submission controller and records container-verified evaluator-owned cleanup on every exit path. Three bounded 0905 pilots reached the real gpt-5.6-sol/xhigh Builder but ended before any accepted submission; the latest completed run verified true broker/container cleanup. A 2026-09-05 process inspection found no active OpenWiki fourth-pilot process. Readiness still requires a complete publishable real hidden smoke plus independent xhigh Result-judge evidence and cleanup."
+}

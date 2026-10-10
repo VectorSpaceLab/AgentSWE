@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "policy_id": "public-agentloop-0920",
+  "policy_epoch": 3,
+  "previous_policy_snapshot_digest": null,
+  "revision": "public-agentloop-v4",
+  "mode": "enforce",
+  "default_decision": "deny",
+  "tools": {
+    "Read": "allow",
+    "Write": "allow",
+    "Bash": "allow"
+  },
+  "paths": {
+    "allow": [
+      "src/**",
+      "tmp/**"
+    ],
+    "deny": [
+      ".env",
+      ".env.*",
+      "secrets/**"
+    ]
+  },
+  "commands": {
+    "allow": [
+      "printf",
+      "pytest",
+      "pwd"
+    ],
+    "deny": [
+      "rm",
+      "curl"
+    ],
+    "audit_only": [
+      "pwd"
+    ],
+    "rewrites": [
+      {
+        "command": "printf raw-status",
+        "replacement": "printf offline-status"
+      }
+    ]
+  },
+  "network": {
+    "allow_hosts": [],
+    "deny_hosts": [
+      "blocked.test"
+    ]
+  },
+  "mcp": {},
+  "integrity": {
+    "protected_paths": [
+      "src/policy-pin.json"
+    ],
+    "seal_plugin_files": true
+  },
+  "reservation": {
+    "max_inflight": 16,
+    "max_session_inflight": 16,
+    "lease_seconds": 900,
+    "reclaim_expired": true
+  },
+  "approval": {
+    "threshold": 2,
+    "ticket_seconds": 600,
+    "principals": [
+      "release",
+      "security"
+    ],
+    "tools": [
+      "Write"
+    ]
+  }
+}

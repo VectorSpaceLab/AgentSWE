@@ -1,0 +1,1 @@
+{"dataset":"patients-mini","features":["age","signal"],"split_id":"patient-split-A","seed":3,"epochs":5}

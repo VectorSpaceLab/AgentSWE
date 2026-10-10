@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "20-edit-openwiki-change-impact-agentloop-v1",
+  "owner": "OWNER=owner-20",
+  "topic": "OpenWiki change impact",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/20-edit-openwiki-change-impact",
+  "authoritative_manifest_source_digest": "87dea0aea5c019f4a37799587b1eed60e313e8dcca53a67f5feba11fd42229b3",
+  "authoritative_native_input_repository_digest": "092844ed148d028bf7205ce5d98aff2a77ff4d80842326ab249e7bc5182bcc68",
+  "paper_as_run_native_input_repository_digest": "9f89b2c56a072f2e5c63d3b60bd6e7c7e9f56861ee1500e0925603ab938e1160",
+  "release_source_language": "en-upstream",
+  "authoritative_upstream_commit": "630eb9ec3fa22a4bed2d347fc3ea3a6a3bd22abc",
+  "authoritative_source_read_only": true,
+  "reference_staging_read_only": "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2",
+  "legacy_formal_runs_read_only": true,
+  "shared_framework_read_only": true,
+  "main_manifest_read_only": true,
+  "migration_is_additive": true,
+  "generated_at": "2026-09-01",
+  "phase": "A",
+  "status": "PARTIAL",
+  "status_reason": "No real lower-agent broker call was started in Phase A; static protocol and self-tests do not establish runtime readiness."
+}

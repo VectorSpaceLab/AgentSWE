@@ -1,0 +1,1 @@
+{"metric":"f1","scale":"fraction","rows":[{"seed":1,"baseline":0.70,"birch":0.73,"status":"complete"},{"seed":2,"baseline":0.71,"birch":0.72,"status":"complete"},{"seed":3,"baseline":0.69,"birch":0.68,"status":"complete"},{"seed":4,"baseline":0.72,"birch":0.70,"status":"complete"},{"seed":5,"baseline":0.70,"birch":0.705,"status":"complete"}]}

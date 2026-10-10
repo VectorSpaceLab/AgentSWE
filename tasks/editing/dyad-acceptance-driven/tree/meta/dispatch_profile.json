@@ -1,0 +1,24 @@
+{
+  "distinct_candidate_digest": true,
+  "exact_feedback_digest": true,
+  "formal_scores_claimed": false,
+  "hidden_cases_after_freeze": [
+    "test_001"
+  ],
+  "legacy_selector_absent_behavior": "unchanged legacy DEV_CASES=(dev_001,dev_002), max_dev_rounds caller range 1..10, formal --run-formal hidden inventory test_001..test_006",
+  "max_dev_rounds": 2,
+  "mode": "--pilot",
+  "n_concurrent": 1,
+  "production_deployed": false,
+  "profile": "single-dev-two-round-hidden-smoke-v1",
+  "provider_free_staging": true,
+  "public_cases": [
+    "dev_001"
+  ],
+  "registry_or_gate_written": false,
+  "required_valid_rounds": 2,
+  "same_builder_session": true,
+  "schema_version": "agentswe-dyad-dispatch-profile-v1",
+  "selector": "--readiness-profile single-dev-two-round-hidden-smoke-v1",
+  "task": "dyad"
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "agentswe-claude-issued-world-audit/v1",
+  "case_inventory": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "source_hashes": {
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_001.json": "f0c6498305d2aa7d8f381ce63624778a911a7806a0c39ff9e29fe17acb23e2b7",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_001.oracle.json": "ad13eae39674fd0166ac7e41a5b1d37402c33ef6a9647613fbfa78fd154bbb67",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_002.json": "7b2cdf408a96eb6acbd564614f178407302ff09af21eefd5fa3e5a36582fa8c0",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_002.oracle.json": "8df5b3f0093ecf4e1ecef173cdaca9caae0182f8068a351502f7dcde6fecc78c",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_003.json": "e1e19e0601975499152ed859f8f104174087e58f24ff48adbb25887ed14a01f3",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_003.oracle.json": "4d3c32470f90367b843c140332db580a2a5e46922a82044ef97df35f4c57ff59",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_004.json": "9ca3f72e3ba75106a754a2e3095fcf82b4dcb10f765160e1bc56aabd3fb45f35",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_004.oracle.json": "c759a6cbe40f93aab587e5dbd7203014a999fae65eedd29fa54166c51206ab98",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_005.json": "7d03da74f86108bafe534ab2d259499175be2e99ec552b402df655519be0d510",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_005.oracle.json": "8c80deb6ed50c33c3b711f1657434aeae2db6864bcd0b7733a84c9cc5a1ea3c0",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_006.json": "bb0822112265a373cb9e2cb386641a51eaefa44dc9ec74978691f6c80230f126",
+    "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/11-claude-round2/claude-003-draft/test_006.oracle.json": "0f7144f48b751260b68884bb1f535ec7c8c8a388a623484569ecc69f376b277a"
+  },
+  "world_fingerprints": {
+    "test_001": "35d9826a08712abca9a32590bed168144c210c3c75bd93e9fcdd5bfe1b7950b1",
+    "test_002": "29b782b9c9691c5eacd89888587ad003d3b9a1b73367af54214fbab5de9ecb87",
+    "test_003": "1bf0a5cb695bd13f34b812c2d41d8955679b8143d7b3df689d672a4e083bf4eb",
+    "test_004": "9e3cc6e931dd6d2e3474a671b52cd83c1672e9bb4cac36e3693e0923016a0aba",
+    "test_005": "5574968c102269e30c3b80db30b7cd93aa4f5c126729bb7d6700a07d20312d84",
+    "test_006": "df381111831315ff808be65afba5b03a532e0ed2c42ae031d0d26d48fe876a76"
+  },
+  "changes": [
+    "remove private case_contract from visible payload",
+    "fresh paired nonce and oracle digest",
+    "test_002 and test_005 establish disclosed historical PreToolUse through the edited hook",
+    "0919 hardening: adversarial worlds with a documented receipt-contract oracle"
+  ],
+  "provider_calls": 0,
+  "formal_result_publishable": false,
+  "authority_branches": {
+    "test_001": 0,
+    "test_002": 0,
+    "test_003": 0,
+    "test_004": 0,
+    "test_005": 0,
+    "test_006": 0
+  },
+  "fixture_authority": "only initial historical events; no evaluator-written recovery state or answer",
+  "tests_executed": false,
+  "oracle_mounted_to_candidate": false
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": "0905-edit-changed-files-v1",
+  "task": "deeptutor",
+  "files": [
+    "agentloop/two_round_controller.py",
+    "agentloop/lower_agent_entry.py",
+    "agentloop/run_hidden.py",
+    "agentloop/responses_client_adapter.py",
+    "agentloop/self_test.py",
+    "agentloop/sitecustomize.py",
+    "agentloop/protocol_lock.json",
+    "schemas/freeze_manifest.schema.json",
+    "tests/test_agentloop_runtime.py",
+    "evaluator/dev_lifecycle.py",
+    "evaluator/formal_axes.py",
+    "evaluator/formal_finalize.py",
+    "evaluator/tests/test_0905_repair.py",
+    "harbor/formal_one_stop.py",
+    "harbor/one_stop_contract.py",
+    "meta/0905_case_contract.json",
+    "meta/0905_changed_files.json",
+    "meta/0905_migration_note.md",
+    "input/02_interface_and_delivery.md",
+    "input/03_requirements_and_constraints.md",
+    "input/05_mastery_tool_contract.md",
+    "dev_cases/dev_001/input.md",
+    "dev_cases/dev_002/input.md",
+    "test_cases/test_001/input.md",
+    "test_cases/test_002/input.md",
+    "test_cases/test_003/input.md",
+    "test_cases/test_004/input.md",
+    "test_cases/test_005/input.md",
+    "test_cases/test_006/input.md",
+    "delivery/solution.patch",
+    "delivery/edit_report.json",
+    "provenance_manifest.json"
+  ],
+  "provider_calls": 80,
+  "heavy_containers_started": true,
+  "readiness": "REPAIR",
+  "repair_delta": [
+    "case contract readiness is explicitly REPAIR until a current six-case hidden smoke satisfies the gate",
+    "formal one-stop owns the fresh xhigh Result-judge broker instead of requiring an external endpoint",
+    "cleanup attestation removes and inspects every broker container by current-run cidfile identity and preserves startup-failure receipts",
+    "formal axes use the evaluator-owned shared implementation instead of an implicit DeepCode sibling dependency",
+    "Result and Code axes collect independent errors and mixed broker failures remain infrastructure-invalid",
+    "lower-agent terminal artifact contract is explicit: the patched product must persist the exact model-final JSON at DEEPTUTOR_AGENT_RESULT; evaluator code only captures after process exit",
+    "hidden and formal validation require case-bound schema_version/case_id/status/summary/artifacts fields and reject malformed or wrong-case artifacts"
+    ,"the Candidate delivery patch now includes a product-side AgentLoop final-result writer at deeptutor/agents/chat/agent_loop.py; materialized patch application and product compilation pass",
+    "public Builder-facing mastery-tool contract now names the complete remediation/review/event/session/policy/snapshot/witness surface and the Builder instruction prioritizes implementing it; a five-tool Candidate is explicitly a capability gap"
+    ,"Builder instructions now require immediate submission of the smallest coherent surface-complete public slice after validation, deferring optional semantics to feedback-driven revisions to reduce oversized-turn timeout risk"
+    ,"Builder-only validation guidance now treats optional dependency import failures such as missing yaml as non-blocking; it directs syntax, registry-shape, and delivery checks to proceed while preserving dependency-complete lower-runtime validation"
+    ,"Builder delivery guidance now requires parser-compatible Git patch headers and a pre-submit path check after a real Builder produced an otherwise usable diff -ruN patch that the evaluator could not recognize"
+    ,"the shared evaluator-owned xhigh Builder broker now writes atomic run-local stats snapshots at startup and after each state transition, and the DeepTutor launcher supplies the stats-file path so interrupted orchestration retains call evidence"
+    ,"services-layer auxiliary product calls, including post-turn session-title generation, now use the same evaluator-owned Responses adapter as the main DeepTutor loop instead of issuing an unsupported Chat Completions request"
+    ,"non-consuming infrastructure retries now write each public lower execution to a unique candidate-and-submission-attempt directory, preserving prior evidence and preventing FileExistsError on the retry"
+    ,"a real medium diagnostic replay of the latest Builder-authored current-007 revision completed 10 of 10 broker calls with zero failures and produced a product-authored terminal artifact; it was not entered into the accepted-round ledger and did not freeze or run hidden cases"
+    ,"the current-009 pilot exposed and repaired a false source-audit gap for split mastery registries: the evaluator now scans all product-owned mastery Python modules, and the repaired pilot recorded 26 of 26 public tools, two valid dev_001 executions, and one valid post-freeze test_001 execution"
+  ]
+}

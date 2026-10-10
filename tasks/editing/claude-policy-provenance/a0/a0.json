@@ -1,0 +1,38 @@
+{
+ "task": "claude-policy-provenance",
+ "upstream": {
+  "repo": "https://github.com/anthropics/claude-code",
+  "commit": "7ef6eec9d9ba84ea6f233f26c45f1df5c5991843",
+  "git_tree": "b94f0d719094ec278d86e3b6a587d42a5f1ee68f",
+  "license": "LicenseRef-Anthropic-All-Rights-Reserved",
+  "redistribute_a0": false
+ },
+ "note": null,
+ "layers": {
+  "upstream_to_english_source": {
+   "added": 0,
+   "removed_from_upstream": 0,
+   "modified": 0,
+   "meaning": "English source package a0 == pinned upstream (subset for deeptutor); no local functional edits"
+  },
+  "english_source_to_asrun": {
+   "files": 106,
+   "summary": {
+    "doc/translated": 106
+   },
+   "meaning": "2026-08-19 machine translation of the package (0818-benchmark-cn) + any later edit; see private migration/zh-asrun-changes.json"
+  }
+ },
+ "language": {
+  "as_run": "zh (machine-translated docs/fixtures in a0)",
+  "functional_risk_files": [],
+  "functional_risk_count": 0
+ },
+ "evaluator_digest_pins_on_asrun_a0": [],
+ "files": {
+  "fetch": "fetch.sh",
+  "en_manifest": "en-upstream.sha256",
+  "subset": null,
+  "private_zh_asrun_dir": "migration/private/zh-asrun/claude-policy-provenance"
+ }
+}

@@ -1,0 +1,140 @@
+{
+  "id": "deepcode-claim-traceability",
+  "family": "editing",
+  "short": "deepcode",
+  "title": "DeepCode claim traceability",
+  "version": "17-edit-deepcode-claim-traceability-agentloop-v1",
+  "tier": "T1",
+  "lite": false,
+  "status": "runnable",
+  "runner": "editing_agentloop_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex"
+  ],
+  "envs": [
+    "deepcode-runtime-venv"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": true,
+    "systemd_delegation": true,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git",
+      "systemd-run"
+    ],
+    "disk_gb": 10
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 5,
+    "builder_session_sec": 18000,
+    "score": "Result only (Code axis skipped_by_policy)",
+    "runtime_model": "deepseek-flash/high",
+    "judge": "deepseek-flash/max, max_output_tokens 64000",
+    "early_stop_resample": "formal only, 1 extra logical request",
+    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+  },
+  "smoke": {
+    "profile": "single-dev-two-round-hidden-smoke-v1",
+    "accepted_dev_rounds": 2,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 28800,
+    "note": "this is the readiness/admission run; scores are not comparable"
+  },
+  "upstream": {
+    "repo": "https://github.com/HKUDS/DeepCode",
+    "commit": "69233821b5dbcf044eb17f91bca1b9c6b1d2fda5",
+    "git_tree": "7d824a3904c0d86f925a078c1e7b677f227fab0c",
+    "license": "MIT",
+    "redistribute_a0": false
+  },
+  "runner_config": {
+    "tree": "tree",
+    "legacy_tree_name": "17-edit-deepcode-claim-traceability-agentloop-v1",
+    "a0": {
+      "fetch": "a0/fetch.sh",
+      "dest": "tree/input/repository",
+      "lang_options": [
+        "en-upstream"
+      ],
+      "evaluator_digest_pins": [
+        [
+          "evaluator/harness/common.py",
+          "SOURCE_TREE_SHA256",
+          "cc1490ea633bfed752c25d5d89bfa8fd7aa95afb740029d81c94c9fd5fc60954",
+          "re-pinned to the en-upstream a0 (stable_tree_digest; also dev_cases/run_public.py); paper as-run zh a0 value 9e7f12af7d71ad0856186ed62359e7edabf0a64d7db497a0f5e1d5e6d8841182"
+        ],
+        [
+          "evaluator/code_identity_scope.py",
+          "BASELINE_DIGEST",
+          "3dfd73e7c9fad2d11f2276c240d25f420430fbbcf073e520648e5fac4f5a0693",
+          "NOT re-pinned: control/code_eval.py tree_digest of the paper zh-asrun a0 (en-upstream value 52fd31d679a2f1efb719673368d3cf63887a1e14a21ab3193ad9d91427af5387). Read only by prepare_code_evidence_scope when the retired Code axis is enabled (control/formal_axes_shared.py); no scoring or diagnostic path reaches it"
+        ]
+      ]
+    },
+    "hidden_issued": null,
+    "formal_extra_flags": [
+      "--python @@AGENTSWE_ENVS@@/deepcode-runtime-venv/bin/python"
+    ],
+    "task_environment": {},
+    "render_tokens": "see staging README: every @@AGENTSWE_*@@ token must be rendered to an absolute path at setup",
+    "harbor_profile": "site"
+  },
+  "language": {
+    "task_docs_as_run": "zh (machine translation of 2026-08-19 + later zh edits)",
+    "a0_as_run": "zh (machine-translated docs/fixtures in a0)",
+    "a0_functional_risk_files": 2,
+    "english_task_docs": "lang/en-backtranslation/ (zh->en back-translation made for the anonymous repo)",
+    "paper_as_run": {
+      "task_docs": "zh (machine translation of 2026-08-19 + later zh edits)",
+      "a0": "zh (machine-translated docs/fixtures in a0)"
+    },
+    "release_language": "en",
+    "release_task_docs": "English backtranslation under lang/en-backtranslation/ where present; native English otherwise",
+    "release_a0": "en-upstream",
+    "release_cjk_check": "tools/scan.py --release"
+  },
+  "paper": {
+    "columns": [
+      "DeepSeek-V4-Pro",
+      "GPT-5.6-Sol",
+      "GPT-5.5",
+      "DeepSeek-V4-Flash",
+      "Qwen3.6-35B-A3B"
+    ],
+    "result": [
+      32.67,
+      26.5,
+      41.33,
+      47.0,
+      0
+    ]
+  },
+  "notes": [
+    "Runnable: with deepseek-flash for every role, a readiness smoke completes two accepted dev rounds (round 2 frozen) and hidden test_001 Result 89 (scoreable), independent review 10/10, gate READY with source_unchanged; the release-provenance formal gate dry run passes.",
+    "Release change (2026-10-10): Docker 29 removes an exited or stopped --rm container asynchronously: for several seconds `docker inspect` still shows it and `docker rm -f` answers \"removal of container ... is already in progress\" (exit 1); Docker 24 has removed it by then. harbor/formal_one_stop.py remove_and_verify_broker records rm's stderr and, when rm answers \"already in progress\" (an --rm broker that exited by itself), waits up to 30 s for the container to be gone before deciding absent_after_cleanup. Any other rm refusal is judged as before, and a container still present after the wait is not absent. Seen with Docker 29.2.1.",
+    "Release change (2026-10-10): harbor/formal_one_stop.py exits 0 for a complete readiness smoke. Under a readiness binding the acceptance finalizer is skipped on purpose (the readiness judge smoke is the single judge evidence), but the exit status still required finalizer_exit == 0, so every complete, valid smoke exited 2 and `agentswe status` showed the unit as failed. A readiness smoke now succeeds when its hidden execution is complete, nothing in it is infrastructure-invalid and its readiness judge smoke completed; pilot and formal exit logic is unchanged. Scores are unaffected."
+  ]
+}

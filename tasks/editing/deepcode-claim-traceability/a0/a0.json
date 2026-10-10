@@ -1,0 +1,56 @@
+{
+ "task": "deepcode-claim-traceability",
+ "upstream": {
+  "repo": "https://github.com/HKUDS/DeepCode",
+  "commit": "69233821b5dbcf044eb17f91bca1b9c6b1d2fda5",
+  "git_tree": "7d824a3904c0d86f925a078c1e7b677f227fab0c",
+  "license": "MIT",
+  "redistribute_a0": false
+ },
+ "note": null,
+ "layers": {
+  "upstream_to_english_source": {
+   "added": 0,
+   "removed_from_upstream": 0,
+   "modified": 0,
+   "meaning": "English source package a0 == pinned upstream (subset for deeptutor); no local functional edits"
+  },
+  "english_source_to_asrun": {
+   "files": 30,
+   "summary": {
+    "doc/translated": 28,
+    "dependency-manifest/translated": 1,
+    "code/config/non-translation": 1
+   },
+   "meaning": "2026-08-19 machine translation of the package (0818-benchmark-cn) + any later edit; see private migration/zh-asrun-changes.json"
+  }
+ },
+ "language": {
+  "as_run": "zh (machine-translated docs/fixtures in a0)",
+  "functional_risk_files": [
+   "requirements.txt",
+   "workflows/codebase_index_workflow.py"
+  ],
+  "functional_risk_count": 2
+ },
+ "evaluator_digest_pins_on_asrun_a0": [
+  [
+   "evaluator/harness/common.py",
+   "SOURCE_TREE_SHA256",
+   "cc1490ea633bfed752c25d5d89bfa8fd7aa95afb740029d81c94c9fd5fc60954",
+   "re-pinned to the en-upstream a0 (stable_tree_digest; also dev_cases/run_public.py); paper as-run zh a0 value 9e7f12af7d71ad0856186ed62359e7edabf0a64d7db497a0f5e1d5e6d8841182"
+  ],
+  [
+   "evaluator/code_identity_scope.py",
+   "BASELINE_DIGEST",
+   "3dfd73e7c9fad2d11f2276c240d25f420430fbbcf073e520648e5fac4f5a0693",
+   "NOT re-pinned: control/code_eval.py tree_digest of the paper zh-asrun a0 (en-upstream value 52fd31d679a2f1efb719673368d3cf63887a1e14a21ab3193ad9d91427af5387). Read only by prepare_code_evidence_scope when the retired Code axis is enabled (control/formal_axes_shared.py); no scoring or diagnostic path reaches it"
+  ]
+ ],
+ "files": {
+  "fetch": "fetch.sh",
+  "en_manifest": "en-upstream.sha256",
+  "subset": null,
+  "private_zh_asrun_dir": "migration/private/zh-asrun/deepcode-claim-traceability"
+ }
+}

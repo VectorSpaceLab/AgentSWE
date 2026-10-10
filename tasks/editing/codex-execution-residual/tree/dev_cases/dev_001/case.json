@@ -1,0 +1,7 @@
+{
+  "case_id": "dev_001",
+  "scenario": "prefix_collision",
+  "required_actions": ["collision_a", "collision_b"],
+  "max_action_invocations": 2,
+  "spill": false
+}

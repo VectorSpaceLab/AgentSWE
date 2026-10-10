@@ -1,0 +1,1 @@
+"""Synthetic affine standardization project."""

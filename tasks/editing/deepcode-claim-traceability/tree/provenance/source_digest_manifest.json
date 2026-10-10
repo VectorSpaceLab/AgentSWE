@@ -1,0 +1,30 @@
+{
+  "schema_version": "agentloop-provenance-v1",
+  "benchmark_id": "owner-17-deepcode-claim-traceability-agentloop-v1",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/17-edit-deepcode-claim-traceability",
+  "source_git_commit": "69233821b5dbcf044eb17f91bca1b9c6b1d2fda5",
+  "source_tree_digest": "21dac6cfff46047f65f90eb272c4d610f4c56f9e7f79ef7f846787420388f081",
+  "source_repository_digest": "735ffeb13d5514a7954789c1ac73fee2a28b400523ddeb4e3e642ddbfb969dd7",
+  "source_file_count": 807,
+  "repository_file_count": 681,
+  "audited_reference_files": [
+    {"path":"@@AGENTSWE_LEGACY_HARBOR@@/0902-edit-repair.md","sha256":"155be2ba16d96741b60785c1a8f21d17923d8a5efef910a7369afb72f3ea3c91"},
+    {"path":"@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit.md","sha256":"78a02a72361efbbb6fcc205e648eff8fe183ad1ef530b76c7bab63cf8acfeb59"},
+    {"path":"@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit-v2.md","sha256":"623ea1de0ed2ba89ab0be8c107be703878631d5e47f287da67b41979fb385b3b"},
+    {"path":"@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2/v2_benchmark_manifest.json","sha256":"e07adf8fed99cd4ce82d3dee1608a9101df1b2ac736f00ff1bc8adb44204d4c2"},
+    {"path":"@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/candidate_broker_protocol.py","sha256":"ce6944f88ce450818037cb9186ddaed7f783fa504098e24e8472fbe63e0fe71b"},
+    {"path":"@@AGENTSWE_LEGACY_HARBOR@@/0825-10create-v4/adapters/repository-bug-repair/one_stop.py","sha256":"9b133c9131063d3e4b7adfc0bcf1bec2ead538bc6bb3ce52cffe89a28cf2d348"},
+    {"path":"@@AGENTSWE_EDITING_TASKS@@/codex-execution-residual/tree/README.md","sha256":"089717ae04e1cc5dcc0daaac221e833401ff15e919ba73efb7fe53be9a0af6ba"},
+    {"path":"@@AGENTSWE_EDITING_TASKS@@/codex-execution-residual/tree/harbor/formal_one_stop.py","sha256":"172b9c34997541ff96b5c29c4b26f031b58cdf761fd16eaeffbdf3f30c314804"},
+    {"path":"@@AGENTSWE_EDITING_TASKS@@/codex-execution-residual/tree/evaluator/harness/run_lower_agent_case.py","sha256":"43d3cee9357d8651b8b2021f6f0ac2a07f805fbadf77d939226beddbdef680d5"}
+  ],
+  "copy_method": "byte-preserving copy followed by sibling-only migration",
+  "immutable_paths": [
+    "@@AGENTSWE_EDITING_SOURCES@@/17-edit-deepcode-claim-traceability",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit.md",
+    "@@AGENTSWE_LEGACY_HARBOR@@/0826-10edit-v2.md"
+  ],
+  "digest_algorithm": "sha256(relative-posix-path NUL file-bytes NUL, sorted; excludes .git and generated caches)",
+  "migration_status": "PARTIAL_STATIC_ONLY"
+}

@@ -1,0 +1,29 @@
+# Restore a conversation after interrupted local work
+
+The browser was interrupted while applying a local file change, and the
+transport is unreliable: a transport response can disappear and a chunk write
+response can be lost after the bytes have already landed remotely. Resume this
+conversation without repeating unsafe work.
+
+Four outcomes are required, and they are scored independently. Partial work is
+reported as partial work, and hidden cases are scored the same way.
+
+1. **OHR901 — Transfer only what is genuinely missing, once.** Probe by content
+   digest before uploading, and re-probe instead of re-sending when a write
+   response is lost. Exactly one chunk upload may appear in total.
+2. **OHR902 — Converge exactly once.** The workspace must end with one durable
+   remote commit, one local apply, and both replicas holding the union of the
+   one-sided paths, with the completion cursor published last.
+3. **OHR903 — Retry a lost transport response from the same cursor.** The next
+   pull must ask from the same durable ledger cursor, never from the advisory
+   remote cursor and never from a skipped position.
+4. **OHR904 — No duplicate effect, no leaked projection.** No side effect may be
+   executed twice, and the public workspace projection must expose only bounded
+   counts, stage flags and phase codes, never paths, digests, chunk identifiers,
+   tab or incarnation identities, or any token.
+
+Use the current visible scope, workspace and inspection values. Choose the
+recovery actions yourself, then deliver a factual report of what the modified
+OpenHands product actually did. Do not claim a successful side effect solely
+because an attempt was made; claiming an outcome you did not reach scores worse
+than reporting it honestly as unmet.

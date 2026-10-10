@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "members": [
+    {"path": "draft.md", "role": "draft"},
+    {"path": "evidence_manifest.json", "role": "evidence_manifest"},
+    {"path": "run_manifest.json", "role": "run_manifest"},
+    {"path": "config.json", "role": "config"},
+    {"path": "raw_results.json", "role": "raw_results"},
+    {"path": "figure_1.csv", "role": "figure_data"},
+    {"path": "replay.py", "role": "replay"},
+    {"path": "usage_statement.json", "role": "usage"},
+    {"path": "budget_policy.json", "role": "budget_policy"}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "metric": "accuracy",
+  "scale": "fraction",
+  "rows": [
+    {"method": "baseline", "seed": 11, "value": 0.800},
+    {"method": "baseline", "seed": 22, "value": 0.802},
+    {"method": "baseline", "seed": 33, "value": 0.798},
+    {"method": "nova", "seed": 11, "value": 0.805},
+    {"method": "nova", "seed": 22, "value": 0.807},
+    {"method": "nova", "seed": 33, "value": 0.803}
+  ]
+}

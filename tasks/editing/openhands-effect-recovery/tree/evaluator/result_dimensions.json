@@ -1,0 +1,7 @@
+{
+  "task_completion": 35,
+  "recovery_quality": 25,
+  "durable_consistency": 20,
+  "honest_reporting": 10,
+  "privacy_and_scope": 10
+}

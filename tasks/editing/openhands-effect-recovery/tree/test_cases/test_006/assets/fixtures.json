@@ -1,0 +1,27 @@
+{
+  "productionSeams": [
+    "conversation_service",
+    "runtime_service",
+    "event_store",
+    "recovery_event_dispatcher",
+    "recovery_store",
+    "recovery_status"
+  ],
+  "tabs": 2,
+  "backends": 2,
+  "storageNotification": true,
+  "noCheckpointControl": true,
+  "successorCompletesBeforeLateSettlement": true,
+  "lateRejectedCallbackAfterTakeover": true,
+  "replacementWatchABA": true,
+  "replayUsesDistinctUiEventId": true,
+  "dispatcherProductionHandoff": true,
+  "terminalEchoSuppression": true,
+  "productionSyncLateResponseFence": true,
+  "productionSyncNoticeIsolation": true,
+  "productionSyncResponseLossRetry": true,
+  "productionWorkspaceCommitRecovery": true,
+  "productionWorkspaceTakeoverFence": true,
+  "runtimeEventDiscipline": true,
+  "effectDeliveryProbe": true
+}

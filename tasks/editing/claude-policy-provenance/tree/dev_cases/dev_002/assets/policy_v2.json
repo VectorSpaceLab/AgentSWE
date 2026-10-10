@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "policy_id": "public-reload",
+  "policy_epoch": 11,
+  "previous_policy_snapshot_digest": "sha256:120b5c179ff899b0786748bdd26967834e8a58b0701793909e256a46b58c4f33",
+  "revision": "public-reload-v2",
+  "mode": "enforce",
+  "default_decision": "deny",
+  "tools": {"Bash": "allow", "Read": "allow"},
+  "paths": {"allow": ["**"], "deny": []},
+  "commands": {"allow": ["pwd", "printf"], "deny": ["curl"], "audit_only": ["pwd"], "rewrites": []},
+  "network": {"allow_hosts": [], "deny_hosts": ["example.test"]},
+  "mcp": {
+    "mcp__files__inspect": {
+      "decision": "allow",
+      "require_delegation": true,
+      "path_fields": ["path"],
+      "url_fields": ["url"],
+      "header_fields": ["headers"],
+      "deny_paths": ["secrets/**"],
+      "deny_hosts": ["blocked.test", "169.254.169.254"]
+    }
+  },
+  "reservation": {"max_inflight": 2, "max_session_inflight": 1, "lease_seconds": 2, "reclaim_expired": true},
+  "approval": {"threshold": 2, "ticket_seconds": 5, "principals": ["public-a", "public-b", "public-c"], "tools": ["Write"], "principal_groups": {"public-a":"release", "public-b":"security", "public-c":"release"}, "required_groups": ["release", "security"]},
+  "ownership": {"handoff_seconds": 5, "allowed_targets": ["public-branch-a", "public-branch-b", "public-recovery-two"]},
+  "delivery": {"claim_seconds": 3, "max_pending": 24, "require_completion": true},
+  "repair": {"max_quarantine_bytes": 1048576, "required_verifiers": 2, "verifiers": ["public-repair-a", "public-repair-b"]},
+  "continuation": {"token_seconds": 5, "max_pending": 2, "tools": ["Bash", "Read", "mcp__files__inspect"]}
+}

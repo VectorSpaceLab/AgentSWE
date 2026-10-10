@@ -1,0 +1,16 @@
+{
+  "schema_version": "agentswe-edit-provenance/v1",
+  "benchmark_id": "openhands-effect-recovery-agentloop-v1",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/13-edit-openhands-effect-recovery",
+  "source_git_head": "c38e8bc72fbadca097620fa847c07e403005d0ed",
+  "source_tree_digest_algorithm": "sha256(relative-path-length,path,type,payload-length,payload; sorted recursive tree)",
+  "source_tree_digest": "65f0c2dc6f28f25aa32998ab4de17107235619b7e0ecbaaa6532250a7e34014e",
+  "copy_method": "cp -a source sibling before sibling-only migration edits",
+  "source_mutation_policy": "read-only; no source, staging, legacy formal run, shared framework, or main manifest writes",
+  "copied_source_scope": ["README.md", "input/", "dev_cases/", "test_cases/", "evaluator/", "meta/", "orchestration/", "all source files"],
+  "staging_reference": {
+    "manifest": "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2/v2_benchmark_manifest.json",
+    "source_digest_recorded_there": "6ee9fcaa6759026872dc371381e5196c992c85139f13fa19295f07fc866e5976"
+  },
+  "integrity_note": "The digest above is a sibling-audit digest, not a replacement for the v2 manifest digest. Both are retained for provenance comparison."
+}

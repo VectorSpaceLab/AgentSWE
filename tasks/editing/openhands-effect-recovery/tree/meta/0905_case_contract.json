@@ -1,0 +1,100 @@
+{
+  "task": "openhands",
+  "sibling": "@@AGENTSWE_EDITING_TASKS@@/openhands-effect-recovery/tree",
+  "dev_cases": [
+    "dev_001",
+    "dev_002"
+  ],
+  "hidden_cases": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "primary_user_goal_by_case": {
+    "test_001": "Converge a three-way workspace update and safely fence a stale takeover.",
+    "test_002": "Recover an interrupted content-addressed workspace transfer without duplicate commit or apply.",
+    "test_003": "Resume or cancel an in-flight effect without allowing an old generation to regain authority.",
+    "test_004": "Expose useful recovery status to authorized tabs while preserving least privilege.",
+    "test_005": "Migrate and compact legacy recovery state without crossing backend or workspace scopes.",
+    "test_006": "Converge production services, browser state, event replay, and workspace recovery after takeover."
+  },
+  "primary_failure_axis_by_case": {
+    "test_001": "workspace takeover fencing",
+    "test_002": "crash-boundary effect recovery",
+    "test_003": "ABA generation fencing",
+    "test_004": "least-privilege projection",
+    "test_005": "migration and scope-safe compaction",
+    "test_006": "production convergence"
+  },
+  "secondary_failure_axes_by_case": {
+    "test_001": [
+      "conflict detection"
+    ],
+    "test_002": [
+      "lost response reconciliation"
+    ],
+    "test_003": [
+      "terminal cancellation"
+    ],
+    "test_004": [
+      "redaction"
+    ],
+    "test_005": [
+      "restart durability"
+    ],
+    "test_006": [
+      "event deduplication",
+      "tab reincarnation"
+    ]
+  },
+  "dynamic_facts": {
+    "test_001": [
+      "workspace revisions",
+      "tab incarnation",
+      "run generation"
+    ],
+    "test_002": [
+      "chunk digest",
+      "crash boundary",
+      "recovery owner"
+    ],
+    "test_003": [
+      "effect generation",
+      "late terminal ordering"
+    ],
+    "test_004": [
+      "grant generation",
+      "caller tab/backend scope"
+    ],
+    "test_005": [
+      "legacy revision race",
+      "compaction anchor"
+    ],
+    "test_006": [
+      "lease takeover",
+      "recovery event id",
+      "workspace cursor"
+    ]
+  },
+  "candidate_visible_inputs": "Natural task input, case-local fixture projection, real Agent Canvas service/actions, placeholder broker credential, and redacted product observations.",
+  "evaluator_only_oracle": "Fixture oracle, expected revisions/effect identities, authority generations, private assertion interpretation, judge prompt, hidden inventory, and real provider credential.",
+  "real_lower_entry": "lower_agent/openhands_lower_agent.py",
+  "product_api_entry": "input/repository/src/api/conversation-service/conversation-service.api.ts -> Candidate recovery adapter/dispatcher/sync/workspace modules",
+  "broker_model": "deepseek-flash",
+  "broker_effort": "high",
+  "agent_authored_artifact": "case-local agent_result.json authored by the lower model after a bounded model-selected recovery API loop; its action and observation arrays must match trajectory.json and its trajectory_digest",
+  "native_harness_role": "Vitest/typecheck/evaluate_suite.py are diagnostic validity and native-fact evidence only; they cannot publish formal Result.",
+  "result_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+  "code_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+  "formal_one_stop_entry": "harbor/formal_one_stop.py",
+  "known_overlap_or_leakage": [
+    "Hidden prompts remain mechanism-dense, but evaluator score weights/oracles/credentials are not in the Builder package.",
+    "Real paid two-hidden smoke was not run in this provider-free repair.",
+    "Production dispatcher/sync/workspace actions are now exposed through bounded ConversationService factory calls; current-digest provider smoke is still required to prove runtime behavior."
+  ],
+  "readiness": "REPAIR",
+  "remaining_blocker": "Run a fresh two-hidden smoke against the current sibling digest with real medium lower-product calls, model-authored artifacts, one independent xhigh Result judgment for each scoreable case, and verified owned-container cleanup."
+}

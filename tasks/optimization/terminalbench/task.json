@@ -1,0 +1,218 @@
+{
+  "id": "terminalbench",
+  "family": "optimization",
+  "short": "tbench",
+  "title": "TerminalBench 2.0 terminal-agent policy optimization",
+  "tier": "T3",
+  "lite": false,
+  "status": "runnable",
+  "runner": "optimization_native_v1",
+  "roles": [
+    "builder",
+    "runtime"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "opt-python312"
+  ],
+  "envs": [
+    "optimization-python311"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "curl"
+    ],
+    "disk_gb": 150
+  },
+  "upstream": {
+    "repo": "https://github.com/laude-institute/terminal-bench",
+    "commit": "d28711d0da2675d0bb1d56de45ae5df6082438a3",
+    "license": "Apache-2.0",
+    "redistribute_a0": true
+  },
+  "notes": [
+    "The native controller runs on the host and drives the host Docker daemon: each case migrates the official Terminal-Bench task with `harbor task migrate`, builds its image and runs Harbor's live Terminus-2 loop against the evaluator broker.",
+    "No LLM judge: the official task tests decide 0 or 100 per case.",
+    "Evaluator-owned assets (locked dependency-image archive, task build assets, verifier wheels) are fetched by sha256 at setup; base images are pulled by digest from ghcr.io.",
+    "Image identity is checked by content (rootfs layer digests), so Docker's classic and containerd image stores both verify; the paper's protocol image IDs are still accepted.",
+    "Per-host guard: at most 4 concurrent Optimization runs."
+  ],
+  "provenance": {
+    "paper_benchmark_digest": "2608764a5767709db07f1b7b4c5333d5f940c664cb47ac432cbb2330ca87db9f",
+    "benchmark_changes": "meta/ and evaluator/task_metadata.json and task_contract.json: the paper host's home prefix in provenance-only path fields replaced by <paper-host>; native task trees byte-identical (their per-case native_task_digest pins are unchanged)"
+  },
+  "runner_config": {
+    "benchmark_name": "terminalbench-code-agent-optimization-v1",
+    "python_runtime_env": "optimization-python311",
+    "harbor_profile": "site",
+    "n_concurrent": 4,
+    "agent_import_path": "resumable_provider_codex_agent:ResumableDeepSeekCodex",
+    "config_env": [
+      "AGENTSWE_TERMINALBENCH_APT_MIRROR",
+      "AGENTSWE_TERMINALBENCH_PIP_INDEX",
+      "AGENTSWE_TERMINALBENCH_DEBIAN_ARCHIVE",
+      "AGENTSWE_TERMINALBENCH_GITHUB_DOWNLOAD_BASE"
+    ],
+    "host_exports": [
+      {
+        "image": "opt-python312",
+        "path": "/python",
+        "dest": "tools/cpython-3.12"
+      }
+    ],
+    "env": {
+      "AGENTSWE_TERMINALBENCH_ASSETS": "{home}/assets/terminalbench",
+      "AGENTSWE_TERMINALBENCH_WHEELHOUSE": "{home}/assets/terminalbench/wheelhouse"
+    },
+    "pull_images": [
+      {
+        "image": "ghcr.io/laude-institute/t-bench/ubuntu-24-04:20250624",
+        "ref": "ghcr.io/laude-institute/t-bench/ubuntu-24-04@sha256:d34916434f1304da8b1fc7aeb547d1bee53770a4c4fe0ff4637eaca293d648d5",
+        "layers": [
+          "sha256:3abdd8a5e7a8909e1509f1d36dcc8b85a0f95c68a69e6d86c6e9e3c1059d44b3",
+          "sha256:f5414c85c764fde3860542d0d9e0b83cde7820bda73d64f3c7347f3a014919b5",
+          "sha256:e86593aa47c118e633e3ea92390960d315ba246eb222df97a7967f5bc3284fd5"
+        ]
+      },
+      {
+        "image": "ghcr.io/laude-institute/t-bench/python-3-13:20250620",
+        "ref": "ghcr.io/laude-institute/t-bench/python-3-13@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5",
+        "layers": [
+          "sha256:f5fe472da25334617e6e6467c7ebce41e0ae5580e5bd0ecbf0d573bacd560ecb",
+          "sha256:52fc15be27b420bfb40eb5c05d987a48267ba43d5277e5505fc00a8eff167df3",
+          "sha256:e47eada9597c0a59b765450294565f1eb4be08aec044b41197ecf5f90d37d977",
+          "sha256:955362541777c2c7efb02f705fc9bbb2c7620a832096c6a56fea713a054d974b",
+          "sha256:b9e273228ebffa28589b5a2cc51f48c74b1be505cba179f560b8ba2a13b8d173",
+          "sha256:9204e406a648ec41d379a62f56b7f16386ea6c9b331cd8a1703add8554af3fa1"
+        ]
+      }
+    ],
+    "assets": {
+      "root": "assets/terminalbench",
+      "files": [
+        {
+          "path": "images/write-compressor.tar.gz",
+          "size": 296789603,
+          "sha256": "b98daf9f49a7931b1ee6c975bcfdb9d739a426f1d6e38ee49d3299c944de896c",
+          "urls": [],
+          "release_path": "terminalbench/images/write-compressor.tar.gz",
+          "note": "docker save of agentswe/tbench-write-compressor-deps:20260812 (locked evaluator-owned dependency image used by the paper runs; a rebuild resolves different apt versions)"
+        },
+        {
+          "path": "task-assets/train-fasttext/test-00000-of-00001.parquet",
+          "size": 23515519,
+          "sha256": "bf06d5969bff93ecd4a6d4b330643761ce108b42e9b8a894cf82c9df02a08540",
+          "urls": [
+            "https://huggingface.co/datasets/Yelp/yelp_review_full/resolve/main/yelp_review_full/test-00000-of-00001.parquet"
+          ],
+          "release_path": "terminalbench/task-assets/train-fasttext/test-00000-of-00001.parquet"
+        },
+        {
+          "path": "task-assets/train-fasttext/train-00000-of-00001.parquet",
+          "size": 299436850,
+          "sha256": "da3ca3dcc52b1e2e44195b53668610d645a59010a985dd45aa12e1109cd44601",
+          "urls": [
+            "https://huggingface.co/datasets/Yelp/yelp_review_full/resolve/main/yelp_review_full/train-00000-of-00001.parquet"
+          ],
+          "release_path": "terminalbench/task-assets/train-fasttext/train-00000-of-00001.parquet"
+        },
+        {
+          "path": "task-assets/alpine-3.19/alpine-extended-3.19.0-x86_64.iso",
+          "size": 1003487232,
+          "sha256": "798e4805c5a4908ca231eae751ba5b2bef6cdbd3931f09b4da47fc35c329b741",
+          "urls": [
+            "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-extended-3.19.0-x86_64.iso"
+          ],
+          "release_path": "terminalbench/task-assets/alpine-3.19/alpine-extended-3.19.0-x86_64.iso"
+        },
+        {
+          "path": "task-assets/make-mips-interpreter/doomgeneric-b94eba35.tar.gz",
+          "size": 3120653,
+          "sha256": "1a4493740b066efe86b0203ad9df96dd86253fc65d810ddd78f576af117284d5",
+          "urls": [],
+          "release_path": "terminalbench/task-assets/make-mips-interpreter/doomgeneric-b94eba35.tar.gz",
+          "note": "snapshot of https://github.com/ozkl/doomgeneric at b94eba35 as the upstream Dockerfile clones it"
+        },
+        {
+          "path": "task-assets/crack-7z-hash/john-8b5bfefb.tar.gz",
+          "size": 56264579,
+          "sha256": "1da7c18532e7c5f8b6d0bc46d27203ec090f8d9b15a3411ee0b4af3b35f694c7",
+          "urls": [],
+          "release_path": "terminalbench/task-assets/crack-7z-hash/john-8b5bfefb.tar.gz",
+          "note": "snapshot of https://github.com/openwall/john at 8b5bfefb as the upstream Dockerfile clones it"
+        },
+        {
+          "path": "task-assets/fix-code-vulnerability/bottle-0207a34f.tar.gz",
+          "size": 829931,
+          "sha256": "65f496d5b5093b33637540a88813ee7ad17a1edce85dd3d5972233284943ec0a",
+          "urls": [],
+          "release_path": "terminalbench/task-assets/fix-code-vulnerability/bottle-0207a34f.tar.gz",
+          "note": "snapshot of https://github.com/bottlepy/bottle at 0207a34f as the upstream Dockerfile clones it"
+        },
+        {
+          "path": "task-assets/fix-code-vulnerability/flit-wheels.tar.gz",
+          "size": 3160427,
+          "sha256": "dd3b3460c06a82d4f09ee02bf7ec6ab28fa966daa4fc13510eab9a8c9122794e",
+          "urls": [],
+          "release_path": "terminalbench/task-assets/fix-code-vulnerability/flit-wheels.tar.gz",
+          "note": "public PyPI wheels for flit 3.12.0 and its dependencies, packed by the paper evaluator"
+        },
+        {
+          "path": "task-assets/install-windows-3.11/win311.img",
+          "size": 268435456,
+          "sha256": "58fb76014dccf13ec048e894ca1e44773eee940ccbc71c97a2ab3d07285da553",
+          "urls": [
+            "https://archive.org/download/win311_202508/win311.img"
+          ],
+          "note": "fetched from the URL in the upstream task Dockerfile; not redistributed by AgentSWE"
+        },
+        {
+          "path": "task-assets/common/uv-0.12.1",
+          "size": 56107008,
+          "sha256": "92face6b1f0462ad911857957bd168cd4ae45515e2a2cb3fcc3ecbda3d4d82b1",
+          "urls": [],
+          "release_path": "terminalbench/task-assets/common/uv-0.12.1",
+          "note": "the uv 0.12.1 x86_64 Linux binary from the astral-sh/uv release"
+        }
+      ]
+    },
+    "wheels": {
+      "root": "assets/terminalbench/wheelhouse",
+      "sums": "runners/optimization/optimization_native/wheelhouse/SHA256SUMS"
+    }
+  },
+  "protocol": {
+    "dev_rounds": 5,
+    "max_dev_rounds": 5,
+    "builder_session_sec": 57600,
+    "score": "S = 100*min(1, (J(candidate)-J(a0)) / (100-J(a0))) on the held-out split"
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "dev_cases_n": 1,
+    "heldout_cases_n": 2,
+    "builder_session_sec": 3600,
+    "dev_cases_ids": [
+      "dev_001"
+    ],
+    "test_cases_ids": [
+      "test_032",
+      "test_040"
+    ],
+    "note": "dev_001 write-compressor (locked dependency image restored from its archive); test_032 regex-log (official build path); test_040 cancel-async-tasks (pinned base image plus offline verifier wheels)"
+  },
+  "smoke_reference": {
+    "roles": "deepseek-flash (DeepSeek official API) for builder and runtime",
+    "what_runs": "The smoke cases (task.json smoke) run end to end: Builder session, a0 and candidate on each case with the official Terminal-Bench verifier deciding 0 or 100. Expect ordinary failures from a low-cost model (for example model_budget_exceeded at the 200,000-token case budget); a verifier that cannot download its test tools is recorded as an infrastructure failure, not a 0.",
+    "note": "smoke S validates runnability only; not comparable with the paper"
+  }
+}

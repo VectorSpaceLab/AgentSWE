@@ -1,0 +1,269 @@
+{
+  "schema_version": "4.0",
+  "assets": [
+    {
+      "case": "dev_cases/dev_001",
+      "asset": "commissioning_report.html",
+      "bytes": 1362,
+      "sha256": "45ce4c170239ab23652eb16aec4d33b811c962e10937ab5a162824cc10c81dd1",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "dev_cases/dev_001",
+      "asset": "hourly_dispatch.csv",
+      "bytes": 590,
+      "sha256": "1b4c6252f54778427fa7be4974a73738e3ebb07365f6ae0fa53e3e6a3792df7e",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "dev_cases/dev_001",
+      "asset": "inverter_map.svg",
+      "bytes": 1203,
+      "sha256": "6881772f0d7fca141abb489b075871e78823f299c17a357a3df1c0688a989751",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "dev_cases/dev_002",
+      "asset": "calibration_register.xlsx",
+      "bytes": 2403,
+      "sha256": "852f8a3935d87f929ba9d89ba720acd25d87ca32033eb4f27588307907915e4e",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "dev_cases/dev_002",
+      "asset": "release_log.docx",
+      "bytes": 1319,
+      "sha256": "d9f8bdb2306da0ccb7f07e2dd329aeb436634d394d15928f185b6d17745bc43f",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "dev_cases/dev_002",
+      "asset": "release_protocol.pdf",
+      "bytes": 2714,
+      "sha256": "d5281424907e5cebb61d3d098a278153537bd4d4809884464ccc52fbea81e92e",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_001",
+      "asset": "inspection_manual.pdf",
+      "bytes": 2838,
+      "sha256": "7bde237ec00941f49898c3b0c1dbfa8940d381b6896b3a58c07a6ba4c7c61aeb",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_001",
+      "asset": "north_pier.png",
+      "bytes": 3349,
+      "sha256": "d432cc81546fcc7725e72d42cd241a15ae5a08bc598c951817378763162b8d85",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_001",
+      "asset": "photo_legend.html",
+      "bytes": 658,
+      "sha256": "84e9de50ec536aeed966ae163505248acd37dfaadc8fafb31bd978704875e7e5",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_001",
+      "asset": "signed_amendment.docx",
+      "bytes": 1164,
+      "sha256": "ae960daa72a43a801a91d109ad1bd0711e896c29b73af71c57b56a8c554b0b4b",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_001",
+      "asset": "survey_results.xlsx",
+      "bytes": 2353,
+      "sha256": "a41ddef9a769be115752492b886b425a23f3434ead407f7062743bd942eb628c",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_002",
+      "asset": "fare_policy.html",
+      "bytes": 1014,
+      "sha256": "007cae5e1b45f44b837880318f20ab5500fd9127738b2e88396b70ed368b0d72",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_002",
+      "asset": "signed_route_directive.docx",
+      "bytes": 1179,
+      "sha256": "3dec1a9452a3a8ecc85faff88504db2af7e222d9626ad24b381bc69eb91c0d44",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_002",
+      "asset": "tap_events.csv",
+      "bytes": 596,
+      "sha256": "e935f57fb81680b4f666215cbad151fd2cb6d71eb67a66a3478ab01fe228dd1f",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_002",
+      "asset": "zone_map.svg",
+      "bytes": 1059,
+      "sha256": "4f0d0d6c3ba61a0fdeff0f37aa16476c38d9d4de1ca3350bf923291e4b55e123",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_003",
+      "asset": "assay_method.docx",
+      "bytes": 1256,
+      "sha256": "7ab2e398e32f3cea122862b8ecdc20fc20aac498a0a7b447e56ada67b9c53f84",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_003",
+      "asset": "plate_reader.csv",
+      "bytes": 2193,
+      "sha256": "26b777ed49d7442186ea04a346b1f6a578b66a912bbbc724b83e2dca3cc6a0f6",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_003",
+      "asset": "revision_notice.pdf",
+      "bytes": 1624,
+      "sha256": "f41571a78c0960927a13c9cfff6bf19f2595d43ff58d4e640b08e0df576b8d60",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_003",
+      "asset": "standard_curve.svg",
+      "bytes": 945,
+      "sha256": "62445ec854b37681c17769bb29801c632771a2878c0c1ae9cee0024c4658eca9",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_004",
+      "asset": "bathymetry_report.pdf",
+      "bytes": 2786,
+      "sha256": "567cbfc6ca27f254b8100d85d449a2ccb8ea65c141a9f59163f3c0ba411d4587",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_004",
+      "asset": "field_correction.html",
+      "bytes": 695,
+      "sha256": "77afd99236815ed92002cc5eea4e2e31cf37f67fb09bafa7852da9e116771841",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_004",
+      "asset": "survey_points.csv",
+      "bytes": 165,
+      "sha256": "9af662f81a77c3b3ac014e09e182daab0d1ad9fd6e8d67372928bf17418b8fab",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_004",
+      "asset": "transect_intensity.png",
+      "bytes": 3487,
+      "sha256": "0c787e593f59841f2f7cc77167dff98780a267c2a2c9ea9533facd5290e26196",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_005",
+      "asset": "archive_index.html",
+      "bytes": 798,
+      "sha256": "e8009d93712e037ba778b73a94fa1dbbc96287a98b16382701a9ef2da6f6f097",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_005",
+      "asset": "board_minutes.pdf",
+      "bytes": 3220,
+      "sha256": "fcfc2702caed5755dcd3eccf78006d323579911925896cff507b6ea5101b6a89",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_005",
+      "asset": "email_export.csv",
+      "bytes": 9386,
+      "sha256": "cb4e7e90c8e417d6d855bbf3ad635ebc4b07ed3343c47420b174d50beb949aaf",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_005",
+      "asset": "signed_addendum.docx",
+      "bytes": 1255,
+      "sha256": "e5e9521c020dbb18a0632aa9f841754bc8986b8479955714121dd59f28da48a7",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_005",
+      "asset": "vendor_offer.xlsx",
+      "bytes": 3053,
+      "sha256": "5dde6a726a0d4edda5b7089b953c2942636bbe7cc0fc8b6eb808caabd7db657d",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_006",
+      "asset": "dashboard.svg",
+      "bytes": 932,
+      "sha256": "a4169c69ef86adccff2cff98520880856ad520f238d4f3b81725df7df9fc67e4",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_006",
+      "asset": "event_log.csv",
+      "bytes": 1975,
+      "sha256": "83fbc1f8a79091b1c697bcf5386f33d6a1ab70300f92b4081ca08f70bc7fb78d",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_006",
+      "asset": "firmware_release.html",
+      "bytes": 1058,
+      "sha256": "fb67c92b26d56589bfefc078f9861859a1b0569d03930b99d4742e76c1e0f363",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_006",
+      "asset": "operator_handoff.docx",
+      "bytes": 1258,
+      "sha256": "a5fd6645bbdba09d3395754c71cb323c50fe670fcaa0126a13537f6465bbdada",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    },
+    {
+      "case": "test_cases/test_006",
+      "asset": "panel_photo.png",
+      "bytes": 2871,
+      "sha256": "63c7f800cd8f768a74a056099deb8b0552589a6d8a2f3b74b232a150446c108d",
+      "provenance": "synthetic; generated locally by meta/generate_assets.py",
+      "license": "CC0-1.0 benchmark fixture"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "object_ref": "MX-3317",
+    "title": "Glass Horizon 17",
+    "category": "drawing",
+    "detail": "details/object-076.html",
+    "annex": false,
+    "revision": "2026-06-21"
+  },
+  {
+    "object_ref": "MX-3318",
+    "title": "Signal Garden 18",
+    "category": "photograph",
+    "detail": "details/object-105.html",
+    "annex": false,
+    "revision": "2026-06-22"
+  },
+  {
+    "object_ref": "MX-3319",
+    "title": "River Study 19",
+    "category": "textile",
+    "detail": "details/object-134.html",
+    "annex": false,
+    "revision": "2026-06-23"
+  },
+  {
+    "object_ref": "MX-3320",
+    "title": "Night Transit 20",
+    "category": "model",
+    "detail": "details/object-163.html",
+    "annex": false,
+    "revision": "2026-06-24"
+  },
+  {
+    "object_ref": "MX-3321",
+    "title": "Salt Diagram 21",
+    "category": "drawing",
+    "detail": "details/object-192.html",
+    "annex": false,
+    "revision": "2026-06-05"
+  },
+  {
+    "object_ref": "MX-3306",
+    "title": "Superseded title",
+    "category": "photograph",
+    "detail": "details/object-158.html",
+    "annex": false,
+    "revision": "2024-01-01"
+  },
+  {
+    "object_ref": "OLD-MX-822",
+    "title": "Cloud Index 22",
+    "category": "photograph",
+    "detail": "details/object-221.html",
+    "annex": false,
+    "revision": "2026-06-06"
+  }
+]

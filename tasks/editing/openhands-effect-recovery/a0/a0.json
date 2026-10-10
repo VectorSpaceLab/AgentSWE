@@ -1,0 +1,42 @@
+{
+ "task": "openhands-effect-recovery",
+ "upstream": {
+  "repo": "https://github.com/OpenHands/OpenHands",
+  "commit": "7fa7b16968eeae6d8f5ea4f8136225ac8e621fe6",
+  "git_tree": "1d56bdf0b23140fc61ce8318b9cee720db351fe9",
+  "license": "MIT",
+  "redistribute_a0": false
+ },
+ "note": null,
+ "layers": {
+  "upstream_to_english_source": {
+   "added": 0,
+   "removed_from_upstream": 0,
+   "modified": 0,
+   "meaning": "English source package a0 == pinned upstream (subset for deeptutor); no local functional edits"
+  },
+  "english_source_to_asrun": {
+   "files": 26,
+   "summary": {
+    "doc/translated": 24,
+    "data/fixture/program-text/translated": 2
+   },
+   "meaning": "2026-08-19 machine translation of the package (0818-benchmark-cn) + any later edit; see private migration/zh-asrun-changes.json"
+  }
+ },
+ "language": {
+  "as_run": "zh (machine-translated docs/fixtures in a0)",
+  "functional_risk_files": [
+   "helm/agent-canvas/templates/NOTES.txt",
+   "public/robots.txt"
+  ],
+  "functional_risk_count": 2
+ },
+ "evaluator_digest_pins_on_asrun_a0": [],
+ "files": {
+  "fetch": "fetch.sh",
+  "en_manifest": "en-upstream.sha256",
+  "subset": null,
+  "private_zh_asrun_dir": "migration/private/zh-asrun/openhands-effect-recovery"
+ }
+}

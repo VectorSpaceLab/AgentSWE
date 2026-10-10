@@ -1,0 +1,11 @@
+{
+  "workspaceChunkResponseLoss": true,
+  "workspaceCrashBoundaries": [
+    "after_plan",
+    "after_remote_commit",
+    "after_local_apply"
+  ],
+  "workspaceCommitResponseLoss": true,
+  "workspaceManifestAndChunkValidation": true,
+  "runtimeEventDiscipline": true
+}

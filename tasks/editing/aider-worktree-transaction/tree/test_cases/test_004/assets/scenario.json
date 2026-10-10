@@ -1,0 +1,1 @@
+{"schema_version":3,"repositories":["root","component"],"conflict":"component-rename-delete-edit","global_decision":"forbidden","disjoint_transaction":true,"foreign_locked_worktree":true,"external_root_move":true}

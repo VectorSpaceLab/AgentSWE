@@ -1,0 +1,8 @@
+{
+  "schema_version":1,
+  "experiments":[
+    {"experiment_id":"exp-archive-7","role":"candidate","method":"cobalt","config":{"path":"config.json","sha256":"2fac775b4baae18ffa3ed66645ea4fe8603b26de01d1843c443fb31562b3f211"},"seeds":[9],"dataset":{"name":"archive-mini","split_id":"archive-split-D","split_sha256":"eb0099880f39ef8d6ddcf066c6f4f760f13c3cf434e0af9ec213d79906cbefb4"},"budget":{"epochs":4},"metrics":[{"name":"accuracy","scale":"fraction","reported_value":0.82,"raw_artifact":{"path":"raw_results.json","sha256":"6a81d5e56b893343e7437cbe8052b5fb8b81a56f1aef6ef814a2b69dc87d02c1","expected_run_id":"exp-archive-7"}}],"log":{"path":"run.log","sha256":"c0f9158a3112f5bfa6ab2e8b82f71dd39c9980400587fa15aac893aee3eaf07e"},"artifact_created_by_run":"exp-archive-7"}
+  ],
+  "replays":[{"replay_id":"replay-hidden-003","command":["python","replay.py"],"working_directory":".","stdout_format":"json","script_sha256":"b7711fa2388a55fd58af851072024329fe450f3ee5d786bf9539b68999ceddf3","timeout_seconds":10,"expected":{"run_id":"exp-archive-7","value":0.82}}],
+  "release_policy":{"minimum_evidence_coverage":1.0,"block_on_integrity_error":true,"never_reuse_stale_success":true,"required_decision":"block"}
+}

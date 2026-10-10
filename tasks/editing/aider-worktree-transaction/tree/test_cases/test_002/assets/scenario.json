@@ -1,0 +1,1 @@
+{"schema_version":3,"repositories":["root","component"],"phase":"federation_prepared","post_crash_loss":["worktrees","admin","task-refs","reflogs","quarantines","unreachable-objects"],"corrupt_component_receipt_variant":true}

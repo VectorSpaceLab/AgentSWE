@@ -1,0 +1,93 @@
+{
+  "oracle_version": "2026-06-30.v1",
+  "cutoff": "2026-06-30",
+  "coverage": "anchor_only",
+  "cases": [
+    {
+      "case_id": "test_001",
+      "verification_topics": ["version-pinned candidate identity", "CPU and offline execution boundary", "page-linked text and table evidence", "license object boundaries", "benchmark comparability"],
+      "sources": [
+        {"id": "O1", "publisher": "GROBID", "title": "GROBID documentation and repository", "locator": "https://github.com/kermitt2/grobid", "body_kind": "repository", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records repository identity, license location, service/batch interfaces, and PDF-structure scope; verify release details live."},
+        {"id": "O2", "publisher": "Docling Project", "title": "Docling repository and documentation", "locator": "https://github.com/docling-project/docling", "body_kind": "repository", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records repository identity, supported conversion pipeline, model assets, and declared execution options; verify current release live."},
+        {"id": "O3", "publisher": "DS4SD", "title": "Marker repository", "locator": "https://github.com/datalab-to/marker", "body_kind": "repository", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records Marker identity, output claims, model/download dependencies, and license files without treating README claims as benchmark proof."}
+      ],
+      "facts": [
+        {"id": "F1", "statement": "GROBID, Docling, and Marker are distinct artifacts whose repository state, model assets, and licenses must be pinned separately.", "centrality": "gate", "source_ids": ["O1", "O2", "O3"], "accepted_qualifications": ["A candidate may recommend none, one, or two tools when its evidence supports the decision."]},
+        {"id": "F2", "statement": "A documented output feature is not by itself evidence of comparable production accuracy across the three tools.", "centrality": "major", "source_ids": ["O1", "O2", "O3"], "accepted_qualifications": ["Independent evaluations may use different corpora, versions, hardware, and metrics."]},
+        {"id": "F3", "statement": "Offline processing feasibility must include pre-downloadable model and OCR assets rather than only absence of network calls during one conversion.", "centrality": "major", "source_ids": ["O1", "O2", "O3"], "accepted_qualifications": []}
+      ]
+    },
+    {
+      "case_id": "test_002",
+      "verification_topics": ["artifact catalog identity", "1947 versus 1945", "Mark II versus Mark III", "attribution versus presence", "earlier technical use of bug"],
+      "sources": [
+        {"id": "O1", "publisher": "Smithsonian Institution", "title": "Log Book With Computer Bug", "locator": "https://americanhistory.si.edu/collections/object/nmah_334663", "body_kind": "scan", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records the museum object identity, Harvard Mark II context, taped moth, 1947 date, and catalog limitations."},
+        {"id": "O2", "publisher": "Computer History Museum", "title": "The First Computer Bug", "locator": "https://www.computerhistory.org/tdih/september/9/", "body_kind": "html", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor preserves one influential later institutional telling for provenance comparison, not as independent proof of the event."},
+        {"id": "O3", "publisher": "Thomas Edison National Historical Park", "title": "Edison correspondence using bug as a technical term", "locator": "https://www.nps.gov/edis/learn/historyculture/edison-biography.htm", "body_kind": "html", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records that technical use of bug predates the Harvard moth incident; exact primary-document locator still requires verification."}
+      ],
+      "facts": [
+        {"id": "F1", "statement": "The surviving taped-moth logbook record is associated with the Harvard Mark II and September 9, 1947, not September 9, 1945.", "centrality": "gate", "source_ids": ["O1"], "accepted_qualifications": ["A report should disclose limits of viewing a catalog surrogate rather than the physical object."]},
+        {"id": "F2", "statement": "The logbook wording describes the moth as the first actual case of a bug being found; it does not establish the first use of bug as an engineering term.", "centrality": "gate", "source_ids": ["O1", "O3"], "accepted_qualifications": []},
+        {"id": "F3", "statement": "Later institutional retellings do not independently establish that Grace Hopper personally found the moth.", "centrality": "major", "source_ids": ["O1", "O2"], "accepted_qualifications": ["Hopper may be described as connected to the team or later retelling when supported and qualified."]}
+      ]
+    },
+    {
+      "case_id": "test_003",
+      "verification_topics": ["2015 USGS category definitions", "Vintage 2015 population denominator", "unit conversion", "rounding interval propagation", "denominator sensitivity"],
+      "sources": [
+        {"id": "O1", "publisher": "U.S. Geological Survey", "title": "Estimated Use of Water in the United States in 2015", "locator": "https://pubs.usgs.gov/circ/1441/", "body_kind": "pdf", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records the 2015 report identity, category definitions, Mgal/day units, and distinction between withdrawal and consumption."},
+        {"id": "O2", "publisher": "U.S. Geological Survey", "title": "2015 water-use data tables", "locator": "https://www.usgs.gov/mission-areas/water-resources/science/water-use-united-states", "body_kind": "structured_data", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records the national/state table family and revision provenance; evaluator must extract exact Arizona, Nevada, and Utah cells."},
+        {"id": "O3", "publisher": "U.S. Census Bureau", "title": "Vintage 2015 population estimates", "locator": "https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2010s-state-total.html", "body_kind": "structured_data", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records the Vintage 2015 estimate program and July 1 reference date; evaluator must verify exact state values."}
+      ],
+      "facts": [
+        {"id": "F1", "statement": "The primary denominator is each state's July 1, 2015 resident-population estimate from Census Vintage 2015.", "centrality": "gate", "source_ids": ["O3"], "accepted_qualifications": []},
+        {"id": "F2", "statement": "USGS freshwater withdrawals are not consumption and cannot by themselves establish conservation efficiency.", "centrality": "gate", "source_ids": ["O1"], "accepted_qualifications": []},
+        {"id": "F3", "statement": "The requested mechanical intervals propagate one-half unit of the last displayed digit and are not sampling or model confidence intervals.", "centrality": "major", "source_ids": ["O1", "O2"], "accepted_qualifications": ["Equivalent endpoint propagation is acceptable when formulas and unrounded inputs are exposed."]}
+      ]
+    },
+    {
+      "case_id": "test_004",
+      "verification_topics": ["CVE identity and product boundary", "vendor correction chronology", "KEV addition and due date", "mitigation versus fixed release", "blocked-source fallback"],
+      "sources": [
+        {"id": "O1", "publisher": "CISA", "title": "Known Exploited Vulnerabilities Catalog", "locator": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json", "body_kind": "structured_data", "captured_at": "2025-01-31", "snapshot_note": "Frozen anchor records the four requested CVE rows, KEV dates, required actions, and due dates as of the case cutoff."},
+        {"id": "O2", "publisher": "Ivanti", "title": "Connect Secure and Policy Secure advisories", "locator": "https://forums.ivanti.com/s/article/KB-CVE-2023-46805-Authentication-Bypass-CVE-2024-21887-Command-Injection-for-Ivanti-Connect-Secure-and-Ivanti-Policy-Secure-Gateways", "body_kind": "html", "captured_at": "2025-01-31", "snapshot_note": "Frozen anchor records Ivanti product scope, evolving remediation, and the need to use the latest authoritative update before cutoff."},
+        {"id": "O3", "publisher": "Fortinet", "title": "FG-IR-24-015", "locator": "https://www.fortiguard.com/psirt/FG-IR-24-015", "body_kind": "html", "captured_at": "2025-01-31", "snapshot_note": "Frozen anchor records FortiOS/FortiProxy CVE-2024-21762 affected and fixed version families."},
+        {"id": "O4", "publisher": "Palo Alto Networks", "title": "PAN-SA-2024-0015", "locator": "https://security.paloaltonetworks.com/CVE-2024-3400", "body_kind": "html", "captured_at": "2025-01-31", "snapshot_note": "Frozen anchor records PAN-OS GlobalProtect scope, exploitation updates, mitigations, and fixed releases through cutoff."}
+      ],
+      "facts": [
+        {"id": "F1", "statement": "All four requested CVEs were present in the CISA KEV catalog by the case cutoff, but each row has its own date added, due date, and required action.", "centrality": "gate", "source_ids": ["O1"], "accepted_qualifications": []},
+        {"id": "F2", "statement": "CVE-2023-46805 and CVE-2024-21887 concern Ivanti Connect Secure or Policy Secure boundaries and must not be transferred to unrelated Ivanti products.", "centrality": "major", "source_ids": ["O2"], "accepted_qualifications": []},
+        {"id": "F3", "statement": "CVE-2024-21762 and CVE-2024-3400 require separate Fortinet and Palo Alto Networks version/remediation chains.", "centrality": "major", "source_ids": ["O3", "O4"], "accepted_qualifications": []}
+      ]
+    },
+    {
+      "case_id": "test_005",
+      "verification_topics": ["intervention taxonomy", "surface versus air temperature", "radiant exposure and comfort", "nighttime effects", "maintenance and distributional transfer"],
+      "sources": [
+        {"id": "O1", "publisher": "City of Phoenix", "title": "Cool Pavement Pilot Program", "locator": "https://www.phoenix.gov/streets/coolpavement", "body_kind": "pdf", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records Phoenix pilot design, measured surface-temperature reductions, air-temperature findings, and implementation context."},
+        {"id": "O2", "publisher": "U.S. Environmental Protection Agency", "title": "Using Cool Pavements to Reduce Heat Islands", "locator": "https://www.epa.gov/heatislands/using-cool-pavements-reduce-heat-islands", "body_kind": "html", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records mechanism, pavement variants, potential benefits, tradeoffs, and evidence limitations."},
+        {"id": "O3", "publisher": "Arizona State University", "title": "Phoenix cool pavement evaluation", "locator": "https://sustainability-innovation.asu.edu/urban-climate/cool-pavement/", "body_kind": "pdf", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records measurement heights, timing, climate/site context, and pedestrian radiant-exposure concerns."}
+      ],
+      "facts": [
+        {"id": "F1", "statement": "Lower daytime pavement surface temperature does not by itself establish lower pedestrian heat exposure or meaningful neighborhood air-temperature reduction.", "centrality": "gate", "source_ids": ["O1", "O2", "O3"], "accepted_qualifications": []},
+        {"id": "F2", "statement": "Higher solar reflectance can reduce stored surface heat while increasing reflected shortwave radiation relevant to pedestrian radiant exposure and glare.", "centrality": "major", "source_ids": ["O2", "O3"], "accepted_qualifications": ["Magnitude is site-, material-, time-, and geometry-dependent."]},
+        {"id": "F3", "statement": "A supportable recommendation must be bounded to a monitored pilot or justified deferral rather than a promise of citywide cooling.", "centrality": "major", "source_ids": ["O1", "O2"], "accepted_qualifications": ["Reject is also acceptable when supported by local decision criteria and evidence."]}
+      ]
+    },
+    {
+      "case_id": "test_006",
+      "verification_topics": ["weights versus code artifact", "official license clauses", "acceptable use", "OSI terminology", "runtime dependency licenses"],
+      "sources": [
+        {"id": "O1", "publisher": "Meta Platforms", "title": "Llama 3.1 Community License Agreement", "locator": "https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/LICENSE", "body_kind": "repository", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records the official weight-license object, attribution/naming conditions, redistribution terms, and 700 million monthly-active-user threshold."},
+        {"id": "O2", "publisher": "Meta Platforms", "title": "Llama 3.1 Acceptable Use Policy", "locator": "https://www.llama.com/llama3/use-policy/", "body_kind": "html", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records that acceptable-use restrictions are a separate applicable policy component."},
+        {"id": "O3", "publisher": "Open Source Initiative", "title": "The Open Source Definition", "locator": "https://opensource.org/osd", "body_kind": "html", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records the OSD requirements, including no discrimination against persons, groups, or fields of endeavor."},
+        {"id": "O4", "publisher": "Open Source Initiative", "title": "Meta's Llama license is not Open Source", "locator": "https://opensource.org/blog/metas-llama-2-license-is-not-open-source", "body_kind": "html", "captured_at": "2026-06-30", "snapshot_note": "Frozen anchor records OSI's published reasoning; evaluator must distinguish Llama versions and later AI-definition process materials."}
+      ],
+      "facts": [
+        {"id": "F1", "statement": "The Llama 3.1 70B Instruct weights, reference code, hosted service, and third-party quantization are not automatically one licensed artifact.", "centrality": "gate", "source_ids": ["O1", "O2"], "accepted_qualifications": []},
+        {"id": "F2", "statement": "The official Llama 3.1 weight license contains conditions beyond a conventional permissive software license, including an additional threshold for products or services above 700 million monthly active users.", "centrality": "major", "source_ids": ["O1"], "accepted_qualifications": ["The report should quote the applicable text narrowly and avoid legal advice."]},
+        {"id": "F3", "statement": "An Apache-licensed reference-code component does not establish that the model weights satisfy an open-source-only infrastructure rule.", "centrality": "gate", "source_ids": ["O1", "O3", "O4"], "accepted_qualifications": []}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+source,deprecated_target,preferred_target,authority
+membrane flux,膜通量,跨膜通量,preferred_target_required
+region of interest,感興趣區,感興趣區域,preferred_target_required
+background correction,背景校正,背景校正,preferred_target_required
+spectral bleed-through,光譜串色,光譜串色,preferred_target_required

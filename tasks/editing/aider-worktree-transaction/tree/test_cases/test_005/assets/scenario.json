@@ -1,0 +1,1 @@
+{"schema_version":3,"repositories":["root","component"],"base_state_policy":"snapshot","publication":"committed","post_commit_external_move":"component-release","rollback_phase":"participant_rollback_committed","exact_index_stages":true}

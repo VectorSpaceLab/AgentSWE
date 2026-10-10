@@ -1,0 +1,1 @@
+{"schema_version":"1.0","policy_version":3,"roles":{"scientist":["science-red"],"maintainer":["code-red"],"operator":["ops-red"],"auditor":["audit-red"],"security":["security-red"]},"required_review_roles":["scientist","maintainer"]}

@@ -1,0 +1,331 @@
+{
+  "schema_version": "0905-edit-case-contract-v1",
+  "task": "dyad",
+  "sibling": "@@AGENTSWE_EDITING_TASKS@@/dyad-acceptance-driven/tree",
+  "dev_cases": [
+    "dev_001",
+    "dev_002"
+  ],
+  "hidden_cases": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "primary_user_goal_by_case": {
+    "test_001": "repair the current app and obtain durable Acceptance proof",
+    "test_002": "start the app preview exactly once after response loss",
+    "test_003": "control only the authorized app/chat run",
+    "test_004": "classify proof after workspace drift",
+    "test_005": "cancel preview and preserve monotonic terminal state",
+    "test_006": "recover interrupted Acceptance state after restart"
+  },
+  "primary_failure_axis_by_case": {
+    "test_001": "failed-first acceptance then focused repair",
+    "test_002": "idempotent preview-start retry",
+    "test_003": "generation and ownership isolation",
+    "test_004": "revision/target invalidation",
+    "test_005": "late callback after cancellation",
+    "test_006": "durable restart recovery"
+  },
+  "secondary_failure_axes_by_case": {
+    "test_001": [
+      "persistent proof readback"
+    ],
+    "test_002": [
+      "restart readback"
+    ],
+    "test_003": [
+      "nondisclosure"
+    ],
+    "test_004": [
+      "historical proof monotonicity"
+    ],
+    "test_005": [
+      "duplicate stop retry"
+    ],
+    "test_006": [
+      "ordinary chat compatibility"
+    ]
+  },
+  "dynamic_facts": {
+    "test_001": [
+      "app/chat/run ids",
+      "revision",
+      "target fingerprint",
+      "attestation id"
+    ],
+    "test_002": [
+      "operation id",
+      "session id",
+      "case-binding tuple"
+    ],
+    "test_003": [
+      "case-binding tuple",
+      "generation",
+      "control sequence"
+    ],
+    "test_004": [
+      "start/end revision",
+      "target fingerprint",
+      "drift mutation"
+    ],
+    "test_005": [
+      "session owner",
+      "control receipt",
+      "event sequence"
+    ],
+    "test_006": [
+      "persisted case-binding tuple",
+      "proof id",
+      "restart mutation"
+    ]
+  },
+  "candidate_visible_inputs": {
+    "test_001": [
+      "typed app task",
+      "Preview/Tests state"
+    ],
+    "test_002": [
+      "typed Acceptance commands and reads"
+    ],
+    "test_003": [
+      "typed control envelopes"
+    ],
+    "test_004": [
+      "workspace and Acceptance state"
+    ],
+    "test_005": [
+      "Tests stop and read APIs"
+    ],
+    "test_006": [
+      "typed chat and Acceptance reads"
+    ]
+  },
+  "evaluator_only_oracle": {
+    "test_001": [
+      "case app fixture",
+      "expected target and proof"
+    ],
+    "test_002": [
+      "spawn count",
+      "receipt bytes"
+    ],
+    "test_003": [
+      "authorized tuple",
+      "foreign session data"
+    ],
+    "test_004": [
+      "protected bytes",
+      "expected invalidation"
+    ],
+    "test_005": [
+      "late callback order",
+      "single proof identity"
+    ],
+    "test_006": [
+      "pre-restart records",
+      "partial-output mutation"
+    ]
+  },
+  "real_lower_entry": "adapters/lower_agent_launcher.py",
+  "product_api_entry": "environment/headless_chat_flow.py",
+  "broker_model": "deepseek-flash",
+  "broker_effort": "high",
+  "agent_authored_artifact": "dyad-lower-agent-artifact-v3 captured verbatim from the model finish action and bound to exact task/action/app/chat/run/session/revision/target evidence",
+  "scenario_dispatch_entry": "evaluator/scenario_contract.py",
+  "model_action_driver_entry": "environment/scenario_chat_flow.test.ts",
+  "scenario_dispatch": {
+    "test_001": "failed-first focused repair",
+    "test_002": "idempotent preview retry after lost response",
+    "test_003": "generation and ownership isolation",
+    "test_004": "revision and target invalidation",
+    "test_005": "late callback after cancellation",
+    "test_006": "durable restart recovery"
+  },
+  "executed_task_contract": "run-local executed_task.md starts with the evaluator-issued natural task, adds only dynamic public fixture facts and the generic product-action interface, and is SHA-256 bound through native evidence, agent artifact, private comparison, hidden record, and Result judge input",
+  "private_oracle_contract": "prepare_scenario keeps the current run's private oracle only as an evaluator-parent in-memory object and digest; no oracle file exists while the Candidate product subprocess runs, and private_oracle.json is persisted only after subprocess exit for comparison/final evidence",
+  "required_action_observation_contract": "ordered action names are insufficient: every required action must have dispatch_status=completed and a case-appropriate usable product observation; dispatcher validation errors, missing handlers, absent required reads, and missing attestation evidence fail closed, while test_003 accepts only real typed rejection or typed null nondisclosure envelopes",
+  "public_fixture_contract": "public_fixture.json has a closed key set containing dynamic target/operation/task identity and explicitly fixture-only fault injection; it contains no private required actions, required checks, axis oracle, or expected product terminal truth",
+  "result_judge_task_source": "run-local formal overlay copies each hidden record's exact executed_task_path and private_oracle_comparison_path; static sibling prompts are not a fallback",
+  "result_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+  "code_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+  "result_judge_broker": {
+    "owner": "harbor/formal_one_stop.py",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "startup_stage": "fresh post-hidden formal scoring stage",
+    "fresh_zero_call_required": true,
+    "external_endpoint_accepted_in_formal": false,
+    "pilot_started": false,
+    "stats": "result_judge_broker_initial.json plus result_judge_broker_stats.json/error",
+    "cleanup": "formal one-stop remove followed by inspect; unrelated_containers_touched=false"
+  },
+  "formal_one_stop_entry": "harbor/formal_one_stop.py",
+  "known_overlap_or_leakage": [
+    "native Electron launch remains smoke-only",
+    "the model sees the dynamic target and operation identity but not required action order or expected outcome",
+    "private oracle and comparison construction remain evaluator-only"
+  ],
+  "inventory": {
+    "dev": [
+      "dev_001",
+      "dev_002"
+    ],
+    "hidden": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ]
+  },
+  "case_binding_required": [
+    "app_id",
+    "chat_id",
+    "run_id",
+    "session_id",
+    "revision",
+    "target_fingerprint"
+  ],
+  "cases": {
+    "test_001": {
+      "natural_user_goal": "repair the current app and obtain durable Acceptance proof",
+      "primary_failure_axis": "failed-first acceptance then focused repair",
+      "secondary_axes": [
+        "persistent proof readback"
+      ],
+      "meaningful_dynamic_facts": [
+        "app/chat/run ids",
+        "workspace revision",
+        "target fingerprint",
+        "attestation id"
+      ],
+      "candidate_visible_inputs": [
+        "app task through typed chat",
+        "Preview/Tests state"
+      ],
+      "evaluator_only_oracle": [
+        "case app fixture",
+        "expected target and terminal proof"
+      ]
+    },
+    "test_002": {
+      "natural_user_goal": "start the app preview exactly once despite a lost response",
+      "primary_failure_axis": "idempotent preview start retry",
+      "secondary_axes": [
+        "restart readback"
+      ],
+      "meaningful_dynamic_facts": [
+        "operation id",
+        "session id",
+        "run id",
+        "revision",
+        "target fingerprint"
+      ],
+      "candidate_visible_inputs": [
+        "typed Acceptance commands and read surfaces"
+      ],
+      "evaluator_only_oracle": [
+        "actual spawn count",
+        "receipt bytes"
+      ]
+    },
+    "test_003": {
+      "natural_user_goal": "control only the authorized app/chat Acceptance run",
+      "primary_failure_axis": "generation and ownership isolation",
+      "secondary_axes": [
+        "nondisclosure"
+      ],
+      "meaningful_dynamic_facts": [
+        "app/chat/run tuple",
+        "generation",
+        "control sequence"
+      ],
+      "candidate_visible_inputs": [
+        "typed control envelopes"
+      ],
+      "evaluator_only_oracle": [
+        "authorized tuple",
+        "foreign session data"
+      ]
+    },
+    "test_004": {
+      "natural_user_goal": "classify Acceptance proof after workspace drift",
+      "primary_failure_axis": "revision/target invalidation",
+      "secondary_axes": [
+        "historical proof monotonicity"
+      ],
+      "meaningful_dynamic_facts": [
+        "start/end revision",
+        "target fingerprint",
+        "drift mutation"
+      ],
+      "candidate_visible_inputs": [
+        "workspace and typed Acceptance state"
+      ],
+      "evaluator_only_oracle": [
+        "protected bytes",
+        "expected invalidation"
+      ]
+    },
+    "test_005": {
+      "natural_user_goal": "cancel the app preview and preserve a monotonic terminal result",
+      "primary_failure_axis": "late callback after cancellation",
+      "secondary_axes": [
+        "duplicate stop retry"
+      ],
+      "meaningful_dynamic_facts": [
+        "session owner",
+        "control receipt",
+        "event sequence",
+        "revision",
+        "target fingerprint"
+      ],
+      "candidate_visible_inputs": [
+        "Tests stop and read APIs"
+      ],
+      "evaluator_only_oracle": [
+        "late callback ordering",
+        "single proof identity"
+      ]
+    },
+    "test_006": {
+      "natural_user_goal": "recover an interrupted Acceptance run after main/database restart",
+      "primary_failure_axis": "durable restart recovery",
+      "secondary_axes": [
+        "ordinary chat compatibility"
+      ],
+      "meaningful_dynamic_facts": [
+        "persisted app/chat/run tuple",
+        "revision",
+        "target fingerprint",
+        "proof id"
+      ],
+      "candidate_visible_inputs": [
+        "typed chat and Acceptance read APIs"
+      ],
+      "evaluator_only_oracle": [
+        "pre-restart records",
+        "corruption/partial-output mutation"
+      ]
+    }
+  },
+  "real_product_lower_entry": "typed chat:stream -> SQLite -> Git -> production Acceptance IPC",
+  "native_harness_role": "Electron launch is smoke only; headless typed Acceptance behavior is the scoreable path",
+  "formal_entry": "harbor/formal_one_stop.py --run-formal",
+  "artifact": "dyad-lower-agent-artifact-v3 authored in the model-selected finish action; evaluator/native evidence and private comparison are separate files",
+  "result_judge": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py once per scoreable hidden",
+  "code_judge": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py once per frozen Candidate",
+  "leakage_list": [
+    "hidden fixture/oracle",
+    "judge prompt",
+    "expected target proof",
+    "real credential"
+  ],
+  "readiness": "REPAIR",
+  "remaining_blocker": "Provider-free contracts now dispatch six distinct model-selected scenarios and route exact executed tasks to Result judging. Readiness remains REPAIR because no authorized provider/Docker/formal six-hidden run has demonstrated that a real model and Candidate complete those action contracts or scenario outcomes."
+}

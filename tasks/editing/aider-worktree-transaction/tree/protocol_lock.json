@@ -1,0 +1,13 @@
+{
+  "schema_version": "agentswe-edit-agentloop-protocol-lock-v1",
+  "benchmark_id": "12-edit-aider-worktree-transaction-agentloop-v1",
+  "source_digest_manifest": "meta/provenance/source_digest_manifest.json",
+  "lower_agent": {"product": "Aider", "entrypoint": "python -m aider", "edit_target_entrypoint": "python -m aider.worktree_plan_adapter", "model": "gpt-5.6-sol", "reasoning_effort": "medium", "transport": "evaluator-owned-broker"},
+  "candidate_credential": "broker-only-placeholder",
+  "builder": {"single_session": true, "feedback_revisions": "up_to_max_dev_rounds"},
+  "inventory": {"public_dev": ["dev_001", "dev_002"], "hidden": ["test_001", "test_002", "test_003", "test_004", "test_005", "test_006"]},
+  "lifecycle": {"accepted_submissions": "up_to_max_dev_rounds", "accepted_range": [1, 10], "fresh_feedback_after_each": true, "hidden_only_after_freeze": true, "freeze_latest_accepted": true, "dev_passed_is_automatic_freeze": false},
+  "legacy_native_result": false,
+  "status": "PARTIAL",
+  "status_reason": "static migration infrastructure; no real successful broker calls yet"
+}

@@ -1,0 +1,362 @@
+[
+  {
+    "sensor_id": "SN-9012",
+    "legacy_id": null,
+    "serial": "SERIAL-70011",
+    "reading": 17.63,
+    "status": "active",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-19T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9026",
+    "legacy_id": null,
+    "serial": "SERIAL-70025",
+    "reading": 26.17,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-15T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9020",
+    "legacy_id": null,
+    "serial": "SERIAL-70019",
+    "reading": 22.51,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-20T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-536",
+    "serial": "SERIAL-70036",
+    "reading": 32.88,
+    "status": "active",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-25T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9015",
+    "legacy_id": null,
+    "serial": "SERIAL-70014",
+    "reading": 19.46,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-05T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9031",
+    "legacy_id": null,
+    "serial": "SERIAL-70030",
+    "reading": 29.22,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-07T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9036",
+    "legacy_id": null,
+    "serial": "SERIAL-70035",
+    "reading": 32.27,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-22T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-520",
+    "serial": "SERIAL-70020",
+    "reading": 23.12,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-23T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9019",
+    "legacy_id": null,
+    "serial": "SERIAL-70018",
+    "reading": 21.9,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-17T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-524",
+    "serial": "SERIAL-70024",
+    "reading": 25.56,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-12T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9040",
+    "legacy_id": null,
+    "serial": "SERIAL-70039",
+    "reading": 34.71,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-11T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-516",
+    "serial": "SERIAL-70016",
+    "reading": 20.68,
+    "status": "active",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-11T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9004",
+    "legacy_id": null,
+    "serial": "SERIAL-70003",
+    "reading": 12.75,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-18T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-512",
+    "serial": "SERIAL-70012",
+    "reading": 18.24,
+    "status": "active",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-22T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9023",
+    "legacy_id": null,
+    "serial": "SERIAL-70022",
+    "reading": 24.34,
+    "status": "active",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-06T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9010",
+    "legacy_id": null,
+    "serial": "SERIAL-70009",
+    "reading": 16.41,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-13T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-500",
+    "serial": "SERIAL-70000",
+    "reading": 10.92,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-09T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9039",
+    "legacy_id": null,
+    "serial": "SERIAL-70038",
+    "reading": 34.1,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-08T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9022",
+    "legacy_id": null,
+    "serial": "SERIAL-70021",
+    "reading": 23.73,
+    "status": "active",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-26T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9038",
+    "legacy_id": null,
+    "serial": "SERIAL-70037",
+    "reading": 33.49,
+    "status": "active",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-05T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9016",
+    "legacy_id": null,
+    "serial": "SERIAL-70015",
+    "reading": 20.07,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-08T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9007",
+    "legacy_id": null,
+    "serial": "SERIAL-70006",
+    "reading": 14.58,
+    "status": "retired",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-27T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9035",
+    "legacy_id": null,
+    "serial": "SERIAL-70034",
+    "reading": 31.66,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-19T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-508",
+    "serial": "SERIAL-70008",
+    "reading": 15.8,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-10T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9014",
+    "legacy_id": null,
+    "serial": "SERIAL-70013",
+    "reading": 18.85,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-25T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9003",
+    "legacy_id": null,
+    "serial": "SERIAL-70002",
+    "reading": 12.14,
+    "status": "active",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-15T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9032",
+    "legacy_id": null,
+    "serial": "SERIAL-70031",
+    "reading": 29.83,
+    "status": "active",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-10T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9024",
+    "legacy_id": null,
+    "serial": "SERIAL-70023",
+    "reading": 24.95,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-09T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-504",
+    "serial": "SERIAL-70004",
+    "reading": 13.36,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-21T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-528",
+    "serial": "SERIAL-70028",
+    "reading": 28.0,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-24T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9034",
+    "legacy_id": null,
+    "serial": "SERIAL-70033",
+    "reading": 31.05,
+    "status": "active",
+    "location": "Snapshot Lab West",
+    "observed_at": "2026-06-16T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9008",
+    "legacy_id": null,
+    "serial": "SERIAL-70007",
+    "reading": 15.19,
+    "status": "active",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-07T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9030",
+    "legacy_id": null,
+    "serial": "SERIAL-70029",
+    "reading": 28.61,
+    "status": "active",
+    "location": "Snapshot Field 9",
+    "observed_at": "2026-06-27T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9028",
+    "legacy_id": null,
+    "serial": "SERIAL-70027",
+    "reading": 27.39,
+    "status": "retired",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-21T12:00:00Z"
+  },
+  {
+    "sensor_id": null,
+    "legacy_id": "LEG-532",
+    "serial": "SERIAL-70032",
+    "reading": 30.44,
+    "status": "active",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-13T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9002",
+    "legacy_id": null,
+    "serial": "SERIAL-70001",
+    "reading": 11.53,
+    "status": "active",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-12T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9006",
+    "legacy_id": null,
+    "serial": "SERIAL-70005",
+    "reading": 13.97,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-24T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9011",
+    "legacy_id": null,
+    "serial": "SERIAL-70010",
+    "reading": 17.02,
+    "status": "active",
+    "location": "Snapshot Roof A",
+    "observed_at": "2026-06-16T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9018",
+    "legacy_id": null,
+    "serial": "SERIAL-70017",
+    "reading": 21.29,
+    "status": "active",
+    "location": "Snapshot Pier 2",
+    "observed_at": "2026-06-14T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9027",
+    "legacy_id": null,
+    "serial": "SERIAL-70026",
+    "reading": 26.78,
+    "status": "active",
+    "location": "Snapshot Tunnel 3",
+    "observed_at": "2026-06-18T12:00:00Z"
+  }
+]

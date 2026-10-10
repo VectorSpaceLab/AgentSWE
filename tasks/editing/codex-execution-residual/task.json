@@ -1,0 +1,140 @@
+{
+  "id": "codex-execution-residual",
+  "family": "editing",
+  "short": "codex",
+  "title": "Codex execution residual",
+  "version": "15-edit-codex-execution-residual-agentloop-v5",
+  "tier": "T3",
+  "lite": false,
+  "status": "runnable",
+  "runner": "editing_agentloop_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe"
+  ],
+  "envs": [
+    "codex-project-memory-edit-v1"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": true,
+    "systemd_delegation": true,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git",
+      "systemd-run",
+      "bwrap",
+      "cc",
+      "zstd",
+      "curl"
+    ],
+    "disk_gb": 120
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 5,
+    "builder_session_sec": 18000,
+    "score": "Result only (Code axis skipped_by_policy)",
+    "runtime_model": "deepseek-flash/high",
+    "judge": "deepseek-flash/max, max_output_tokens 64000",
+    "early_stop_resample": "formal only, 1 extra logical request",
+    "freeze": "freeze_latest_accepted (a manual freeze of the latest accepted Candidate after the Builder's budget is exhausted is NOT automated in the tree; see runners/editing/tools/manual_freeze_budget_exhausted.py)"
+  },
+  "smoke": {
+    "profile": "single-dev-two-round-hidden-smoke-v1",
+    "accepted_dev_rounds": 2,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 28800,
+    "note": "this is the readiness/admission run; scores are not comparable"
+  },
+  "upstream": {
+    "repo": "https://github.com/openai/codex",
+    "commit": "fe01054a28fa4bd04716d9ceadb410f2443a50ce",
+    "git_tree": "b5caf956f90cc41cdb56d93be4a541c3a7cf02f0",
+    "license": "Apache-2.0",
+    "redistribute_a0": false
+  },
+  "runner_config": {
+    "tree": "tree",
+    "legacy_tree_name": "15-edit-codex-execution-residual-agentloop-v5",
+    "a0": {
+      "fetch": "a0/fetch.sh",
+      "dest": "tree/input/repository",
+      "lang_options": [
+        "en-upstream"
+      ],
+      "evaluator_digest_pins": [
+        [
+          "evaluator/code_inputs.py",
+          "BASELINE_DIGEST",
+          "aba04760755fd0aed49fd282dc7780cc2c6fc15b55d36b0abb37da2c58cc2fc3",
+          "control/code_eval.py tree_digest of the en-upstream a0; paper as-run zh a0 value 37bd1c05fd0e061c3524311889b3f86ec4fbbbbad9ede33f640d76ed69ab4c94. Read only by the Code-axis input preparation (axis retired, skipped_by_policy) and by the formal_one_stop.py --acceptance-candidate diagnostic preflight"
+        ]
+      ]
+    },
+    "hidden_issued": null,
+    "formal_extra_flags": [
+      "--benchmark <tree>"
+    ],
+    "task_environment": {},
+    "render_tokens": "see staging README: every @@AGENTSWE_*@@ token must be rendered to an absolute path at setup",
+    "harbor_profile": "site"
+  },
+  "language": {
+    "task_docs_as_run": "en",
+    "a0_as_run": "zh (machine-translated docs/fixtures in a0)",
+    "a0_functional_risk_files": 243,
+    "english_task_docs": "native",
+    "paper_as_run": {
+      "task_docs": "en",
+      "a0": "zh (machine-translated docs/fixtures in a0)"
+    },
+    "release_language": "en",
+    "release_task_docs": "English backtranslation under lang/en-backtranslation/ where present; native English otherwise",
+    "release_a0": "en-upstream",
+    "release_cjk_check": "tools/scan.py --release"
+  },
+  "paper": {
+    "columns": [
+      "DeepSeek-V4-Pro",
+      "GPT-5.6-Sol",
+      "GPT-5.5",
+      "DeepSeek-V4-Flash",
+      "Qwen3.6-35B-A3B"
+    ],
+    "result": [
+      35.0,
+      11.67,
+      70.0,
+      0,
+      0
+    ]
+  },
+  "notes": [
+    "Runnable: with deepseek-flash for every role, a readiness smoke completes two accepted dev rounds and hidden test_001 Result 30 (scoreable, valid, publishable), independent review 10/10, gate READY with source_unchanged; the release-provenance formal gate dry run passes. A submission whose own lower codex closes its connection mid-response is an infrastructure attempt and is not consumed (the broker request completes; no failed receipt is written). One unattributed provider-failure receipt makes a readiness smoke inadmissible; the release's Codex exporter attributes that case.",
+    "Environment: cargo-home comes from the sha-pinned archive when AGENTSWE_ENV_ARCHIVE_DIR holds it (about 20 s), otherwise by recipe: cargo fetch --locked of the a0 Cargo.lock from crates.io (resumable retries) plus the sha256-pinned rusty_v8 v150.4.0 asset; crates.io can be slow (about 19 min on one host; AGENTSWE_BUILD_PROXY is honoured). With either path the evaluator's offline baseline build of the unchanged a0 compiles (cargo 1.95.0). The crate cache (1,155 files) and the 6 git checkouts equal the paper environment byte for byte; rusty_v8 differs only in compression (the paper's .gz was recompressed; the library is identical).",
+    "Release change (2026-10-10): Docker 29 removes an exited or stopped --rm container asynchronously: for several seconds `docker inspect` still shows it and `docker rm -f` answers \"removal of container ... is already in progress\" (exit 1); Docker 24 has removed it by then. evaluator/harness/run_lower_agent_case.py cleanup_lower_container (after a deadline or transport-failure kill of the --rm lower container, absent_after_cleanup false made the case an evaluator_infrastructure_failure; the wait stays inside the case's 30 s evidence reserve) and harbor/formal_one_stop.py cleanup_broker record rm's stderr and, when rm answers \"already in progress\", wait up to 30 s for the container to be gone before deciding absence. Any other rm refusal is judged as before, and a container still present after the wait is not absent. Seen with Docker 29.2.1."
+  ]
+}

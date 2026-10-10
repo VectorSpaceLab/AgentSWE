@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benchmark.invalid/openhands/builder-broker-stats-v1.schema.json",
+  "type": "object",
+  "required": ["schema_version", "role", "protocol", "runtime", "requests"],
+  "properties": {
+    "schema_version": {"const": "agentswe-broker-stats/v1"},
+    "role": {"const": "builder"},
+    "protocol": {
+      "type": "object",
+      "required": ["model", "reasoning_effort", "transport"],
+      "properties": {
+        "model": {"const": "deepseek-flash"},
+        "reasoning_effort": {"const": "xhigh"},
+        "transport": {"const": "responses"}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["calls", "failures", "successful_calls", "input_tokens", "output_tokens", "total_tokens"]
+    },
+    "requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ok", "model", "reasoning_effort"],
+        "properties": {
+          "ok": {"type": "boolean"},
+          "model": {"const": "deepseek-flash"},
+          "reasoning_effort": {"const": "xhigh"}
+        }
+      }
+    }
+  }
+}

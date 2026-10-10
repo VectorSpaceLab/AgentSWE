@@ -1,0 +1,26 @@
+schema_version = "1.4"
+
+[task]
+name = "local/optimization-eval"
+version = "1.0.0"
+description = "Independent optimization benchmark Eval"
+authors = [{ name = "AgentSWE Harbor Adapter" }]
+
+[agent]
+timeout_sec = 960.0
+user = "root"
+network_mode = "public"
+
+[verifier]
+timeout_sec = 120.0
+user = "root"
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 300.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workdir = "/workspace"

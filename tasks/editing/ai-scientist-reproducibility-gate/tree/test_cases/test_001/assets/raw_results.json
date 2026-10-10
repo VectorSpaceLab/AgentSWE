@@ -1,0 +1,1 @@
+{"metric":"accuracy","scale":"fraction","rows":[{"experiment_id":"exp-base","seed":3,"value":0.70},{"experiment_id":"exp-aurora","seed":3,"value":0.74},{"experiment_id":"exp-shuffle","seed":3,"value":0.50}]}

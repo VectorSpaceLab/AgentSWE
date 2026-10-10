@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Tidepool firmware note</title></head><body>
+<h1 id="release-title">Tidepool humidity firmware release 2.3</h1>
+<p id="correction-rule">For devices H-7 and H-8 after the 2.3 activation time, corrected humidity equals logged humidity minus 2 percentage points.</p>
+<p id="threshold-rule">An alarm interval begins at the first corrected reading at or above 80 percent and ends at the timestamp of the first corrected reading below 80 percent.</p>
+<p id="duration-rule">Treat consecutive five-minute samples as a continuous interval; report elapsed minutes, not the number of samples.</p>
+<p id="panel-display-rule">Until the next panel reboot, the physical alarm lights continue to evaluate uncorrected logged humidity; the corrected dashboard uses release-2.3 values.</p>
+<p id="scope-gap">Release 2.3 does not diagnose battery condition or establish the physical cause of an alarm.</p>
+<p id="distractor">Tidepool salinity firmware 2.3-S uses a different correction and is unrelated.</p>
+</body></html>

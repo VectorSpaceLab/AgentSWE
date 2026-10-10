@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "candidate_digest", "candidate_1_digest", "candidate_2_digest", "source_submission_id", "builder_session_id", "candidate_1_feedback_sha256", "frozen_at", "hidden_started_at"],
+  "properties": {
+    "schema_version": {"const": "dyad-agentloop-freeze-v1"},
+    "candidate_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_submission_id": {"type": "string", "minLength": 1},
+    "builder_session_id": {"type": "string", "minLength": 1},
+    "candidate_1_feedback_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "frozen_at": {"type": "string", "minLength": 1},
+    "hidden_started_at": {"type": ["string", "null"], "minLength": 1},
+    "candidate_1_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_2_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

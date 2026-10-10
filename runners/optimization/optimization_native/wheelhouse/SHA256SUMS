@@ -1,0 +1,22 @@
+# sha256  <abi>/<wheel>: offline verifier dependencies installed into stabilized TerminalBench task images
+# (the paper's wheelhouse, pinned from its protocol lock; setup fetches each from the configured package index)
+80bab7bfc629882493af4aa31a4cfa43a4c57c83813253626916b8c7ada83476  py312/PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12  py312/iniconfig-2.3.0-py3-none-any.whl
+fd83c01228a688733f1ded5201c678f0c53ecc1006ffbc404db9f7a899ac6249  py312/numpy-2.2.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c  py312/packaging-26.3-py3-none-any.whl
+ba24af48643b12ffe49b27065d3babd52702d95ab70f50e1b34f71ca703e2c0d  py312/pandas-2.3.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af  py312/pip-25.1.1-py3-none-any.whl
+e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746  py312/pluggy-1.6.0-py3-none-any.whl
+2c3a01f313ffe27ac4126f4c2e5ea0f36a5fc6ab51f8726cf41fee4b256680bd  py312/pyarrow-20.0.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176  py312/pygments-2.20.0-py3-none-any.whl
+539c70ba6fcead8e78eebbf1115e8b589e7565830d7d006a8723f19ac8a0afb7  py312/pytest-8.4.1-py3-none-any.whl
+a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427  py312/python_dateutil-2.9.0.post0-py2.py3-none-any.whl
+dd95840dd199baea12d9cc096a1d452caa6596a1c1e4b5f3dbd1541855d5e815  py312/pytz-2026.3.post1-py2.py3-none-any.whl
+4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274  py312/six-1.17.0-py2.py3-none-any.whl
+dc096730c87af6cab1b171c9d532be840741ff5d459015e7f6947bd7d7e54931  py312/tzdata-2026.3-py2.py3-none-any.whl
+f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12  py313/iniconfig-2.3.0-py3-none-any.whl
+d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c  py313/packaging-26.3-py3-none-any.whl
+2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af  py313/pip-25.1.1-py3-none-any.whl
+e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746  py313/pluggy-1.6.0-py3-none-any.whl
+81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176  py313/pygments-2.20.0-py3-none-any.whl
+539c70ba6fcead8e78eebbf1115e8b589e7565830d7d006a8723f19ac8a0afb7  py313/pytest-8.4.1-py3-none-any.whl

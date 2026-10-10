@@ -1,0 +1,68 @@
+{
+    "schema_version": 2,
+    "policy_id": "hidden-shell",
+    "policy_epoch": 42,
+    "previous_policy_snapshot_digest": "sha256:76d277ad3ae7998f5630be34aa77295a050eb870cf28c6fd5f8259fc93e3ee65",
+    "revision": "shell-generation-v2",
+    "mode": "enforce",
+    "default_decision": "deny",
+    "tools": {
+        "Bash": "allow"
+    },
+    "paths": {
+        "allow": [
+            "src/**",
+            "tmp/**"
+        ],
+        "deny": [
+            ".env",
+            "secrets/**"
+        ]
+    },
+    "commands": {
+        "allow": [
+            "env",
+            "command",
+            "timeout",
+            "nice",
+            "nohup",
+            "bash",
+            "sh",
+            "pytest",
+            "printf"
+        ],
+        "deny": [
+            "rm",
+            "curl",
+            "cat"
+        ],
+        "audit_only": [],
+        "rewrites": []
+    },
+    "network": {
+        "allow_hosts": [],
+        "deny_hosts": [
+            "blocked.test",
+            "169.254.169.254"
+        ]
+    },
+    "mcp": {},
+    "reservation": {
+        "max_inflight": 2,
+        "max_session_inflight": 1,
+        "lease_seconds": 3,
+        "reclaim_expired": true
+    },
+    "approval": {
+        "threshold": 2,
+        "ticket_seconds": 4,
+        "principals": ["shell-a", "shell-b", "shell-c"],
+        "tools": ["Bash"],
+        "principal_groups": {"shell-a":"release", "shell-b":"security", "shell-c":"release"},
+        "required_groups": ["release", "security"]
+    },
+    "ownership": {"handoff_seconds": 5, "allowed_targets": ["shell-recovery", "shell-spare"]},
+    "delivery": {"claim_seconds": 3, "max_pending": 12, "require_completion": true},
+    "repair": {"max_quarantine_bytes": 1048576, "required_verifiers": 2, "verifiers": ["shell-repair-a", "shell-repair-b"]},
+    "continuation": {"token_seconds": 4, "max_pending": 2, "tools": ["Bash"]}
+}

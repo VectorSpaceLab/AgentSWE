@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["classification", "infra_valid", "score"],
+  "properties": {
+    "classification": {"type": "string"},
+    "infra_valid": {"type": "boolean"},
+    "score": {"type": ["number", "null"]}
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "benchmark_id": "osworld-desktop-agent-optimization-v1",
+  "contamination_policy": {
+    "builder_visible": [
+      "input",
+      "dev_cases",
+      "starter_harness",
+      "sanitized task_contract"
+    ],
+    "builder_withheld": [
+      "hidden cases",
+      "task UUID mapping",
+      "evaluator",
+      "VM",
+      "credentials",
+      "runtime traces"
+    ]
+  },
+  "editable_space": [
+    "run_harness.py",
+    "desktop_policy.py"
+  ],
+  "evaluation": {
+    "candidate_path": "Candidate JSONL -> trusted OSWorld native runtime",
+    "candidate_self_report_ignored": true,
+    "eval_path": "independent no-network Eval reads evaluator-owned native_result.json",
+    "main_score": "round(100 * official OSWorld reward)",
+    "missing_or_unofficial_native_result": "infrastructure fail-closed",
+    "same_evaluator_runtime_model_and_budget": true
+  },
+  "evaluator": {
+    "official_only": true,
+    "score": "round(100 * DesktopEnv.evaluate())"
+  },
+  "fixed_space": [
+    "prediction_schema",
+    "osworld_source_commit",
+    "task_mapping",
+    "vm_and_provider",
+    "vision_model_and_broker",
+    "action_executor",
+    "resource_budgets",
+    "official_evaluator"
+  ],
+  "initial_artifact": {
+    "digest": "6551f4d13c728ca88df765ae4718cdf5aa697d6a0518ac2bfd3920eef7c6f88e",
+    "entrypoint": "run_harness.py",
+    "kind": "starter_harness",
+    "name": "OSWorld Screenshot ReAct Agent",
+    "path": "starter_harness"
+  },
+  "prediction_contract": {
+    "agent_fields": [
+      "kind",
+      "instructions",
+      "planning_guidance",
+      "recovery_guidance",
+      "verification_guidance"
+    ],
+    "agent_kind": "osworld_screenshot_react",
+    "forbidden_capabilities": [
+      "import_path",
+      "model",
+      "endpoint",
+      "api_key",
+      "shell",
+      "plugin"
+    ],
+    "top_level_fields": [
+      "id",
+      "agent"
+    ]
+  },
+  "runtime": {
+    "agent_kind": "osworld_screenshot_react",
+    "agent_wall_seconds": 900,
+    "max_actions": 30,
+    "max_model_calls": 30,
+    "max_model_tokens": 100000,
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "screen": [
+      1920,
+      1080
+    ]
+  },
+  "schema_version": "3.0",
+  "source": {
+    "commit": "091f5ef1d5544bc74953c77875d5feb5bed30108",
+    "excluded_task_ids": [
+      "46407397-a7d5-4c6b-92c6-dbe038b1457b",
+      "4e9f0faf-2ecc-4ae8-a804-28c9a75d1ddc",
+      "897e3b53-5d4d-444b-85cb-2cdc8a97d903",
+      "a96b564e-dbe9-42c3-9ccf-b4498073438a"
+    ],
+    "repository": "xlang-ai/OSWorld",
+    "selected_task_count": 35,
+    "source_task_count": 39,
+    "split_file": "evaluation_examples/test_small.json",
+    "split_selection": "deterministic stratified 10 dev / 25 hidden from pinned test_small"
+  },
+  "splits": {
+    "dev": {
+      "cases": [
+        {
+          "app": "chrome",
+          "case_id": "dev_001",
+          "upstream_id": "bb5e4c0d-f964-439c-97b6-bdb9747de3f4"
+        },
+        {
+          "app": "chrome",
+          "case_id": "dev_002",
+          "upstream_id": "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3"
+        },
+        {
+          "app": "chrome",
+          "case_id": "dev_003",
+          "upstream_id": "35253b65-1c19-4304-8aa4-6884b8218fc0"
+        },
+        {
+          "app": "gimp",
+          "case_id": "dev_004",
+          "upstream_id": "7a4deb26-d57d-4ea9-9a73-630f66a7b568"
+        },
+        {
+          "app": "libreoffice_calc",
+          "case_id": "dev_005",
+          "upstream_id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff"
+        },
+        {
+          "app": "libreoffice_impress",
+          "case_id": "dev_006",
+          "upstream_id": "5d901039-a89c-4bfb-967b-bf66f4df075e"
+        },
+        {
+          "app": "libreoffice_writer",
+          "case_id": "dev_007",
+          "upstream_id": "0810415c-bde4-4443-9047-d5f70165a697"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "dev_008",
+          "upstream_id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a"
+        },
+        {
+          "app": "os",
+          "case_id": "dev_009",
+          "upstream_id": "5ea617a3-0e86-4ba6-aab2-dac9aa2e8d57"
+        },
+        {
+          "app": "vs_code",
+          "case_id": "dev_010",
+          "upstream_id": "0ed39f63-6049-43d4-ba4d-5fa2fe04a951"
+        }
+      ],
+      "count": 10
+    },
+    "hidden": {
+      "cases": [
+        {
+          "app": "gimp",
+          "case_id": "test_001",
+          "upstream_id": "554785e9-4523-4e7a-b8e1-8016f565f56a"
+        },
+        {
+          "app": "libreoffice_calc",
+          "case_id": "test_002",
+          "upstream_id": "42e0a640-4f19-4b28-973d-729602b5a4a7"
+        },
+        {
+          "app": "libreoffice_calc",
+          "case_id": "test_003",
+          "upstream_id": "abed40dc-063f-4598-8ba5-9fe749c0615d"
+        },
+        {
+          "app": "libreoffice_impress",
+          "case_id": "test_004",
+          "upstream_id": "550ce7e7-747b-495f-b122-acdc4d0b8e54"
+        },
+        {
+          "app": "libreoffice_writer",
+          "case_id": "test_005",
+          "upstream_id": "0a0faba3-5580-44df-965d-f562a99b291c"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_006",
+          "upstream_id": "5990457f-2adb-467b-a4af-5c857c92d762"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_007",
+          "upstream_id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_008",
+          "upstream_id": "510f64c8-9bcc-4be1-8d30-638705850618"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_009",
+          "upstream_id": "c867c42d-a52d-4a24-8ae3-f75d256b5618"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_010",
+          "upstream_id": "74d5859f-ed66-4d3e-aa0e-93d7a592ce41"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_011",
+          "upstream_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_012",
+          "upstream_id": "48d05431-6cd5-4e76-82eb-12b60d823f7d"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_013",
+          "upstream_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_014",
+          "upstream_id": "d1acdb87-bb67-4f30-84aa-990e56a09c92"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_015",
+          "upstream_id": "deec51c9-3b1e-4b9e-993c-4776f20e8bb2"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_016",
+          "upstream_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_017",
+          "upstream_id": "716a6079-22da-47f1-ba73-c9d58f986a38"
+        },
+        {
+          "app": "multi_apps",
+          "case_id": "test_018",
+          "upstream_id": "2373b66a-092d-44cb-bfd7-82e86e7a3b4d"
+        },
+        {
+          "app": "os",
+          "case_id": "test_019",
+          "upstream_id": "5812b315-e7bd-4265-b51f-863c02174c28"
+        },
+        {
+          "app": "thunderbird",
+          "case_id": "test_020",
+          "upstream_id": "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397"
+        },
+        {
+          "app": "thunderbird",
+          "case_id": "test_021",
+          "upstream_id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e"
+        },
+        {
+          "app": "vlc",
+          "case_id": "test_022",
+          "upstream_id": "59f21cfb-0120-4326-b255-a5b827b38967"
+        },
+        {
+          "app": "vlc",
+          "case_id": "test_023",
+          "upstream_id": "8f080098-ddb1-424c-b438-4e96e5e4786e"
+        },
+        {
+          "app": "vs_code",
+          "case_id": "test_024",
+          "upstream_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+        },
+        {
+          "app": "vs_code",
+          "case_id": "test_025",
+          "upstream_id": "276cc624-87ea-4f08-ab93-f770e3790175"
+        }
+      ],
+      "count": 25
+    }
+  },
+  "track_semantics": {
+    "empty_submission": false,
+    "goal": "optimize the supplied runnable initial agent",
+    "same_runtime_for_starter_and_candidate": true,
+    "track": "A"
+  },
+  "upstream": {
+    "commit": "091f5ef1d5544bc74953c77875d5feb5bed30108",
+    "repository": "https://github.com/xlang-ai/OSWorld"
+  }
+}

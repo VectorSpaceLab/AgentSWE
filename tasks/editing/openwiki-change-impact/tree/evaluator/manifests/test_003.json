@@ -1,0 +1,22 @@
+{
+  "case_id": "test_003",
+  "change_kind": "diff",
+  "scenario": "generation_tenant_isolation",
+  "transaction": {"state_dir": ".openwiki-impact", "tenant_id": "reader-red", "request_id": "migration-005", "generation": 5, "payload_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "owner_id": "red-worker", "lease_ms": 30000},
+  "publication": {"root": ".published-wiki", "site_id": "read-api", "generation": 5, "base_path": "/v3/"},
+  "search": {"root": ".search-wiki", "index_id": "read-api", "generation": 5},
+  "search_queries": [{"query": "Version 3 read migration", "limit": 4, "expected_paths": ["openwiki/migrations/v3.md"]}, {"query": "Create API", "limit": 1, "expected_paths": ["openwiki/api/create.md"]}],
+  "ceilings": {"surface_availability": 25, "safety_boundary": 30},
+  "expected_pages": ["openwiki/api/read.md", "openwiki/migrations/v3.md"],
+  "direct_pages": ["openwiki/api/read.md"],
+  "unaffected_pages": ["openwiki/api/create.md"],
+  "required_text": {"openwiki/api/read.md": ["legacyFetch", "removed", "fetchRecord", "deprecated", "getRecord"], "openwiki/migrations/v3.md": ["getRecord", "migration"]},
+  "forbidden_text": {"openwiki/api/read.md": ["legacyFetch remains supported"], "openwiki/migrations/v3.md": ["import { legacyFetch }"]},
+  "expected_examples": {"read-migration": "record:42\n"},
+  "expected_stale_kinds": ["removed-api", "deprecated-api", "migration-guidance"],
+  "preserved_tokens": ["HANDWRITTEN: Version 2 archives remain readable but are not regenerated."],
+  "preserved_anchors": ["read-api", "v3-read-migration"],
+  "expected_diagrams": [],
+  "expected_link_suffixes": ["migrations/v3.md"],
+  "weights": {"preserved_executable_docs": 15, "static_publication": 30, "full_text_search": 30, "cross_surface_convergence": 20, "production_compatibility_security": 5}
+}

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benchmark.invalid/openhands/freeze-manifest-v1.schema.json",
+  "type": "object",
+  "required": ["schema_version", "candidate_digest", "source_submission", "frozen_at_unix", "hidden_allowed"],
+  "properties": {"schema_version": {"const":"agentswe-freeze-manifest/v1"}, "candidate_digest": {"type":"string", "pattern":"^[a-f0-9]{64}$"}, "source_submission": {"const":2}, "frozen_at_unix": {"type":"number"}, "hidden_allowed": {"const":true}},
+  "additionalProperties": false
+}

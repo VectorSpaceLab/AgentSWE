@@ -1,0 +1,13 @@
+# Evaluator Instructions
+
+You receive the active case's `input.md`, its runtime `assets/`, the candidate's six final artifacts, parser/render results, and the global rubric. You do not receive or use a hidden answer key. Reconstruct the case truth from the active sources and explicit priority rules.
+
+1. Confirm launch, timeout, closed-corpus network behavior, and target-artifact validity. Apply a zero rule immediately when required.
+2. Run `python evaluator/validate_artifacts.py <case_dir> <output_dir>`. This checks output schemas, IDs, source references, quote/observation provenance, and native locators against actual bytes and parsed PDF/DOCX/XLSX/SVG/raster content.
+3. Run `python evaluator/validate_source_native_review.py <case_dir> <output_dir>`. This verifies exact source bundle bytes/hashes, claim-manifest equality, reciprocal IDs/relations, embedded offline source data, DOM targets, and static safety requirements.
+4. In a fresh offline browser, invoke every manifest claim and evidence target through `selectClaim`, `selectEvidence`, and `getState`. Prefer `node evaluator/validate_viewer_interaction.mjs ...` with an available Chromium-family executable. Block all external and secondary file requests. Verify complete reciprocal highlight sets, genuinely visible selected claim/evidence/source elements, status/confidence/relation, source ID/hash, locator metadata, exact-byte source download hash, and claim+evidence URL-fragment changes. API-name strings, hidden test shims, or one representative passing pair are insufficient.
+5. Independently recompute every requested sum, mean, weighted mean, average-end-area volume, dilution, fare/time calculation, energy estimate, price ratio, threshold comparison, and duration from cited source inputs. Inspect figures and raster regions visually when the question requires it.
+6. Check every material claim for entailment and every locator for precision. Confirm that controlling and superseded evidence use the correct support/contradiction relation and that unanswerable claims are justified.
+7. Score all six rubric dimensions. Cite concrete evidence for every deduction by output file plus claim ID, evidence ID, section/table/cell, source page/region, figure element, raster region, validator message, or browser behavior. Ignore implementation choices and differences from any reference implementation.
+
+Return: validity state; `hard_feature_valid`; six dimension scores and maxima; total before and after any cap; evidence and deductions per dimension; major errors; and a concise overall assessment. Do not reveal hidden-case facts outside the evaluator report for that case.

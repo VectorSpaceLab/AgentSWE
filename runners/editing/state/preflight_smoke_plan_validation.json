@@ -1,0 +1,11 @@
+{
+  "schema_version": "agentswe-edit-preflight-smoke-plan-validation-v1",
+  "checked_at": "2026-09-18T03:59:43.456445+00:00",
+  "valid": true,
+  "provider_calls": 0,
+  "errors": [],
+  "plan_sha256": "9a96688feefde51615bf8fa00feb9709f2af71d2d53024396a34a2b95b50dafe",
+  "matrix_sha256": "a650046a17a2e2e9cbfe349e0c3d86c5e397767598ff41c932c3cb17ec72b8a9",
+  "gate_sha256": "318990b240668bf6eb136c7d26768ef43d9f0b04ffffafbff831c33c2e7ed677",
+  "task_count": 10
+}
