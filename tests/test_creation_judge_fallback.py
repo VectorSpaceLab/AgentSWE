@@ -1,4 +1,6 @@
-"""Result-judge context overflow fallback of the repository-bug-repair and database-analytics evals (stdlib unittest).
+"""Result-judge context overflow fallback of the Creation evals whose judge prompt carries the whole candidate output:
+repository-bug-repair, database-analytics, formal-theorem-proving, schema-guided-web-extraction and web-research-report
+(stdlib unittest).
 
     python3 -m unittest tests/test_creation_judge_fallback.py      (no model calls; the judge endpoint is faked)
 
@@ -33,7 +35,9 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 CREATION = ROOT / "tasks" / "creation"
-TASKS = ("repository-bug-repair", "database-analytics")
+TASKS = ("repository-bug-repair", "database-analytics", "formal-theorem-proving", "schema-guided-web-extraction",
+         "web-research-report")
+IMAGE_TASKS = ("database-analytics", "schema-guided-web-extraction", "web-research-report")  # judge sees images
 
 
 def overflow_body(messages: int) -> bytes:
@@ -73,6 +77,18 @@ DIMENSIONS = {
     "database-analytics": {"request_artifact_compliance": 8, "numerical_sql_correctness": 36,
                            "business_definition_coherence": 20, "privacy_insufficiency": 18,
                            "anomaly_auditability": 12, "chart_communication_consistency": 6},
+    "formal-theorem-proving": {"kernel_project_validity": 35, "requirement_constraint_compliance": 20,
+                               "premise_proof_completeness": 20, "generalization_semantic_fidelity": 15,
+                               "honest_diagnostics_unprovable": 10},
+    "schema-guided-web-extraction": {"schema_identity_entity_coverage": 20, "field_correctness_normalization": 25,
+                                     "temporal_conflict_recovery": 20, "field_evidence_integrity": 15,
+                                     "workflow_state_action_evidence": 15, "operational_reporting_safety_budget": 5},
+    "web-research-report": {"request_compliance_decision_utility": 12,
+                            "factual_entity_temporal_quantitative_fidelity": 22,
+                            "retrieval_depth_source_selection_independent_verification": 18,
+                            "evidence_graph_auditability_conflict_provenance": 24,
+                            "analysis_conflict_resolution_research_integrity": 14,
+                            "reproducibility_communication_artifact_consistency": 10},
 }
 DELIVERABLES = {
     "repository-bug-repair": {"solution.patch": "diff --git a/app.py b/app.py\n+fixed = True\n",
@@ -81,7 +97,18 @@ DELIVERABLES = {
     "database-analytics": {"answer.json": '{"status": "answered"}\n', "queries.json": "[]\n",
                            "result.csv": "a,b\n1,2\n", "chart.json": "{}\n", "dashboard.html": "<html></html>\n",
                            "decision.json": "{}\n", "lineage.json": "{}\n", "results/q1.csv": "a\n1\n"},
+    "formal-theorem-proving": {"solution.patch": "diff --git a/Proof.lean b/Proof.lean\n+theorem t : True := trivial\n",
+                               "proof_report.json": '{"schema_version": "1.1", "status": "proved"}\n'},
+    "schema-guided-web-extraction": {"records.json": "[]\n", "evidence.json": '{"sources": []}\n',
+                                     "interaction_trace.json": '[{"seq": 1}]\n',
+                                     "session_summary.json": '{"completed": true}\n',
+                                     "screenshots/capture_index.json": "[]\n"},
+    "web-research-report": {"report.md": "# Decision\nAnswer [C1].\n", "sources.json": '{"sources": []}\n',
+                            "evidence_graph.json": '{"claims": []}\n'},
 }
+# A one-pixel PNG the trusted harness carries as evidence (the judge receives it as an input_image part).
+PNG = (b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89"
+       b"\x00\x00\x00\rIDATx\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8N\x00\x00\x00\x00IEND\xaeB`\x82")
 
 
 class Response:
@@ -105,8 +132,11 @@ class Response:
 
 def judge_output(task: str, case_id: str) -> dict:
     dims = {name: {"score": maximum, "max": maximum, "evidence": "ok"} for name, maximum in DIMENSIONS[task].items()}
-    return {"case_id": case_id, "evaluation_state": "scoreable", "validity_gate": True, "dimensions": dims,
-            "score": 100, "major_errors": [], "assessment": "valid"}
+    value = {"case_id": case_id, "evaluation_state": "scoreable", "validity_gate": True, "dimensions": dims,
+             "score": 100, "major_errors": [], "assessment": "valid"}
+    if task == "schema-guided-web-extraction":
+        value["hard_feature_valid"] = True
+    return value
 
 
 def digest(value) -> str:
@@ -116,12 +146,18 @@ def digest(value) -> str:
 class Case:
     """An eval task as the adapter stages it: manifest, active case, evaluator prompt files and candidate output."""
 
-    def __init__(self, task: str, root: Path, *, nul_bytes: int = 200_000, notes_chars: int = 12_000):
+    def __init__(self, task: str, root: Path, *, nul_bytes: int = 200_000, notes_chars: int = 12_000,
+                 image: bool = False):
         self.task, self.root, self.case_id = task, root, "test_002"
         audit = {"syscall_audit": "openat(AT_FDCWD, \"work/state.db\", O_RDWR) = 3\n" * 600, "exit_code": 0}
         self.harness = {"case": self.case_id, "evaluation_state": "scoreable", "validity_gate": True,
                         "public_tests": {"passed": True}, "recovery_validation": {"execution": audit, "valid": True}}
         self.harness["trusted_replay"] = copy.deepcopy(self.harness["recovery_validation"])
+        if task == "schema-guided-web-extraction":
+            self.harness["hard_feature_valid"] = True
+        if image:
+            self.harness["screenshot"] = {"mime": "image/png", "base64": base64.b64encode(PNG).decode(),
+                                          "sha256": hashlib.sha256(PNG).hexdigest()}
         contract = {"case_id": self.case_id, "validity_gate": True, "recovery_required": False,
                     "migration_valid": True, "candidate_digest": "c" * 64, "output_digest": "e" * 64,
                     "case_digest": "d" * 64, "recovery_validation": copy.deepcopy(self.harness["recovery_validation"]),
@@ -193,6 +229,10 @@ class Case:
 
 def prompt_of(payload: dict) -> str:
     return payload["input"][0]["content"][0]["text"]
+
+
+def image_parts_of(payload: dict) -> list:
+    return payload["input"][0]["content"][1:]
 
 
 def ok(task: str) -> Response:
@@ -545,6 +585,147 @@ class DatabaseMainTest(MainTest):
                           "score": 0, "major_errors": [], "assessment": ""}, sort_keys=True))
 
 
+class FormalMainTest(MainTest):
+    """formal-theorem-proving: the full harness (with the candidate execution contract) and the whole output tree."""
+    task = "formal-theorem-proving"
+
+    def test_api_receipt_keeps_the_attempts_of_both_requests(self):
+        result, sent = self.case.run([ok(self.task)])
+        self.assertEqual(result["api_receipt"]["attempts"], [{"attempt": 1, "http_status": 200}])
+        (self.case.root / "out" / "prompt_reduction.json").unlink(missing_ok=True)
+        result, sent = self.case.run([Response(503), Response(400, OVERFLOW_BODY), ok(self.task)])
+        self.assertEqual(len(sent), 3)
+        self.assertIs(result["evidence_reduced"], True)
+        self.assertEqual(result["api_receipt"]["attempts"],
+                         [{"attempt": 1, "http_status": 503, "prompt": "original"},
+                          {"attempt": 2, "http_status": 400, "prompt": "original"},
+                          {"attempt": 3, "http_status": 200, "prompt": "reduced"}])
+        self.assertEqual([(e["prompt"], e["attempt"], e["status"]) for e in result["judge_http_errors"]],
+                         [("original", 2, 400)])
+        self.assertEqual(result["provider_counts"]["gateway_text"], 3)
+
+    def test_lean_build_outputs_are_omitted_as_binary_then_non_artifact(self):
+        lake = self.case.output / "_work" / "repo" / ".lake" / "build"
+        (lake / "lib").mkdir(parents=True)
+        (lake / "lib" / "Proof.olean").write_bytes(b"olean\x00\x01\x02" + b"\x00" * 50_000)
+        (lake / "ir").mkdir()
+        (lake / "ir" / "Proof.ilean").write_text(json.dumps({"version": 3, "module": "Proof", "refs": ["x"] * 4000}))
+        result, sent = self.case.run([Response(400, DEEPSEEK_OVERFLOW), ok(self.task)])
+        receipt = result["prompt_reduction"]
+        self.assertIs(receipt["all_steps_forced"], True)  # the provider counted more than the estimate
+        second = prompt_of(sent[1])
+        self.assertRegex(second, r"\n--- _work/repo/\.lake/build/lib/Proof\.olean ---\n\[BINARY FILE OMITTED: ")
+        self.assertRegex(second, r"\n--- _work/repo/\.lake/build/ir/Proof\.ilean ---\n\[NON-ARTIFACT FILE OMITTED: ")
+        for rel, text in DELIVERABLES[self.task].items():
+            self.assertIn(f"\n--- {rel} ---\n{text}", second)
+        self.assertIn("\x00", prompt_of(sent[0]))  # the first request still carries the full tree
+
+
+class SchemaMainTest(MainTest):
+    """The text-evidence evals (schema-guided-web-extraction, web-research-report): the judge sees the harness
+    without base64 payloads, the output tree without image, PDF, SQLite and zip files, and every trusted image."""
+    task = "schema-guided-web-extraction"
+    heading = "Harness result (authoritative validity evidence)"
+
+    def judge_view(self, result: dict) -> dict:
+        return result["harness_result"]
+
+    def paper_prompt(self, result: dict) -> str:
+        module, case_id = self.module, self.case.case_id
+        shape = {"case_id": case_id, "evaluation_state": "scoreable", "validity_gate": True,
+                 "dimensions": {name: {"score": 0, "max": maximum, "evidence": ""}
+                                for name, maximum in DIMENSIONS[self.task].items()},
+                 "score": 0, "major_errors": [], "assessment": ""}
+        if self.task == "schema-guided-web-extraction":
+            shape["hard_feature_valid"] = True
+        return (
+            (self.case.root / "eval_prompt.md").read_text(encoding="utf-8")
+            + "\n\n# Rubric\n"
+            + (self.case.root / "rubric.md").read_text(encoding="utf-8")
+            + f"\n\n# Active case: {case_id}\n"
+            + (self.case.root / "cases" / case_id / "input.md").read_text(encoding="utf-8")
+            + f"\n\n# {self.heading}\n"
+            + json.dumps(module.text_evidence(self.judge_view(result)), indent=2, sort_keys=True)
+            + "\n\n# Candidate final artifacts (source is intentionally unavailable)\n"
+            + module.tree_text(self.case.output, (JUDGE_KEY, RESOURCE_SECRET))
+            + "\n\nReturn one JSON object only. Required shape: "
+            + json.dumps(shape, sort_keys=True))
+
+    def test_images_are_sent_unchanged_and_counted_in_the_estimate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.case = Case(self.task, Path(tmp), image=True)
+            (self.case.output / "screenshots").mkdir(exist_ok=True)
+            (self.case.output / "screenshots" / "state.png").write_bytes(PNG)  # never part of the text prompt
+            result, sent = self.case.run([Response(400, OVERFLOW_BODY), ok(self.task)])
+            self.assertEqual(len(sent), 2)
+            self.assertEqual(prompt_of(sent[0]), self.paper_prompt(result))
+            self.assertNotIn("screenshots/state.png", prompt_of(sent[0]))
+            parts = image_parts_of(sent[0])
+            self.assertEqual(parts, [{"type": "input_image",
+                                      "image_url": "data:image/png;base64," + base64.b64encode(PNG).decode()}])
+            self.assertEqual(image_parts_of(sent[1]), parts)  # the reduced request carries the same images
+            image_tokens = self.module.image_token_estimate(parts)
+            self.assertEqual(image_tokens, 1 + 85)
+            receipt = result["prompt_reduction"]
+            self.assertEqual(receipt["original"]["estimated_tokens"],
+                             self.module.estimate_tokens(prompt_of(sent[0])) + image_tokens)
+            self.assertEqual(receipt["reduced"]["estimated_tokens"],
+                             self.module.estimate_tokens(prompt_of(sent[1])) + image_tokens)
+            self.assertEqual(result["image_receipts"], [{"sha256": hashlib.sha256(PNG).hexdigest()}])
+            self.assertEqual(result["provider_counts"]["gateway_image"], 2)
+            self.assertEqual(result["provider_counts"]["gateway_text"], 0)
+            directory = self.case.root / "verify"
+            directory.mkdir()
+            (directory / "eval_result.json").write_text(json.dumps(result))
+            argv = ["verify_score.py", "--manifest", str(self.case.root / "eval_manifest.json"), "--eval-result",
+                    str(directory / "eval_result.json"), "--harness-result",
+                    str(self.case.root / "out" / "harness_result.json"), "--verifier-dir", str(directory / "v")]
+            with mock.patch.object(sys, "argv", argv):
+                self.assertEqual(VERIFIERS[self.task].main(), 0)
+            contract = json.loads((directory / "v" / "score_contract.json").read_text())
+            self.assertEqual((contract["score"], contract["contract_valid"], contract["errors"]), (100, True, []))
+
+    def test_a_case_the_deterministic_gate_settles_never_reaches_the_judge(self):
+        manifest = json.loads((self.case.root / "eval_manifest.json").read_text())
+        contract = manifest["candidate_execution_contract"]
+        if self.task == "schema-guided-web-extraction":
+            contract["trusted_harness_result"]["validity_gate"] = False
+        else:
+            contract["fatal_gate"] = True
+            contract["fatal_reasons"] = ["registered_fatal_condition"]
+        contract["trusted_harness_result_sha256"] = digest(contract["trusted_harness_result"])
+        (self.case.root / "eval_manifest.json").write_text(json.dumps(manifest))
+        result, sent = self.case.run([])
+        self.assertEqual(sent, [])
+        self.assertEqual((result["evidence_reduced"], result["prompt_reduction"], result["judge_http_errors"]),
+                         (False, None, []))
+        self.assertEqual(result["provider_counts"]["gateway_text"], 0)
+
+
+class WebMainTest(SchemaMainTest):
+    task = "web-research-report"
+    heading = "Harness result (validity and scoreability evidence)"
+
+    def judge_view(self, result: dict) -> dict:
+        """The judge sees the trusted harness with the eval's own annotations; eval_result keeps the trusted copy."""
+        return dict(result["harness_result"], case_id=self.case.case_id, fatal_gate=False, fatal_reasons=[],
+                    advisory_findings=[], output_structure_valid=True, evaluation_state="scoreable")
+
+    def test_diagnostics_are_not_deliverables(self):
+        (self.case.output / "diagnostics").mkdir()
+        (self.case.output / "diagnostics" / "retrieval.log").write_text("GET https://example.org 200\n" * 400)
+        report = {"status": "success", "artifacts": ["report.md", "sources.json", "evidence_graph.json"],
+                  "errors": [], "usage": {}}
+        (self.case.output / "run_report.json").write_text(json.dumps(report))
+        result, sent = self.case.run([Response(400, DEEPSEEK_OVERFLOW), ok(self.task)])
+        second = prompt_of(sent[1])
+        self.assertRegex(second, r"\n--- diagnostics/retrieval\.log ---\n\[NON-ARTIFACT FILE OMITTED: \d+ bytes, ")
+        self.assertIn("\n--- run_report.json ---\n" + json.dumps(report), second)
+        for rel, text in DELIVERABLES[self.task].items():
+            self.assertIn(f"\n--- {rel} ---\n{text}", second)
+        self.assertIn("GET https://example.org 200", prompt_of(sent[0]))
+
+
 class ResultCountTest(unittest.TestCase):
     """`agentswe result` says how many cases the Result judge scored on reduced evidence."""
 
@@ -590,13 +771,29 @@ class ResultCountTest(unittest.TestCase):
 
 
 class SharedBlockTest(unittest.TestCase):
-    def test_the_fallback_is_identical_in_both_evals(self):
+    def test_the_fallback_is_identical_in_every_eval_that_carries_it(self):
         pattern = re.compile(r"^# --- judge context overflow fallback .*?^# --- end judge context overflow fallback ---$",
                              re.M | re.S)
         blocks = [pattern.findall((CREATION / task / "adapter/eval-template/solution/run_eval.py").read_text())
                   for task in TASKS]
-        self.assertEqual([len(found) for found in blocks], [1, 1])
-        self.assertEqual(blocks[0], blocks[1])
+        self.assertEqual([len(found) for found in blocks], [1] * len(TASKS))
+        for task, found in zip(TASKS[1:], blocks[1:]):
+            self.assertEqual(found, blocks[0], task)
+
+    def test_final_artifacts_follow_each_delivery_contract(self):
+        expected = {
+            "repository-bug-repair": ("solution.patch", "repair_report.json", "run_report.json", "migration_report.json"),
+            "formal-theorem-proving": ("solution.patch", "proof_report.json", "run_report.json"),
+            "schema-guided-web-extraction": ("records.json", "evidence.json", "interaction_trace.json",
+                                             "session_summary.json", "run_report.json", "screenshots"),
+            "web-research-report": ("report.md", "sources.json", "evidence_graph.json", "run_report.json"),
+        }
+        for task, artifacts in expected.items():
+            with self.subTest(task=task):
+                self.assertEqual(EVALS[task].FINAL_ARTIFACTS, artifacts)
+                contract = (CREATION / task / "benchmark" / "input" / "02_interface_and_delivery.md").read_text()
+                for name in artifacts:
+                    self.assertIn(f"`{name}", contract)
 
 
 if __name__ == "__main__":

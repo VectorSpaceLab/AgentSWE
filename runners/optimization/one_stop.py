@@ -529,7 +529,47 @@ def stage_builder_job(
     return config_path, jobs_dir.resolve() / job_name, task_dir
 
 
-def run_adapter_phase(
+# Statuses run_adapter_phase leaves in a phase's infrastructure_resume_state.json while the phase is still going.
+UNFINISHED_PHASE_STATUSES = {"running", "resuming", "paused_infrastructure"}
+
+
+def record_phase_end(log_dir: Path, exc: BaseException) -> None:
+    """Close a phase's resume state when the phase raises: status `infrastructure_error` (the caller, e.g. the dev
+    controller, may replay it as a new phase) or `failed`, with finished_at and the error. States the phase already
+    closed (completed, blocked on environment repair, resume exhausted) are left as they are."""
+    state_path = log_dir / "infrastructure_resume_state.json"
+    try:
+        state = adapter.read_json(state_path)
+    except (OSError, ValueError):
+        return
+    if not isinstance(state, dict) or state.get("status") not in UNFINISHED_PHASE_STATUSES:
+        return
+    attempts = sorted(log_dir.glob("attempt_[0-9][0-9][0-9]"))
+    status = "infrastructure_error" if adapter.is_infrastructure_error(exc) else "failed"
+    if state.get("status") != "paused_infrastructure":
+        # a paused phase already holds the event for its last attempt
+        state.setdefault("events", []).append({
+            "attempt": int(attempts[-1].name[len("attempt_"):]) if attempts else None,
+            "phase_id": state.get("phase_id"),
+            "status": status,
+            "error_type": type(exc).__name__,
+            "error_message": str(exc)[-4000:],
+            "at": adapter.utc_now(),
+        })
+    state.update({"status": status, "finished_at": adapter.utc_now()})
+    adapter.write_json(state_path, state)
+
+
+def run_adapter_phase(**kwargs: Any) -> tuple[dict[str, Any], Path]:
+    """Run one evaluation phase (see _run_adapter_phase); a phase that raises records how it ended."""
+    try:
+        return _run_adapter_phase(**kwargs)
+    except Exception as exc:
+        record_phase_end(kwargs["run_dir"] / "controller_logs" / kwargs["phase_id"], exc)
+        raise
+
+
+def _run_adapter_phase(
     *,
     run_dir: Path,
     phase_id: str,

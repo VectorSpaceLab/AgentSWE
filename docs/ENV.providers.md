@@ -30,8 +30,8 @@ effort (`profiles/README.md`). So leave `AGENTSWE_DEFAULT_BASE_URL` unset for th
 | Role | Who calls the model | Reaches the provider through |
 |---|---|---|
 | `BUILDER` | Codex CLI 0.144.1, the coding agent under test | Creation, Optimization: broker role `builder` (Codex sees a placeholder token only). Editing: the provider directly; Codex holds the real key in its container's `auth.json` for the Builder session (`docs/ENV.md`, "Where the keys are") |
-| `RUNTIME` | the built candidate agent, during dev and held-out evaluation; Editing lower agents; Optimization agents under test | the task's evaluator broker (unchanged accounting), which points at broker role `runtime` |
-| `JUDGE` | Result/Code judges, τ³ user simulator and NL-assertion judge, PinchBench LLM grader | the task's evaluator/judge broker, which points at broker role `judge` |
+| `RUNTIME` | the built candidate agent, during dev and held-out evaluation; Editing lower agents; Optimization agents under test and the τ³ user simulator (as in the paper runs: same model and effort as the agent, and its calls count toward the row's runtime budget) | the task's evaluator broker (unchanged accounting), which points at broker role `runtime` |
+| `JUDGE` | Result/Code judges; in Optimization the τ³ NL-assertion judge, the PinchBench LLM grader and the BrowseComp grader, which take only the JUDGE effort and call the RUNTIME provider and model | the task's evaluator/judge broker, which points at broker role `judge`; in Optimization the task's evaluator broker |
 | `SEARCH` | candidates of T2 tasks (web research, PPTX sourcing, BrowseComp) | broker role `search` (candidates never see the real key) |
 
 ## Variables

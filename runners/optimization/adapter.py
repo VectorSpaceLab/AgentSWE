@@ -1454,8 +1454,48 @@ def collect_candidate(job: Path, cases: tuple[str, ...], candidate_digest: str) 
     return {"cases": values, "total_score": sum(v["score"] for v in values), "mean_score": sum(v["score"] for v in values) / len(values), "harbor_stats": result.get("stats"), "candidate_digest": candidate_digest}
 
 
+def eval_trial_exception(trial: Path, job_stats: Any) -> str | None:
+    """The exception Harbor recorded for an Eval trial, as "Type: message", or None when it recorded none.
+
+    Harbor writes it to the trial's result.json (exception_info) and lists the trial under the job's
+    exception_stats; either one marks the trial as errored.
+    """
+    try:
+        trial_result = read_json(trial / "result.json")
+    except (OSError, ValueError):
+        trial_result = None
+    info = trial_result.get("exception_info") if isinstance(trial_result, dict) else None
+    if isinstance(info, dict):
+        kind = str(info.get("exception_type") or "HarborTrialError")
+        message = str(info.get("exception_message") or info.get("message") or "")
+        return f"{kind}: {message}" if message else kind
+    if info:
+        return str(info)
+    evals = job_stats.get("evals") if isinstance(job_stats, dict) else None
+    for row in (evals.values() if isinstance(evals, dict) else ()):
+        exceptions = row.get("exception_stats") if isinstance(row, dict) else None
+        for kind, trials in (exceptions.items() if isinstance(exceptions, dict) else ()):
+            if isinstance(trials, list) and trial.name in trials:
+                return str(kind)
+    return None
+
+
 def collect_eval(job: Path, cases: tuple[str, ...]) -> dict[str, Any]:
     result = read_json(job / "result.json")
+    # An Eval trial that Harbor ended with an exception before the evaluator wrote its score contract (environment
+    # start or verifier timeout, a failed compose command) was never scored: that is an infrastructure failure of the
+    # evaluation, as in collect_candidate, so the phase is replayed instead of failing on the missing contract.
+    # A trial whose contract exists is read as before, whatever Harbor recorded after the verifier finished.
+    failures = []
+    for case_id in cases:
+        trial = next(p for p in job.iterdir() if p.is_dir() and p.name.startswith(case_id + "__"))
+        if (trial / "verifier/score_contract.json").is_file():
+            continue
+        exception = eval_trial_exception(trial, result.get("stats"))
+        if exception is not None:
+            failures.append({"case_id": case_id, "trial": trial.name, "exception": exception})
+    if failures:
+        raise InfrastructureEvaluationError(f"Eval Harbor infrastructure failure: {failures}")
     values = []
     for case_id in cases:
         trial = next(p for p in job.iterdir() if p.is_dir() and p.name.startswith(case_id + "__"))

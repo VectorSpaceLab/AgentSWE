@@ -136,6 +136,56 @@ class OptimizationInfrastructureStatus(unittest.TestCase):
                                                           "candidate-test": 0})
         self.assertEqual(res["score"], 20.0)
 
+    # A dev evaluation that ended without a resume (a public tau3 run, 2026-10-10): the dev controller's record has
+    # infrastructure_error ("Type: message") and finished_at, not the error_type / at / error_message of a pause.
+    def strict_dev_failure(self):
+        phase_id = f"{RUN_ID}-dev-r001-a001"
+        stderr = self.logs / phase_id / "attempt_001" / "stderr.log"
+        write(stderr, "Traceback (most recent call last):\n  ...\nFileNotFoundError: [Errno 2] No such file or "
+                      "directory: '/h/jobs/e/dev_011__TJJ6fdS/verifier/score_contract.json'\n")
+        write(self.run_dir / "infrastructure_events.json", [
+            {"round": 1, "evaluation_attempt": 1, "submission_id": "dev-r001-a001-69ebed6376cb",
+             "state": "infrastructure_error", "finished_at": "2026-10-10T10:44:37+00:00", "accepted_round": False,
+             "infrastructure_error": f"RuntimeError: {phase_id} failed; see {stderr}"}])
+        return stderr
+
+    def test_a_dev_evaluation_that_ended_without_resume_shows_its_error(self):
+        self.strict_dev_failure()
+        dev = self.status()["infrastructure"]["dev_evaluation_resumes"]
+        self.assertEqual((dev["events"], dev["round"], dev["state"], dev["submission_id"]),
+                         (1, 1, "infrastructure_error", "dev-r001-a001-69ebed6376cb"))
+        error = dev["last_error"]
+        self.assertEqual((error["type"], error["at"]), ("RuntimeError", "2026-10-10T10:44:37+00:00"))
+        self.assertTrue(error["message"].startswith(f"RuntimeError: {RUN_ID}-dev-r001-a001 failed; see "))
+        self.assertTrue(error["detail"].startswith("FileNotFoundError: [Errno 2] No such file or directory"))
+        last = opt.last_infrastructure_error(self.run_dir, RUN_ID)  # dev phases passed: falls back to the dev record
+        self.assertEqual((last["source"], last["type"]), ("infrastructure_events.json", "RuntimeError"))
+
+    def test_the_phase_is_baseline_until_the_starter_has_been_evaluated(self):
+        (self.run_dir / "freeze_manifest.json").unlink()
+        self.assertEqual(self.status()["phase"], "baseline")
+        write(self.run_dir / "baseline.json", {"score": 45.0})
+        self.assertEqual(self.status()["phase"], "builder/dev")
+        with mock.patch.object(opt.util, "pid_alive", return_value=False):
+            self.assertEqual(opt.status(Cfg(), self.launch)["phase"], "stopped")
+
+    def test_result_lists_each_phase_final_status(self):
+        self.write_phase("dev-r001-a001", "infrastructure_error", 1, [
+            {"attempt": 1, "phase_id": f"{RUN_ID}-dev-r001-a001", "status": "paused_infrastructure",
+             "error_type": "HarborProcessError", "error_message": "x", "at": "t"}], mtime=2000)
+        self.write_phase("dev-r001-a002", "completed_without_resume", 0, [], mtime=2500)
+        self.write_phase("initial-test", "completed_without_resume", 0, [], mtime=3000)
+        self.write_phase("candidate-test", "completed_without_resume", 0, [], mtime=4000)
+        write(self.run_dir / "one_stop_summary.json", {"status": "completed", "hidden_mean": 42.5,
+                                                        "initial_test_mean": 50.0})
+        res = opt.result(Cfg(), self.launch)
+        self.assertEqual(res["evaluation_phase_status"], {
+            "baseline": "completed_without_resume", "dev-r001-a001": "infrastructure_error",
+            "dev-r001-a002": "completed_without_resume", "initial-test": "completed_without_resume",
+            "candidate-test": "completed_without_resume"})
+        self.assertEqual(res["infrastructure_resumes"]["dev-r001-a001"], 1)
+        self.assertEqual(res["score"], -15.0)
+
 
 if __name__ == "__main__":
     unittest.main()

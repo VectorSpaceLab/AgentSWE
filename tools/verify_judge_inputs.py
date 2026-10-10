@@ -2,17 +2,22 @@
 """Replay archived Creation judge inputs through run_eval.py and check that the first judge request is unchanged.
 
     python3 tools/verify_judge_inputs.py --task repository-bug-repair --run RUN_DIR [--run ...] --scratch DIR \\
-        [--ledger judge-events.jsonl ...] [--reference staged|PATH] [--overflow-case PHASE/CASE] [--dump-prompts]
+        [--ledger judge-events.jsonl ...] [--reference staged|PATH] [--compare body|prompt]
+        [--overflow-case PHASE/CASE] [--dump-prompts]
 
-For every staged eval task under RUN_DIR/evaluations/*/eval_tasks/<case> (repository-bug-repair, database-analytics)
-it rebuilds the judge request offline: the archived manifest, active case, eval prompt, rubric and candidate output
-(read from the task's compose binds) go through run_eval.py main() with the judge endpoint faked, and the request
-body it would send is captured. Nothing is sent and the archive is only read; outputs go under --scratch.
+For every staged eval task under RUN_DIR/evaluations/*/eval_tasks/<case>, or RUN_DIR/eval_tasks/<case> (an eval-only
+run), of a Creation task whose eval carries the overflow fallback (repository-bug-repair, database-analytics,
+formal-theorem-proving, schema-guided-web-extraction, web-research-report) it rebuilds the judge request offline: the
+archived manifest, active case, eval prompt, rubric and candidate output (read from the task's compose binds) go
+through run_eval.py main() with the judge endpoint faked, and the request body it would send is captured. Nothing is
+sent and the archive is only read; outputs go under --scratch.
 
   * --ledger: the request body's sha256 (json.dumps(body, sort_keys=True, ensure_ascii=False), as the judge broker
     hashes it) must be in the ledger's body_sha256 set (release runs, whose judge went through the broker).
   * --reference staged: the archived copy of run_eval.py that ran for the case (or PATH) builds the request from the
     same inputs; the two request bodies must be byte-identical (paper archives, whose judge was called directly).
+    With --compare prompt only the judge input must be byte-identical: the prompt text and every image part, for an
+    archive whose run_eval.py sent them to a judge configured differently (model, effort, output limit, streaming).
   * the replayed harness evidence must equal the archived eval_result.json harness_result when that file exists.
   * --overflow-case: replays one case against a judge that answers the first request with the provider's
     context-overflow HTTP 400 and the second with a judge result, and prints the prompt_reduction receipt.
@@ -26,12 +31,14 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
 
-TASK_FILES = {"repository-bug-repair": "tasks/creation/repository-bug-repair/adapter/eval-template/solution/run_eval.py",
-              "database-analytics": "tasks/creation/database-analytics/adapter/eval-template/solution/run_eval.py"}
+TASK_FILES = {task: f"tasks/creation/{task}/adapter/eval-template/solution/run_eval.py" for task in (
+    "repository-bug-repair", "database-analytics", "formal-theorem-proving", "schema-guided-web-extraction",
+    "web-research-report")}
 ROOT = Path(__file__).resolve().parents[1]
 PLACEHOLDER_KEY = "replay-placeholder-not-a-key"
 OVERFLOW_BODY = ('{"error":{"message":"This model\'s maximum context length is 1048576 tokens. However, you requested '
@@ -63,6 +70,9 @@ class Response:
         yield "data: " + json.dumps({"type": "response.output_text.delta", "delta": json.dumps(self.judge)})
         yield "data: " + json.dumps({"type": "response.completed", "response": {}})
 
+    def json(self):  # a judge called without streaming
+        return {"status": "completed", "output_text": json.dumps(self.judge)}
+
     def close(self):
         pass
 
@@ -71,12 +81,16 @@ def post(url, headers=None, json=None, timeout=None, stream=None):
     import json as _json
     body = _json.dumps(json, sort_keys=True, ensure_ascii=False)
     prompt = json["input"][0]["content"][0]["text"]
+    parts = json["input"][0]["content"][1:]
     record = {"broker_sha256": hashlib.sha256(body.encode("utf-8", "surrogatepass")).hexdigest(),
               "prompt_sha256": hashlib.sha256(prompt.encode("utf-8", "surrogatepass")).hexdigest(),
-              "prompt_chars": len(prompt), "images": len(json["input"][0]["content"]) - 1,
+              "images_sha256": hashlib.sha256(_json.dumps(parts, sort_keys=True).encode()).hexdigest(),
+              "prompt_chars": len(prompt), "images": len(parts),
               "fields": {k: v for k, v in json.items() if k != "input"}}
     if hasattr(module, "estimate_tokens"):
         record["estimated_tokens"] = module.estimate_tokens(prompt)
+        if hasattr(module, "image_token_estimate"):
+            record["estimated_image_tokens"] = module.image_token_estimate(parts)
     if spec.get("dump_dir"):
         path = pathlib.Path(spec["dump_dir"]) / ("request_%d.txt" % len(requests_sent))
         path.write_text(prompt, encoding="utf-8", errors="surrogatepass")
@@ -149,6 +163,20 @@ def archived_eval_result(phase: Path, case: str) -> Path | None:
     return paths[-1] if len(paths) == 1 else None
 
 
+def key_variables(run_eval: Path) -> set[str]:
+    """The judge-key environment variables a run_eval.py reads; each is set to the placeholder (an archived
+    run_eval.py may read its key under another name)."""
+    names = set(re.findall(r"environ\.get\(\s*[\"']([A-Z0-9_]*API_KEY)[\"']", run_eval.read_text(encoding="utf-8")))
+    return (names or {"DEEPSEEK_API_KEY"}) - {"AGENTSWE_JUDGE_API_KEY"}
+
+
+def eval_tasks(run: Path) -> list[Path]:
+    """Staged eval tasks of a run: per phase (RUN/evaluations/<phase>/eval_tasks/<case>) or of an eval-only run
+    (RUN/eval_tasks/<case>, whose phase is RUN itself)."""
+    found = sorted(run.glob("evaluations/*/eval_tasks/*")) + sorted(run.glob("eval_tasks/*"))
+    return [task_dir for task_dir in found if (task_dir / "solution" / "eval_manifest.json").is_file()]
+
+
 def capture(python: str, run_eval: Path, task_dir: Path, case: str, out_dir: Path, responses: list,
             dump_dir: Path | None) -> dict:
     volumes, judge_env = binds(task_dir)
@@ -158,7 +186,7 @@ def capture(python: str, run_eval: Path, task_dir: Path, case: str, out_dir: Pat
             "candidate_output": volumes.get("/candidate-output") or str(task_dir / "input" / "candidate_output"),
             "eval_prompt": volumes.get("/evaluator/eval_prompt.md", ""), "rubric": volumes.get("/evaluator/rubric.md", ""),
             "out_dir": str(out_dir), "responses": responses, "dump_dir": str(dump_dir) if dump_dir else None,
-            "env": dict(judge_env, DEEPSEEK_API_KEY=PLACEHOLDER_KEY)}
+            "env": dict(judge_env, **{name: PLACEHOLDER_KEY for name in key_variables(run_eval)})}
     out_dir.mkdir(parents=True, exist_ok=True)
     if dump_dir:
         dump_dir.mkdir(parents=True, exist_ok=True)
@@ -181,6 +209,9 @@ def main() -> int:
     parser.add_argument("--scratch", type=Path, required=True)
     parser.add_argument("--ledger", type=Path, action="append", default=[])
     parser.add_argument("--reference", help="'staged' (the archived run_eval.py of each case) or a run_eval.py path")
+    parser.add_argument("--compare", choices=("body", "prompt"), default="body",
+                        help="with --reference: the whole request body must match (default), or only the judge "
+                             "input (prompt text and image parts)")
     parser.add_argument("--run-eval", type=Path, help="the run_eval.py under test (default: this checkout's)")
     parser.add_argument("--python", default=sys.executable, help="interpreter for run_eval.py")
     parser.add_argument("--overflow-case", help="PHASE/CASE to replay against a context-overflow 400")
@@ -197,9 +228,7 @@ def main() -> int:
                     ledger[event["body_sha256"]] = event
     rows, reference_hashes = [], {}
     for run in args.run:
-        for task_dir in sorted(run.glob("evaluations/*/eval_tasks/*")):
-            if not (task_dir / "solution" / "eval_manifest.json").is_file():
-                continue
+        for task_dir in eval_tasks(run):
             phase, case = task_dir.parent.parent, task_dir.name
             key = f"{phase.name}/{case}"
             scratch = args.scratch / run.name / phase.name / case
@@ -210,8 +239,9 @@ def main() -> int:
             row["requests"] = len(new["requests"])
             first = new["requests"][0] if new["requests"] else None
             if first:
-                row.update({k: first.get(k) for k in ("broker_sha256", "prompt_chars", "estimated_tokens",
-                                                      "prompt_file", "images")})
+                row.update({k: first.get(k) for k in ("broker_sha256", "prompt_sha256", "images_sha256", "prompt_chars",
+                                                      "estimated_tokens", "estimated_image_tokens", "prompt_file",
+                                                      "images")})
             archived_path = archived_eval_result(phase, case)
             archived = read_json(archived_path) if archived_path else None
             if archived is not None and isinstance(new["eval_result"], dict):
@@ -232,8 +262,19 @@ def main() -> int:
                 row["reference_sha256"] = digest
                 row["reference_requests"] = len(old["requests"])
                 row["reference_error"] = old["error"]
-                row["reference_match"] = (len(old["requests"]) == len(new["requests"]) and all(
-                    a["broker_sha256"] == b["broker_sha256"] for a, b in zip(old["requests"][:1], new["requests"][:1])))
+                same_count = len(old["requests"]) == len(new["requests"])
+                pairs = list(zip(old["requests"][:1], new["requests"][:1]))
+                row["reference_body_match"] = same_count and all(
+                    a["broker_sha256"] == b["broker_sha256"] for a, b in pairs)
+                row["reference_prompt_match"] = same_count and all(
+                    (a["prompt_sha256"], a["images_sha256"]) == (b["prompt_sha256"], b["images_sha256"])
+                    for a, b in pairs)
+                row["reference_match"] = row["reference_body_match" if args.compare == "body" else
+                                             "reference_prompt_match"]
+                if pairs and not row["reference_body_match"]:
+                    row["reference_field_differences"] = sorted(
+                        key for key in set(pairs[0][0]["fields"]) | set(pairs[0][1]["fields"])
+                        if pairs[0][0]["fields"].get(key) != pairs[0][1]["fields"].get(key))
             if args.overflow_case == key and first:
                 tokens = row.get("ledger_input_tokens")
                 messages = int(tokens) - 30 if isinstance(tokens, int) else 1_360_700
@@ -264,6 +305,10 @@ def main() -> int:
         failures += summary["ledger_unmatched_cases"]
     if args.reference:
         summary["reference_run_eval_sha256"] = reference_hashes
+        summary["compare"] = args.compare
+        summary["reference_body_matches"] = sum(1 for r in rows if r.get("reference_body_match"))
+        summary["reference_prompt_matches"] = sum(1 for r in rows if r.get("reference_prompt_match"))
+        summary["reference_field_differences"] = sorted({k for r in rows for k in r.get("reference_field_differences", [])})
         summary["reference_matches"] = sum(1 for r in rows if r.get("reference_match"))
         summary["reference_mismatches"] = [r["case"] for r in rows if r.get("reference_match") is False]
         summary["reference_errors"] = sum(1 for r in rows if r.get("reference_error"))

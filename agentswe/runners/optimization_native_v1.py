@@ -22,8 +22,9 @@ import shlex
 import shutil
 import socket
 import subprocess
+import time
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from .. import util
 from ..config import REPO_ROOT, Config
@@ -31,7 +32,7 @@ from ..doctor import docker_ip
 from ..profiles import staged
 from ..registry import Task
 from .creation_harbor_v1 import (active_runs, ended_without_result, free_port, generate_codex_config,
-                                 process_gone, run_containers, start_role_broker)
+                                 process_gone, start_role_broker)
 
 FAMILY_DIR = "optimization"
 POOLS = {"AGENTSWE_OPTIMIZATION_POOL": "198.18.0.0/15", "AGENTSWE_TAU3_POOL": "198.18.0.0/15",
@@ -312,10 +313,32 @@ def infrastructure_status(run_dir: Path, run_id: str) -> dict | None:
     if events:
         last = events[-1]
         value["dev_evaluation_resumes"] = {
-            "events": len(events), "round": last.get("round"), "resume_attempt": last.get("resume_attempt"),
-            "state": last.get("state"), "last_error": {"type": last.get("error_type"), "at": last.get("at"),
-                                                       "message": _short(last.get("error_message"))}}
+            "events": len(events), "round": last.get("round"), "submission_id": last.get("submission_id"),
+            "resume_attempt": last.get("resume_attempt", last.get("infrastructure_resume_attempts")),
+            "state": last.get("state"), "last_error": _dev_event_error(last)}
     return value
+
+
+def _dev_event_error(event: dict) -> dict:
+    """A dev controller event's error as type, time and short message. A resume pause records error_type, at and
+    error_message; the record of a submission that ended without a resume (state infrastructure_error) records
+    infrastructure_error ("Type: message") and finished_at. When the message names a phase's stderr.log, `detail` is
+    that log's last line (the adapter's own error)."""
+    kind, message = event.get("error_type"), event.get("error_message")
+    combined = event.get("infrastructure_error") or event.get("last_infrastructure_error")
+    if not message and combined:
+        message = str(combined)
+        head, sep, _ = message.partition(": ")
+        if not kind and sep and re.fullmatch(r"[A-Za-z_][\w.]*", head):
+            kind = head
+    error = {"type": kind, "at": event.get("at") or event.get("finished_at") or event.get("paused_at"),
+             "message": _short(message)}
+    match = re.search(r"see (/\S+/stderr\.log)", str(message or ""))
+    if match and Path(match.group(1)).is_file():
+        lines = [line for line in Path(match.group(1)).read_text(errors="replace").splitlines() if line.strip()]
+        if lines:
+            error["detail"] = _short(lines[-1])
+    return error
 
 
 def status(cfg: Config, launch: dict) -> dict:
@@ -323,8 +346,9 @@ def status(cfg: Config, launch: dict) -> dict:
     summary = util.read_json(run_dir / "one_stop_summary.json")
     lifecycle = util.read_json(run_dir / "dev_lifecycle.json", []) or []
     alive = util.pid_alive(int(launch["pid"]))
+    # one_stop evaluates the starter on the dev split (writing baseline.json) before the Builder session starts
     phase = ("finished" if summary else "held-out" if (run_dir / "freeze_manifest.json").exists()
-             else "builder/dev" if alive else "stopped")
+             else "stopped" if not alive else "builder/dev" if (run_dir / "baseline.json").exists() else "baseline")
     res = {"run_id": launch["run_id"], "alive": alive, "phase": phase,
            "dev_scores": [r.get("dev_mean", r.get("score")) for r in lifecycle if isinstance(r, dict)],
            "frozen": (run_dir / "freeze_manifest.json").exists(),
@@ -357,6 +381,7 @@ def result(cfg: Config, launch: dict) -> dict | None:
             return None
         return ended_without_result(launch, last_infrastructure_error(Path(launch["run_dir"]), launch["run_id"]))
     j1, j0 = summary.get("hidden_mean"), summary.get("initial_test_mean")
+    phases = evaluation_phases(Path(launch["run_dir"]), launch["run_id"])
     s = None
     if isinstance(j1, (int, float)) and isinstance(j0, (int, float)):
         s = 100.0 * min(1.0, (j1 - j0) / (100.0 - j0)) if j0 < 100 else 0.0
@@ -370,13 +395,146 @@ def result(cfg: Config, launch: dict) -> dict | None:
            "provenance": {"repo_commit": launch.get("repo_commit"), "repo_dirty": launch.get("repo_dirty"),
                           "benchmark_digest": summary.get("benchmark_digest")},
            # how many infrastructure resumes each evaluation phase took (0 when it passed first time)
-           "infrastructure_resumes": {p["phase"]: p["resume_count"]
-                                      for p in evaluation_phases(Path(launch["run_dir"]), launch["run_id"])}}
+           "infrastructure_resumes": {p["phase"]: p["resume_count"] for p in phases},
+           # how each evaluation phase ended: completed_without_resume / completed_after_resume, or
+           # infrastructure_error (replayed by the dev controller as a new phase) / failed for one that raised
+           "evaluation_phase_status": {p["phase"]: p["status"] for p in phases}}
     util.write_json(Path(launch["log"]).with_name(launch["run_id"] + ".result.json"), res)
     return res
 
 
+# The run's Harbor jobs live under <home>/jobs, outside the run directory. one_stop names the builder job
+# formal-persistent-builder-<agent>-<run_id> and the adapter names each Candidate and Eval job
+# optimization-[eval-]<benchmark>-<run_id>-<phase>; every job also has its config (job_name, jobs_dir) under the run
+# directory, as do the TerminalBench controller's nested jobs (harbor_job.json).
+JOB_PHASE = r"(?:baseline|dev-r\d{3}-a\d{3}|initial-test|candidate-test)(?:-infra-a\d{3})?(?:-row-retry-\d{3})?"
+JOB_CONFIGS = ("builder_job_config.json", "evaluations/*/*job_config.json",
+               "evaluations/*/row_infrastructure_retries/*/*job_config.json",
+               "evaluations/*/native_eval/*/harbor_job.json")
+REMOVAL_WAIT_SECONDS = 30  # an --rm container the daemon is still removing (Docker 29)
+
+
+def _roots(paths) -> set[PurePosixPath]:
+    roots = set()
+    for path in paths:
+        roots.add(PurePosixPath(os.path.normpath(str(path))))
+        roots.add(PurePosixPath(os.path.realpath(str(path))))
+    return roots
+
+
+def _under(path, roots: set[PurePosixPath]) -> bool:
+    """`path` is one of `roots` or lies below one, compared by whole path components."""
+    if not isinstance(path, str) or not path.startswith("/"):
+        return False
+    candidate = PurePosixPath(os.path.normpath(path))
+    return any(candidate == root or candidate.is_relative_to(root) for root in roots)
+
+
+def run_job_dirs(cfg: Config, launch: dict) -> set[Path]:
+    """The Harbor job directories of this run: those its own job configs name, and those under <home>/jobs whose
+    name is one of this run's job names (the run id as a whole name part, with the run's benchmark and a phase)."""
+    run_dir, run_id = Path(launch["run_dir"]), str(launch["run_id"])
+    found: set[Path] = set()
+    for pattern in JOB_CONFIGS:
+        for path in run_dir.glob(pattern):
+            config = util.read_json(path, {}) or {}
+            name, jobs = config.get("job_name"), config.get("jobs_dir")
+            if (isinstance(name, str) and name not in ("", ".", "..") and "/" not in name
+                    and isinstance(jobs, str) and os.path.isabs(jobs)):
+                found.add(Path(jobs) / name)
+    names = [rf"formal-persistent-builder-[a-z0-9_]+-{re.escape(run_id)}"]
+    benchmark = Path(str(launch.get("benchmark") or "")).name
+    if benchmark:
+        names.append(rf"optimization-(?:eval-)?{re.escape(benchmark)}-{re.escape(run_id)}-{JOB_PHASE}")
+    own = re.compile("^(?:" + "|".join(names) + ")$")
+    jobs_root = cfg.home / "jobs"
+    for child in (jobs_root.iterdir() if jobs_root.is_dir() else ()):
+        if own.match(child.name):
+            found.add(child)
+    return found
+
+
+def container_owner(info: dict, run_roots: set[PurePosixPath], job_roots: set[PurePosixPath]) -> str | None:
+    """Why a container belongs to the run, or None: a mount source under the run directory or under one of the
+    run's Harbor job directories, or a compose working directory or compose file under them. Names are not used."""
+    labels = (info.get("Config") or {}).get("Labels") or {}
+    mounts = [m.get("Source") for m in info.get("Mounts") or [] if isinstance(m, dict)]
+    if any(_under(source, run_roots) for source in mounts):
+        return "mount under the run directory"
+    if any(_under(source, job_roots) for source in mounts):
+        return "mount under a Harbor job of the run"
+    owned = run_roots | job_roots
+    if _under(labels.get("com.docker.compose.project.working_dir"), owned):
+        return "compose working directory under the run"
+    if any(_under(path.strip(), owned)
+           for path in str(labels.get("com.docker.compose.project.config_files") or "").split(",")):
+        return "compose file under the run"
+    return None
+
+
+def run_owned_containers(cfg: Config, launch: dict) -> list[dict]:
+    """The containers (running or exited) that belong to this run (container_owner), as id, name and reason.
+    Read-only: lists and inspects containers, removes nothing."""
+    run_dir, run_id = str(launch.get("run_dir") or ""), str(launch.get("run_id") or "")
+    if not run_id or not os.path.isabs(run_dir) or Path(run_dir).name != run_id:
+        return []
+    run_roots, job_roots = _roots([run_dir]), _roots(run_job_dirs(cfg, launch))
+    owned = []
+    for cid in util.out(["docker", "ps", "-aq", "--no-trunc"]).split():
+        try:
+            info = json.loads(util.out(["docker", "inspect", cid]))[0]
+        except (ValueError, IndexError, KeyError, TypeError):
+            continue
+        reason = container_owner(info, run_roots, job_roots) if isinstance(info, dict) else None
+        if reason:
+            owned.append({"id": cid, "name": str(info.get("Name") or "").lstrip("/"), "reason": reason,
+                          "project": ((info.get("Config") or {}).get("Labels") or {}).get("com.docker.compose.project")})
+    return owned
+
+
+def remove_run_containers(cfg: Config, launch: dict) -> list[str]:
+    """Remove the run's containers (run_owned_containers), then the now-empty networks of their compose projects.
+    Each removal is logged in <home>/DELETIONS.log."""
+    owned = run_owned_containers(cfg, launch)
+    removed, removing = [], []
+    for container in owned:
+        r = util.run(["docker", "rm", "-f", container["id"]], check=False)
+        label = f"container {container['id'][:12]} {container['name']} ({container['reason']})"
+        if r.returncode == 0:
+            removed.append(label)
+        elif "already in progress" in (r.stdout or "").lower():
+            removing.append((container["id"], label))
+    pending, deadline = [cid for cid, _ in removing], time.monotonic() + REMOVAL_WAIT_SECONDS
+    while pending and time.monotonic() < deadline:
+        pending = [cid for cid in pending if util.run(["docker", "inspect", cid], check=False).returncode == 0]
+        if pending:
+            time.sleep(1)
+    removed += [f"{label} (removed by the daemon)" for cid, label in removing if cid not in pending]
+    for project in sorted({c["project"] for c in owned if c.get("project")}):
+        for net in util.out(["docker", "network", "ls", "-q", "--filter",
+                             f"label=com.docker.compose.project={project}"]).split():
+            busy = util.out(["docker", "network", "inspect", net, "--format", "{{len .Containers}}"])
+            if busy.strip() == "0" and util.run(["docker", "network", "rm", net], check=False).returncode == 0:
+                removed.append(f"network {net[:12]} ({project})")
+    if removed:
+        with open(cfg.home / "DELETIONS.log", "a") as log:
+            for item in removed:
+                log.write(f"{util.now()} stop {launch['run_id']}: removed {item}\n")
+    return removed
+
+
 def stop(cfg: Config, launch: dict) -> None:
-    from .creation_harbor_v1 import stop as creation_stop
-    creation_stop(cfg, launch)
-    (cfg.home / "secrets" / launch["run_id"] / "evaluator.env").unlink(missing_ok=True)
+    """Stop the controller's process group, then remove the run's containers (remove_run_containers: found by
+    mounts and compose labels under the run directory and the run's Harbor job directories, never by name), the
+    builder broker and the run's key files."""
+    pid = int(launch["pid"])
+    if util.pid_alive(pid):
+        os.killpg(pid, 15)
+        deadline = time.time() + 60
+        while util.pid_alive(pid) and time.time() < deadline:
+            time.sleep(2)
+    remove_run_containers(cfg, launch)
+    for cid in launch["broker"].get("containers") or [launch["broker"]["container_id"]]:
+        util.run(["docker", "rm", "-f", cid], check=False)
+    for name in ("builder.key", "runtime.key", "judge.key", "evaluator.env"):
+        (cfg.home / "secrets" / launch["run_id"] / name).unlink(missing_ok=True)

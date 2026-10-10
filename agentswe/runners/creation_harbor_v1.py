@@ -487,8 +487,9 @@ def process_gone(launch: dict) -> bool:
 
 def reduced_evidence_cases(score_summary_path) -> list[str]:
     """Case ids of one evaluation phase whose Result judge scored reduced evidence: the overflow fallback of a Creation
-    eval (repository-bug-repair, database-analytics) retried with a smaller prompt and recorded
-    evidence_reduced: true in that case's eval_result.json."""
+    eval (repository-bug-repair, database-analytics, formal-theorem-proving, schema-guided-web-extraction,
+    web-research-report) retried with a smaller prompt and recorded evidence_reduced: true in that case's
+    eval_result.json."""
     summary = util.read_json(Path(score_summary_path), {}) if score_summary_path else {}
     cases = []
     for case in (summary or {}).get("cases") or []:

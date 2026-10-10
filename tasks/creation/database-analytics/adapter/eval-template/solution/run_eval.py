@@ -341,7 +341,7 @@ FINAL_ARTIFACTS = ("answer.json", "queries.json", "result.csv", "chart.json", "d
                    "lineage.json", "run_report.json", "results")
 
 
-# --- judge context overflow fallback (identical in repository-bug-repair and database-analytics) ---
+# --- judge context overflow fallback (identical in every Creation eval that carries it) ---
 # The first judge request carries the full prompt, unchanged. Only when the judge provider rejects that request
 # because it does not fit the judge context is one reduced prompt built and sent, once:
 #   trigger: HTTP 400 whose body says the context length was exceeded; or HTTP 400 with no provider message (an

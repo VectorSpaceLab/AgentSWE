@@ -8,8 +8,8 @@ which takes precedence. `python3 -m agentswe config` prints the resolved values 
 | Role | Used for | Variables |
 |---|---|---|
 | BUILDER | the coding agent under evaluation (Codex CLI) | `AGENTSWE_BUILDER_{BASE_URL,API_KEY,WIRE,MODEL,EFFORT}` |
-| RUNTIME | the model a built or edited agent calls during evaluation, only via the evaluator broker | `AGENTSWE_RUNTIME_{...}` |
-| JUDGE | Result judges, user simulators, LLM graders | `AGENTSWE_JUDGE_{...}` |
+| RUNTIME | the model a built or edited agent calls during evaluation, only via the evaluator broker; also the τ³ user simulator | `AGENTSWE_RUNTIME_{...}` |
+| JUDGE | Result judges, LLM graders (in Optimization only the JUDGE effort is used, on the RUNTIME provider and model) | `AGENTSWE_JUDGE_{...}` |
 | SEARCH | Serper-compatible search (tier-2 tasks) | `AGENTSWE_SEARCH_{BASE_URL,API_KEY}` |
 
 In Creation and Optimization runs every model call goes through a broker that holds the role's key; an Editing run
@@ -194,8 +194,9 @@ any formal run.
 
 ### When a Result-judge prompt does not fit the judge context
 
-This applies to `repository-bug-repair` and `database-analytics`, whose judge prompt carries the whole candidate
-output.
+This applies to the five Creation tasks whose judge prompt carries the whole candidate output:
+`repository-bug-repair`, `database-analytics`, `formal-theorem-proving`, `schema-guided-web-extraction` and
+`web-research-report`. The other Creation tasks put only named deliverables or text files in the judge prompt.
 
 - The default judge has a context of 1,048,576 tokens. The provider counts the request's 100,000-token output limit
   against that context, so 948,576 tokens remain for the prompt.
@@ -210,7 +211,18 @@ output.
   when that is smaller:
   1. repeated values in the harness evidence become references to the copy that is kept;
   2. binary files (a NUL byte, or not valid UTF-8) become a `path`, size and sha256 marker;
-  3. files that are neither required deliverables nor listed in `run_report.json` become the same marker.
+  3. files that are neither required deliverables nor listed in `run_report.json` (`artifact_paths` or
+     `artifacts`) become the same marker. The required deliverables are those of each task's delivery contract:
+     - `repository-bug-repair`: `solution.patch`, `repair_report.json`, `migration_report.json`, `run_report.json`;
+     - `database-analytics`: `answer.json`, `queries.json`, `result.csv`, `chart.json`, `dashboard.html`,
+       `decision.json`, `lineage.json`, `run_report.json` and `results/`;
+     - `formal-theorem-proving`: `solution.patch`, `proof_report.json`, `run_report.json`;
+     - `schema-guided-web-extraction`: `records.json`, `evidence.json`, `interaction_trace.json`,
+       `session_summary.json`, `run_report.json` and `screenshots/`;
+     - `web-research-report`: `report.md`, `sources.json`, `evidence_graph.json`, `run_report.json` (the optional
+       `diagnostics/` directory is not evaluated).
+- Where the judge also receives images (`database-analytics`, `schema-guided-web-extraction`,
+  `web-research-report`), the reduced request carries the same images, and the estimate counts them.
 - The reduced prompt is sent once.
 - If it still does not fit, or the retry fails, the case is an infrastructure error, as before.
 - The case's `eval_result.json` gains three fields, none of them read by scoring:
@@ -218,6 +230,8 @@ output.
   - `prompt_reduction`, the receipt: the trigger and a redacted body sample, the steps, and the prompt sizes before
     and after. The same receipt is also written to `prompt_reduction.json`.
   - `judge_http_errors`, a redacted sample (at most 2,000 characters, credentials removed) of every judge 4xx body.
+- In `formal-theorem-proving`, `api_receipt` then lists the transport attempts of both requests, each marked
+  `original` or `reduced`.
 - `verify_score.py` scores such a case as any other.
 - `agentswe result` reports `evidence_reduced`: the held-out cases judged on reduced evidence, their count, and the
   count of dev cases judged that way.
@@ -231,6 +245,16 @@ the same evaluation again rather than scoring the failure. `agentswe status <run
 the current evaluation phase, how many times it has resumed, its last infrastructure error (type, short message and
 the attempt's `stderr.log`), and where the controller logs are (`<run dir>/controller_logs`). A run that keeps
 resuming will not finish on its own; `agentswe stop <run_id>` ends it.
+
+An Eval trial that Harbor ends with an exception before the evaluator has written its score contract (an environment
+start or verifier timeout on a loaded Docker host, for example) is such an infrastructure failure; a trial the
+evaluator scored is scored as before. A development evaluation that fails this way is replayed by the dev controller
+as a new phase (up to `AGENTSWE_EVAL_RESUME_MAX_ATTEMPTS` = 3 times, as in the paper's Lite runs) and does not use up
+a round; a held-out phase resumes without limit. A phase that ends with an error records it in its
+`infrastructure_resume_state.json` (status `infrastructure_error` or `failed`), and `agentswe result` lists every
+phase's final status under `evaluation_phase_status`. `agentswe stop` removes the run's containers, including exited
+Harbor verifier containers whose mounts are under the run's Harbor job directories in `<home>/jobs`; it finds them by
+mounts and compose labels under the run directory and those job directories, never by name.
 
 ## Release assets
 
