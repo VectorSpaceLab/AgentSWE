@@ -888,10 +888,13 @@ def _case_validity(case: dict) -> tuple[bool | None, str | None]:
 
 
 def _failure_party(case: dict) -> tuple[str | None, str | None]:
-    """Who the evaluator attributes the case's outcome to, and why: failure_attribution, else classification_axis;
+    """Who the evaluator attributes the case's failure to, and why: failure_attribution, else classification_axis;
     Dyad records `attribution.owner` (the candidate for a candidate_failure, else the evaluator/provider, also for a
-    valid case, which has no failure) and `failure_class`."""
+    valid case, which has no failure) and `failure_class`. A failure_attribution with fatal false records no failure
+    (Claude names the candidate as the owner of a successful outcome too), so it has no failure party."""
     attribution = case.get("failure_attribution") if isinstance(case.get("failure_attribution"), dict) else {}
+    if attribution.get("fatal") is False:
+        return None, None
     party = attribution.get("party") or case.get("classification_axis")
     owner = case.get("attribution") if isinstance(case.get("attribution"), dict) else {}
     if not party and owner.get("owner") and case.get("classification") != "valid":

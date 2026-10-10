@@ -288,6 +288,18 @@ class SmokeShapesOfTheReleaseSmokes(unittest.TestCase):
         self.assertEqual((held["valid"], held["valid_field"], held["failure_party"]),
                          (True, "artifact_validation.valid", None))
 
+    def test_non_fatal_attribution_is_not_a_failure(self):
+        # Claude records a successful held-out case (Result 100) as candidate_behavior_observed with a non-fatal
+        # candidate attribution; the smoke block must not name a failure party for it.
+        observed = {"case_id": "test_001", "classification": "candidate_behavior_observed",
+                    "failure_attribution": {"party": "candidate", "observed_by": "evaluator", "fatal": False,
+                                            "reason": "candidate_behavior_observed"}}
+        self.assertEqual(ed._failure_party(observed), (None, None))
+        failed = dict(observed, classification="candidate_failure",
+                      failure_attribution={"party": "candidate", "observed_by": "evaluator", "fatal": True,
+                                           "reason": "deadline"})
+        self.assertEqual(ed._failure_party(failed), ("candidate", "deadline"))
+
     def claude_run(self, events):
         write(self.run_dir / "lifecycle/round_001.json", {"accepted": True, "submission_number": 1, "dev": [
             {"case_id": "dev_001", "classification": "candidate_behavior_observed", "infrastructure_invalid": False,
