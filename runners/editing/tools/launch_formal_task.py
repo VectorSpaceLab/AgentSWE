@@ -30,7 +30,8 @@ import formal_config as cfg  # noqa: E402
 import formal_commands as fc  # noqa: E402
 from control_runtime import control_command  # noqa: E402
 TOOLS = Path(__file__).resolve().parent
-FORMAL_GATE_RELEASE = 'release-integrity'  # readiness_admission.RELEASE_INTEGRITY
+sys.path.insert(0, str(TOOLS))
+from formal_unit_env import FORMAL_GATE_RELEASE, TaskEnvironmentMissing, unit_environment  # noqa: E402
 
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -116,35 +117,15 @@ def main():
     print('run   =', run_dir)
     if a.dry_run:
         print('dry run; not launched'); return 0
+    # The unit's environment (formal_unit_env.py; never a credential), recorded so that a later budget freeze of this
+    # run (budget_freeze.py) runs its held-out cases and finalizer with the same variables.
+    try:
+        env = unit_environment(task, cfg, integrity_only=a.integrity_only)
+    except TaskEnvironmentMissing as exc:
+        print('task environment file missing:', exc); return 1
+    record['unit_environment'] = env
     control.mkdir(parents=True, exist_ok=True)  # after the dry-run return: a dry run leaves nothing behind
     (control / 'launch_record.json').write_text(json.dumps(record, indent=2) + '\n')
-    env = {'PYTHONUNBUFFERED': '1', 'PYTHONDONTWRITEBYTECODE': '1', 'AGENTSWE_RESULT_JUDGE': str(cfg.RESULT_JUDGE),
-           'AGENTSWE_CODE_JUDGE': str(cfg.CREATE_CODE_JUDGE), 'AGENTSWE_CREATE_ALIGNMENT_SNAPSHOT': str(cfg.ALIGNMENT_SNAPSHOT),
-           'AGENTSWE_EDIT_PROFILE_SCOPE': 'codex_xhigh_only',
-           # FORMAL cells only.  A completed judge response whose
-           # ANSWER is unusable -- it does not parse even after the deterministic
-           # envelope repair, or it stops before the required top-level keys -- gets
-           # exactly ONE further logical request with the same prompt.  A complete
-           # object the judge merely disagrees with is never resampled.  Readiness
-           # pilots run under launch_readiness.py and never see this variable, so
-           # their `exactly one broker request` smoke assertions are untouched.
-           'AGENTSWE_EDIT_EARLY_STOP_RESAMPLE': '1'}
-    if a.integrity_only:
-        env['AGENTSWE_EDITING_FORMAL_GATE'] = FORMAL_GATE_RELEASE
-    # Task-required environment (same table as launch_readiness.py): evaluator-owned
-    # evidence paths plus their digests, never credentials. deeptutor refuses to run
-    # without its prior-product guard (a launch without it dies at startup).
-    import hashlib as _hashlib
-    TASK_ENVIRONMENT = {'deeptutor': {'AGENTSWE_DEEPTUTOR_PRIOR_PRODUCT_GUARD':
-                                      '@@AGENTSWE_EDITING_STATE@@/deeptutor-prior-product-guard.json'}}
-    TASK_ENVIRONMENT_DIGESTS = {'deeptutor': {'AGENTSWE_DEEPTUTOR_PRIOR_PRODUCT_GUARD_SHA256':
-                                              'AGENTSWE_DEEPTUTOR_PRIOR_PRODUCT_GUARD'}}
-    for key, value in TASK_ENVIRONMENT.get(task, {}).items():
-        if not Path(value).is_file():
-            print('task environment file missing:', value); return 1
-        env[key] = value
-    for key, source in TASK_ENVIRONMENT_DIGESTS.get(task, {}).items():
-        env[key] = _hashlib.sha256(Path(env[source]).read_bytes()).hexdigest()
     run_dir.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(['systemd-run', '--unit=' + unit, *['--setenv=%s=%s' % kv for kv in env.items()],
                     '--description=AgentSWE edit %s FORMAL %s' % (task, a.label),

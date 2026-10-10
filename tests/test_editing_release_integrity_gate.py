@@ -119,8 +119,14 @@ class Wiring(unittest.TestCase):
             spec.loader.exec_module(module)
         self.assertEqual(module.FORMAL_GATE_RELEASE, admission.RELEASE_INTEGRITY)
         source = Path(spec.origin).read_text()
-        self.assertIn("    if a.integrity_only:\n        env['AGENTSWE_EDITING_FORMAL_GATE'] = FORMAL_GATE_RELEASE\n", source)
+        # the unit's environment comes from formal_unit_env.unit_environment (also used by budget_freeze.py)
+        self.assertIn("env = unit_environment(task, cfg, integrity_only=a.integrity_only)", source)
         self.assertIn("os.environ.pop('AGENTSWE_EDITING_FORMAL_GATE', None)", source)
+        cfg = types.SimpleNamespace(RESULT_JUDGE=Path("/c/result_judge.py"), CREATE_CODE_JUDGE=Path("/c/code.py"),
+                                    ALIGNMENT_SNAPSHOT=Path("/c/snapshot.json"))
+        release = module.unit_environment("aider", cfg, integrity_only=True)
+        self.assertEqual(release["AGENTSWE_EDITING_FORMAL_GATE"], admission.RELEASE_INTEGRITY)
+        self.assertNotIn("AGENTSWE_EDITING_FORMAL_GATE", module.unit_environment("aider", cfg, integrity_only=False))
 
 
 if __name__ == "__main__":

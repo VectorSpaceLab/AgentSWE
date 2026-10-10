@@ -646,23 +646,34 @@ def ensure_builder_proxy(wait: float = 15.0) -> dict:
             "script_sha256": util.sha256_file(script), "probe": detail}
 
 
-def run(cfg: Config, task: Task, *, builder: str, seed: int, smoke: bool, label: str | None) -> dict:
-    state = util.read_json(cfg.home / "state" / "setup.json", {}) or {}
-    if task.id not in state.get("tasks", {}):
-        raise SystemExit(f"run `agentswe setup {task.id}` first")
+def editing_roles(cfg: Config) -> dict:
     roles = {n: cfg.role(n, "EDITING") for n in ("BUILDER", "RUNTIME", "JUDGE")}
     keys = {r.api_key for r in roles.values()}
     if len(keys) != 1 or any(r.wire != "responses" for r in roles.values()):
         raise SystemExit("the Editing control plane uses one Responses provider key for builder, lower agent and "
                          "judge; configure all three roles on the same provider for now")
-    b = roles["BUILDER"]
+    return roles
+
+
+def write_credential(cfg: Config) -> Path:
+    """The control plane's 0600 credential file, from the .env roles (read only by its own brokers; never printed)."""
+    b = editing_roles(cfg)["BUILDER"]
+    cred = credential_file(cfg)
+    util.write_secret(cred, {"DEEPSEEK_API_KEY": b.api_key, "OPENAI_API_KEY": b.api_key})
+    return cred
+
+
+def run(cfg: Config, task: Task, *, builder: str, seed: int, smoke: bool, label: str | None) -> dict:
+    state = util.read_json(cfg.home / "state" / "setup.json", {}) or {}
+    if task.id not in state.get("tasks", {}):
+        raise SystemExit(f"run `agentswe setup {task.id}` first")
+    b = editing_roles(cfg)["BUILDER"]
     key = TASK_KEYS[task.id]
     e = editing_root(cfg)
     proxy = ensure_builder_proxy()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ").lower()
     tag = f"oss-{'smoke' if smoke else 'formal'}-s{seed}-{stamp}" if not label else f"{label}-{stamp}"
-    cred = credential_file(cfg)
-    util.write_secret(cred, {"DEEPSEEK_API_KEY": b.api_key, "OPENAI_API_KEY": b.api_key})
+    cred = write_credential(cfg)
     env = {k: v for k, v in os.environ.items() if not k.endswith(("_API_KEY", "_TOKEN"))
            and k.lower() not in {"http_proxy", "https_proxy", "all_proxy"}}
     env["AGENTSWE_BUILDER_BASE_URL"] = b.base_url
@@ -1175,8 +1186,9 @@ BUDGET_CODEX_GATE_ERRORS = ("Builder native feedback evidence incomplete: ", "Bu
                             "Builder did not produce an accepted Candidate")
 BUDGET_RECORD_NUMBER = ("submission_number", "source_submission", "submission", "number", "round", "candidate_number")
 BUDGET_RECORD_ID = ("submission_id", "source_submission_id", "candidate_id")
-# Editing tasks for which `agentswe freeze <run_id>` freezes a budget-cut run and runs its held-out cases (none yet).
-BUDGET_FREEZE_TASKS: frozenset[str] = frozenset()
+# Editing tasks for which `agentswe freeze <run_id>` freezes a budget-cut run and runs its held-out cases
+# (editing_budget_freeze.py, runners/editing/tools/budget_freeze.py); the other trees have no freeze command yet.
+BUDGET_FREEZE_TASKS: frozenset[str] = frozenset({"aider", "deeptutor", "openwiki"})
 BUDGET_RULE = ("Development ends when the Builder exits, uses up its 5 accepted submissions or uses up its 5-hour "
                "budget. The last accepted submission is frozen and scored on the held-out cases; a Builder with no "
                "accepted submission delivers nothing and scores 0.")
@@ -1365,6 +1377,23 @@ def budget_exhausted_report(state: dict, run_id: str) -> dict:
     return block
 
 
+def derived_freeze_reason(run_dir: Path, summaries: dict) -> dict | None:
+    """How a frozen formal run's development ended, when one_stop_summary.json records the freeze with no reason
+    (some trees' freeze manifests carry none): a budget freeze names itself in manual_freeze/manual_freeze_record.json;
+    otherwise a Builder that exited 0 without timing out (builder_process.json) ended development itself."""
+    freeze = (summaries.get("one_stop_summary.json") or {}).get("freeze") \
+        if isinstance(summaries.get("one_stop_summary.json"), dict) else None
+    if not isinstance(freeze, dict) or not freeze.get("digest") or freeze.get("reason"):
+        return None
+    record = util.read_json(run_dir / "manual_freeze" / "manual_freeze_record.json")
+    if isinstance(record, dict) and record.get("reason"):
+        return {"reason": record["reason"], "source": "manual_freeze/manual_freeze_record.json"}
+    process = util.read_json(run_dir / "builder_process.json")
+    if isinstance(process, dict) and process.get("exit_code") == 0 and process.get("timed_out") is False:
+        return {"reason": "builder_exit", "source": "builder_process.json"}
+    return None
+
+
 def result(cfg: Config, launch: dict) -> dict | None:
     st = status(cfg, launch)
     if st["alive"]:
@@ -1382,6 +1411,10 @@ def result(cfg: Config, launch: dict) -> dict | None:
     if isinstance(aggregation, dict):
         res["formal_result_publishable"] = aggregation.get("formal_result_publishable")
         res["result_axis"] = aggregation.get("result_axis")
+    if launch.get("mode") == "formal" and run_dir and run_dir.is_dir():
+        reason = derived_freeze_reason(run_dir, data)
+        if reason:
+            res["freeze_reason"] = reason
     # A smoke's summaries say result_axis "N/A" and combined_score null; its outcome is in the run's own files.
     if launch.get("mode") == "smoke" and run_dir and run_dir.is_dir():
         res["smoke"] = smoke_outcome(run_dir, data)
@@ -1405,3 +1438,9 @@ def stop(cfg: Config, launch: dict) -> None:
     if removed:
         util.log(f"removed {len(removed)} docker objects owned by {launch['run_id']} (see DELETIONS.log)")
     _release_credential(cfg, launch)
+
+
+def freeze(cfg: Config, launch: dict, *, stage: str = "check", apply: bool = False, operator: str | None = None) -> int:
+    """`agentswe freeze`: the budget freeze of a formal run cut at its time budget (editing_budget_freeze.py)."""
+    from .editing_budget_freeze import freeze as budget_freeze
+    return budget_freeze(cfg, launch, stage=stage, apply=apply, operator=operator)

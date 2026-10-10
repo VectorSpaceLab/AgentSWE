@@ -144,9 +144,9 @@ The three Editing tasks also need cgroup v2 with systemd delegation; `doctor` ch
 
 In a full Editing run the builder has 5 hours and up to 5 accepted submissions. If the time runs out before the
 builder finishes, the run stops before the held-out cases. With no accepted submission, `agentswe result` reports a
-score of 0, as the protocol says. Otherwise it lists the accepted submissions and reports no score, because this
-release cannot yet freeze the last one and evaluate it (see
-[docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)).
+score of 0, as the protocol says. Otherwise it lists the accepted submissions, and
+`python3 -m agentswe freeze <run_id> --stage all --apply` freezes the last one and runs the held-out cases against
+it (see [docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)).
 
 ## 📚 Documentation
 

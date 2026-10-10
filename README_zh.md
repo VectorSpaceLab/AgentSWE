@@ -132,8 +132,9 @@ python3 -m agentswe run <task> --builder codex
 三个修改任务还需要带 systemd 委派的 cgroup v2，`doctor` 会检查。
 
 完整的修改任务运行中，builder 有 5 小时和最多 5 次被接受的提交。如果时间用完时 builder 还没结束，运行会在隐藏用例之前停止。
-没有任何提交被接受时，`agentswe result` 按协议报告 0 分；否则它列出被接受的提交，但不给分数，因为这个版本还不能冻结最后一次
-提交并评测它（见 [docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)）。
+没有任何提交被接受时，`agentswe result` 按协议报告 0 分；否则它列出被接受的提交，
+`python3 -m agentswe freeze <run_id> --stage all --apply` 会冻结最后一次被接受的提交，并用它运行隐藏用例
+（见 [docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)）。
 
 ## 📚 文档（英文）
 

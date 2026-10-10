@@ -1,4 +1,4 @@
-"""agentswe command line: list | doctor | probe-roles | setup | run | status | result | stop."""
+"""agentswe command line: list | doctor | probe-roles | setup | run | status | result | stop | freeze."""
 from __future__ import annotations
 
 import argparse
@@ -46,6 +46,19 @@ def main(argv: list[str] | None = None) -> int:
     rs.add_argument("run_id")
     sp = sub.add_parser("stop", help="stop a run (process group, broker, key files)")
     sp.add_argument("run_id")
+    fz = sub.add_parser(
+        "freeze", help="budget freeze of a formal Editing run whose Builder was cut at its time budget",
+        description="Apply the Editing rule to a formal run whose Builder Harbor cut at the 5 h budget: freeze the "
+                    "last accepted submission, run the six held-out cases against it and finalize, through the task "
+                    "tree's own code. Stages: check (read-only) -> freeze -> hidden -> finalize, or all. Without "
+                    "--apply every stage is a dry run. Run it as the owner of the run directory. Supported tasks: "
+                    "aider, deeptutor, openwiki; a run with no accepted submission is refused (its Result is 0).")
+    fz.add_argument("run_id")
+    fz.add_argument("--stage", choices=("check", "freeze", "hidden", "finalize", "all"), default="check",
+                    help="check (default, read-only), freeze, hidden, finalize, or all three in turn")
+    fz.add_argument("--apply", action="store_true", help="execute the stage (default: a dry run)")
+    fz.add_argument("--operator", default=None,
+                    help="who decided the freeze, for the record (default: the invoking user)")
     sub.add_parser("config", help="show resolved configuration (no key values)")
     a = ap.parse_args(argv)
     cfg = config.load(a.env_file)
@@ -90,6 +103,13 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(json.dumps(res, indent=2))
         return 1 if res.get("ended_without_result") else 0
+    if a.cmd == "freeze":
+        m = _launches(cfg, a.run_id)[0]
+        runner = runners.load(registry.find(m["task"]).runner)
+        if not hasattr(runner, "freeze"):
+            raise SystemExit(f"agentswe freeze applies to formal Editing runs only; {a.run_id} is a "
+                             f"{m.get('family')} run")
+        return runner.freeze(cfg, m, stage=a.stage, apply=a.apply, operator=a.operator)
     if a.cmd == "stop":
         m = _launches(cfg, a.run_id)[0]
         runners.load(registry.find(m["task"]).runner).stop(cfg, m)

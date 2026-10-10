@@ -33,7 +33,8 @@ Keys can stay in a credential file you already have:
   Result judges and Optimization agents under test hold placeholder tokens only.
 - **Editing.** All three roles use one provider key (`agentswe run` refuses different keys). The CLI writes it to a
   single 0600 file, `AGENTSWE_HOME/secrets/editing/credential.env`, shared by the home's Editing runs;
-  `agentswe result` and `agentswe stop` delete it once no other Editing run in the home is live. The lower-agent and
+  `agentswe result` and `agentswe stop` delete it once no other Editing run in the home is live (`agentswe freeze`
+  writes it again for its held-out and finalize stages and deletes it the same way). The lower-agent and
   Result-judge brokers mount that file read-only, and the edited product and its lower agents get the placeholder
   token `broker-only-placeholder`. The Builder has no broker: as in the paper's Editing protocol, Codex calls the
   provider with the real key (through the CONNECT proxy of "Editing runs" when the run uses it). The task's Builder
@@ -134,7 +135,9 @@ and `held_out: "not run"`:
 
 - with no accepted submission: `scored: true`, `score: 0` and `score_basis`. The 0 follows from the rule, not from
   the finalizer, so the result has no `formal_result_publishable`.
-- otherwise: `scored: false`, and `next` says that this release cannot yet freeze such a run, so it has no score.
+- otherwise: `scored: false`, and `next` names the step that scores the run: `agentswe freeze <run_id>` (below) for
+  `aider-worktree-transaction`, `deeptutor-adaptive-remediation` and `openwiki-change-impact`. For the other Editing
+  tasks no freeze command is available yet, so such a run has no score.
 
 The block appears only when the last Builder segment (`builder_segment_receipt.json`) ended on Harbor's agent
 timeout (`AgentTimeoutError`) or within 10 minutes of the deadline, the only native Builder evidence error is the
@@ -143,6 +146,41 @@ gate refuses any Harbor exception), which still counts. Smoke runs, runs that fi
 any other infrastructure failure get no block. The two manual freeze scripts of earlier releases
 (`runners/editing/tools/manual_freeze_budget_exhausted.py`, `lite_manual_freeze.py`) were bound to specific recorded
 runs and could not run in an install; they have been removed.
+
+#### Freezing a budget-cut run: `agentswe freeze`
+
+```bash
+python3 -m agentswe freeze <run_id>                        # check (read-only): the preconditions and the plan
+python3 -m agentswe freeze <run_id> --stage all --apply    # freeze, held-out cases, finalize
+```
+
+`agentswe freeze` applies the rule to such a run after it has ended, through the task tree's own code: `freeze` (the
+tree's controller freezes the latest accepted submission), `hidden` (the six held-out cases, with a fresh lower-agent
+broker started the way the formal run starts it) and `finalize` (the tree's finalizer with a fresh Result-judge
+broker; `summary.json` and `one_stop_summary.json` are rewritten the way the formal run writes them). `--stage`
+selects one of them or `all`; without `--apply` a stage only checks its preconditions and prints its plan, and
+`check` (the default) is read-only. After `finalize`, `agentswe result` reports the run's `result_axis` like that of
+any formal run.
+
+- Run it as the owner of the run directory, after the run has ended. The `hidden` and `finalize` stages call the
+  models as a formal run's held-out phase does, and take about as long (up to an hour): keep the terminal open. For
+  them the command writes the credential file `run` writes and removes it afterwards, as `result` and `stop` do.
+- It refuses unless the run is the budget cut `agentswe result` reports: the unit has ended and no container uses
+  the run directory; the task tree and the Result judge are unchanged since the launch; the last Builder segment
+  ended on Harbor's agent timeout (or within 10 minutes of the deadline) and was not resumed; the only native
+  evidence error is the missing terminal event; the summary has the task's gate status; 1 to 5 distinct accepted
+  submissions, the latest one unchanged since it was accepted; and no held-out evidence or aggregation yet. A run
+  with no accepted submission is refused: its Result is 0.
+- Each file it rewrites is first copied to `<name>.pre-manual-freeze` (it refuses when such a copy exists that it did
+  not make). `manual_freeze/manual_freeze_record.json` records the decision: reason
+  `budget_exhausted_freeze_latest_accepted`, `manual: true`, the operator (`--operator`, default the user running
+  it), timestamps and each stage's result; `summary.json` carries a `manual_freeze` note.
+- The freeze manifest keeps the freeze reason each task's held-out runner and finalizer accept. The
+  `aider-worktree-transaction` finalizer requires the Builder session to be proven continuous: the command sets
+  `same_session` from the tree's own native-evidence check with the allowance the tree already grants a Builder
+  interrupted after its last submission, and only when the strict check failed for the missing terminal event alone;
+  the strict result stays in the attestation.
+- Every other Editing task refuses: the command does not support it yet.
 
 ## When an evaluation fails on infrastructure
 
