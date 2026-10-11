@@ -257,8 +257,11 @@
   <pre class="cmd"><span class="c"># in a clone of the repository, with AGENTSWE_DEFAULT_API_KEY set in .env</span>
 echo AGENTSWE_PROFILE=lite-v1.1 &gt;&gt; .env
 python3 -m agentswe doctor repo db pdf deeptutor aider openwiki tau3 pinch
+python3 -m agentswe probe-roles
 python3 -m agentswe setup &lt;task&gt;
-python3 -m agentswe run &lt;task&gt; --builder codex</pre>
+python3 -m agentswe run &lt;task&gt; --builder codex --seed 1   <span class="c"># then --seed 2 and --seed 3</span></pre>
+  <p class="tnote">Run each task three times and report the mean of the three held-out results, as the table does:
+    one build can land tens of points away from the mean.</p>
 </section>
 
 <section id="findings">
