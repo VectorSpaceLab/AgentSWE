@@ -391,6 +391,7 @@ python3 -m agentswe run &lt;task&gt; --builder codex --seed 1   <span class="c">
     ["Optimization", "τ³ (tau3)", 10.1, 13.0, 4.3],
     ["", "PinchBench (pinch)", 19.4, 24.3, 2.4],
   ];
+  function round1(v) { return (Math.round(v * 10 + 1e-9) / 10); }
   const LITE_MEANS = [["Creation", 23.1, 33.5, 0.0], ["Editing", 29.3, 29.3, 2.0], ["Optimization", 14.8, 18.7, 3.4]];
   (function renderLite() {
     const head = "<tr><th>Stage</th><th>Task</th>" + LITE_BUILDERS.map(b => "<th>" + b + "</th>").join("") + "</tr>";
