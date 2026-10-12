@@ -101,7 +101,7 @@ class HostRequirements(unittest.TestCase):
                            env_file=None)
             check = self.checks(openwiki, other)["Editing provider"]
         self.assertEqual(check.status, doctor.FAIL)
-        self.assertIn("BUILDER base URL is https://api.openai.com/v1", check.detail)
+        self.assertIn("RUNTIME base URL is https://api.openai.com/v1", check.detail)
         self.assertNotIn("Editing provider", self.checks(registry.find("db")))
 
 

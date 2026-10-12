@@ -74,10 +74,10 @@ class ProviderProblems(Base):
                     "https://api.deepseek.com:8443/v1", "https://api.deepseek.com:bad/v1", "", OTHER):
             self.assertFalse(ed.official_deepseek_url(url), url)
 
-    def test_another_provider_names_every_role_and_its_variable(self):
+    def test_another_provider_names_the_lower_agent_and_judge_and_their_variables(self):
         problems = ed.editing_provider_problems(self.cfg(AGENTSWE_DEFAULT_BASE_URL=OTHER))
-        self.assertEqual(len(problems), 3)
-        for role, line in zip(("BUILDER", "RUNTIME", "JUDGE"), problems):
+        self.assertEqual(len(problems), 2)
+        for role, line in zip(("RUNTIME", "JUDGE"), problems):
             self.assertEqual(line, f"{role} base URL is {OTHER} (from AGENTSWE_DEFAULT_BASE_URL); set "
                                    f"AGENTSWE_EDITING_{role}_BASE_URL=https://api.deepseek.com/v1")
 
@@ -92,6 +92,19 @@ class ProviderProblems(Base):
             "RUNTIME model is gpt-5.6-sol (from AGENTSWE_RUNTIME_MODEL); set AGENTSWE_EDITING_RUNTIME_MODEL=deepseek-flash",
             "JUDGE effort is xhigh (from AGENTSWE_EDITING_JUDGE_EFFORT); set AGENTSWE_EDITING_JUDGE_EFFORT=max"])
 
+    def test_the_builder_may_use_another_https_responses_endpoint(self):
+        self.assertEqual(ed.editing_provider_problems(self.cfg(AGENTSWE_EDITING_BUILDER_BASE_URL=OTHER,
+                                                               AGENTSWE_EDITING_BUILDER_MODEL="gpt-5.5")), [])
+
+    def test_the_builder_endpoint_must_be_https_responses(self):
+        problems = ed.editing_provider_problems(self.cfg(AGENTSWE_EDITING_BUILDER_BASE_URL="http://127.0.0.1:8000/v1"))
+        self.assertEqual(len(problems), 1)
+        self.assertIn("must be an https:// URL", problems[0])
+        problems = ed.editing_provider_problems(self.cfg(AGENTSWE_EDITING_BUILDER_BASE_URL=OTHER,
+                                                         AGENTSWE_EDITING_BUILDER_WIRE="chat"))
+        self.assertEqual(len(problems), 1)
+        self.assertIn("needs a Responses-API endpoint", problems[0])
+
     def test_the_builder_model_is_free(self):
         # the Builder model and effort are switched into the trees at setup (editing_builder_model)
         self.assertEqual(ed.editing_provider_problems(self.cfg(AGENTSWE_BUILDER_MODEL="deepseek-pro",
@@ -104,10 +117,22 @@ class SetupAndRunRefuse(Base):
         with self.assertRaises(SystemExit) as ctx:
             self.run_editing(self.cfg(AGENTSWE_DEFAULT_BASE_URL=OTHER))
         message = str(ctx.exception.code)
-        self.assertTrue(message.startswith("Editing tasks run only on the official DeepSeek API."), message)
-        self.assertIn("BUILDER base URL is https://api.openai.com/v1 (from AGENTSWE_DEFAULT_BASE_URL)", message)
+        self.assertTrue(message.startswith("Editing tasks send the lower agent and the Result judge to the official "
+                                           "DeepSeek API"), message)
+        self.assertIn("RUNTIME base URL is https://api.openai.com/v1 (from AGENTSWE_DEFAULT_BASE_URL)", message)
         self.assertIn("same DeepSeek API key", message)
         self.assertFalse(ed.credential_file(self.cfg()).exists())
+
+    def test_a_builder_with_its_own_key_gets_its_own_credential_entry(self):
+        cfg = self.cfg(AGENTSWE_EDITING_BUILDER_BASE_URL=OTHER, AGENTSWE_EDITING_BUILDER_API_KEY="sk-test-builder-only")
+        cred = ed.write_credential(cfg)
+        values = dict(line.split("=", 1) for line in cred.read_text().splitlines() if "=" in line)
+        self.assertEqual(values.get("AGENTSWE_EDITING_BUILDER_API_KEY"), "sk-test-builder-only")
+        self.assertNotEqual(values.get("DEEPSEEK_API_KEY"), "sk-test-builder-only")
+        cred.unlink()
+        same = ed.write_credential(self.cfg())
+        self.assertNotIn("AGENTSWE_EDITING_BUILDER_API_KEY", same.read_text())
+        same.unlink()
 
     def test_freeze_writes_no_credential_for_another_provider(self):
         # `agentswe freeze` writes the control plane's credential file through the same role check
@@ -162,9 +187,9 @@ class ProbeWarning(Base):
     def test_probe_roles_warns_for_editing_only(self):
         cfg = self.cfg(AGENTSWE_DEFAULT_BASE_URL=OTHER)
         report = probe_roles(cfg, roles=(), search=False, family="editing")
-        self.assertEqual(len(report["warnings"]), 3)
+        self.assertEqual(len(report["warnings"]), 2)
         self.assertTrue(report["warnings"][0].startswith("Editing runs do not use this configuration as probed: "
-                                                         "BUILDER base URL is https://api.openai.com/v1"))
+                                                         "RUNTIME base URL is https://api.openai.com/v1"))
         self.assertNotIn("warnings", probe_roles(cfg, roles=(), search=False, family="creation"))
         self.assertNotIn("warnings", probe_roles(self.cfg(), roles=(), search=False, family="editing"))
 

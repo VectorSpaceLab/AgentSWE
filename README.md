@@ -155,9 +155,9 @@ The held-out cases ship in this public repository, and builders run with network
 if the builder did not look the held-out cases up, so report the builder's settings (model, effort, harness, network
 and search access) with your scores, and note this when you compare them with other results.
 
-The three Editing tasks work only with the official DeepSeek API (`https://api.deepseek.com`): the builder, the model
-calls of the edited agent and the Result judge all use it, with one key; other providers are not supported for
-Editing. These tasks also need cgroup v2 with systemd delegation (`doctor` checks it), and they start system-scope
+In the three Editing tasks the model calls of the edited agent and the Result judge always go to the official DeepSeek
+API (`https://api.deepseek.com`); the builder may use any provider with a Responses API (set
+`AGENTSWE_EDITING_BUILDER_BASE_URL`, `_API_KEY` and `_MODEL`, then run `setup` again). These tasks also need cgroup v2 with systemd delegation (`doctor` checks it), and they start system-scope
 systemd units: run every Editing command as root (or as a user allowed to start system units), always as the same
 user, with `AGENTSWE_HOME` set in `.env`, and with Python 3.10 or newer at `/usr/bin/python3`
 (see [docs/ENV.md](docs/ENV.md#editing-runs)).

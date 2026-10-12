@@ -140,8 +140,9 @@ python3 -m agentswe run <task> --builder codex --seed 1    # 之后再跑 --seed
 隐藏用例随本公开仓库一起发布，而 builder 运行时可以联网。只有 builder 没有去查找隐藏用例，结果才有意义。所以报告分数时
 请同时说明 builder 的设置（模型、effort、harness、网络和搜索权限），与其他结果比较时也请注明这一点。
 
-三个修改任务只能使用 DeepSeek 官方 API（`https://api.deepseek.com`）：builder、被修改 agent 的模型调用和 Result 判官都用它，
-并共用一个 key；修改任务不支持其他 provider。这些任务还需要带 systemd 委派的 cgroup v2（`doctor` 会检查），并且会启动
+三个修改任务中，被修改 agent 的模型调用和 Result 判官始终使用 DeepSeek 官方 API（`https://api.deepseek.com`）；builder
+可以使用任何提供 Responses API 的 provider（设置 `AGENTSWE_EDITING_BUILDER_BASE_URL`、`_API_KEY` 和 `_MODEL` 后重新运行
+`setup`）。这些任务还需要带 systemd 委派的 cgroup v2（`doctor` 会检查），并且会启动
 系统级 systemd unit：所有修改任务的命令都请用 root（或有权启动系统 unit 的用户）运行，始终用同一个用户，在 `.env` 里设置
 `AGENTSWE_HOME`，并且 `/usr/bin/python3` 须为 Python 3.10 或更高版本（见 [docs/ENV.md](docs/ENV.md#editing-runs)）。
 

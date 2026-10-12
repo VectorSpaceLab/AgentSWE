@@ -68,6 +68,28 @@ class BuilderSwitch(unittest.TestCase):
                 self.assertEqual(again["report"]["problems"], [])
                 self.assertGreater(len(report["edits"]), 40)
 
+    def test_another_endpoint_changes_only_the_builder_transport(self):
+        url = "https://api.openai.com/v1"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = fake_install(Path(tmp))
+            before = snapshot(root)
+            planned = ebm.plan("deepseek-flash", "max", root, ROOT, base_url=url)
+            self.assertEqual(planned["report"]["problems"], [])
+            ebm.apply("deepseek-flash", "max", root, ROOT, base_url=url)
+            after = snapshot(root)
+            changed = {k for k in after if before.get(k) != after[k] and not k.endswith(".pyc")}
+            self.assertTrue(changed)
+            self.assertTrue(all(k.endswith(("direct_harbor_builder.py", "native_builder_runner.py")) for k in changed),
+                            changed)
+            self.assertEqual(len([k for k in changed if k.endswith("direct_harbor_builder.py")]), 9)
+            control = (root / "control/direct_harbor_builder.py").read_text()
+            self.assertIn("def write_provider(path, base_url=%r):" % url, control)
+            self.assertIn("provider.hostname not in ('api.deepseek.com', 'api.openai.com')", control)
+            self.assertIn("values.get('AGENTSWE_EDITING_BUILDER_API_KEY') or values.get('DEEPSEEK_API_KEY')", control)
+            # lower agent and judges keep their DeepSeek endpoints
+            self.assertEqual(before["control/judge_broker_xhigh.py"], after["control/judge_broker_xhigh.py"])
+            self.assertEqual(ebm.plan("deepseek-flash", "max", root, ROOT, base_url=url)["files"], {})
+
     def test_default_builder_is_a_no_op(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = fake_install(Path(tmp))

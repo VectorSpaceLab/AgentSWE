@@ -18,7 +18,8 @@ AGENTSWE_DEFAULT_API_KEY=...
 AGENTSWE_DEFAULT_WIRE=responses
 ```
 
-Editing runs work only with the official DeepSeek API (`docs/ENV.md`, "Model roles").
+Editing runs send the lower agent and the Result judge to the official DeepSeek API; the Editing Builder may use any
+HTTPS Responses endpoint (`docs/ENV.md`, "Model roles").
 
 Setting a provider or runtime value explicitly is a configuration choice, even when it repeats the built-in value:
 with no `AGENTSWE_PROFILE`, any of `AGENTSWE_DEFAULT_BASE_URL`, `AGENTSWE_RUNTIME_{BASE_URL,MODEL,EFFORT}` or

@@ -17,11 +17,16 @@ In Creation and Optimization runs every model call goes through a broker that ho
 gives its Builder the key itself ("Where the keys are", below). See `docs/ENV.providers.md` for wires, effort
 spellings and the protocol constants that are not configurable.
 
-Editing runs use only the official DeepSeek API: the Builder, the lower agent and the Result judge all call
-`https://api.deepseek.com/v1` with one key, the lower agent with `deepseek-flash` at effort high and the judge with
-`deepseek-flash` at effort max. `agentswe setup` and `agentswe run` refuse any other Editing provider setting, and
-`agentswe probe-roles --family editing` warns about one. Creation and Optimization accept other providers
-(`docs/ENV.providers.md`).
+In Editing runs the lower agent and the Result judge always call the official DeepSeek API, `https://api.deepseek.com/v1`,
+with one key: the lower agent with `deepseek-flash` at effort high, the judge with `deepseek-flash` at effort max.
+`agentswe setup` and `agentswe run` refuse other settings for these two roles, and `agentswe probe-roles --family
+editing` warns about them. The Editing Builder may use any HTTPS endpoint with a Responses API and its own key
+(`AGENTSWE_EDITING_BUILDER_BASE_URL`, `AGENTSWE_EDITING_BUILDER_API_KEY`, `AGENTSWE_EDITING_BUILDER_MODEL`, or the
+shared `AGENTSWE_BUILDER_*`): `agentswe setup <editing task>` renders the endpoint into the Builder's transport (its
+provider configuration, the relay that lets only that host through, and the Builder's key) and `run` refuses a
+Builder other than the one setup rendered. Creation and Optimization accept other providers for every role
+(`docs/ENV.providers.md`). The release ships one Builder harness, Codex (`--builder codex`); the paper's harness
+study (Claude Code, DSH, OpenCode, Pi) is not part of the release.
 
 `BASE_URL` is the OpenAI-style base including `/v1`; the Responses endpoint is `BASE_URL + /responses`.
 Unset `BASE_URL`, `API_KEY` or `WIRE` fall back to `AGENTSWE_DEFAULT_*`.
@@ -108,7 +113,8 @@ host's `openssl` makes the per-run CA and certificate.
 
 ## Editing runs
 
-Editing runs use only the official DeepSeek API ("Model roles", above). They start system-scope systemd units
+Editing runs send the lower agent and the judge to the official DeepSeek API; the Builder may use another Responses
+endpoint ("Model roles", above). They start system-scope systemd units
 (`systemd-run` without `--user`) for the formal run, the readiness smoke and the loopback proxy, so run every Editing
 command (`setup`, `run`, `status`, `result`, `stop`, `freeze`) as root, or as a user that polkit allows to start
 system units, and always as the same user: `agentswe freeze` refuses a caller who does not own the run directory.
@@ -117,7 +123,7 @@ exported variables, so a command run through `sudo` may look in another home and
 `AGENTSWE_HOME` in `.env`, which every command reads from the repository whoever runs it. The Editing control plane,
 its systemd units and the tasks' one-stop scripts run under the host's `/usr/bin/python3`, not under the Python that
 runs `agentswe`, so `/usr/bin/python3` must be Python 3.10 or newer. Only `--builder codex` is available. After
-changing the Editing Builder's model or effort, run `agentswe setup <editing task>` again before `run`.
+changing the Editing Builder's endpoint, model or effort, run `agentswe setup <editing task>` again before `run`.
 
 `agentswe setup` runs one at a time per `AGENTSWE_HOME`: a second setup in the same home logs "another setup is
 running in <home>; waiting" and starts when the first ends. An Editing setup keeps the rendered control plane

@@ -365,7 +365,7 @@ def _stage_builder_switch(stage: Path, e: Path, builder_key: dict, cfg: Config) 
             link.symlink_to(e / "tasks")
         window = cfg.get("AGENTSWE_EDITING_BUILDER_CONTEXT_WINDOW")
         planned = editing_builder_model.plan(builder_key["model"], builder_key["effort"], stage, REPO_ROOT,
-                                             int(window) if window else None)
+                                             int(window) if window else None, builder_key["base_url"])
     except editing_builder_model.SwitchError:
         return  # the real apply below reports it
     finally:
@@ -435,9 +435,10 @@ def setup(cfg: Config, task: Task, s) -> None:
     require_editing_provider(cfg)  # also checked by `agentswe setup` before any build (preflight)
     builder = cfg.role("BUILDER", "EDITING")
     builder_key = {"model": builder.model or editing_builder_model.DEFAULT_MODEL,
-                   "effort": builder.effort or editing_builder_model.DEFAULT_EFFORT}
-    switched = (builder_key["model"], builder_key["effort"]) != (editing_builder_model.DEFAULT_MODEL,
-                                                                 editing_builder_model.DEFAULT_EFFORT)
+                   "effort": builder.effort or editing_builder_model.DEFAULT_EFFORT,
+                   "base_url": editing_builder_model.normalize_url(builder.base_url)}
+    switched = (builder_key["model"], builder_key["effort"], builder_key["base_url"]) != (
+        editing_builder_model.DEFAULT_MODEL, editing_builder_model.DEFAULT_EFFORT, editing_builder_model.DEFAULT_URL)
     render_control_plane(cfg, s, e, mapping, live, builder_key, switched)
     (e / "state").mkdir(parents=True, exist_ok=True)
     # Every task tree must exist (rebind and the audit walk all ten), but re-rendering one that is already
@@ -577,11 +578,12 @@ def setup(cfg: Config, task: Task, s) -> None:
         window = cfg.get("AGENTSWE_EDITING_BUILDER_CONTEXT_WINDOW")
         try:
             report = editing_builder_model.apply(builder_key["model"], builder_key["effort"], e, REPO_ROOT,
-                                                 int(window) if window else None)
+                                                 int(window) if window else None, builder_key["base_url"])
         except editing_builder_model.SwitchError as exc:
             raise SystemExit(str(exc))
         util.write_json(e / "state" / "builder_switch.json", report)
-        util.log(f"Editing Builder switched to {builder_key['model']}/{builder_key['effort']}: "
+        util.log(f"Editing Builder switched to {builder_key['model']}/{builder_key['effort']} at "
+                 f"{builder_key['base_url']}: "
                  f"{len(report['edits'])} Builder-only edits (state/builder_switch.json)")
     s.state["editing_builder"] = dict(builder_key)  # `run` checks the configured Builder against it
     util.log("rebinding the configuration registry and source snapshot")
@@ -670,10 +672,31 @@ def official_deepseek_url(url: str) -> bool:
             and not parts.query and not parts.fragment)
 
 
+def builder_url_problem(url: str) -> str | None:
+    """The Builder may use any HTTPS Responses-API endpoint (native Codex talks to it through the Builder relay)."""
+    try:
+        parts = urlsplit((url or "").strip())
+        parts.port
+    except ValueError:
+        return "is not a valid URL"
+    if parts.scheme != "https" or not parts.hostname or parts.username or parts.password or parts.query \
+            or parts.fragment:
+        return "must be an https:// URL without credentials, query or fragment"
+    return None
+
+
 def editing_provider_problems(cfg: Config) -> list[str]:
     """Each Editing role setting that the task trees would not use as configured (empty when they all match)."""
     problems = []
-    for name in ("BUILDER", "RUNTIME", "JUDGE"):
+    b = cfg.role("BUILDER", "EDITING")
+    bad = builder_url_problem(b.base_url)
+    if bad:
+        source = cfg.role_source("BUILDER", "BASE_URL", "EDITING")
+        problems.append(f"BUILDER base URL {b.base_url or '(not set)'} {bad}" + (f" (from {source})" if source else ""))
+    if b.wire != "responses":
+        problems.append(f"BUILDER wire is {b.wire}; the Editing Builder (native Codex) needs a Responses-API endpoint "
+                        "(AGENTSWE_EDITING_BUILDER_WIRE=responses)")
+    for name in ("RUNTIME", "JUDGE"):
         url = cfg.role(name, "EDITING").base_url
         if not official_deepseek_url(url):
             source = cfg.role_source(name, "BASE_URL", "EDITING")
@@ -693,12 +716,12 @@ def require_editing_provider(cfg: Config) -> None:
     problems = editing_provider_problems(cfg)
     if problems:
         raise SystemExit(
-            "Editing tasks run only on the official DeepSeek API. Their task trees send the Builder, the lower agent "
-            f"and the Result judge to {EDITING_PROVIDER_URL} and use deepseek-flash for the lower agent (effort high) "
-            "and the judge (effort max), whatever .env says, so these settings would not be used as configured:\n  - "
+            "Editing tasks send the lower agent and the Result judge to the official DeepSeek API "
+            f"({EDITING_PROVIDER_URL}, deepseek-flash at effort high and max) whatever .env says; the Builder may use any "
+            "HTTPS Responses-API endpoint. These settings would not be used as configured:\n  - "
             + "\n  - ".join(problems)
-            + "\nAll three Editing roles also need the same DeepSeek API key (AGENTSWE_EDITING_<ROLE>_API_KEY, or the "
-              "shared AGENTSWE_<ROLE>_API_KEY / AGENTSWE_DEFAULT_API_KEY).")
+            + "\nThe lower agent and the judge need the same DeepSeek API key; the Builder may have its own "
+              "(AGENTSWE_EDITING_<ROLE>_API_KEY, or the shared AGENTSWE_<ROLE>_API_KEY / AGENTSWE_DEFAULT_API_KEY).")
 
 
 def require_editing_builder(builder: str) -> None:
@@ -724,6 +747,11 @@ def require_setup_builder(cfg: Config, state: dict) -> None:
     b = cfg.role("BUILDER", "EDITING")
     configured = {"model": b.model or editing_builder_model.DEFAULT_MODEL,
                   "effort": b.effort or editing_builder_model.DEFAULT_EFFORT}
+    rendered_url = (rendered or {}).get("base_url") or editing_builder_model.DEFAULT_URL
+    if rendered and rendered_url != editing_builder_model.normalize_url(b.base_url):
+        raise SystemExit(f"The Editing install was set up for the Builder endpoint {rendered_url}, but the configured "
+                         f"Builder endpoint is {editing_builder_model.normalize_url(b.base_url)}. Run `agentswe setup "
+                         "<editing task>` again to switch it, or restore the setting.")
     if rendered and (rendered["model"], rendered["effort"]) != (configured["model"], configured["effort"]):
         raise SystemExit(f"The Editing install was set up for the Builder {rendered['model']} (effort "
                          f"{rendered['effort']}), but the configured Builder is {configured['model']} (effort "
@@ -734,18 +762,21 @@ def require_setup_builder(cfg: Config, state: dict) -> None:
 def editing_roles(cfg: Config) -> dict:
     require_editing_provider(cfg)
     roles = {n: cfg.role(n, "EDITING") for n in ("BUILDER", "RUNTIME", "JUDGE")}
-    keys = {r.api_key for r in roles.values()}
-    if len(keys) != 1 or any(r.wire != "responses" for r in roles.values()):
-        raise SystemExit("the Editing control plane uses one Responses provider key for builder, lower agent and "
-                         "judge; configure all three roles on the same provider for now")
+    if roles["RUNTIME"].api_key != roles["JUDGE"].api_key or any(r.wire != "responses" for r in roles.values()):
+        raise SystemExit("the Editing lower agent and judge use one DeepSeek Responses key; configure RUNTIME and "
+                         "JUDGE with the same key")
     return roles
 
 
 def write_credential(cfg: Config) -> Path:
     """The control plane's 0600 credential file, from the .env roles (read only by its own brokers; never printed)."""
-    b = editing_roles(cfg)["BUILDER"]
+    roles = editing_roles(cfg)
+    b, lower = roles["BUILDER"], roles["RUNTIME"]
     cred = credential_file(cfg)
-    util.write_secret(cred, {"DEEPSEEK_API_KEY": b.api_key, "OPENAI_API_KEY": b.api_key})
+    values = {"DEEPSEEK_API_KEY": lower.api_key, "OPENAI_API_KEY": lower.api_key}
+    if b.api_key != lower.api_key:  # native Codex reads it first (rendered by editing_builder_model)
+        values[editing_builder_model.BUILDER_KEY_VAR] = b.api_key
+    util.write_secret(cred, values)
     return cred
 
 

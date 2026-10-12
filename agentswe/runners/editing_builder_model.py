@@ -28,6 +28,10 @@ import re
 from pathlib import Path
 
 DEFAULT_MODEL, DEFAULT_EFFORT = "deepseek-flash", "max"
+# The Builder endpoint the trees name. Another Responses-API endpoint is rendered into the Builder-only sites of
+# the direct Builder transport (provider TOML default, relay allow-list, Builder key) by _provider_rules.
+DEFAULT_URL = "https://api.deepseek.com/v1"
+BUILDER_KEY_VAR = "AGENTSWE_EDITING_BUILDER_API_KEY"
 TREE_KEYS = {
     "claude": "claude-policy-provenance", "aider": "aider-worktree-transaction",
     "openhands": "openhands-effect-recovery", "openclaw": "openclaw-channel-handoff",
@@ -233,28 +237,44 @@ def _rules(model: str, effort: str, control: Path, tools: Path, trees: dict[str,
     return E
 
 
-def _load_generator(repo: Path):
-    spec = importlib.util.spec_from_file_location("agentswe_gen_codex_config", repo / "builders/codex/gen_codex_config.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+def normalize_url(url: str | None) -> str:
+    return (url or DEFAULT_URL).strip().rstrip("/")
 
 
-def plan(model: str, effort: str, root: Path, repo: Path, context_window: int | None = None) -> dict:
-    """All edits for a rendered Editing install at `root` (<home>/editing): {path: new text}, plus a report."""
-    if effort not in EFFORTS:
-        raise SwitchError(f"Editing Builder effort {effort!r}: expected one of {', '.join(EFFORTS)}")
-    trees = {k: root / "tasks" / tid / "tree" for k, tid in TREE_KEYS.items()}
-    control, tools = root / "control", root / "tools"
-    report: dict = {"model": model, "effort": effort, "edits": [], "already": [], "problems": []}
-    out: dict[Path, str] = {}
-    if (model, effort) == (DEFAULT_MODEL, DEFAULT_EFFORT):
-        return {"files": out, "report": report}
-    for path, rules in sorted(_rules(model, effort, control, tools, trees).items(), key=lambda kv: str(kv[0])):
+def _provider_rules(url: str, control: Path, trees: dict[str, Path]) -> dict[Path, list[tuple]]:
+    """Builder endpoint: every copy of the direct Builder transport (the control plane's, used by openhands and
+    openwiki, and the eight tree copies) defaults to the configured endpoint, lets its CONNECT relay through to that
+    host as well as api.deepseek.com, and gives native Codex the Builder key (falling back to the shared key); the
+    native Builder runners default to the same endpoint. The lower agent and the judges keep their own brokers."""
+    from urllib.parse import urlsplit
+    host = urlsplit(url).hostname
+    E: dict[Path, list[tuple]] = {}
+    old_url = repr(DEFAULT_URL)
+    transport = [control / "direct_harbor_builder.py"] + sorted(
+        p for p in (t / "harbor/direct_harbor_builder.py" for t in trees.values()) if p.is_file())
+    for path in transport:
+        E[path] = [
+            ("def write_provider(path, base_url=%s):" % old_url, "def write_provider(path, base_url=%r):" % url, 1,
+             "Builder provider TOML default endpoint"),
+            ("provider_url=%s):" % old_url, "provider_url=%r):" % url, 1, "Builder relay default endpoint"),
+            ("or provider.hostname not in ('api.deepseek.com',)):",
+             "or provider.hostname not in ('api.deepseek.com', %r)):" % host, 1, "Builder relay allows the endpoint host"),
+            ("    key = values.get('DEEPSEEK_API_KEY')\n",
+             "    key = values.get(%r) or values.get('DEEPSEEK_API_KEY')\n" % BUILDER_KEY_VAR, 1, "native Codex Builder key"),
+        ]
+    for t in trees.values():
+        runner = t / "harbor/native_builder_runner.py"
+        if runner.is_file() and ("provider_url=%s):" % old_url) in runner.read_text(encoding="utf-8"):
+            E[runner] = [("provider_url=%s):" % old_url, "provider_url=%r):" % url, 1, "native Builder runner endpoint")]
+    return E
+
+
+def _apply_rules(rules_by_path: dict, root: Path, out: dict, report: dict) -> None:
+    for path, rules in sorted(rules_by_path.items(), key=lambda kv: str(kv[0])):
         if not path.is_file():
             report["problems"].append(f"missing {path.relative_to(root)}")
             continue
-        text = path.read_text(encoding="utf-8")
+        text = out.get(path) or path.read_text(encoding="utf-8")
         new = text
         for old, rep, count, note in rules:
             if old == rep:
@@ -267,8 +287,32 @@ def plan(model: str, effort: str, root: Path, repo: Path, context_window: int | 
                 report["already"].append(f"{path.relative_to(root)}: {note}")
             else:
                 report["problems"].append(f"{path.relative_to(root)}: anchor found {found}x, expected {count}: {note}")
-        if new != text:
+        if new != text or path in out:
             out[path] = new
+
+
+def _load_generator(repo: Path):
+    spec = importlib.util.spec_from_file_location("agentswe_gen_codex_config", repo / "builders/codex/gen_codex_config.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def plan(model: str, effort: str, root: Path, repo: Path, context_window: int | None = None,
+         base_url: str | None = None) -> dict:
+    """All edits for a rendered Editing install at `root` (<home>/editing): {path: new text}, plus a report."""
+    if effort not in EFFORTS:
+        raise SwitchError(f"Editing Builder effort {effort!r}: expected one of {', '.join(EFFORTS)}")
+    url = normalize_url(base_url)
+    trees = {k: root / "tasks" / tid / "tree" for k, tid in TREE_KEYS.items()}
+    control, tools = root / "control", root / "tools"
+    report: dict = {"model": model, "effort": effort, "base_url": url, "edits": [], "already": [], "problems": []}
+    out: dict[Path, str] = {}
+    if url != DEFAULT_URL:
+        _apply_rules(_provider_rules(url, control, trees), root, out, report)
+    if (model, effort) == (DEFAULT_MODEL, DEFAULT_EFFORT):
+        return {"files": out, "report": report}
+    _apply_rules(_rules(model, effort, control, tools, trees), root, out, report)
     # Codex catalog for the Builder model, generated, and its pin in builder_segments
     gen = _load_generator(repo)
     base = json.loads((repo / "builders/codex/catalog/codex-0.144.1-lite-v1.json").read_text())
@@ -296,9 +340,10 @@ def plan(model: str, effort: str, root: Path, repo: Path, context_window: int | 
     return {"files": out, "report": report}
 
 
-def apply(model: str, effort: str, root: Path, repo: Path, context_window: int | None = None) -> dict:
+def apply(model: str, effort: str, root: Path, repo: Path, context_window: int | None = None,
+          base_url: str | None = None) -> dict:
     """Write every planned edit, or nothing (raises SwitchError listing every problem)."""
-    result = plan(model, effort, root, repo, context_window)
+    result = plan(model, effort, root, repo, context_window, base_url)
     report = result["report"]
     if report["problems"]:
         raise SwitchError("Editing Builder switch refused; no file was changed:\n  " + "\n  ".join(report["problems"]))
