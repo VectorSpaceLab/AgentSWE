@@ -48,13 +48,29 @@ def _paths(cfg: Config, run_id: str) -> dict[str, Path]:
             "ledger": cfg.home / "broker_ledgers" / run_id}
 
 
+def unit_active(unit: str) -> bool:
+    return util.out(["systemctl", "show", "-p", "ActiveState", "--value", unit]) in ("active", "activating")
+
+
 def active_runs(cfg: Config) -> list[dict]:
+    """Live runs of this home on this host: a process for Creation and Optimization, a systemd unit for Editing."""
     rows = []
     for mf in (cfg.home / "runs").glob("*/*.launch.json"):
         m = util.read_json(mf, {}) or {}
-        if m.get("pid") and util.pid_alive(int(m["pid"])) and m.get("host") == socket.gethostname():
+        if m.get("host") != socket.gethostname():
+            continue
+        if (m.get("pid") and util.pid_alive(int(m["pid"]))) or (m.get("unit") and unit_active(m["unit"])):
             rows.append(m)
     return rows
+
+
+def evaluator_judge_role(cfg: Config) -> str:
+    """AGENTSWE_EVALUATOR_JUDGE_ROLE: on restores the judge role of the evaluator broker that Candidates call (the
+    paper's runs had it); off (default) leaves that broker the runtime role only."""
+    value = (cfg.get("AGENTSWE_EVALUATOR_JUDGE_ROLE") or "off").strip().lower()
+    if value not in ("on", "off"):
+        raise SystemExit("AGENTSWE_EVALUATOR_JUDGE_ROLE must be on or off")
+    return value
 
 
 def free_port(host: str) -> int:
@@ -285,6 +301,7 @@ def start_broker(cfg: Config, run_id: str, host: str, port: int, runtime_env: Pa
            "-e", f"AGENTSWE_RUNTIME_RESPONSES_URL={upstream}", "-e", f"AGENTSWE_RUNTIME_MODEL={rt.model}",
            "-e", f"AGENTSWE_RUNTIME_EFFORT={rt.effort}",
            "-e", f"AGENTSWE_BROKER_JUDGE_EFFORT={cfg.role('JUDGE', 'CREATION').effort}",
+           "-e", f"AGENTSWE_EVALUATOR_JUDGE_ROLE={evaluator_judge_role(cfg)}",
            "-e", f"AGENTSWE_RUNTIME_MODEL_ALIASES={cfg.get('AGENTSWE_RUNTIME_MODEL_ALIASES') or rt.model.split('/')[-1]}",
            image, "python3", "/broker.py", "--credential-file", "/run/secrets/agentswe.env", "--bind", host,
            "--port", str(port), "--ledger-file", "/telemetry/calls.jsonl", "--max-runtime-calls", "0",

@@ -33,6 +33,18 @@ RUNTIME_EFFORT = os.environ.get("AGENTSWE_RUNTIME_EFFORT", "high")
 JUDGE_EFFORT = os.environ.get("AGENTSWE_BROKER_JUDGE_EFFORT", "max")
 # Providers may report a dated or aliased model id; any of these substrings is accepted.
 MODEL_ALIASES = tuple(a for a in os.environ.get("AGENTSWE_RUNTIME_MODEL_ALIASES", "deepseek").split(",") if a)
+# The judge role (JUDGE effort) is used by no Creation component: Result judges have their own provider broker.
+# It is off unless AGENTSWE_EVALUATOR_JUDGE_ROLE=on, which restores the broker of the paper's runs, where a
+# Candidate holding the judge placeholder could call the runtime model at the JUDGE effort.
+JUDGE_ROLE = os.environ.get("AGENTSWE_EVALUATOR_JUDGE_ROLE", "off").strip().lower() in ("on", "1", "true", "yes")
+
+
+def request_role(token: str) -> str | None:
+    if token in RUNTIME_TOKENS:
+        return "runtime"
+    if JUDGE_ROLE and token in JUDGE_TOKENS:
+        return "judge"
+    return None
 
 
 def response_metadata(payload: bytes, content_type: str) -> dict:
@@ -187,7 +199,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
         token = self.headers.get("Authorization", "").removeprefix("Bearer ").strip()
-        role = "runtime" if token in RUNTIME_TOKENS else "judge" if token in JUDGE_TOKENS else None
+        role = request_role(token)
         if role is None:
             self.send_json(401, {"error": "unauthorized"})
             return

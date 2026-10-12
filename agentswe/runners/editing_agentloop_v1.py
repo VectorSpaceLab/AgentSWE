@@ -749,8 +749,18 @@ def write_credential(cfg: Config) -> Path:
     return cred
 
 
+def run_tag(*, smoke: bool, seed: int, stamp: str, label: str | None) -> str:
+    """The run's tag; a --label replaces the default prefix and keeps the mode and the seed."""
+    return f"{label or 'oss'}-{'smoke' if smoke else 'formal'}-s{seed}-{stamp}"
+
+
 def run(cfg: Config, task: Task, *, builder: str, seed: int, smoke: bool, label: str | None) -> dict:
     require_editing_builder(builder)
+    from .creation_harbor_v1 import active_runs
+    limit = int(cfg.get("AGENTSWE_MAX_CONCURRENT_RUNS"))
+    active = active_runs(cfg)
+    if len(active) >= limit:
+        raise SystemExit(f"{len(active)} runs already active on this host (limit AGENTSWE_MAX_CONCURRENT_RUNS={limit})")
     state = util.read_json(cfg.home / "state" / "setup.json", {}) or {}
     if task.id not in state.get("tasks", {}):
         raise SystemExit(f"run `agentswe setup {task.id}` first")
@@ -761,7 +771,7 @@ def run(cfg: Config, task: Task, *, builder: str, seed: int, smoke: bool, label:
     e = editing_root(cfg)
     proxy = ensure_builder_proxy()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ").lower()
-    tag = f"oss-{'smoke' if smoke else 'formal'}-s{seed}-{stamp}" if not label else f"{label}-{stamp}"
+    tag = run_tag(smoke=smoke, seed=seed, stamp=stamp, label=label)
     cred = write_credential(cfg)
     env = {k: v for k, v in os.environ.items() if not k.endswith(("_API_KEY", "_TOKEN"))
            and k.lower() not in {"http_proxy", "https_proxy", "all_proxy"}}
