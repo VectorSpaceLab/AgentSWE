@@ -7,6 +7,11 @@
 | `paper` (default when unset) | the bytes the paper runs received | `paper.env`: Creation runtime gpt-5.6-sol medium, judge xhigh; Editing runtime and judge on the DeepSeek API (Flash, high / max); Optimization runtime and evaluator gpt-5.6-sol |
 | `lite-v1.1` | the bytes the paper's Lite runs received | `lite-v1.1.env`: deepseek-flash for every role (runtime high, judge max) |
 
+A formal run's result is marked `comparable` with the paper when `AGENTSWE_PROFILE` is set explicitly (`paper`, or
+`lite-v1.1` for the Lite tasks), the runtime and judge models, efforts and wires are that profile's, and, for a
+Creation run under `paper`, `AGENTSWE_JUDGE_FORMAT=exact`; `comparable_basis` names the profile or the reason a run
+is not comparable. Smoke runs are never comparable, and the label changes no score.
+
 With `AGENTSWE_PROFILE` unset, tasks use the paper bytes and the built-in smoke defaults (deepseek-flash for every
 role). Such a smoke validates that a task runs; its scores are not comparable with the paper, and the Builder-visible
 runtime description of the Creation and Optimization tasks then describes the paper runtime, not the model actually

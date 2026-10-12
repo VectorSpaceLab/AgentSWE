@@ -77,7 +77,7 @@ agent，再用它从没见过的用例去测交付出来的 agent。25 个任务
 
 AgentSWE-Lite 是从 25 个任务中选出的 8 个。每个 builder 在 Codex 中各构建 3 次，三个阶段的运行时模型和判官都是
 DeepSeek-V4.1-Flash（`deepseek-flash`，profile `lite-v1.1`）。它只需要一个 DeepSeek key，不需要搜索 key，也不需要
-发布资产，是评测你自己的编码 agent 最省事的方式。下表是 3 次构建的均值；单次运行可能和均值相差几十分，优化任务的 S 还会随该次运行中起始 agent 在隐藏集上的得分变化。由于运行时模型和判官与主实验不同，创建和
+发布资产，是评测新 builder 模型最省事的方式。下表是 3 次构建的均值。由于运行时模型和判官与主实验不同，创建和
 优化两个阶段的分数水平不能和上面的表比较。
 
 | 阶段 | 任务 | GPT-5.6 Sol | DeepSeek-V4.1-Flash | Qwen3.6-35B-A3B |
@@ -112,11 +112,10 @@ python3 -m agentswe result <run_id>
 
 `--smoke` 用很小的预算检查整条流程能否跑通：只评一个隐藏用例，之前创建任务有一次开发提交，修改任务有两次。网络好的
 服务器上，`repo` 首次 setup 加 smoke 需要 25 到 45 分钟；一个修改任务的 smoke 通常需要 10 分钟到约 2 小时，builder
-迟迟交不出两次提交时最长约 8 小时（smoke 中 builder 的时间上限）。去掉 `--smoke` 就按论文的预算运行。
-结果会说明它能否和论文的数字比较（`comparable`，原因见 `comparable_basis`）：这要求显式设置 `AGENTSWE_PROFILE`
-（`paper`；Lite 任务也可以用 `lite-v1.1`），并使用该 profile 的运行时和判官设置；在 `paper` 下跑创建任务还需要
-`AGENTSWE_JUDGE_FORMAT=exact`。smoke 的分数一律不可比。完整运行的时长取决于 builder 工作多久，上限是它的预算（创建 8 小时、10 次提交，
-修改 5 小时、5 次提交，优化 16 小时、5 轮开发），再加上隐藏用例的评测，从不到一小时到大约一天不等。
+迟迟交不出两次提交时最长约 8 小时（smoke 中 builder 的时间上限）。去掉 `--smoke` 就按论文的预算运行，结果会说明
+它能否和论文的数字比较（`comparable` 和 `comparable_basis`，见 [profiles/README.md](profiles/README.md)）。完整运行的
+时长取决于 builder 工作多久，上限是它的预算（创建 8 小时、10 次提交，修改 5 小时、5 次提交，优化 16 小时、5 轮开发），
+再加上隐藏用例的评测，从不到一小时到大约一天不等。
 
 网络调研、PPTX 和 BrowseComp 三个任务还需要兼容 Serper 的搜索 key。在防火墙或代理之后使用，见
 [docs/ENV.md](docs/ENV.md)。
@@ -134,26 +133,31 @@ python3 -m agentswe setup <task>
 python3 -m agentswe run <task> --builder codex --seed 1    # 之后再跑 --seed 2 和 --seed 3
 ```
 
-每个任务请跑三次，报告三次隐藏用例结果的均值，和上面 Lite 表的做法一致。单次构建可能和均值相差几十分，
-所以一次运行的分数并不可靠。`--seed` 只用来给运行命名，每次运行都是一次独立的构建。
+每个任务请跑三次，报告三次隐藏用例结果的均值，和上面 Lite 表的做法一致；单次构建之间会有波动。`--seed` 只用来
+给运行命名，每次运行都是一次独立的构建。
 
-隐藏用例随本公开仓库一起发布，而 builder 运行时可以联网。只有 builder 没有去查找隐藏用例，结果才有意义。所以报告分数时
-请同时说明 builder 的设置（模型、effort、harness、网络和搜索权限），与其他结果比较时也请注明这一点。
+### 评测你自己的 builder
 
-三个修改任务中，被修改 agent 的模型调用和 Result 判官始终使用 DeepSeek 官方 API（`https://api.deepseek.com`）；builder
-可以使用任何提供 Responses API 的 provider（设置 `AGENTSWE_EDITING_BUILDER_BASE_URL`、`_API_KEY` 和 `_MODEL` 后重新运行
-`setup`）。这些任务还需要带 systemd 委派的 cgroup v2（`doctor` 会检查），并且会启动
-系统级 systemd unit：所有修改任务的命令都请用 root（或有权启动系统 unit 的用户）运行，始终用同一个用户，在 `.env` 里设置
-`AGENTSWE_HOME`，并且 `/usr/bin/python3` 须为 Python 3.10 或更高版本（见 [docs/ENV.md](docs/ENV.md#editing-runs)）。
+builder 是 Codex harness 里的一个模型。用 `AGENTSWE_BUILDER_BASE_URL`、`AGENTSWE_BUILDER_API_KEY` 和
+`AGENTSWE_BUILDER_MODEL` 把 BUILDER 角色指向你的模型即可：任何 OpenAI 兼容端点都可以，用 Responses API，或者设
+`AGENTSWE_BUILDER_WIRE=chat` 用 Chat Completions。Codex 不认识的模型还需要设置 `AGENTSWE_BUILDER_CONTEXT_WINDOW`。
+修改任务的 builder 需要 Responses API 端点（与上面不同时设置 `AGENTSWE_EDITING_BUILDER_*`，再重新运行 `setup`）。
+运行时模型和判官保持固定，各个 builder 在同一基准上比较；详见 [docs/ENV.providers.md](docs/ENV.providers.md)。
 
-完整的修改任务运行中，builder 有 5 小时和最多 5 次被接受的提交。如果时间用完时 builder 还没结束，运行会在隐藏用例之前停止。
-没有任何提交被接受时，`agentswe result` 按协议报告 0 分；否则它列出被接受的提交，
-`python3 -m agentswe freeze <run_id> --stage all --apply` 会冻结最后一次被接受的提交，并用它运行隐藏用例
+隐藏用例包含在本仓库中，便于复现和审计；builder 和论文中的运行一样可以联网。报告分数时请同时说明 builder 的设置
+（模型、effort、harness、网络和搜索权限）。
+
+修改任务中，被修改 agent 的模型调用和 Result 判官使用 DeepSeek 官方 API（`https://api.deepseek.com`）。这些任务还需要
+带 systemd 委派的 cgroup v2（`doctor` 会检查），并且会启动系统级 systemd unit：所有修改任务的命令都请用 root（或有权
+启动系统 unit 的用户）运行，始终用同一个用户，在 `.env` 里设置 `AGENTSWE_HOME`，并且 `/usr/bin/python3` 须为 Python 3.10
+或更高版本（见 [docs/ENV.md](docs/ENV.md#editing-runs)）。修改任务的 builder 有 5 小时和最多 5 次被接受的提交；时间用完时，
+`python3 -m agentswe freeze <run_id> --stage all --apply` 会用它最后一次被接受的提交运行隐藏用例
 （见 [docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)）。
 
 ## 📚 文档（英文）
 
 - [docs/ENV.md](docs/ENV.md)：模型角色、搜索 key、镜像和代理、Docker 地址池
+- [docs/ENV.providers.md](docs/ENV.providers.md)：各角色的 provider 和模型
 - [profiles/README.md](profiles/README.md)：`paper` 和 `lite-v1.1` 两套配置
 - [docs/DESIGN.md](docs/DESIGN.md)：任务注册表、runner 接口、测试
 - [THIRD_PARTY.md](THIRD_PARTY.md)：上游项目及其许可证

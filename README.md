@@ -84,9 +84,8 @@ completion that the records contradict.
 
 AgentSWE-Lite is 8 of the 25 tasks, built three times per builder in Codex, with DeepSeek-V4.1-Flash
 (`deepseek-flash`) as the runtime model and the judge in all three stages (profile `lite-v1.1`). It needs only a
-DeepSeek key, no search key and no release assets, so it is the easiest way to evaluate your own coding agent.
-Scores are the mean of the three builds; a single run can land tens of points away from them, and an Optimization
-S also moves with how the starter scores on the held-out set in that run. Because the runtime model and the judge differ from the main study, the
+DeepSeek key, no search key and no release assets, so it is the easiest place to evaluate a new builder model.
+Scores are the mean of the three builds. Because the runtime model and the judge differ from the main study, the
 Creation and Optimization levels are not comparable with the table above.
 
 | Stage | Task | GPT-5.6 Sol | DeepSeek-V4.1-Flash | Qwen3.6-35B-A3B |
@@ -122,13 +121,11 @@ python3 -m agentswe result <run_id>
 `--smoke` runs a small budget to check that everything works: one held-out case, after one development submission
 for Creation and two for Editing. On a well-connected server the first setup and smoke run of `repo` take 25 to 45
 minutes; an Editing smoke usually takes 10 minutes to about 2 hours, and up to about 8 hours (its builder's time cap)
-when the builder is slow to make its two submissions. Without `--smoke` a run uses the paper's budgets. Its result
-says whether it is comparable with the paper's numbers (`comparable`, with the reason in `comparable_basis`): that
-needs `AGENTSWE_PROFILE` set explicitly (`paper`, or `lite-v1.1` for the Lite tasks) with that profile's runtime and
-judge settings, and a Creation run under `paper` also needs `AGENTSWE_JUDGE_FORMAT=exact`. Smoke scores are never
-comparable. A full run takes as long as the builder works, up to its
-budget (Creation 8 hours and 10 submissions, Editing 5 hours and 5 submissions, Optimization 16 hours and 5
-development rounds), plus the held-out evaluation: from under an hour to about a day.
+when the builder is slow to make its two submissions. Without `--smoke` a run uses the paper's budgets, and its
+result says whether it is comparable with the paper's numbers (`comparable` and `comparable_basis`; see
+[profiles/README.md](profiles/README.md)). A full run takes as long as the builder works, up to its budget
+(Creation 8 hours and 10 submissions, Editing 5 hours and 5 submissions, Optimization 16 hours and 5 development
+rounds), plus the held-out evaluation: from under an hour to about a day.
 
 The web research, PPTX and BrowseComp tasks also need a Serper-compatible search key. Behind a firewall or a proxy,
 see [docs/ENV.md](docs/ENV.md).
@@ -147,30 +144,34 @@ python3 -m agentswe setup <task>
 python3 -m agentswe run <task> --builder codex --seed 1    # then --seed 2 and --seed 3
 ```
 
-Run each task three times and report the mean of the three held-out results, as the Lite table above does. One
-build can land tens of points away from the mean, so a single run is not a reliable score. `--seed` only names the
-run; each run is an independent build.
+Run each task three times and report the mean of the three held-out results, as the Lite table above does; single
+builds vary. `--seed` only names the run; each run is an independent build.
 
-The held-out cases ship in this public repository, and builders run with network access. A result is meaningful only
-if the builder did not look the held-out cases up, so report the builder's settings (model, effort, harness, network
-and search access) with your scores, and note this when you compare them with other results.
+### Evaluate your own builder
 
-In the three Editing tasks the model calls of the edited agent and the Result judge always go to the official DeepSeek
-API (`https://api.deepseek.com`); the builder may use any provider with a Responses API (set
-`AGENTSWE_EDITING_BUILDER_BASE_URL`, `_API_KEY` and `_MODEL`, then run `setup` again). These tasks also need cgroup v2 with systemd delegation (`doctor` checks it), and they start system-scope
-systemd units: run every Editing command as root (or as a user allowed to start system units), always as the same
-user, with `AGENTSWE_HOME` set in `.env`, and with Python 3.10 or newer at `/usr/bin/python3`
-(see [docs/ENV.md](docs/ENV.md#editing-runs)).
+The builder is a model in the Codex harness. Point the BUILDER role at your model with `AGENTSWE_BUILDER_BASE_URL`,
+`AGENTSWE_BUILDER_API_KEY` and `AGENTSWE_BUILDER_MODEL`: any OpenAI-compatible endpoint works, with the Responses API
+or, with `AGENTSWE_BUILDER_WIRE=chat`, Chat Completions. A model that Codex does not know also needs
+`AGENTSWE_BUILDER_CONTEXT_WINDOW`. The Editing builder needs a Responses API endpoint (set
+`AGENTSWE_EDITING_BUILDER_*` when it differs, then run `setup` again). The runtime model and the judge stay fixed,
+so builders are compared on the same footing; see [docs/ENV.providers.md](docs/ENV.providers.md).
 
-In a full Editing run the builder has 5 hours and up to 5 accepted submissions. If the time runs out before the
-builder finishes, the run stops before the held-out cases. With no accepted submission, `agentswe result` reports a
-score of 0, as the protocol says. Otherwise it lists the accepted submissions, and
-`python3 -m agentswe freeze <run_id> --stage all --apply` freezes the last one and runs the held-out cases against
-it (see [docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)).
+The held-out cases are part of this repository, so results can be reproduced and audited, and builders have network
+access, as in the paper's runs. Report the builder's settings (model, effort, harness, network and search access)
+with your scores.
+
+In the Editing tasks the edited agent's model calls and the Result judge use the official DeepSeek API
+(`https://api.deepseek.com`). These tasks also need cgroup v2 with systemd delegation (`doctor` checks it), and they
+start system-scope systemd units: run every Editing command as root (or as a user allowed to start system units),
+always as the same user, with `AGENTSWE_HOME` set in `.env`, and with Python 3.10 or newer at `/usr/bin/python3`
+(see [docs/ENV.md](docs/ENV.md#editing-runs)). An Editing builder has 5 hours and up to 5 accepted submissions; when
+its time runs out, `python3 -m agentswe freeze <run_id> --stage all --apply` evaluates its last accepted submission
+(see [docs/ENV.md](docs/ENV.md#when-the-editing-builder-budget-ends)).
 
 ## 📚 Documentation
 
 - [docs/ENV.md](docs/ENV.md): model roles, search keys, mirrors and proxies, Docker address pools
+- [docs/ENV.providers.md](docs/ENV.providers.md): providers and models for each role
 - [profiles/README.md](profiles/README.md): the `paper` and `lite-v1.1` configurations
 - [docs/DESIGN.md](docs/DESIGN.md): task registry, runner interface, tests
 - [THIRD_PARTY.md](THIRD_PARTY.md): upstream projects and their licenses
