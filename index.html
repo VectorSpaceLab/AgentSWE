@@ -249,7 +249,7 @@
   <p class="callout"><b>Start here.</b> AgentSWE-Lite is 8 of the 25 tasks: three Creation, three Editing and two
     Optimization tasks. DeepSeek-V4.1-Flash is the runtime model and the judge in all three stages, so a single
     DeepSeek API key is all you need: no search key and no release assets. It is the lower-cost entry point for
-    evaluating your own coding agent.</p>
+    evaluating a new builder model.</p>
   <div class="table-scroll"><table id="lite-table"></table></div>
   <p class="tnote">Mean over three builds per pairing in Codex (profile <code>lite-v1.1</code>). Creation and Editing:
     held-out Result (0–100); Optimization: S. DeepSeek-V4.1-Flash is the runtime model and the judge, so the Creation
@@ -260,8 +260,8 @@ python3 -m agentswe doctor repo db pdf deeptutor aider openwiki tau3 pinch
 python3 -m agentswe probe-roles
 python3 -m agentswe setup &lt;task&gt;
 python3 -m agentswe run &lt;task&gt; --builder codex --seed 1   <span class="c"># then --seed 2 and --seed 3</span></pre>
-  <p class="tnote">Run each task three times and report the mean of the three held-out results, as the table does:
-    one build can land tens of points away from the mean.</p>
+  <p class="tnote">Run each task three times and report the mean of the three held-out results, as the table does;
+    single builds vary.</p>
 </section>
 
 <section id="findings">
