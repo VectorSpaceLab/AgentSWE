@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://vectorspacelab.github.io/AgentSWE"><img src="https://img.shields.io/badge/Project%20Page-AgentSWE-yellow" alt="project page"></a>
-  <img src="https://img.shields.io/badge/arXiv-coming%20soon-b31b1b.svg" alt="arxiv">
+  <a href="https://arxiv.org/abs/2610.13361"><img src="https://img.shields.io/badge/arXiv-2610.13361-b31b1b.svg" alt="arxiv"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
 </p>
 
@@ -41,6 +41,7 @@ three stages of an agent's life: **Creation** (10), **Editing** (10) and **Optim
 
 ## 🔥 News
 
+- **2026-10**: The paper is on [arXiv](https://arxiv.org/abs/2610.13361).
 - **2026-10**: Code, all 25 tasks and the Lite set are released.
 
 ## 📦 Benchmark
@@ -66,7 +67,7 @@ Mean held-out score of five builders, all in the Codex harness. Creation and Edi
 Optimization reports S, the gap closure: the share of the gap between the starter's held-out score J0 and the target
 of 100 that the delivery's held-out score J closes, `S = 100 * min(1, (J - J0) / (100 - J0))`. S is negative when the
 delivery scores below the starter, with no lower bound when the starter is already close to the target. Per-task
-results are in the paper and on the [project page](https://vectorspacelab.github.io/AgentSWE).
+results are in the [paper](https://arxiv.org/abs/2610.13361) and on the [project page](https://vectorspacelab.github.io/AgentSWE).
 
 | Builder | Creation | Editing | Optimization |
 |---|---:|---:|---:|
@@ -185,10 +186,13 @@ agents and benchmarks; [THIRD_PARTY.md](THIRD_PARTY.md) lists them with their li
 
 ```bibtex
 @misc{wang2026agentswe,
-  title  = {AgentSWE: Can Coding Agents Build the Agent You Actually Want?},
-  author = {Jiahao Wang and Hongjin Qian and Yuyang Hu and Jiajun Zhang and Zheng Liu},
-  year   = {2026},
-  note   = {arXiv preprint coming soon}
+  title         = {AgentSWE: Can Coding Agents Build the Agent You Actually Want?},
+  author        = {Jiahao Wang and Hongjin Qian and Yuyang Hu and Jiajun Zhang and Zheng Liu},
+  year          = {2026},
+  eprint        = {2610.13361},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.SE},
+  url           = {https://arxiv.org/abs/2610.13361}
 }
 ```
 

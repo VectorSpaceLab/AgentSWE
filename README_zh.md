@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://vectorspacelab.github.io/AgentSWE"><img src="https://img.shields.io/badge/Project%20Page-AgentSWE-yellow" alt="project page"></a>
-  <img src="https://img.shields.io/badge/arXiv-coming%20soon-b31b1b.svg" alt="arxiv">
+  <a href="https://arxiv.org/abs/2610.13361"><img src="https://img.shields.io/badge/arXiv-2610.13361-b31b1b.svg" alt="arxiv"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
 </p>
 
@@ -38,6 +38,7 @@ agent，再用它从没见过的用例去测交付出来的 agent。25 个任务
 
 ## 🔥 新闻
 
+- **2026-10**：论文已发布在 [arXiv](https://arxiv.org/abs/2610.13361)。
 - **2026-10**：开源代码、全部 25 个任务和 Lite 子集。
 
 ## 📦 基准
@@ -60,7 +61,7 @@ agent，再用它从没见过的用例去测交付出来的 agent。25 个任务
 
 5 个 builder 的隐藏用例平均分，全部使用 Codex harness。创建和修改报告 Result（0–100）。优化报告 S，即差距缩小比例：
 起始 agent 的隐藏集得分 J0 与目标 100 之间的差距，被交付物的隐藏集得分 J 缩小了多少，`S = 100 * min(1, (J - J0) / (100 - J0))`。
-交付物得分低于起始 agent 时 S 为负，起始 agent 已接近目标时没有下界。逐任务结果见论文和[项目主页](https://vectorspacelab.github.io/AgentSWE)。
+交付物得分低于起始 agent 时 S 为负，起始 agent 已接近目标时没有下界。逐任务结果见[论文](https://arxiv.org/abs/2610.13361)和[项目主页](https://vectorspacelab.github.io/AgentSWE)。
 
 | Builder | 创建 | 修改 | 优化 |
 |---|---:|---:|---:|
@@ -171,10 +172,13 @@ AgentSWE 的每个任务都通过 [Harbor](https://github.com/harbor-framework/h
 
 ```bibtex
 @misc{wang2026agentswe,
-  title  = {AgentSWE: Can Coding Agents Build the Agent You Actually Want?},
-  author = {Jiahao Wang and Hongjin Qian and Yuyang Hu and Jiajun Zhang and Zheng Liu},
-  year   = {2026},
-  note   = {arXiv preprint coming soon}
+  title         = {AgentSWE: Can Coding Agents Build the Agent You Actually Want?},
+  author        = {Jiahao Wang and Hongjin Qian and Yuyang Hu and Jiajun Zhang and Zheng Liu},
+  year          = {2026},
+  eprint        = {2610.13361},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.SE},
+  url           = {https://arxiv.org/abs/2610.13361}
 }
 ```
 
