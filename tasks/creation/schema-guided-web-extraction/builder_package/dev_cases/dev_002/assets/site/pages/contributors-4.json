@@ -1,0 +1,44 @@
+[
+  {
+    "person_id": "RG-316",
+    "display": "Tomas Ibrahim",
+    "role": "Designer",
+    "as_of": "2026-06-13T09:00:00Z",
+    "profile": "profiles/card-70.html"
+  },
+  {
+    "person_id": "RG-317",
+    "display": "Y. Singh",
+    "role": "Editor",
+    "as_of": "2026-06-14T09:00:00Z",
+    "profile": "profiles/card-87.html"
+  },
+  {
+    "person_id": "RG-305",
+    "display": "S. Morgan",
+    "role": "Former Photographer",
+    "as_of": "2025-11-01T00:00:00Z",
+    "profile": "profiles/card-77.html"
+  },
+  {
+    "person_id": "RG-318",
+    "display": "Zhen Patel",
+    "role": "Engineer",
+    "as_of": "2026-06-15T09:00:00Z",
+    "profile": "profiles/card-07.html"
+  },
+  {
+    "person_id": "RG-319",
+    "display": "Iris Lopez",
+    "role": "Researcher",
+    "as_of": "2026-06-16T09:00:00Z",
+    "profile": "profiles/card-24.html"
+  },
+  {
+    "person_id": "RG-320",
+    "display": "Owen Morgan",
+    "role": "Photographer",
+    "as_of": "2026-06-17T09:00:00Z",
+    "profile": "profiles/card-41.html"
+  }
+]

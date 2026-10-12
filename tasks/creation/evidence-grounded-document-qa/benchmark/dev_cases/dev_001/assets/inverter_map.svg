@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <title id="chart-title">Inverter efficiency and enclosure temperature</title>
+  <rect id="plot-background" x="60" y="35" width="600" height="310" fill="#ffffff" stroke="#222"/>
+  <line id="x-axis" x1="60" y1="345" x2="660" y2="345" stroke="#111"/>
+  <line id="y-axis" x1="60" y1="35" x2="60" y2="345" stroke="#111"/>
+  <text id="x-label" x="285" y="392">enclosure temperature (C)</text>
+  <text id="y-label" x="8" y="25">AC efficiency (%)</text>
+  <circle id="point-25c" cx="190" cy="95" r="9" fill="#25855a"/>
+  <text id="label-25c" x="155" y="78">25 C: 88%</text>
+  <circle id="point-42c" cx="520" cy="165" r="9" fill="#c46718"/>
+  <text id="label-42c" x="470" y="148">42 C field enclosure</text>
+  <path id="trend-line" d="M190 95 L520 165" fill="none" stroke="#315f9f" stroke-width="4"/>
+  <rect id="caption-box" x="80" y="245" width="555" height="72" fill="#eef4fb" stroke="#315f9f"/>
+  <text id="caption-cause" x="96" y="274">At 42 C, cooling-fan draw and higher switching resistance</text>
+  <text id="caption-cause-2" x="96" y="299">reduce AC efficiency under the field enclosure condition.</text>
+</svg>

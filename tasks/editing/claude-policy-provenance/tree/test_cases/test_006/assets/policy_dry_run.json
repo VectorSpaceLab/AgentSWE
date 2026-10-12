@@ -1,0 +1,1 @@
+{"schema_version":1,"revision":"compat-dry-v3","mode":"dry_run","default_decision":"deny","tools":{"Bash":"allow"},"paths":{"allow":["src/**"],"deny":[]},"commands":{"allow":[],"deny":["rm"],"audit_only":[],"rewrites":[]},"network":{"allow_hosts":[],"deny_hosts":[]},"mcp":{}}

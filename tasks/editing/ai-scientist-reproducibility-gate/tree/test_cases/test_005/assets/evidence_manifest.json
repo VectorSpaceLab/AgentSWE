@@ -1,0 +1,8 @@
+{
+  "schema_version":1,
+  "experiments":[
+    {"experiment_id":"exp-ember-stats","role":"comparison","method":"ember","config":{"path":"config.json","sha256":"6af48c48442c62fd3f9edeb999c3994b33e126a340eecd2ab3917b4e40e09dc4"},"seeds":[10,20,30,40,50],"dataset":{"name":"variance-mini","split_id":"split-F","split_sha256":"958238720bfee03c0ac95cb58a246aff6f459e9c51d1e1666c928dc9bb1249da"},"budget":{"epochs":9},"metrics":[{"name":"accuracy","scale":"fraction","raw_artifact":{"path":"raw_results.json","sha256":"fb4935e94d57b1887e9f6fecda7c17c02b6f9d16ff2dc9188494e88ea6c72427"},"statistical_test":{"path":"statistical_test.json","sha256":"21441c1ed5e48a46be66a6926ec4ed62d676d3858efe77d931fe229ec9e4357b"}}]}
+  ],
+  "replays":[{"replay_id":"replay-hidden-005","command":["python","replay.py"],"working_directory":".","stdout_format":"json","script_sha256":"b9a3b26f86683e79169503b2ebf8414c45a3bde168007ada7dfd2f029b247b93","timeout_seconds":10,"expected":{"mean_difference":0.010001,"allowed_absolute_deviation":0.000001}}],
+  "release_policy":{"minimum_evidence_coverage":1.0,"significance_alpha":0.01,"maximum_difference_standard_deviation":0.03,"block_on_false_significance":true,"required_decision":"block"}
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "policy_id": "public-agentloop-mode-0919",
+  "policy_epoch": 4,
+  "previous_policy_snapshot_digest": null,
+  "revision": "public-agentloop-mode-v3",
+  "mode": "audit_only",
+  "default_decision": "deny",
+  "tools": {
+    "Read": "allow",
+    "Write": "allow",
+    "Bash": "allow"
+  },
+  "paths": {
+    "allow": [
+      "src/**",
+      "tmp/**"
+    ],
+    "deny": [
+      ".env",
+      ".env.*"
+    ]
+  },
+  "commands": {
+    "allow": [
+      "printf",
+      "pwd"
+    ],
+    "deny": [
+      "rm",
+      "curl"
+    ],
+    "audit_only": [
+      "pwd"
+    ],
+    "rewrites": [
+      {
+        "command": "printf raw-status",
+        "replacement": "printf offline-status"
+      }
+    ]
+  },
+  "network": {
+    "allow_hosts": [],
+    "deny_hosts": [
+      "blocked.test"
+    ]
+  },
+  "mcp": {}
+}

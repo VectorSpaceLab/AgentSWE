@@ -1,0 +1,7 @@
+{
+  "schema_version": "agentswe-edit-infra-classification/v1",
+  "candidate_failure": ["unsafe_patch", "patch_apply_failure", "missing_plugin_entry", "hook_build_failure", "lower_agent_strategy_failure", "invalid_final_artifact"],
+  "infrastructure_invalid": ["broker_unavailable", "provider_failure", "credential_failure", "mount_or_isolation_failure", "evaluator_failure", "docker_failure", "timeout_before_target_execution"],
+  "rule": "infrastructure_invalid is N/A and does not become Candidate zero; Candidate failures may score zero or a documented cap",
+  "forbidden": ["fabricated_calls", "fabricated_trajectory", "fabricated_receipts", "oracle_in_prompt"]
+}

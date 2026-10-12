@@ -1,0 +1,8 @@
+{
+  "transitions": ["pause", "resume", "cancel", "retry"],
+  "inFlightCallbacks": 2,
+  "lateTerminalEvents": 80,
+  "aba": true,
+  "syncTermIsOrthogonal": true,
+  "workspaceFenceIsOrthogonal": true
+}

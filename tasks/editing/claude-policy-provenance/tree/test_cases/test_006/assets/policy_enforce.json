@@ -1,0 +1,1 @@
+{"schema_version":1,"revision":"compat-enforce-v3","mode":"enforce","default_decision":"deny","tools":{"Write":"allow","Bash":"allow"},"paths":{"allow":["src/**"],"deny":[".env"]},"commands":{"allow":[],"deny":["rm"],"audit_only":[],"rewrites":[]},"network":{"allow_hosts":[],"deny_hosts":[]},"mcp":{}}

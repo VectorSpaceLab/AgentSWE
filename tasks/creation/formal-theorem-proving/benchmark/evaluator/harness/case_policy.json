@@ -1,0 +1,193 @@
+{
+  "dev_001": {
+    "mode": "proved",
+    "changed_paths": ["Main.lean"],
+    "targets": [
+      {
+        "name": "Training.Warehouse.Shipping.shipped_mass",
+        "leaf": "shipped_mass",
+        "file": "Main.lean",
+        "max_proof_lines": 4,
+        "required_refs": ["Training.Warehouse.Batch.mass_merge"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      }
+    ],
+    "input_must_contain": ["Main.lean", "Training.Warehouse.Batch.mass_merge", "four noncomment nonblank lines", "lake build"]
+  },
+  "dev_002": {
+    "mode": "proved",
+    "changed_paths": ["Main.lean"],
+    "targets": [
+      {
+        "name": "Training.Pipeline.one_pass",
+        "leaf": "one_pass",
+        "file": "Main.lean",
+        "max_proof_lines": 5,
+        "required_refs": ["Training.Pipeline.pad_eq"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      },
+      {
+        "name": "Training.Pipeline.two_pass",
+        "leaf": "two_pass",
+        "file": "Main.lean",
+        "max_proof_lines": 6,
+        "required_refs": ["Training.Pipeline.one_pass"],
+        "depends_on": ["Training.Pipeline.one_pass"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      }
+    ],
+    "input_must_contain": ["Main.lean", "Training.Pipeline.pad_eq", "Training.Pipeline.one_pass", "six such lines", "lake build"]
+  },
+  "test_001": {
+    "mode": "proved",
+    "changed_paths": ["Main.lean"],
+    "targets": [
+      {
+        "name": "Hidden.Ambiguous.Target.additive_identity",
+        "leaf": "additive_identity",
+        "file": "Main.lean",
+        "max_proof_lines": 5,
+        "required_refs": ["Hidden.Ambiguous.Additive.unit_act"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      },
+      {
+        "name": "Hidden.Ambiguous.Target.prefix_identity",
+        "leaf": "prefix_identity",
+        "file": "Main.lean",
+        "max_proof_lines": 5,
+        "required_refs": ["Hidden.Ambiguous.Prefix.unit_act"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      }
+    ],
+    "input_must_contain": ["Main.lean", "Hidden.Ambiguous.Additive.unit_act", "Hidden.Ambiguous.Prefix.unit_act", "five noncomment nonblank lines", "lake build"]
+  },
+  "test_002": {
+    "mode": "proved",
+    "changed_paths": ["Main.lean", "Proof/Stage.lean"],
+    "targets": [
+      {
+        "name": "Hidden.Dependency.clear_pad",
+        "leaf": "clear_pad",
+        "file": "Proof/Stage.lean",
+        "max_proof_lines": 7,
+        "required_refs": ["Hidden.Dependency.pad"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      },
+      {
+        "name": "Hidden.Dependency.one_pass",
+        "leaf": "one_pass",
+        "file": "Main.lean",
+        "max_proof_lines": 7,
+        "required_refs": ["Hidden.Dependency.clear_pad"],
+        "depends_on": ["Hidden.Dependency.clear_pad"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      },
+      {
+        "name": "Hidden.Dependency.two_pass",
+        "leaf": "two_pass",
+        "file": "Main.lean",
+        "max_proof_lines": 7,
+        "required_refs": ["Hidden.Dependency.one_pass"],
+        "depends_on": ["Hidden.Dependency.one_pass"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      },
+      {
+        "name": "Hidden.Dependency.two_pass_cost",
+        "leaf": "two_pass_cost",
+        "file": "Main.lean",
+        "max_proof_lines": 7,
+        "required_refs": ["Hidden.Dependency.two_pass"],
+        "depends_on": ["Hidden.Dependency.two_pass"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      }
+    ],
+    "input_must_contain": ["Proof/Stage.lean", "Hidden.Dependency.clear_pad", "Hidden.Dependency.one_pass", "Hidden.Dependency.two_pass", "seven noncomment nonblank lines", "lake build"]
+  },
+  "test_003": {
+    "mode": "proved",
+    "changed_paths": ["Main.lean"],
+    "targets": [
+      {
+        "name": "Hidden.Sequence.Target.mirror_involutive",
+        "leaf": "mirror_involutive",
+        "file": "Main.lean",
+        "max_proof_lines": 10,
+        "required_refs": ["Hidden.Sequence.mirror_append", "Hidden.Sequence.mirror_singleton"],
+        "required_tokens": ["rw", "rfl"],
+        "forbidden_tokens": ["simp", "simpa", "simp_all", "aesop", "omega", "decide", "native_decide", "exact?", "apply?"],
+        "require_induction": true
+      }
+    ],
+    "input_must_contain": ["Main.lean", "Hidden.Sequence.mirror_append", "Hidden.Sequence.mirror_singleton", "ten noncomment nonblank lines", "simp_all", "lake build"]
+  },
+  "test_004": {
+    "mode": "proved",
+    "changed_paths": ["Main.lean"],
+    "targets": [
+      {
+        "name": "Hidden.Codec.Target.list_roundTrip",
+        "leaf": "list_roundTrip",
+        "file": "Main.lean",
+        "max_proof_lines": 12,
+        "required_refs": ["Hidden.Codec.Laws.roundTrip_eq"],
+        "forbidden_tokens": ["aesop", "omega", "native_decide", "simp_all"],
+        "require_induction": true
+      },
+      {
+        "name": "Hidden.Codec.Target.tree_roundTrip",
+        "leaf": "tree_roundTrip",
+        "file": "Main.lean",
+        "max_proof_lines": 12,
+        "required_refs": ["Hidden.Codec.Laws.roundTrip_eq"],
+        "forbidden_tokens": ["aesop", "omega", "native_decide", "simp_all"],
+        "require_induction": true
+      }
+    ],
+    "input_must_contain": ["Main.lean", "Hidden.Codec.Laws.roundTrip_eq", "structural induction", "twelve noncomment nonblank lines", "lake build"]
+  },
+  "test_005": {
+    "mode": "proved",
+    "changed_paths": ["Main.lean"],
+    "targets": [
+      {
+        "name": "Hidden.Pipeline.Candidates.candidate_capacity",
+        "leaf": "candidate_capacity",
+        "file": "Main.lean",
+        "max_proof_lines": 5,
+        "required_refs": ["Hidden.Pipeline.Facts.measure_normalize"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      },
+      {
+        "name": "Hidden.Pipeline.Candidates.candidate_checksum",
+        "leaf": "candidate_checksum",
+        "file": "Main.lean",
+        "max_proof_lines": 5,
+        "required_refs": ["Hidden.Pipeline.Facts.checksum_append_empty"],
+        "forbidden_tokens": ["aesop", "native_decide"]
+      }
+    ],
+    "input_must_contain": ["SPEC.md", "Hidden.Pipeline.Facts.measure_normalize", "Hidden.Pipeline.Facts.checksum_append_empty", "five noncomment nonblank lines", "lake build"]
+  },
+  "test_006": {
+    "mode": "unprovable",
+    "changed_paths": ["Counterexample.lean"],
+    "targets": [
+      {
+        "name": "Hidden.Workflow.Target.conjecture",
+        "leaf": "conjecture",
+        "file": "Main.lean",
+        "max_proof_lines": 0,
+        "required_refs": [],
+        "forbidden_tokens": []
+      }
+    ],
+    "counterexample": {
+      "target": "Hidden.Workflow.Target.conjecture",
+      "witness": "Hidden.Workflow.Phase.running",
+      "file": "Counterexample.lean",
+      "max_proof_lines": 10,
+      "required_refs": ["Hidden.Workflow.Facts.running_eligible", "Hidden.Workflow.Facts.tick_running_not_eligible"]
+    },
+    "input_must_contain": ["Counterexample.lean", "Hidden.Workflow.Target.conjecture", "Hidden.Workflow.Phase.running", "Hidden.Workflow.Facts.running_eligible", "Hidden.Workflow.Facts.tick_running_not_eligible", "ten noncomment nonblank lines", "lake env lean Counterexample.lean"]
+  }
+}

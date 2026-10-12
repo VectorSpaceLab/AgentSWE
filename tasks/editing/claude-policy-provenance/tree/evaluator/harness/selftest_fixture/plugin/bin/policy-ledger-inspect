@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import argparse, json, os, sys
+p=argparse.ArgumentParser(); p.add_argument("--state-dir",required=True); p.add_argument("--receipt-id"); p.add_argument("--session-id"); p.add_argument("--after-sequence",type=int,default=0); p.add_argument("--limit",type=int,default=1000); views=p.add_mutually_exclusive_group(); views.add_argument("--leases",action="store_true"); views.add_argument("--approvals",action="store_true"); views.add_argument("--checkpoints",action="store_true"); views.add_argument("--handoffs",action="store_true"); views.add_argument("--upgrades",action="store_true"); views.add_argument("--effects",action="store_true"); views.add_argument("--repairs",action="store_true"); views.add_argument("--continuations",action="store_true"); g=p.add_mutually_exclusive_group(); g.add_argument("--compact",action="store_true"); g.add_argument("--rotate-key",action="store_true"); g.add_argument("--mint-delegation",action="store_true"); g.add_argument("--revoke-delegation"); g.add_argument("--reconcile",action="store_true"); g.add_argument("--enroll-approver",action="store_true"); g.add_argument("--cast-approval",action="store_true"); g.add_argument("--rotate-approver"); g.add_argument("--revoke-approval"); g.add_argument("--supersede-approval"); g.add_argument("--export-checkpoint",action="store_true"); g.add_argument("--import-checkpoint",action="store_true"); g.add_argument("--prepare-handoff",action="store_true"); g.add_argument("--accept-handoff",action="store_true"); g.add_argument("--finalize-handoff",action="store_true"); g.add_argument("--activate-handoff",action="store_true"); g.add_argument("--abort-handoff",action="store_true"); g.add_argument("--begin-upgrade",action="store_true"); g.add_argument("--advance-upgrade"); g.add_argument("--commit-upgrade",action="store_true"); g.add_argument("--abort-upgrade"); g.add_argument("--claim-effects",action="store_true"); g.add_argument("--ack-effect"); g.add_argument("--nack-effect"); g.add_argument("--begin-repair",action="store_true"); g.add_argument("--advance-repair"); g.add_argument("--verify-repair"); g.add_argument("--commit-repair",action="store_true"); g.add_argument("--abort-repair"); g.add_argument("--issue-continuation",action="store_true"); g.add_argument("--cancel-continuation"); a=p.parse_args(); path=os.path.join(a.state_dir,"audit.jsonl")
+if a.mint_delegation or a.revoke_delegation or a.enroll_approver or a.cast_approval or a.rotate_approver or a.revoke_approval or a.supersede_approval or a.export_checkpoint or a.import_checkpoint or a.prepare_handoff or a.accept_handoff or a.finalize_handoff or a.activate_handoff or a.abort_handoff or a.begin_upgrade or a.advance_upgrade or a.commit_upgrade or a.abort_upgrade or a.claim_effects or a.ack_effect or a.nack_effect or a.begin_repair or a.advance_repair or a.verify_repair or a.commit_repair or a.abort_repair or a.issue_continuation or a.cancel_continuation:
+    sys.stdin.read()
+    raise SystemExit(2)
+if a.leases or a.approvals or a.checkpoints or a.handoffs or a.upgrades or a.effects or a.repairs or a.continuations: raise SystemExit(0)
+try:
+    lines=open(path,encoding="utf-8").read().splitlines()
+except FileNotFoundError:
+    lines=[]
+emitted=0
+for line in lines:
+    try: value=json.loads(line)
+    except json.JSONDecodeError: continue
+    if value.get("schema_version")!=1: continue
+    if a.receipt_id and value.get("receipt_id")!=a.receipt_id: continue
+    if a.session_id and value.get("session_id")!=a.session_id: continue
+    if value.get("sequence",0)<=a.after_sequence or emitted>=max(0,min(a.limit,1000)): continue
+    print(json.dumps(value,separators=(",",":")))
+    emitted+=1

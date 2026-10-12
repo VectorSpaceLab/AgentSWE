@@ -1,0 +1,11 @@
+{
+  "case_id": "dev_001",
+  "visibility": "public",
+  "seed_mode": "persistent_error",
+  "prompt_file": "dev_cases/dev_001/input.md",
+  "required_tools_any": ["mastery_remediation_status", "mastery_review_plan", "mastery_learner_snapshot"],
+  "provenance_tools_any": ["mastery_learner_snapshot_attest", "mastery_learner_snapshot_witness", "mastery_learner_snapshot_verify", "mastery_learner_snapshot_chain_audit"],
+  "max_model_calls": 12,
+  "max_tool_calls": 24,
+  "require_safe_refusal": false
+}

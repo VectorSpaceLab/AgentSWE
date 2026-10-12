@@ -1,0 +1,370 @@
+{
+  "benchmark_id": "tau3-tool-agent-optimization-v1",
+  "contamination_policy": {
+    "answers_or_solutions_forbidden": true,
+    "hidden_or_evaluator_material_forbidden": true,
+    "static_terminalbench_solver_forbidden": true,
+    "task_id_branches_forbidden": true
+  },
+  "editable_space": [
+    "run_harness.py",
+    "policy_react.py"
+  ],
+  "evaluation": {
+    "cli": "python run_harness.py --input <input.jsonl> --output <predictions.jsonl> --run-dir <run_dir>",
+    "infrastructure_failure": "not official, not cached as zero, and does not consume a dev round",
+    "ordinary_candidate_failure": "official zero and consumes a dev round",
+    "primary_metric": "official mean score over rows",
+    "relative_improvement_definition": "(candidate_score-baseline_score)/abs(baseline_score); null when baseline_score is zero",
+    "reported_metrics": [
+      "baseline_score",
+      "candidate_score",
+      "absolute_improvement",
+      "relative_improvement"
+    ],
+    "same_evaluator_runtime_model_and_budget": true,
+    "same_path_for_baseline_and_candidate": true,
+    "score_only_final_task_outcomes": true
+  },
+  "fixed_space": {
+    "budgets": {
+      "max_steps": 25,
+      "runtime_model_calls": 50,
+      "runtime_tokens": 150000,
+      "tool_calls_per_turn": 4
+    },
+    "evaluator": "official tau-bench EvaluationType.ALL reward",
+    "model": "gpt-5.6-sol for agent and user simulator through evaluator-owned broker",
+    "runtime": "official tau-bench retail LLMAgent, simulator and half-duplex protocol"
+  },
+  "initial_artifact": {
+    "digest": "a56bdf005c6d19bc5b743f4699dae6155a5ec8b472d2c1d1a477d4637c592333",
+    "entrypoint": "run_harness.py",
+    "kind": "starter_harness",
+    "name": "Policy-aware ReAct",
+    "path": "starter_harness"
+  },
+  "schema_version": "3.0",
+  "splits": {
+    "dev": {
+      "cases": [
+        {
+          "case_id": "dev_001",
+          "domain": "retail",
+          "upstream_id": "0"
+        },
+        {
+          "case_id": "dev_002",
+          "domain": "retail",
+          "upstream_id": "1"
+        },
+        {
+          "case_id": "dev_003",
+          "domain": "retail",
+          "upstream_id": "2"
+        },
+        {
+          "case_id": "dev_004",
+          "domain": "retail",
+          "upstream_id": "3"
+        },
+        {
+          "case_id": "dev_005",
+          "domain": "retail",
+          "upstream_id": "4"
+        },
+        {
+          "case_id": "dev_006",
+          "domain": "retail",
+          "upstream_id": "6"
+        },
+        {
+          "case_id": "dev_007",
+          "domain": "retail",
+          "upstream_id": "7"
+        },
+        {
+          "case_id": "dev_008",
+          "domain": "retail",
+          "upstream_id": "8"
+        },
+        {
+          "case_id": "dev_009",
+          "domain": "retail",
+          "upstream_id": "10"
+        },
+        {
+          "case_id": "dev_010",
+          "domain": "retail",
+          "upstream_id": "11"
+        },
+        {
+          "case_id": "dev_011",
+          "domain": "retail",
+          "upstream_id": "13"
+        },
+        {
+          "case_id": "dev_012",
+          "domain": "retail",
+          "upstream_id": "14"
+        },
+        {
+          "case_id": "dev_013",
+          "domain": "retail",
+          "upstream_id": "15"
+        },
+        {
+          "case_id": "dev_014",
+          "domain": "retail",
+          "upstream_id": "16"
+        },
+        {
+          "case_id": "dev_015",
+          "domain": "retail",
+          "upstream_id": "19"
+        },
+        {
+          "case_id": "dev_016",
+          "domain": "retail",
+          "upstream_id": "20"
+        },
+        {
+          "case_id": "dev_017",
+          "domain": "retail",
+          "upstream_id": "21"
+        },
+        {
+          "case_id": "dev_018",
+          "domain": "retail",
+          "upstream_id": "22"
+        },
+        {
+          "case_id": "dev_019",
+          "domain": "retail",
+          "upstream_id": "23"
+        },
+        {
+          "case_id": "dev_020",
+          "domain": "retail",
+          "upstream_id": "24"
+        }
+      ],
+      "count": 20
+    },
+    "hidden": {
+      "cases": [
+        {
+          "case_id": "test_001",
+          "domain": "retail",
+          "upstream_id": "5"
+        },
+        {
+          "case_id": "test_002",
+          "domain": "retail",
+          "upstream_id": "9"
+        },
+        {
+          "case_id": "test_003",
+          "domain": "retail",
+          "upstream_id": "12"
+        },
+        {
+          "case_id": "test_004",
+          "domain": "retail",
+          "upstream_id": "17"
+        },
+        {
+          "case_id": "test_005",
+          "domain": "retail",
+          "upstream_id": "18"
+        },
+        {
+          "case_id": "test_006",
+          "domain": "retail",
+          "upstream_id": "26"
+        },
+        {
+          "case_id": "test_007",
+          "domain": "retail",
+          "upstream_id": "27"
+        },
+        {
+          "case_id": "test_008",
+          "domain": "retail",
+          "upstream_id": "32"
+        },
+        {
+          "case_id": "test_009",
+          "domain": "retail",
+          "upstream_id": "33"
+        },
+        {
+          "case_id": "test_010",
+          "domain": "retail",
+          "upstream_id": "36"
+        },
+        {
+          "case_id": "test_011",
+          "domain": "retail",
+          "upstream_id": "38"
+        },
+        {
+          "case_id": "test_012",
+          "domain": "retail",
+          "upstream_id": "39"
+        },
+        {
+          "case_id": "test_013",
+          "domain": "retail",
+          "upstream_id": "40"
+        },
+        {
+          "case_id": "test_014",
+          "domain": "retail",
+          "upstream_id": "42"
+        },
+        {
+          "case_id": "test_015",
+          "domain": "retail",
+          "upstream_id": "45"
+        },
+        {
+          "case_id": "test_016",
+          "domain": "retail",
+          "upstream_id": "49"
+        },
+        {
+          "case_id": "test_017",
+          "domain": "retail",
+          "upstream_id": "51"
+        },
+        {
+          "case_id": "test_018",
+          "domain": "retail",
+          "upstream_id": "53"
+        },
+        {
+          "case_id": "test_019",
+          "domain": "retail",
+          "upstream_id": "55"
+        },
+        {
+          "case_id": "test_020",
+          "domain": "retail",
+          "upstream_id": "56"
+        },
+        {
+          "case_id": "test_021",
+          "domain": "retail",
+          "upstream_id": "60"
+        },
+        {
+          "case_id": "test_022",
+          "domain": "retail",
+          "upstream_id": "61"
+        },
+        {
+          "case_id": "test_023",
+          "domain": "retail",
+          "upstream_id": "62"
+        },
+        {
+          "case_id": "test_024",
+          "domain": "retail",
+          "upstream_id": "64"
+        },
+        {
+          "case_id": "test_025",
+          "domain": "retail",
+          "upstream_id": "65"
+        },
+        {
+          "case_id": "test_026",
+          "domain": "retail",
+          "upstream_id": "68"
+        },
+        {
+          "case_id": "test_027",
+          "domain": "retail",
+          "upstream_id": "70"
+        },
+        {
+          "case_id": "test_028",
+          "domain": "retail",
+          "upstream_id": "71"
+        },
+        {
+          "case_id": "test_029",
+          "domain": "retail",
+          "upstream_id": "74"
+        },
+        {
+          "case_id": "test_030",
+          "domain": "retail",
+          "upstream_id": "77"
+        },
+        {
+          "case_id": "test_031",
+          "domain": "retail",
+          "upstream_id": "79"
+        },
+        {
+          "case_id": "test_032",
+          "domain": "retail",
+          "upstream_id": "86"
+        },
+        {
+          "case_id": "test_033",
+          "domain": "retail",
+          "upstream_id": "90"
+        },
+        {
+          "case_id": "test_034",
+          "domain": "retail",
+          "upstream_id": "94"
+        },
+        {
+          "case_id": "test_035",
+          "domain": "retail",
+          "upstream_id": "97"
+        },
+        {
+          "case_id": "test_036",
+          "domain": "retail",
+          "upstream_id": "100"
+        },
+        {
+          "case_id": "test_037",
+          "domain": "retail",
+          "upstream_id": "101"
+        },
+        {
+          "case_id": "test_038",
+          "domain": "retail",
+          "upstream_id": "102"
+        },
+        {
+          "case_id": "test_039",
+          "domain": "retail",
+          "upstream_id": "108"
+        },
+        {
+          "case_id": "test_040",
+          "domain": "retail",
+          "upstream_id": "111"
+        }
+      ],
+      "count": 40
+    }
+  },
+  "track_semantics": "optimize a runnable initial agent; do not build from an empty submission",
+  "upstream": {
+    "dev_size": 20,
+    "dev_split": "first 20 ordered task IDs from train",
+    "domain": "retail",
+    "hidden_size": 40,
+    "hidden_split": "test",
+    "source": "tau-bench retail official split_tasks.json",
+    "source_commit": "668d3bcd135c02aa3438f987ef45735b7c163ee3"
+  }
+}

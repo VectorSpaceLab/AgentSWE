@@ -1,0 +1,1 @@
+{"schema_version":1,"revision":"compat-audit-v3","mode":"audit_only","default_decision":"deny","tools":{"Bash":"deny"},"paths":{"allow":[],"deny":["**"]},"commands":{"allow":[],"deny":["rm"],"audit_only":[],"rewrites":[]},"network":{"allow_hosts":[],"deny_hosts":[]},"mcp":{}}

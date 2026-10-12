@@ -1,0 +1,80 @@
+{
+  "id": "formal-theorem-proving",
+  "family": "creation",
+  "short": "formal",
+  "title": "Formal theorem proving",
+  "version": "v4",
+  "tier": "T1",
+  "lite": false,
+  "status": "runnable",
+  "runner": "creation_harbor_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "task-base",
+    "ubuntu-base",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder"
+  ],
+  "envs": [
+    "formal-theorem-proving-agent-v2"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git"
+    ],
+    "disk_gb": 20
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 10,
+    "builder_session_sec": 28800
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 3600
+  },
+  "upstream": {
+    "repo": "https://github.com/lean-dojo/LeanCopilot",
+    "commit_note": "no commit recorded: the task was designed after LeanCopilot's capability, and no source was copied",
+    "license": "MIT",
+    "role": "requirement source; no upstream code copied",
+    "details": "benchmark/meta"
+  },
+  "runner_config": {
+    "n_concurrent": 2,
+    "harbor_profile": "creation"
+  },
+  "notes": [
+    "Extracted from the evaluator of the paper's final Creation evaluation with the Lite delta (provider constants, Builder session-limit freeze, n_concurrent 1-2) and the release edits; verify_score fatal filter includes 'dimensions must be an object' (Lite fix).",
+    "Release change (2026-10-10): adapter/eval-template/solution/run_eval.py normalize_evaluation_state reads the judge's prose (assessment, major_errors) as an infrastructure marker only when it holds the standalone token INFRASTRUCTURE_ERROR or INFRASTRUCTURE_INVALID (underscores, any case, no letter, digit or underscore immediately before or after). The previous rule turned every non-alphanumeric into '_' and matched substrings, so prose such as 'evaluator-side infrastructure errors' voided a scored case. The harness, the transport and the judge's structured evaluation_state mark infrastructure as before, and verify_score.py reads the state run_eval writes.",
+    "Release change (2026-10-11): adapter/eval-template/solution/run_eval.py retries a Result-judge request once with reduced evidence when it does not fit the judge context, as the repository-bug-repair and database-analytics evals do. The trigger is an HTTP 400 whose body says the context length was exceeded, or an HTTP 400 with no provider message while the prompt's upper token estimate is above 900,000 (the 1,048,576-token context minus the 100,000-token output limit, less 5%). The first request is unchanged. The reduced prompt is built in steps, re-estimated after each, and the eval stops once it fits: repeated harness values become references, then binary files (Lake build outputs such as .olean files included), then files that are neither required deliverables (solution.patch, proof_report.json, run_report.json) nor listed in run_report.json artifact_paths (the isolated work copy of the repository, for example), become path/size/sha256 markers. A prompt that still does not fit, or a failed retry, stays an infrastructure error. eval_result.json records evidence_reduced, a non-scoring prompt_reduction receipt (also prompt_reduction.json) and redacted samples of every judge 4xx body (judge_http_errors); api_receipt lists the transport attempts of both requests. verify_score.py is unchanged.",
+    "Builder-visible text vs. evaluation: the Builder instruction (adapter/one_stop.py) says the controller freezes the submitted digest as soon as every dev case is valid with a dev mean above 60, or once the last accepted submission is evaluated, and then answers `frozen: true`. The controller does not freeze on the dev score or the submission count: it freezes when the Builder session ends (the Builder exits or its time runs out), taking the final workspace, or the latest submission whose evaluation completed when the final workspace is not structurally valid, and no submission response reports `frozen: true`. The pass rule in the dev feedback (every case valid, mean above 60) is informational. The paper's runs received the same instruction; the release keeps it unchanged (docs/ENV.md, \"Where Builder-visible task text differs from the evaluation\")."
+  ]
+}

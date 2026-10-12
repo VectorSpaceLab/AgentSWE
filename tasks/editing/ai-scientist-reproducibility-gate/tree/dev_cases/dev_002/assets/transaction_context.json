@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "tenant_id": "public-lab",
+  "verification_id": "stability-study",
+  "request_id": "publish-002",
+  "owner_id": "worker-b",
+  "generation": 1,
+  "project_id": "public-repro",
+  "capsule_policy": "capsule_policy.json",
+  "usage_statement": "usage_statement.json",
+  "budget_policy": "budget_policy.json",
+  "run_manifest": "run_manifest.json",
+  "attestation_policy": "attestation_policy.json",
+  "notification_policy": "notification_policy.json",
+  "attestation_store": "attestations",
+  "notification_store": "outbox",
+  "scenario": "prepare_restart_status_commit"
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+ <title id="curve-title">Orchid OM-6 standard curve</title>
+ <rect id="curve-plot" x="80" y="45" width="610" height="330" fill="white" stroke="#222"/>
+ <line id="curve-x-axis" x1="80" y1="375" x2="690" y2="375" stroke="#111"/>
+ <line id="curve-y-axis" x1="80" y1="45" x2="80" y2="375" stroke="#111"/>
+ <text id="curve-x-label" x="300" y="425">concentration (mg/L)</text>
+ <text id="curve-y-label" x="12" y="28">absorbance after blank</text>
+ <path id="fit-line" d="M100 355 L650 80" fill="none" stroke="#2768a8" stroke-width="4"/>
+ <text id="fit-equation" x="420" y="120">slope = 0.025 absorbance per mg/L</text>
+ <text id="fit-r2" x="420" y="145">R2 = 0.998</text>
+ <circle id="std-4" cx="210" cy="300" r="7" fill="#25855a"/>
+ <circle id="std-8" cx="320" cy="245" r="7" fill="#25855a"/>
+ <circle id="std-12" cx="430" cy="190" r="7" fill="#25855a"/>
+</svg>

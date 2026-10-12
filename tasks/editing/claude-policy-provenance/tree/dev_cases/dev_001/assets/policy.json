@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "policy_id": "public-workspace",
+  "policy_epoch": 1,
+  "previous_policy_snapshot_digest": null,
+  "revision": "public-workspace-v1",
+  "mode": "enforce",
+  "default_decision": "deny",
+  "tools": {"Read": "allow", "Write": "allow", "Bash": "allow", "WebFetch": "allow"},
+  "paths": {"allow": ["src/**", "tmp/**"], "deny": [".env", ".env.*"]},
+  "commands": {"allow": ["bash", "sh", "printf", "pytest"], "deny": ["rm"], "audit_only": [], "rewrites": []},
+  "network": {"allow_hosts": ["example.test"], "deny_hosts": []},
+  "mcp": {},
+  "reservation": {"max_inflight": 2, "max_session_inflight": 1, "lease_seconds": 2, "reclaim_expired": true},
+  "approval": {"threshold": 2, "ticket_seconds": 5, "principals": ["public-release", "public-security", "public-owner"], "tools": ["WebFetch"], "principal_groups": {"public-release":"release", "public-security":"security", "public-owner":"release"}, "required_groups": ["release", "security"]},
+  "ownership": {"handoff_seconds": 5, "allowed_targets": ["public-recovery", "public-spare"]},
+  "delivery": {"claim_seconds": 3, "max_pending": 24, "require_completion": true},
+  "repair": {"max_quarantine_bytes": 1048576, "required_verifiers": 2, "verifiers": ["public-repair-a", "public-repair-b"]},
+  "continuation": {"token_seconds": 5, "max_pending": 2, "tools": ["Write", "Bash", "WebFetch"]}
+}

@@ -1,0 +1,81 @@
+%PDF-1.4
+%synthetic-v4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 351 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Mesa Reservoir bathymetric survey 2026) Tj ET
+BT /F2 11 Tf 1 0 0 1 54 706 Tm (Section 1 - Survey scope) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 678 Tm (Four cross-sections T1 through T4 define three consecutive reaches.) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 652 Tm (Cross-sectional deposited areas are supplied in the survey CSV.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 394 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Section 2 - Volume method) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 706 Tm (For each reach, volume = length x \(upstream area + downstream area\) / 2.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (Total deposited volume is the sum of all reach volumes.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 650 Tm (Draft dry bulk density: 1.52 tonnes per cubic metre; see signed field correction.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 392 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Section 4 - Management threshold) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 706 Tm (Mechanical removal planning begins when estimated dry mass exceeds 50,000 tonnes.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (Round final volume and mass to the nearest whole unit.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 650 Tm (The threshold is operational, not a contaminant-toxicity standard.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 277 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Section 6 - Evidence limits) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 706 Tm (No sediment chemistry or contaminant concentration was sampled.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (No laboratory inference may be added to this physical-volume survey.) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000023 00000 n 
+0000000072 00000 n 
+0000000149 00000 n 
+0000000219 00000 n 
+0000000294 00000 n 
+0000000696 00000 n 
+0000000832 00000 n 
+0000001277 00000 n 
+0000001413 00000 n 
+0000001856 00000 n 
+0000001993 00000 n 
+0000002322 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+2460
+%%EOF

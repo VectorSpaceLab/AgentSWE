@@ -1,0 +1,43 @@
+#!/bin/bash
+# agentswe-build-env <spec dir> <prefix>
+# Builds one trusted environment from tasks/<family>/<task>/env/ at <prefix>
+# (normally /opt/agentswe/benchmark/envs/<name>).  env.json "kind":
+#   conda : micromamba create from conda-explicit.txt, then pip --require-hashes -r requirements.lock
+#   venv  : "python" is an interpreter path  -> <python> -m venv; pip --require-hashes -r requirements.lock
+#           "python" is a version (3.12.13)  -> uv venv with that managed CPython; uv pip --require-hashes
+# then runs <spec>/post-build.sh with PREFIX set, if present.
+set -euo pipefail
+spec=$(cd "$1" && pwd); prefix=$2
+field() { python3 -c 'import json,sys; v=json.load(open(sys.argv[1])).get(sys.argv[2], ""); print(v if not isinstance(v, (dict, list)) else json.dumps(v))' "$spec/env.json" "$1"; }
+kind=$(field kind)
+index=${PIP_INDEX_URL:-https://pypi.org/simple}
+# env.json "pip_via" names the interpreter pip runs under (default bin/python); pip
+# writes it into console-script shebangs, so it follows the paper-era build.
+vpy() { local v; v=$(field pip_via); echo "$1/${v:-bin/python}"; }
+mkdir -p "$(dirname "$prefix")"
+case "$kind" in
+  conda)
+    sed "s|https://conda.anaconda.org/conda-forge|${CONDA_FORGE_URL:-https://conda.anaconda.org/conda-forge}|" "$spec/conda-explicit.txt" > /tmp/explicit.txt
+    micromamba create -y --no-rc -p "$prefix" -f /tmp/explicit.txt
+    rm -rf "${MAMBA_ROOT_PREFIX:-/opt/mamba}/pkgs" /tmp/explicit.txt
+    if [ -s "$spec/requirements.lock" ]; then
+      PIP_NO_CACHE_DIR=1 "$(vpy "$prefix")" -m pip install --no-deps --require-hashes --no-compile \
+        --index-url "$index" -r "$spec/requirements.lock"
+    fi
+    ;;
+  venv)
+    py=$(field python)
+    case "$py" in
+      /*) "$py" -m venv "$prefix"
+          PIP_NO_CACHE_DIR=1 "$(vpy "$prefix")" -m pip install --no-deps --require-hashes --no-compile \
+            --index-url "$index" -r "$spec/requirements.lock" ;;
+      *)  uv venv --python "$py" "$prefix"
+          VIRTUAL_ENV="$prefix" UV_NO_CACHE=1 uv pip install --no-deps --require-hashes \
+            --index-url "$index" -r "$spec/requirements.lock" ;;
+    esac
+    ;;
+  *) echo "unknown env kind: $kind" >&2; exit 2 ;;
+esac
+if [ -x "$spec/post-build.sh" ]; then PREFIX="$prefix" SPEC="$spec" "$spec/post-build.sh"; fi
+find "$prefix" -path '*/site-packages/*' -name __pycache__ -prune -exec rm -rf {} + 2>/dev/null || true
+echo "built $kind env at $prefix"

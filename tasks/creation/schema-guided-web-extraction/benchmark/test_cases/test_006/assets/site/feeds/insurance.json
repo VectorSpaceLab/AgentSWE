@@ -1,0 +1,218 @@
+[
+  {
+    "object_id": "MX-3336",
+    "value_usd": 6312.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-10"
+  },
+  {
+    "object_id": "MX-3335",
+    "value_usd": 6175.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-09"
+  },
+  {
+    "object_id": "MX-3334",
+    "value_usd": 6037.5,
+    "policy_status": "lapsed",
+    "as_of": "2026-07-08"
+  },
+  {
+    "object_id": "MX-3333",
+    "value_usd": 5900.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-07"
+  },
+  {
+    "object_id": "MX-3332",
+    "value_usd": 5762.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-06"
+  },
+  {
+    "object_id": "MX-3331",
+    "value_usd": 5625.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-05"
+  },
+  {
+    "object_id": "MX-3330",
+    "value_usd": 5487.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-19"
+  },
+  {
+    "object_id": "MX-3329",
+    "value_usd": 5350.0,
+    "policy_status": "lapsed",
+    "as_of": "2026-07-18"
+  },
+  {
+    "object_id": "MX-3328",
+    "value_usd": 5212.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-17"
+  },
+  {
+    "object_id": "MX-3327",
+    "value_usd": 5075.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-16"
+  },
+  {
+    "object_id": "MX-3326",
+    "value_usd": 4937.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-15"
+  },
+  {
+    "object_id": "MX-3325",
+    "value_usd": 4800.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-14"
+  },
+  {
+    "object_id": "MX-3324",
+    "value_usd": 4662.5,
+    "policy_status": "lapsed",
+    "as_of": "2026-07-13"
+  },
+  {
+    "object_id": "MX-3323",
+    "value_usd": 4525.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-12"
+  },
+  {
+    "object_id": "MX-3322",
+    "value_usd": 4387.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-11"
+  },
+  {
+    "object_id": "MX-3321",
+    "value_usd": 4250.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-10"
+  },
+  {
+    "object_id": "MX-3320",
+    "value_usd": 4112.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-09"
+  },
+  {
+    "object_id": "MX-3319",
+    "value_usd": 3975.0,
+    "policy_status": "lapsed",
+    "as_of": "2026-07-08"
+  },
+  {
+    "object_id": "MX-3318",
+    "value_usd": 3837.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-07"
+  },
+  {
+    "object_id": "MX-3317",
+    "value_usd": 3700.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-06"
+  },
+  {
+    "object_id": "MX-3316",
+    "value_usd": 3562.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-05"
+  },
+  {
+    "object_id": "MX-3315",
+    "value_usd": 3425.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-19"
+  },
+  {
+    "object_id": "MX-3314",
+    "value_usd": 3287.5,
+    "policy_status": "lapsed",
+    "as_of": "2026-07-18"
+  },
+  {
+    "object_id": "MX-3313",
+    "value_usd": 3150.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-17"
+  },
+  {
+    "object_id": "MX-3312",
+    "value_usd": 3012.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-16"
+  },
+  {
+    "object_id": "MX-3311",
+    "value_usd": 2875.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-15"
+  },
+  {
+    "object_id": "MX-3310",
+    "value_usd": 2737.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-14"
+  },
+  {
+    "object_id": "MX-3309",
+    "value_usd": 2600.0,
+    "policy_status": "lapsed",
+    "as_of": "2026-07-13"
+  },
+  {
+    "object_id": "MX-3308",
+    "value_usd": 2462.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-12"
+  },
+  {
+    "object_id": "MX-3307",
+    "value_usd": 2325.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-11"
+  },
+  {
+    "object_id": "MX-3306",
+    "value_usd": 2187.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-10"
+  },
+  {
+    "object_id": "MX-3305",
+    "value_usd": 2050.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-09"
+  },
+  {
+    "object_id": "MX-3304",
+    "value_usd": 1912.5,
+    "policy_status": "lapsed",
+    "as_of": "2026-07-08"
+  },
+  {
+    "object_id": "MX-3303",
+    "value_usd": 1775.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-07"
+  },
+  {
+    "object_id": "MX-3302",
+    "value_usd": 1637.5,
+    "policy_status": "valid",
+    "as_of": "2026-07-06"
+  },
+  {
+    "object_id": "MX-3301",
+    "value_usd": 1500.0,
+    "policy_status": "valid",
+    "as_of": "2026-07-05"
+  }
+]

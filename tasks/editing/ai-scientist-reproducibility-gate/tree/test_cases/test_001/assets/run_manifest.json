@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "run_id": "run-rho-001",
+  "project_id": "project-restart",
+  "replay": {"command": ["python", "replay.py"], "working_directory": ".", "timeout_seconds": 10, "script_path": "replay.py", "script_sha256": "d13b70db61b32e113e2170d981bda88ebade3ccd7d40f6c2e77f6a2daab12f21"},
+  "workers": [
+    {"worker_id": "rho-base", "experiment_id": "exp-base", "seed": 3, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "2cc612e210b81a046615b54d11680642a7fe0bdfe17b1e4299890c943acbe954"},
+    {"worker_id": "rho-aurora", "experiment_id": "exp-aurora", "seed": 3, "status": "failed", "failure_class": "worker_error", "error": "worker returned a bounded validation error"},
+    {"worker_id": "rho-shuffle", "experiment_id": "exp-shuffle", "seed": 3, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "2cc612e210b81a046615b54d11680642a7fe0bdfe17b1e4299890c943acbe954"}
+  ],
+  "failure_policy": {"allow_partial": true, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "lab-rho/release-r1/request-r1", "global_process_scan": false}
+}

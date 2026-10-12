@@ -1,0 +1,73 @@
+{
+  "schema_version": "0905-edit-changed-files-v1",
+  "task": "ai-scientist",
+  "files": [
+    "agentloop/case_world.py",
+    "agentloop/lower_agent_launcher.py",
+    "agentloop/cases/test_001/task.md",
+    "agentloop/cases/test_002/case_input.json",
+    "agentloop/cases/test_002/task.md",
+    "agentloop/cases/test_003/case_input.json",
+    "agentloop/cases/test_003/task.md",
+    "agentloop/cases/test_004/case_input.json",
+    "agentloop/cases/test_004/task.md",
+    "agentloop/cases/test_005/case_input.json",
+    "agentloop/cases/test_005/task.md",
+    "agentloop/cases/test_006/case_input.json",
+    "agentloop/cases/test_006/task.md",
+    "agentloop/protocol.py",
+    "agentloop/two_round_controller.py",
+    "agentloop/run_hidden.py",
+    "agentloop/self_test.py",
+    "evaluator/code_rubric.md",
+    "evaluator/formal_finalize.py",
+    "evaluator/semantic_finalize.py",
+    "schemas/freeze_manifest.schema.json",
+    "schemas/protocol_lock.json",
+    "evaluator/tests/test_0905_offline_contract.py",
+    "evaluator/tests/test_0910_lower_action_loop.py",
+    "evaluator/tests/test_0911_case_world_contract.py",
+    "harbor/formal_one_stop.py",
+    "meta/0905_case_contract.json",
+    "meta/0905_changed_files.json",
+    "meta/0905_migration_note.md"
+  ],
+  "last_static_repair_files": ["agentloop/case_world.py", "agentloop/lower_agent_launcher.py", "agentloop/two_round_controller.py", "evaluator/semantic_finalize.py", "evaluator/tests/test_0905_offline_contract.py", "evaluator/tests/test_0910_lower_action_loop.py", "evaluator/tests/test_0911_case_world_contract.py"],
+  "last_static_repair_commands": ["PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s evaluator/tests -p 'test*.py'", "PYTHONDONTWRITEBYTECODE=1 python3 agentloop/self_test.py", "PYTHONDONTWRITEBYTECODE=1 python3 harbor/formal_one_stop.py --self-test --run-dir $(mktemp -d /tmp/ai-scientist-formal-selftest-XXXXXX)", "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile agentloop/case_world.py agentloop/lower_agent_launcher.py evaluator/semantic_finalize.py agentloop/two_round_controller.py agentloop/run_hidden.py harbor/formal_one_stop.py"],
+  "last_static_repair_result": "CaseWorld is connected to the model-selected lower action loop only for hidden cases; transitions advance only on operation-relevant substantive product evidence; concurrent probes use isolated output with shared durable stores; takeover_generation reaches product arguments; public dev dry-run remains compatible; provider-free tests and self-tests passed",
+  "provider_calls": 0,
+  "heavy_containers_started": false,
+  "readiness": "REPAIR",
+  "current_smoke_attempts": [
+    {
+      "run_id": "0905-smoke-reference-003",
+      "status": "lifecycle_evidence_invalid_or_candidate_failed",
+      "publishable": false,
+      "reason": "independent Result judge was not invoked because hidden infrastructure failures made the complete formal evidence gate false"
+    },
+    {
+      "run_id": "0905-smoke-reference-004",
+      "status": "builder_integration_incomplete",
+      "publishable": false,
+      "reason": "Builder submission bridge/provider delivery did not yield an accepted Candidate"
+    }
+  ],
+  "followup_repairs_2026_09_07": [
+    {
+      "files": ["agentloop/lower_agent_launcher.py"],
+      "change": "Read the current lower-agent task.md beside case_input.json; retain input.md only as a narrow legacy fixture fallback so formal cases reach the first model/product action."
+    },
+    {
+      "files": ["agentloop/two_round_controller.py"],
+      "change": "Compute all_cases_started_after_freeze from parsed freeze, hidden-start, and per-case start timestamps instead of asserting it unconditionally."
+    },
+    {
+      "files": ["evaluator/tests/test_0905_offline_contract.py"],
+      "change": "Add regressions for the task.md contract and post-freeze timestamp predicate."
+    },
+    {
+      "files": ["evaluator/semantic_finalize.py", "evaluator/tests/test_0905_offline_contract.py"],
+      "change": "Bind the canonical lower task.md through runtime and launcher source/SHA-256 evidence, reject stale or mismatched task contracts before Result judging, and pass the verified run-local task copy to the independent Result judge."
+    }
+  ]
+}

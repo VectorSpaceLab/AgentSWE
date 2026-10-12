@@ -1,0 +1,31 @@
+{
+  "tabs": [
+    "owner",
+    "viewer",
+    "wrong"
+  ],
+  "backends": [
+    "backend-red",
+    "backend-blue"
+  ],
+  "levels": [
+    "status",
+    "support"
+  ],
+  "grantLifecycle": [
+    "expiry",
+    "revocation",
+    "generation_change"
+  ],
+  "sensitiveClasses": [
+    "credential",
+    "authorization",
+    "prompt",
+    "claim_token",
+    "grant_token",
+    "fencing_token"
+  ],
+  "syncProjectionIsolation": true,
+  "workspaceProjectionIsolation": true,
+  "grantLimitProbe": true
+}

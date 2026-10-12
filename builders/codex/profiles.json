@@ -1,0 +1,12 @@
+{
+  "comment": "Builder profiles for `agentswe run --builder <name>`. Model, effort and provider come from the BUILDER role in .env unless a profile pins them.",
+  "profiles": {
+    "codex": {
+      "harness": "codex",
+      "harness_version": "0.144.1",
+      "agent_import_path": "codex_provider_agent:ProviderCodex",
+      "generator": "builders/codex/gen_codex_config.py",
+      "comment": "model, effort and provider from the BUILDER role; Codex reaches the provider only through the builder broker"
+    }
+  }
+}

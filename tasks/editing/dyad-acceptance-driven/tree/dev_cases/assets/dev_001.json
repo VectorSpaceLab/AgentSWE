@@ -1,0 +1,14 @@
+{
+  "caseId": "dev_001",
+  "fixtureName": "acceptance-preview-benchmark",
+  "scenario": "pass_retry_restart",
+  "testFile": "e2e-tests/acceptance-registration.spec.ts",
+  "focusedGrep": "registers once and restores the authenticated session",
+  "operationId": "public-registration-preview-v2",
+  "controlCommand": "resume",
+  "runOutcomes": ["failed", "passed", "infrastructure"],
+  "requirementNeedles": ["register", "duplicate email", "signed in", "reload", "invalid email"],
+  "testContent": "import { test, expect } from \"@playwright/test\";\n\ntest(\"registers once and restores the authenticated session\", async ({ page }) => {\n  const requests: string[] = []; page.on(\"request\", r => { if (r.url().includes(\"/register\")) requests.push(r.url()); });\n  await page.goto(\"/register\"); await page.getByLabel(\"Email\").fill(\"new@example.test\"); await page.getByLabel(\"Password\").fill(\"correct-horse\"); await page.getByRole(\"button\", { name: \"Register\" }).click();\n  await expect(page).toHaveURL(/dashboard/); await expect(page.getByTestId(\"account-email\")).toHaveText(\"new@example.test\"); expect(requests).toHaveLength(1); await page.reload(); await expect(page).toHaveURL(/dashboard/); expect(requests).toHaveLength(1);\n});\n",
+  "runner": {"delayMs": 40, "outcome": "passed", "passed": 1, "failed": 0, "skipped": 0},
+  "workspaceAction": "none"
+}

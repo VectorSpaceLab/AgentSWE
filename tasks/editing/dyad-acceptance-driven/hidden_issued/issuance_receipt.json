@@ -1,0 +1,58 @@
+{
+  "schema_version": "agentswe-dyad-task-input-issuance/v1",
+  "issued_at": "2026-09-20T00:46:07.250612+00:00",
+  "issuance_id": "6e6c42ed006125a20210ac3a41463b75",
+  "inventory": "formal",
+  "case_ids": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "specs": [
+    {
+      "case_id": "test_001",
+      "path": "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/19-dyad/dyad-issued-0920/dyad/0920-hardened-001/test_001.json",
+      "sha256": "37e633e51689c2bbb5ede91941fba8d490ed00a372986c6194626ef53675bd9c",
+      "source_task_sha256": "b5f5d77b72ee061fe89c8d383616c79585e7f86ea7c09ddb2c995d5b4d1af09c"
+    },
+    {
+      "case_id": "test_002",
+      "path": "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/19-dyad/dyad-issued-0920/dyad/0920-hardened-001/test_002.json",
+      "sha256": "e1b19528b4791b4746fd8f8e85fcbd8a8d07f1b7da7789f1fe99d91ec5a72331",
+      "source_task_sha256": "4ab019b9333a65c718416a23edc227cee5cf609140b6420384f048b802021f7f"
+    },
+    {
+      "case_id": "test_003",
+      "path": "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/19-dyad/dyad-issued-0920/dyad/0920-hardened-001/test_003.json",
+      "sha256": "4fe5a1be774941b6d70bb1ba670b8a981d5e52c39d02559de8857e5c92ed1d75",
+      "source_task_sha256": "9c2e8fbbeaa896231eec8c034ea107fc7e31dbe225e76fd2c3e00007c717bab2"
+    },
+    {
+      "case_id": "test_004",
+      "path": "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/19-dyad/dyad-issued-0920/dyad/0920-hardened-001/test_004.json",
+      "sha256": "1e87673900fe7e7e657fcf05086a97430fca38dba02a7f19184a2fbac51e41f0",
+      "source_task_sha256": "c13cb46e446307442e829a0d7910e5231bc564799129ee2f21741eaf4dd17e61"
+    },
+    {
+      "case_id": "test_005",
+      "path": "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/19-dyad/dyad-issued-0920/dyad/0920-hardened-001/test_005.json",
+      "sha256": "6a19247cf7535f39cdefe8694d75162e01e65b3df3161f8add8262fe5a5cb3c3",
+      "source_task_sha256": "cafd51558d069ab026b2d7d1a436616892c4664ec45154c5fa27db465a7107de"
+    },
+    {
+      "case_id": "test_006",
+      "path": "@@AGENTSWE_LEGACY_DATA@@/0920-hardening/19-dyad/dyad-issued-0920/dyad/0920-hardened-001/test_006.json",
+      "sha256": "d064bac4bf3bd7a68f1ccd4a111f971e2769db53eca00d5a0148813a28b61fb4",
+      "source_task_sha256": "66e43feb497fdfec9378826a85662467bb0ec1f07865b779321316da6a12342a"
+    }
+  ],
+  "provider_calls": 0,
+  "dynamic_world_preconstructed": false,
+  "old_oracle_copied": false,
+  "runtime_world_issuer": "evaluator.scenario_contract.prepare_scenario",
+  "runtime_randomness": "secrets.token_hex(8) per case at run time",
+  "issued_from": "hardened tree @@AGENTSWE_LEGACY_DATA@@/0920-hardening/19-dyad/tree (install the tree before the bundle: the bundle and the tree are married)"
+}

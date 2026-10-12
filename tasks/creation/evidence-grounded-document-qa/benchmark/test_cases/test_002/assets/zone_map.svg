@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="360" viewBox="0 0 800 360">
+ <title id="map-title">Metrovale route and fare zones</title>
+ <rect id="zone-a" x="40" y="50" width="330" height="250" fill="#e9f4ff" stroke="#246"/>
+ <rect id="zone-b" x="430" y="50" width="330" height="250" fill="#fff1df" stroke="#642"/>
+ <text id="zone-a-label" x="165" y="80">ZONE A</text><text id="zone-b-label" x="555" y="80">ZONE B</text>
+ <circle id="station-oak" cx="120" cy="180" r="16" fill="#315f9f"/><text id="label-oak" x="92" y="215">Oak</text>
+ <circle id="station-pine" cx="290" cy="180" r="16" fill="#315f9f"/><text id="label-pine" x="260" y="215">Pine</text>
+ <circle id="station-river" cx="510" cy="180" r="16" fill="#c46718"/><text id="label-river" x="478" y="215">River</text>
+ <circle id="station-hill" cx="680" cy="180" r="16" fill="#c46718"/><text id="label-hill" x="655" y="215">Hill</text>
+ <line id="route-n" x1="120" y1="180" x2="680" y2="180" stroke="#222" stroke-width="6"/>
+ <text id="route-n-label" x="340" y="155">Route N</text>
+</svg>

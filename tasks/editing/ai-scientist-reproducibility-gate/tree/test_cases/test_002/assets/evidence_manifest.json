@@ -1,0 +1,8 @@
+{
+  "schema_version":1,
+  "experiments":[
+    {"experiment_id":"exp-birch-multiseed","role":"comparison","method":"birch","config":{"path":"config.json","sha256":"50417e06b93c0c87b96761841a7dbf43fa8a192683c615f492cd7a605446b4a6"},"seeds":[1,2,3,4,5],"dataset":{"name":"mini-text","split_id":"fixed-C","split_sha256":"fd92109745541e4dfd7c8804c06c04b451764845904240ad3bd23c4f2c09fe71"},"budget":{"epochs":6},"metrics":[{"name":"f1","scale":"fraction","aggregation":"mean_all_prespecified_seeds","raw_artifact":{"path":"raw_results.json","sha256":"399f96a74dc4b7fc554fb92c8fb24f14621704a1d0835713086b8b330cbbea30"},"reported_summary":{"path":"reported_summary.json","sha256":"b0843e9b78c091f3ba2e05836617c6bae48a5e6925eba81e54181745fd1ec197"}}],"run_registry":{"prespecified_seeds":[1,2,3,4,5],"completed_seeds":[1,2,3,4,5],"must_report_all_completed":true}}
+  ],
+  "replays":[{"replay_id":"replay-hidden-002","command":["python","replay.py"],"working_directory":".","stdout_format":"json","script_sha256":"2af76db7664128483c01c185f5c2d501d443a136f8b2a3e7b1357c938ba4f025","timeout_seconds":10}],
+  "release_policy":{"minimum_evidence_coverage":1.0,"minimum_seeds_for_stability":3,"block_on_selective_reporting":true,"require_negative_results":true,"required_decision":"block"}
+}

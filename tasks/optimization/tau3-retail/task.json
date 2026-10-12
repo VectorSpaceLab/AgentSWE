@@ -1,0 +1,90 @@
+{
+  "id": "tau3-retail",
+  "family": "optimization",
+  "short": "tau3",
+  "title": "tau3 retail tool agent optimization",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "optimization_native_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "opt-python312",
+    "opt-tau3-runtime"
+  ],
+  "envs": [
+    "optimization-python311"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [],
+    "disk_gb": 20
+  },
+  "upstream": {
+    "repo": "https://github.com/sierra-research/tau2-bench",
+    "commit": "668d3bcd135c02aa3438f987ef45735b7c163ee3",
+    "license": "MIT",
+    "redistribute_a0": true
+  },
+  "notes": [
+    "Model roles, as in the paper runs: the agent under test and the user simulator both call the RUNTIME provider and model at the RUNTIME effort through the evaluator broker (tau3_runtime.py llm_agent and llm_user), so user-simulator calls count toward each row's runtime call and token budget. Requests on the chat-completions path (here only the NL-assertion evaluator) get the JUDGE effort and output floor on the same provider and model; of the JUDGE role only its effort is used.",
+    "Per-host guard: at most 4 concurrent Optimization runs.",
+    "Evaluator brokers reach the RUNTIME provider directly (Responses wire) with a key file mounted only into them, as in the paper's Lite runs; Chat-only runtime providers need the unified broker here.",
+    "Release change (2026-10-11): runners/optimization/adapter.py collect_eval treats an Eval trial that Harbor ended with an exception before the evaluator wrote its score contract (for example an environment start or verifier timeout on a loaded Docker host) as an infrastructure failure of the evaluation, as collect_candidate already did for Candidate trials, so the infrastructure resume replays it: the dev controller replays a dev evaluation as a new phase, and a held-out phase resumes. Before, the missing contract raised FileNotFoundError, which was not classified as infrastructure: a dev evaluation was dropped (the Builder had to submit again) and a held-out evaluation ended the run. A trial whose contract exists is scored from that contract as before, and a missing contract without a Harbor trial exception still fails the phase.",
+    "Release change (2026-10-11): an evaluation phase that raises closes its controller_logs/<phase>/infrastructure_resume_state.json (status infrastructure_error or failed, finished_at and the error). `agentswe status` reads the dev controller's last error from both of its record shapes (a resume pause: error_type, at, error_message; a submission that ended: infrastructure_error, finished_at) and shows the phase `baseline` while the starter is evaluated; `agentswe result` adds evaluation_phase_status. `agentswe stop` also removes the run's containers that mount its Harbor job directories under <home>/jobs or whose compose working directory or compose files are under the run directory (an exited verifier container was left behind before); it never selects containers by name, and other runs in the same home are not matched."
+  ],
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "S": [
+      17.39,
+      4.35,
+      17.39
+    ],
+    "mean_at_3": 13.04,
+    "sd": 7.53
+  },
+  "runner_config": {
+    "benchmark_name": "tau3-tool-agent-optimization-v1",
+    "python_runtime_env": "optimization-python311",
+    "harbor_profile": "site",
+    "n_concurrent": 4,
+    "agent_import_path": "resumable_provider_codex_agent:ResumableDeepSeekCodex",
+    "host_exports": [
+      {
+        "image": "opt-python312",
+        "path": "/python",
+        "dest": "tools/cpython-3.12"
+      },
+      {
+        "image": "opt-tau3-runtime",
+        "path": "/tau2",
+        "dest": "snapshots/tau2-bench"
+      }
+    ]
+  },
+  "protocol": {
+    "dev_rounds": 5,
+    "max_dev_rounds": 5,
+    "builder_session_sec": 57600,
+    "score": "S = 100*min(1, (J(candidate)-J(a0)) / (100-J(a0))) on the held-out split"
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "dev_cases_n": 1,
+    "heldout_cases_n": 2,
+    "builder_session_sec": 3600
+  }
+}

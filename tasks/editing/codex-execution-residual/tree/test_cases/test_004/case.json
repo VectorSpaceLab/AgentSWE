@@ -1,0 +1,7 @@
+{
+  "case_id": "test_004",
+  "scenario": "chain_attestation",
+  "required_actions": ["chain_first", "chain_second"],
+  "max_action_invocations": 2,
+  "spill": false
+}

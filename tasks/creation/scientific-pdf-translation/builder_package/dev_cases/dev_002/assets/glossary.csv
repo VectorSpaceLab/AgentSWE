@@ -1,0 +1,5 @@
+source,target,authority
+thermal diffusivity,热扩散率,required
+boundary condition,边界条件,required
+confidence interval,置信区间,required
+thermal barrier coating,热障涂层,required

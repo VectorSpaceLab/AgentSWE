@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentswe"
+version = "0.1.0.dev0"
+description = "Benchmark harness for agents that build, edit and optimise other agents"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+agentswe = "agentswe.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["agentswe*"]

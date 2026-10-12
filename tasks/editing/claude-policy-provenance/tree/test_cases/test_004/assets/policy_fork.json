@@ -1,0 +1,50 @@
+{
+    "schema_version": 2,
+    "policy_id": "hidden-epoch",
+    "policy_epoch": 71,
+    "previous_policy_snapshot_digest": "sha256:57ef42c580af18f420a400ca7195348e6993ea2ddba0a9103f9539b51dd735d7",
+    "revision": "snapshot-fork-v2",
+    "mode": "enforce",
+    "default_decision": "allow",
+    "tools": {
+        "Read": "allow",
+        "Bash": "allow"
+    },
+    "paths": {
+        "allow": [
+            "**"
+        ],
+        "deny": []
+    },
+    "commands": {
+        "allow": [
+            "pytest"
+        ],
+        "deny": [],
+        "audit_only": [],
+        "rewrites": []
+    },
+    "network": {
+        "allow_hosts": [],
+        "deny_hosts": []
+    },
+    "mcp": {},
+    "reservation": {
+        "max_inflight": 10,
+        "max_session_inflight": 10,
+        "lease_seconds": 3,
+        "reclaim_expired": true
+    },
+    "approval": {
+        "threshold": 1,
+        "ticket_seconds": 300,
+        "principals": ["fork-owner"],
+        "tools": ["Bash"],
+        "principal_groups": {"fork-owner":"owner"},
+        "required_groups": ["owner"]
+    },
+    "ownership": {"handoff_seconds": 300, "allowed_targets": ["fork-target"]},
+    "delivery": {"claim_seconds": 30, "max_pending": 100, "require_completion": false},
+    "repair": {"max_quarantine_bytes": 16777216, "required_verifiers": 2, "verifiers": ["fork-a", "fork-b"]},
+    "continuation": {"token_seconds": 300, "max_pending": 64, "tools": ["Read", "Bash"]}
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "dyad-agentloop-public-inventory-v1",
+  "cases": [
+    {
+      "case_id": "dev_001",
+      "family": "exact_target_retry_terminal_proof_restart",
+      "product_entry": "chat:stream -> acceptance:get-run(currentTarget) -> acceptance:start-preview -> tests isolation -> restart",
+      "agent_observes": ["typed IPC envelopes", "product-published current target", "preview status events", "durable run, attestation and revision fields"],
+      "feedback_fields": ["result_score", "dimensions", "assessment", "major_errors", "ceiling_assessments", "assertions", "broker_stats", "build_status"],
+      "oracle_disclosed": false
+    },
+    {
+      "case_id": "dev_002",
+      "family": "revision_drift_invalidation_restore_cancel_compatibility",
+      "product_entry": "chat:stream -> acceptance control -> tests:stop",
+      "agent_observes": ["started/current/finished revisions", "bounded invalidation reason", "terminal status", "cancel receipt", "single attestation identity", "ordinary test compatibility"],
+      "feedback_fields": ["result_score", "dimensions", "assessment", "major_errors", "ceiling_assessments", "assertions", "broker_stats", "build_status"],
+      "oracle_disclosed": false
+    }
+  ],
+  "scoring_note": "Hidden Result scoring applies evaluator-issued, evidence-bound ceilings: an incomplete acceptance chain, an unverified case binding, a dispatch-integrity failure, an artifact that is not the exact dispatch record, an unproven scenario capability, or a private-path leak each limit the total score regardless of dimension narrative. See evaluator/result_rubric.md."
+}

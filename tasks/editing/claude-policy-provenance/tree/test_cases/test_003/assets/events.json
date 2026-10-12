@@ -1,0 +1,8 @@
+[
+  {"session_id":"mcp-nested","hook_event_name":"PreToolUse","tool_name":"mcp__files__inspect","tool_use_id":"mcp-control","tool_input":{"request":{"root":"src","targets":[{"path":"src/app.py"}],"endpoint":{"url":"https://EXAMPLE.test/info"}},"metadata":{"headers":{"Authorization":"Bearer ${TOKEN}","X-Note":"ordinary-text"}}}},
+  {"session_id":"mcp-nested","hook_event_name":"PreToolUse","tool_name":"mcp__files__inspect","tool_use_id":"mcp-encoded","tool_input":{"request":{"targets":[{"path":"%252e%252e%252fsecrets/key.txt"}]}}},
+  {"session_id":"mcp-nested","hook_event_name":"PreToolUse","tool_name":"mcp__files__inspect","tool_use_id":"mcp-url","tool_input":{"request":{"endpoint":{"url":"https://user:pass@169.254.169.254/latest"}}}},
+  {"session_id":"mcp-nested","hook_event_name":"PreToolUse","tool_name":"mcp__files__inspect","tool_use_id":"mcp-header","tool_input":{"metadata":{"headers":[{"authorization":"Bearer EVAL_MCP_NESTED_7f91d20a"}]}}},
+  {"session_id":"mcp-nested","hook_event_name":"PreToolUse","tool_name":"mcp__files__inspect_copy","tool_use_id":"mcp-name","tool_input":{"request":{"targets":[{"path":"src/app.py"}]}}},
+  {"session_id":"mcp-nested","hook_event_name":"PostToolUse","tool_name":"mcp__files__inspect","tool_use_id":"mcp-control","tool_input":{"request":{"root":"src","targets":[{"path":"src/app.py"}]}},"tool_response":{"error":{"authorization":"Bearer EVAL_POST_SECRET_8d31","url":"https://user:EVAL_URL_SECRET_41aa@example.test/x"},"private_key":"-----BEGIN PRIVATE KEY-----\nEVAL_PRIVATE_KEY_4c19\n-----END PRIVATE KEY-----"}}
+]

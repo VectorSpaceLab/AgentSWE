@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benchmark.invalid/openhands/freeze-manifest-v1.schema.json",
+  "type": "object",
+  "required": ["schema_version", "candidate_digest", "source_submission", "source_submission_id", "accepted_submission_count", "accepted_candidate_digests", "candidate_delivery_digest", "candidate_materialized_digest", "freeze_reason", "max_dev_rounds", "n_concurrent", "dev_passed_is_automatic_freeze", "feedback_digest", "feedback_consumed", "feedback_chain_complete", "dev_evaluated", "credential_mounted_to_candidate", "frozen_tree_read_only", "frozen_tree_regular", "frozen_at_unix", "hidden_allowed"],
+  "properties": {
+    "schema_version": {"const": "agentswe-freeze-manifest/v1"},
+    "candidate_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "source_submission": {"type": "integer", "minimum": 1, "maximum": 10},
+    "source_submission_id": {"type": "string"},
+    "accepted_submission_count": {"type": "integer", "minimum": 1, "maximum": 10},
+    "accepted_candidate_digests": {"type": "array", "minItems": 1, "maxItems": 10, "items": {"type": "string", "pattern": "^[a-f0-9]{64}$"}},
+    "candidate_delivery_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "candidate_materialized_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "freeze_reason": {"enum": ["builder_exit", "max_dev_rounds"]},
+    "max_dev_rounds": {"type": "integer", "minimum": 1, "maximum": 10},
+    "n_concurrent": {"const": 1},
+    "dev_passed_is_automatic_freeze": {"const": false},
+    "feedback_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "feedback_consumed": {"const": true},
+    "feedback_chain_complete": {"const": true},
+    "dev_evaluated": {"const": true},
+    "credential_mounted_to_candidate": {"const": false},
+    "frozen_tree_read_only": {"const": true},
+    "frozen_tree_regular": {"const": true},
+    "frozen_at_unix": {"type": "number"},
+    "hidden_allowed": {"const": true},
+    "pilot_not_formal": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

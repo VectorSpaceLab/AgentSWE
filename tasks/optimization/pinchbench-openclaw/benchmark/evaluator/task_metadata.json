@@ -1,0 +1,422 @@
+{
+  "dev_001": {
+    "category": "productivity",
+    "grading_type": "automated",
+    "task_id": "task_sanity",
+    "task_source_digest": "a6912dc746a88faba7557266da7ccd55fb5b02313701c276dffe6ff9e6e9059c",
+    "timeout_seconds": 60
+  },
+  "dev_002": {
+    "category": "productivity",
+    "grading_type": "automated",
+    "task_id": "task_calendar",
+    "task_source_digest": "3ed30a4927d463c4dff73cd2f7dea4bc302753d4cb9d048a5c6f09e60b60314b",
+    "timeout_seconds": 120
+  },
+  "dev_003": {
+    "category": "skills",
+    "grading_type": "automated",
+    "task_id": "task_files",
+    "task_source_digest": "fa88095c89caaabf0626ed1fd269b5a77c01375bd78dbb2f051cc3b2f8a81309",
+    "timeout_seconds": 120
+  },
+  "dev_004": {
+    "category": "productivity",
+    "grading_type": "automated",
+    "task_id": "task_todo_list_cleanup",
+    "task_source_digest": "1dbd1e557ac1007250dd386e44ae3f6ffe8fe95228028e26c6276ef28d9e966d",
+    "timeout_seconds": 120
+  },
+  "dev_005": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_iris_summary",
+    "task_source_digest": "6e7ff2e8d940df1a90c3a13cf0da792a1a2fced33826ae892355d1e8c1aebfdc",
+    "timeout_seconds": 180
+  },
+  "dev_006": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_stock_trend",
+    "task_source_digest": "47aa4051da51c628acf3b5adcce7042393e3561a79d90d23d4385b72035f7d4f",
+    "timeout_seconds": 180
+  },
+  "dev_007": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_apache_top_errors",
+    "task_source_digest": "1e3ec0ab185206ebfdf8d0b2083be6d464b0ff76d7e76c61a9c03d94b94373c3",
+    "timeout_seconds": 180
+  },
+  "dev_008": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_syslog_boot",
+    "task_source_digest": "729a8717e68ccbfeb91e9f89c323466defc76e47496e8edebcd92834b9a9354e",
+    "timeout_seconds": 180
+  },
+  "dev_009": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_tldr",
+    "task_source_digest": "e365287809e605d3ae7089928852d3a2849516cf5340056fbeb5044bb04dcc64",
+    "timeout_seconds": 180
+  },
+  "dev_010": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_council_votes",
+    "task_source_digest": "dd3e49143f1f8354aacb93b7ef4c1c540b0060bcca25ac09ea605fc05734652d",
+    "timeout_seconds": 180
+  },
+  "dev_011": {
+    "category": "coding",
+    "grading_type": "automated",
+    "task_id": "task_dockerfile_optimization",
+    "task_source_digest": "f8e8fb490fb22edcea684b63d4989a4c612d4966165ca19bcb9ead25b8e3fed4",
+    "timeout_seconds": 120
+  },
+  "dev_012": {
+    "category": "coding",
+    "grading_type": "automated",
+    "task_id": "task_multi_file_refactoring",
+    "task_source_digest": "18b59323b522488e91a462a4fa15b32b763eff34f5cc539ee92c53af8d7d8a58",
+    "timeout_seconds": 120
+  },
+  "dev_013": {
+    "category": "coding",
+    "grading_type": "automated",
+    "task_id": "task_k8s_debugging",
+    "task_source_digest": "6aa528e074a7d86cfda93d5239284f14733cc98cd1c116d17bf828d98a5aff4e",
+    "timeout_seconds": 120
+  },
+  "dev_014": {
+    "category": "analysis",
+    "grading_type": "llm_judge",
+    "task_id": "task_summary",
+    "task_source_digest": "4b708aad0439834a514e5ccb4c424c22c2ff29a4a4f2cc2013b3cfbc837b52f2",
+    "timeout_seconds": 240
+  },
+  "dev_015": {
+    "category": "analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_spreadsheet_summary",
+    "task_source_digest": "97928ce77e1edaf36d63ab76666aa2bbaa159ae9713c98b8827064bf1ec86963",
+    "timeout_seconds": 180
+  },
+  "dev_016": {
+    "category": "analysis",
+    "grading_type": "automated",
+    "task_id": "task_access_log_anomaly",
+    "task_source_digest": "cc866321febcc09a176b25f468838525636d5ae1f2b53c478507818286b4a432",
+    "timeout_seconds": 90
+  },
+  "dev_017": {
+    "category": "productivity",
+    "grading_type": "hybrid",
+    "task_id": "task_email_triage",
+    "task_source_digest": "333cb207fbb5c609ebdfc597fce5f33af6de68fdcfad15d6238bbcad2bcd47b2",
+    "timeout_seconds": 240
+  },
+  "dev_018": {
+    "category": "analysis",
+    "grading_type": "llm_judge",
+    "task_id": "task_contract_analysis",
+    "task_source_digest": "2e24431a9412a0c312d59244eabedf1a45d964f97a60f37a55ddee331c32ac60",
+    "timeout_seconds": 300
+  },
+  "dev_019": {
+    "category": "analysis",
+    "grading_type": "automated",
+    "task_id": "task_session_chain_analysis",
+    "task_source_digest": "40de8653c8355a882307ebcd2a0949881f0d0a1ca02533824d790aa61a699a9b",
+    "timeout_seconds": 300
+  },
+  "dev_020": {
+    "category": "coding",
+    "grading_type": "automated",
+    "task_id": "task_shell_command_generator",
+    "task_source_digest": "a5d28f13355271e0fc86304601fff658ba32468a798f3cb92ce57e0eb335972c",
+    "timeout_seconds": 90
+  },
+  "test_001": {
+    "category": "productivity",
+    "grading_type": "automated",
+    "task_id": "task_cron_organizer",
+    "task_source_digest": "30fb215aa440180a41735714c69ab7d0d0de350a33f8e2ae3eda3dff92ed82fb",
+    "timeout_seconds": 120
+  },
+  "test_002": {
+    "category": "productivity",
+    "grading_type": "automated",
+    "task_id": "task_pdf_to_calendar",
+    "task_source_digest": "4b23a1d04f91b213ada7aafe328924ac0bfd83fc9b8a0fb9622444ed1d6077b4",
+    "timeout_seconds": 180
+  },
+  "test_003": {
+    "category": "productivity",
+    "grading_type": "llm_judge",
+    "task_id": "task_daily_summary",
+    "task_source_digest": "2c7ff6187a2638ea0d4b54a3ecc44bb27f4f6d0c6edbe864e550e2da9230e690",
+    "timeout_seconds": 300
+  },
+  "test_004": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_stock_volatility",
+    "task_source_digest": "7b58e52159634b3114747bbc484019a5b474273e78f8c1037bee8e642ec733df",
+    "timeout_seconds": 180
+  },
+  "test_005": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_stock_best_worst",
+    "task_source_digest": "33d9a6b4fc81e9d1d2f2f604650331e2d75ba0978dff86a19dd6726619c57c53",
+    "timeout_seconds": 180
+  },
+  "test_006": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_temp_anomalies",
+    "task_source_digest": "9f961f2683dc8e2bc1c7783f0087afce677289749a14bc22a75f94c964ca3403",
+    "timeout_seconds": 180
+  },
+  "test_007": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_life_exp_change",
+    "task_source_digest": "b1a470cdc65939978b60b2dcb4e54248543f7221fca67af8f38f0de39732e39c",
+    "timeout_seconds": 180
+  },
+  "test_008": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_gdp_regions",
+    "task_source_digest": "e9c94a44de9ae12f06949d6747ed7b31776f8c024752f3ede23025f1200f25a1",
+    "timeout_seconds": 180
+  },
+  "test_009": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_stations_coverage",
+    "task_source_digest": "edc2ef819266064185cfcacabd642d124d00ba247183867f095613265f745d04",
+    "timeout_seconds": 180
+  },
+  "test_010": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_iris_outliers",
+    "task_source_digest": "e9bcce74595c0fd65a8e68429e2ae98f6e90b092e949d823ade8495af5584e09",
+    "timeout_seconds": 180
+  },
+  "test_011": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_cities_density",
+    "task_source_digest": "89598ede102661e7f217d6bbf2df77fef0721fff0905fefbd9b7f40bdb7fc652",
+    "timeout_seconds": 180
+  },
+  "test_012": {
+    "category": "csv_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_csv_pension_risk",
+    "task_source_digest": "7423862163a7e02c9c282b01de3b73456881f930a5a97f7f7301dab1c7d1c003",
+    "timeout_seconds": 180
+  },
+  "test_013": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_apache_critical",
+    "task_source_digest": "867c8f27fb4f6e829a7cb5ccd408bc9444684e6059d64275097aad580b638783",
+    "timeout_seconds": 180
+  },
+  "test_014": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_apache_timeline",
+    "task_source_digest": "7eb77f9ff6fe3bdba5e63ce141313b7bb8609419d27080e364c4df775be957b0",
+    "timeout_seconds": 180
+  },
+  "test_015": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_nginx_status_codes",
+    "task_source_digest": "fdabe7a3f72d630ffe548b66129db7000018aa6ca2b7e44a87a76e7450b4d9f3",
+    "timeout_seconds": 180
+  },
+  "test_016": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_nginx_slow_requests",
+    "task_source_digest": "3dcebf2ba957421574835201482aff515931d61f7e25e6ab204dbefad75182ce",
+    "timeout_seconds": 180
+  },
+  "test_017": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_ssh_brute_force",
+    "task_source_digest": "753b121b1254c8f435630d9e701c1a69cb5d6c7bd3f96552db31c1a19a06d77f",
+    "timeout_seconds": 180
+  },
+  "test_018": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_hdfs_failures",
+    "task_source_digest": "1bba3043a4bc0fbff306ffb1da0655cc2132d83133bcca1dee0379604d3c55a7",
+    "timeout_seconds": 180
+  },
+  "test_019": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_mapreduce_resources",
+    "task_source_digest": "11e6e604ab4a95fbd02f7c9af0e6c54629f8691c03876af3a8b68be489aaabca",
+    "timeout_seconds": 180
+  },
+  "test_020": {
+    "category": "log_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_log_syslog_anomalies",
+    "task_source_digest": "e939959e0ddedc872af817905676d6f62b306b890e81bcedd006a27be364b577",
+    "timeout_seconds": 180
+  },
+  "test_021": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_advisory_attendees",
+    "task_source_digest": "1dcde37e3947d2fd47b4f7e978a440082831f5ba260ea2ddac1e68105532d55f",
+    "timeout_seconds": 180
+  },
+  "test_022": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_advisory_technical",
+    "task_source_digest": "791a8f299c2c018e68974bc6f3b1050e4c48e7dbc7f5dc362da6913b4301c0a8",
+    "timeout_seconds": 180
+  },
+  "test_023": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_council_budget",
+    "task_source_digest": "15d8f920b447bc593966dda7cffac84e8a305eefa0118246355d6468a6a04eb8",
+    "timeout_seconds": 180
+  },
+  "test_024": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_council_public_comment",
+    "task_source_digest": "ab801d6f6cac266089008727acd209684ea5db594fdc6e995e51989d77247bb3",
+    "timeout_seconds": 180
+  },
+  "test_025": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_tech_action_items",
+    "task_source_digest": "b8ef4f79996a9a5028427ede70097674c6d43a28e4d309cf965b5a650a2d160e",
+    "timeout_seconds": 180
+  },
+  "test_026": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_tech_decisions",
+    "task_source_digest": "597b94ca1677b48a991234e50c528ab1c6d69a1496e5ef05c5570fe082a14903",
+    "timeout_seconds": 180
+  },
+  "test_027": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_executive_summary",
+    "task_source_digest": "11347737e48bca154e0aa945ccce32fd11344d8b62f08499bda880dcce45b9f9",
+    "timeout_seconds": 180
+  },
+  "test_028": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_sentiment_analysis",
+    "task_source_digest": "754290f223774e272c21db31c69871eedbb345a534a56c954704159f7a402a18",
+    "timeout_seconds": 180
+  },
+  "test_029": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_gov_recommendations",
+    "task_source_digest": "407403fcab97902f22360f3b2f40564ed6d8a73ba0fe665c1805e0f37f70f164",
+    "timeout_seconds": 180
+  },
+  "test_030": {
+    "category": "meeting_analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_meeting_searchable_index",
+    "task_source_digest": "7b826489801949c708a4c590fcc0894de880c210a049a83fc581a19b0249474c",
+    "timeout_seconds": 180
+  },
+  "test_031": {
+    "category": "coding",
+    "grading_type": "automated",
+    "task_id": "task_cicd_pipeline_debug",
+    "task_source_digest": "4a23dcb333c0cc480ed9cb6f9c31239eb5e115dd4e214e8d7ca8c49702a76ea9",
+    "timeout_seconds": 120
+  },
+  "test_032": {
+    "category": "coding",
+    "grading_type": "automated",
+    "task_id": "task_git_rescue_recovery",
+    "task_source_digest": "8821bb9108b1a813f122ac241536f1b321788a9c3dae03ac20d3efdfa973a104",
+    "timeout_seconds": 120
+  },
+  "test_033": {
+    "category": "coding",
+    "grading_type": "hybrid",
+    "task_id": "task_test_generation",
+    "task_source_digest": "e7da7692d5f3c7e349c8560345166328d67249a51f0abdf50144e1f71ed6c831",
+    "timeout_seconds": 180
+  },
+  "test_034": {
+    "category": "coding",
+    "grading_type": "hybrid",
+    "task_id": "task_selector_fix",
+    "task_source_digest": "a15f974660571b2a812f932e3a0cac35566611674467be55dc2cc91fd7322384",
+    "timeout_seconds": 180
+  },
+  "test_035": {
+    "category": "analysis",
+    "grading_type": "automated",
+    "task_id": "task_openclaw_comprehension",
+    "task_source_digest": "7e0707a9b9b69cb497a0722b06e0f881315351b3c884088d4571dc3ea01be9f4",
+    "timeout_seconds": 300
+  },
+  "test_036": {
+    "category": "analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_email_search",
+    "task_source_digest": "f58126dd62ea53dd6e04d5d86d9591eab1f39d69d518398ce2c76cc3c0deb4b6",
+    "timeout_seconds": 240
+  },
+  "test_037": {
+    "category": "analysis",
+    "grading_type": "hybrid",
+    "task_id": "task_cve_security_triage",
+    "task_source_digest": "88cf8a92efc3a60fd5af6df6cab5e419c1fd479acd67a3d0b509ead81e39421a",
+    "timeout_seconds": 300
+  },
+  "test_038": {
+    "category": "analysis",
+    "grading_type": "automated",
+    "task_id": "task_image_identification",
+    "task_source_digest": "c89212e2fd0b3731a02d7211d70e5943b22e25d42fff45c5081eaee0e4a368f8",
+    "timeout_seconds": 150
+  },
+  "test_039": {
+    "category": "writing",
+    "grading_type": "llm_judge",
+    "task_id": "task_readme_generation",
+    "task_source_digest": "e556d3ba4f6393aa81ea5eb2b0c586d891a275a352ea5c2554209c5c1fff7b83",
+    "timeout_seconds": 180
+  },
+  "test_040": {
+    "category": "coding",
+    "grading_type": "hybrid",
+    "task_id": "task_browser_automation",
+    "task_source_digest": "773dd0ef26a52cab8b7208f9eca2739cb5a32d57fc7bd4089cc071edb2c16dcf",
+    "timeout_seconds": 180
+  }
+}

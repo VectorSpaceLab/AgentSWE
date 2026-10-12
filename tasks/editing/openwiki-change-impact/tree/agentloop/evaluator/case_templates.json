@@ -1,0 +1,22 @@
+{
+  "dev_001": {
+    "scenario": "rename_and_lost_response",
+    "change_kind": "git",
+    "request": {"tenant": "public-team", "generation": 1, "request_kind": "rename", "payload_digest": "runtime-generated"},
+    "required_actions": ["inspect_change", "update_docs", "write_impact_report", "commit_receipt", "publish", "index", "verify_retry"],
+    "public_fixture": "dev_cases/dev_001/assets/project"
+  },
+  "dev_002": {
+    "scenario": "expired_owner_and_conflict",
+    "change_kind": "diff",
+    "request": {"tenant": "public-team", "generation": 2, "request_kind": "default_change", "payload_digest": "runtime-generated"},
+    "required_actions": ["inspect_change", "discard_partial_stage", "update_docs", "write_impact_report", "recover_receipt", "publish", "index", "reject_conflict"],
+    "public_fixture": "dev_cases/dev_002/assets/project"
+  },
+  "test_001": {"scenario": "module_move_compatibility", "change_kind": "git", "request": {"tenant": "format-team", "generation": 4, "payload_digest": "runtime-generated"}, "required_actions": ["recover_owner", "update_docs", "publish", "index", "verify_receipt"]},
+  "test_002": {"scenario": "transitive_type_migration_corrupt_search", "change_kind": "directories", "request": {"tenant": "identity-team", "generation": 9, "payload_digest": "runtime-generated"}, "required_actions": ["restart_request", "update_docs", "repair_search", "publish", "verify_noop"]},
+  "test_003": {"scenario": "removed_api_migration", "change_kind": "diff", "request": {"tenant": "reader-red", "generation": 5, "payload_digest": "runtime-generated"}, "required_actions": ["inspect_change", "update_docs", "publish", "index", "verify_tenant_isolation"]},
+  "test_004": {"scenario": "partial_stage_deleted_path", "change_kind": "git", "request": {"tenant": "runtime-team", "generation": 12, "payload_digest": "runtime-generated"}, "required_actions": ["recover_partial_stage", "update_docs", "repair_link", "repair_example", "publish", "index"]},
+  "test_005": {"scenario": "concurrent_duplicate", "change_kind": "directories", "request": {"tenant": "monorepo-team", "generation": 3, "payload_digest": "runtime-generated"}, "required_actions": ["coordinate_workers", "update_docs", "commit_one_receipt", "publish", "index", "verify_duplicate"]},
+  "test_006": {"scenario": "ordinary_noop_security_isolation", "change_kind": "git", "request": {"tenant": "security-a", "generation": 1, "payload_digest": "runtime-generated"}, "required_actions": ["inspect_noop", "refuse_untrusted_instruction", "verify_tenant_isolation"]}
+}

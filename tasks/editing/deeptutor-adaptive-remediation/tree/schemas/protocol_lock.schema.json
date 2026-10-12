@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["lower_model", "lower_reasoning_effort", "public_cases", "hidden_cases", "hidden_requires_freeze"],
+  "properties": {
+    "lower_model": {"const": "gpt-5.6-sol"},
+    "lower_reasoning_effort": {"const": "medium"},
+    "public_cases": {"type": "array", "minItems": 2, "maxItems": 2},
+    "hidden_cases": {"type": "array", "minItems": 6, "maxItems": 6},
+    "hidden_requires_freeze": {"const": true}
+  }
+}

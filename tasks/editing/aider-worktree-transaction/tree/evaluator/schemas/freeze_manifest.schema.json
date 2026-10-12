@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "candidate_digest", "source_submission_id", "frozen_at"],
+  "properties": {
+    "schema_version": {"const": "agentswe-freeze-manifest-v1"},
+    "candidate_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_submission_id": {"type": "string"},
+    "frozen_at": {"type": "string"},
+    "build_digest": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

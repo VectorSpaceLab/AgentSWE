@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="460" viewBox="0 0 840 460">
+ <title id="dashboard-title">Tidepool corrected-humidity dashboard</title>
+ <rect id="plot" x="80" y="45" width="690" height="330" fill="white" stroke="#222"/>
+ <line id="threshold-line" x1="80" y1="185" x2="770" y2="185" stroke="#b21f2d" stroke-width="3"/>
+ <text id="threshold-label" x="635" y="170">alarm threshold</text>
+ <polyline id="h7-series" points="100,250 200,220 300,170 400,140 500,200 600,240 700,255" fill="none" stroke="#315f9f" stroke-width="5"/>
+ <polyline id="h8-series" points="100,240 200,225 300,210 400,200 500,170 600,225 700,240" fill="none" stroke="#25855a" stroke-width="5"/>
+ <text id="h7-label" x="115" y="90">H-7 corrected series</text>
+ <text id="h8-label" x="115" y="115">H-8 corrected series after clock alignment</text>
+ <text id="time-axis" x="315" y="425">aligned UTC time, five-minute samples</text>
+</svg>

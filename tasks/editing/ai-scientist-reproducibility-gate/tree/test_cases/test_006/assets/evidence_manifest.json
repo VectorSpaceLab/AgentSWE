@@ -1,0 +1,9 @@
+{
+  "schema_version":1,
+  "experiments":[
+    {"experiment_id":"exp-fjord","role":"candidate","method":"fjord","config":{"path":"config.json","sha256":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"},"seeds":[12],"dataset":{"name":"integrity-mini","split_id":"split-G","split_sha256":"114d5b7f9cff1e5af43a0ca57d580669be010c2d04c0d2df95d0ba282492b90d"},"budget":{"epochs":7},"metrics":[{"name":"accuracy","scale":"fraction","reported_value":0.90,"raw_artifact":{"path":"raw_results.json","sha256":"f56a8eb5faa5d822df5c3fb7a19403cda0c0a8f7c078310e5a82aae8e2e2f8c9"}}],"log":{"path":"run.log","sha256":"4f6896f57d1a63ef1de58b29cf7911483d308193b258abe12e0ce9f8069cb4a7","must_match_config_fields":["learning_rate","epochs"]}}
+  ],
+  "figures":[{"figure_id":"figure-1","path":"figure_1.csv","sha256":"1a4df5e92e6eff8369713a7a32b9326851c722b87872328a2b3e0c48a0d107d0","source_experiment_id":"exp-fjord","metric":"accuracy","must_match_raw":true}],
+  "replays":[{"replay_id":"replay-hidden-006","command":["python","replay.py"],"working_directory":".","stdout_format":"json","script_sha256":"8310d9123fdde520ee42c75b378b8759ad14ebf8c38f224a9dca1d953edaec7b","timeout_seconds":10}],
+  "release_policy":{"minimum_evidence_coverage":1.0,"block_on_integrity_error":true,"require_config_log_consistency":true,"require_figure_raw_consistency":true,"required_decision":"block"}
+}

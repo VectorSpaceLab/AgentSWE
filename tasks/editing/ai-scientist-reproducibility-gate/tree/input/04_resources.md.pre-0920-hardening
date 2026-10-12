@@ -1,0 +1,34 @@
+# Resources
+
+## Local resources
+
+- A writable pinned repository snapshot under `input/repository`.
+- Python 3.11, Git, standard Unix tools, and local filesystem access.
+- Exactly two deterministic public cases and the standalone `dev_cases/run_public.py` runner.
+- CPU-small JSON, Markdown, CSV, configuration, usage, policy, and replay assets.
+- Each case additionally provides an offline `run_manifest.json`, plus partial/fatal/drift variants where necessary; the replay script and worker results all have fixed digests.
+- A total budget of 600 seconds per case; the current agent-loop lower control process, world/observer, and all product containers share one 4 GiB cgroup parent aligned with Create (swap is 0; not observed RSS), and each product container uses 2 CPUs. The 600 seconds include setup, model waiting, product execution, and cleanup; the execution stage has at most 560 seconds, with the remaining 40 seconds reserved for authenticated cleanup and evidence sealing. The historical 2 GiB description has been explicitly superseded by input/03 and the evaluator's configuration difference record.
+
+The public runner invokes separate processes, restarts between prepare and commit, deletes the response copies to simulate loss, and directly verifies the ZIP members, run provenance, scoped cleanup, durable budget totals, and the science gate digest across transaction/capsule/attestation/notification. These are normal product conditions, not benchmark-only hooks. Do not add sleeps, environment-controlled faults, fixture-specific branches, or hard-coded identities.
+
+v4 additionally derives the evidence-attestation reference table and metric observation table independently from the evidence manifest. The candidate must not depend on the evaluator-owned manifest, hidden case names, or fixture-specific branches; it must use the same canonical ordering, hashing, and integrity-status model for any safe relative reference.
+
+v5 additionally recomputes the semantic claim contract independently from the final ledger/report/write-up and verifies the bindings and decision evidence with the scientific requirements declared per case. The public cases show only two semantics; the hidden cases contain unseen combinations such as leakage/split, selective reporting, stale artifacts, budget/ablation, statistics, and config/figure integrity.
+
+## Optional development APIs
+
+Only while editing the development repository, you may use the GATEWAY Responses API at `https://gateway.example.com/v1/responses` with the bearer credential environment variable `GATEWAY_API_KEY`, model `gpt-5.6-sol`, and reasoning effort `high`. Optional public documentation search may use only the configured Serper-compatible service with the bearer credential environment variable `SERPER_TOKEN`.
+
+No other remote model, model name, search provider, or web retrieval service is authorized. Never send credentials, evaluator code, hidden cases, source dumps, or unpublished fixture content. The evaluator provides no credentials and requires zero runtime network calls.
+
+Public issue research for this improvement is limited to the configured GATEWAY and Serper resources. If credentials are unavailable, record that limitation in the maintainer report and do not substitute other providers.
+
+## Boundaries
+
+The builder-visible material is exactly `input/` and `dev_cases/`. Do not seek evaluator-owned cases, manifests, metadata, controls, prior submissions, or results. Product changes belong only in `solution.patch`; the two JSON reports are the only other delivery files. Runtime artifacts belong only in the requested output, ledger, session store, and budget store paths.
+
+Full upstream execution is out of scope because it needs model services, GPU/scientific packages, generated code execution, and LaTeX. The public fixtures are a complete, safe iteration loop for nominal scientific, transaction, capsule, and budget behavior.
+
+## Current agent-loop lower protocol
+
+The zero-network constraint above targets the isolated scientific product process; the model-driven choice of product operations is connected to `gpt-5.6-sol/medium` through the evaluator-owned broker, and real credentials do not enter the product. Each case has at most 8 action decisions and 1 final artifact generation. A single lower decision has at most 300 seconds and is bound by the same execution deadline of the parent group. Each logical request has exactly one upstream submission; 429/502/503/504, disconnects, timeouts, and incomplete responses are never resent automatically. Completed responses may only be queried from the original immutable record; unknown usage stays unknown, and an incomplete evaluation does not fake a Candidate zero. This change fixes transport and evidence recording; it provides no scientific answers or recovery action sequences.

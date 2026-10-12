@@ -1,0 +1,17 @@
+Subject: [PATCH 0003] Classify Codex 'stream disconnected before completion' as ApiConnectionClosedError
+
+Applies on top of profile 'pristine'.
+
+--- a/harbor/agents/installed/base.py
++++ b/harbor/agents/installed/base.py
+@@ -310,6 +310,10 @@
+             ApiResponseStalledError,
+         ),
+         ErrorPattern(
++            r"stream disconnected before completion|stream closed before response\.completed",
++            ApiConnectionClosedError,
++        ),
++        ErrorPattern(
+             r"response exceeded .+ output token maximum",
+             OutputTokenExceededError,
+         ),

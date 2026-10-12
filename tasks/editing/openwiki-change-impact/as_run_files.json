@@ -1,0 +1,10 @@
+{
+  "schema_version": "agentswe-as-run-files/v1",
+  "files": [
+    {
+      "path": "tasks/editing/openwiki-change-impact/tree/input/02_interface_and_delivery.md.pre-zero-call-feedback",
+      "sha256": "4dbafda4c10762ecea383d5d43b20c54ad01e5489e030b4e0fc7b6e99735a298",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    }
+  ]
+}

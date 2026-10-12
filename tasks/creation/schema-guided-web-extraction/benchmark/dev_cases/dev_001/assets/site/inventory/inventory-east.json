@@ -1,0 +1,74 @@
+[
+  {
+    "asset_id": "AU-2001",
+    "stock": 0,
+    "warehouse": "Reno",
+    "observed_at": "2026-07-08T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2003",
+    "stock": 14,
+    "warehouse": "Boise",
+    "observed_at": "2026-07-10T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2005",
+    "stock": 28,
+    "warehouse": "Reno",
+    "observed_at": "2026-07-12T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2007",
+    "stock": 13,
+    "warehouse": "Boise",
+    "observed_at": "2026-07-14T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2009",
+    "stock": 27,
+    "warehouse": "Reno",
+    "observed_at": "2026-07-08T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2011",
+    "stock": 12,
+    "warehouse": "Boise",
+    "observed_at": "2026-07-10T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2013",
+    "stock": 26,
+    "warehouse": "Reno",
+    "observed_at": "2026-07-12T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2015",
+    "stock": 11,
+    "warehouse": "Boise",
+    "observed_at": "2026-07-14T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2017",
+    "stock": 25,
+    "warehouse": "Reno",
+    "observed_at": "2026-07-08T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2019",
+    "stock": 10,
+    "warehouse": "Boise",
+    "observed_at": "2026-07-10T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2021",
+    "stock": 24,
+    "warehouse": "Reno",
+    "observed_at": "2026-07-12T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2023",
+    "stock": 9,
+    "warehouse": "Boise",
+    "observed_at": "2026-07-14T08:00:00Z"
+  }
+]

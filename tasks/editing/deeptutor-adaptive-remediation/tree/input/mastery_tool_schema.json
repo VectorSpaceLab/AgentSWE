@@ -1,0 +1,1906 @@
+{
+  "schema_version": "deeptutor-public-mastery-api/v1",
+  "tool_count": 26,
+  "injected_context": {
+    "_mastery_path_id": "server-owned active learner path",
+    "_session_id": "server-owned authorized session",
+    "_turn_id": "optional server-owned turn"
+  },
+  "result_envelope": "ToolResult; extension content is one JSON object, refusal is success=false plus bounded error and no mutation.",
+  "parameter_compatibility": "This is a public parameter/result-field index, not an evaluator runtime filter. Canonical names must be supported. Optional compatibility aliases may be accepted, but the evaluator sends canonical names. Unknown adaptive_context fields remain forward-compatible. Server-injected authorization fields are not model parameters.",
+  "tools": {
+    "mastery_assess": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "knowledge_point_id": {
+            "type": "string"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "feedback": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "knowledge_point_id",
+          "passed"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "description": "Preserve the original ordinary tool result schema and errors. Additional adaptive evidence is allowed without changing ordinary behavior."
+      }
+    },
+    "mastery_build": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "knowledge_points": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "concept",
+                          "design",
+                          "memory",
+                          "procedure"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "knowledge_points"
+              ]
+            }
+          },
+          "mode": {
+            "type": "string",
+            "default": "replace",
+            "enum": [
+              "replace",
+              "append"
+            ]
+          }
+        },
+        "required": [
+          "modules"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "description": "Preserve the original ordinary tool result schema and errors. Additional adaptive evidence is allowed without changing ordinary behavior."
+      }
+    },
+    "mastery_grade": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "description": "Preserve the original ordinary tool result schema and errors. Additional adaptive evidence is allowed without changing ordinary behavior."
+      }
+    },
+    "mastery_learner_snapshot": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "include_terminal": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": "integer"
+          },
+          "snapshot_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "high_water_sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "digest": {
+            "type": "string"
+          },
+          "mastery": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 100
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 100
+          },
+          "handoffs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 100
+          },
+          "policy": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "additionalProperties": true
+          },
+          "lineage": {
+            "type": "object",
+            "properties": {
+              "review_task_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "event_sequences": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "review_task_ids",
+              "event_sequences"
+            ],
+            "additionalProperties": true
+          },
+          "attestation": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "string"
+              },
+              "attestation_id": {
+                "type": "string"
+              },
+              "snapshot_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "snapshot_digest": {
+                "type": "string"
+              },
+              "high_water_sequence": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "policy_version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "covered": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "mastery",
+                    "reviews",
+                    "handoffs",
+                    "policy",
+                    "lineage",
+                    "event_feed"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 6,
+                "maxItems": 6
+              },
+              "canonical_digest": {
+                "type": "string"
+              },
+              "proof": {
+                "type": "string"
+              },
+              "replayed": {
+                "type": "boolean"
+              },
+              "state": {
+                "type": "string",
+                "const": "verified"
+              },
+              "source": {
+                "type": "string",
+                "const": "mastery_learner_snapshot"
+              }
+            },
+            "required": [
+              "schema_version",
+              "snapshot_revision",
+              "snapshot_digest",
+              "high_water_sequence",
+              "policy_version",
+              "covered",
+              "canonical_digest",
+              "proof",
+              "state",
+              "source"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "schema_version",
+          "status",
+          "as_of",
+          "snapshot_revision",
+          "high_water_sequence",
+          "digest",
+          "mastery",
+          "reviews",
+          "handoffs",
+          "policy",
+          "lineage",
+          "attestation"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_learner_snapshot_attest": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "snapshot_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "high_water_sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "policy_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "challenge": {
+            "type": "string"
+          },
+          "attestation_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attestation_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_revision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "snapshot_revision",
+          "snapshot_digest",
+          "high_water_sequence",
+          "policy_version",
+          "challenge",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "attestation_id": {
+            "type": "string"
+          },
+          "snapshot_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "high_water_sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "policy_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "covered": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "mastery",
+                "reviews",
+                "handoffs",
+                "policy",
+                "lineage",
+                "event_feed"
+              ]
+            },
+            "uniqueItems": true,
+            "minItems": 6,
+            "maxItems": 6
+          },
+          "canonical_digest": {
+            "type": "string"
+          },
+          "proof": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string",
+            "const": "verified"
+          }
+        },
+        "required": [
+          "schema_version",
+          "attestation_id",
+          "snapshot_revision",
+          "snapshot_digest",
+          "high_water_sequence",
+          "policy_version",
+          "covered",
+          "canonical_digest",
+          "proof",
+          "replayed",
+          "state"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_learner_snapshot_chain_audit": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "snapshot_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "attestation_digest": {
+            "type": "string"
+          },
+          "witness_id": {
+            "type": "string"
+          },
+          "witness_sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "witness_root_digest": {
+            "type": "string"
+          },
+          "expected_head_sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "challenge": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "snapshot_revision",
+          "snapshot_digest",
+          "attestation_digest",
+          "witness_id",
+          "witness_sequence",
+          "witness_root_digest",
+          "expected_head_sequence",
+          "challenge",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "audit_valid": {
+            "type": "boolean"
+          },
+          "head_sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "head_root_digest": {
+            "type": "string"
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "attestation_digest": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "state",
+          "audit_valid",
+          "head_sequence",
+          "head_root_digest",
+          "snapshot_digest",
+          "attestation_digest"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_learner_snapshot_checkpoint": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "subscriber_id": {
+            "type": "string"
+          },
+          "through_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "expected_checkpoint": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "subscriber_id",
+          "through_revision",
+          "expected_checkpoint",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "checkpoint": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "attestation_digest": {
+            "type": "string"
+          },
+          "witness_root_digest": {
+            "type": "string"
+          },
+          "witness_sequence": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "status",
+          "checkpoint",
+          "replayed"
+        ],
+        "additionalProperties": true,
+        "conditional_fields": "Bind the accepted snapshot and attestation digests. When a witness head exists, also return witness_root_digest and witness_sequence. These fields do not merge snapshot and event-feed checkpoint namespaces."
+      }
+    },
+    "mastery_learner_snapshot_restore": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "snapshot_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "high_water_sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "policy_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "challenge": {
+            "type": "string"
+          },
+          "attestation_id": {
+            "type": "string"
+          },
+          "attestation_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "snapshot_revision",
+          "snapshot_digest",
+          "high_water_sequence",
+          "policy_version",
+          "attestation_id",
+          "expected_revision",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "snapshot_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "status",
+          "snapshot_revision",
+          "snapshot_digest",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_learner_snapshot_verify": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "witness_id": {
+            "type": "string"
+          },
+          "witness_sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "attestation_digest": {
+            "type": "string"
+          },
+          "leaf_digest": {
+            "type": "string"
+          },
+          "root_digest": {
+            "type": "string"
+          },
+          "previous_root_digest": {
+            "type": "string"
+          },
+          "inclusion_proof": {
+            "type": "array",
+            "items": {}
+          },
+          "consistency_proof": {
+            "type": "array",
+            "items": {}
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "witness_id",
+          "witness_sequence",
+          "snapshot_digest",
+          "attestation_digest",
+          "leaf_digest",
+          "root_digest",
+          "previous_root_digest",
+          "inclusion_proof",
+          "consistency_proof"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "witness_id": {
+            "type": "string"
+          },
+          "root_digest": {
+            "type": "string"
+          },
+          "leaf_digest": {
+            "type": "string"
+          },
+          "inclusion_valid": {
+            "type": "boolean"
+          },
+          "consistency_valid": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "state",
+          "witness_id",
+          "root_digest",
+          "leaf_digest",
+          "inclusion_valid",
+          "consistency_valid"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_learner_snapshot_witness": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "snapshot_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "attestation_id": {
+            "type": "string"
+          },
+          "attestation_digest": {
+            "type": "string"
+          },
+          "challenge": {
+            "type": "string"
+          },
+          "witness_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "previous_root_digest": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "snapshot_revision",
+          "snapshot_digest",
+          "attestation_id",
+          "attestation_digest",
+          "challenge",
+          "expected_sequence",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "witness_id": {
+            "type": "string"
+          },
+          "witness_sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "snapshot_digest": {
+            "type": "string"
+          },
+          "attestation_digest": {
+            "type": "string"
+          },
+          "previous_root_digest": {
+            "type": "string"
+          },
+          "leaf_digest": {
+            "type": "string"
+          },
+          "root_digest": {
+            "type": "string"
+          },
+          "inclusion_proof": {
+            "type": "array",
+            "items": {}
+          },
+          "consistency_proof": {
+            "type": "array",
+            "items": {}
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "state",
+          "witness_id",
+          "witness_sequence",
+          "snapshot_digest",
+          "attestation_digest",
+          "previous_root_digest",
+          "leaf_digest",
+          "root_digest",
+          "inclusion_proof",
+          "consistency_proof",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_learning_checkpoint": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "subscriber_id": {
+            "type": "string"
+          },
+          "through_sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "expected_checkpoint": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "subscriber_id",
+          "through_sequence",
+          "expected_checkpoint",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "checkpoint": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status",
+          "checkpoint",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_learning_events": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "subscriber_id": {
+            "type": "string"
+          },
+          "after_sequence": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "event_types": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "subscriber_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "checkpoint": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "high_water_sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "events": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "schema_version",
+          "status",
+          "checkpoint",
+          "high_water_sequence",
+          "events"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_policy_publish": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "actor_id": {
+            "type": "string"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "policy": {
+            "type": "object"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "effective_at": {
+            "type": "integer"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "actor_id",
+          "policy_id",
+          "policy",
+          "version",
+          "expected_version",
+          "effective_at",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "digest": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "policy_id",
+          "version",
+          "digest",
+          "status",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_policy_status": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "actor_id": {
+            "type": "string"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "policy": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "version": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "expected_version": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "effective_at": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "policy": {
+            "type": "object"
+          },
+          "digest": {
+            "type": "string"
+          },
+          "migration_required": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "policy_id",
+          "version",
+          "policy",
+          "digest",
+          "migration_required"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_quiz": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "knowledge_point_id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "expected_answer": {
+            "type": "string"
+          },
+          "question_type": {
+            "type": "string",
+            "default": "short",
+            "enum": [
+              "choice",
+              "short",
+              "open"
+            ]
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "adaptive_context": {
+            "type": "object",
+            "description": "Version1.0 adaptive evidence context; known fields validate atomically; unknown extensions remain forward-compatible."
+          }
+        },
+        "required": [
+          "knowledge_point_id",
+          "question",
+          "expected_answer"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "description": "Preserve the original ordinary tool result schema and errors. Additional adaptive evidence is allowed without changing ordinary behavior."
+      }
+    },
+    "mastery_remediation_ack": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "delivery_id": {
+            "type": "string"
+          },
+          "consumer_id": {
+            "type": "string"
+          },
+          "generation": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string",
+            "default": "delivered"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "delivery_id",
+          "consumer_id",
+          "generation",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status",
+          "replayed"
+        ],
+        "additionalProperties": true
+      },
+      "semantics": "Only the current active-path delivery_id/consumer_id/generation may acknowledge. Default outcome is delivered. Exact event replay returns its saved response; expired, stale generation, conflicting event, foreign path or terminal delivery is refused without revival or duplicate review."
+    },
+    "mastery_remediation_claim": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "topic_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "consumer_id": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "lease_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 60
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "consumer_id",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "delivery": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": true,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "claimed"
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "delivery"
+              ],
+              "properties": {
+                "delivery": {
+                  "type": "object",
+                  "properties": {
+                    "delivery_id": {
+                      "type": "string"
+                    },
+                    "consumer_id": {
+                      "type": "string"
+                    },
+                    "generation": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "attempt": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "required": [
+                    "delivery_id",
+                    "consumer_id",
+                    "generation",
+                    "attempt"
+                  ],
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        ],
+        "description": "A claimed result has a complete delivery. Legitimate empty/busy responses need not expose a delivery and may return null or an empty bounded object; they do not claim a lease was issued."
+      }
+    },
+    "mastery_remediation_reset": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "topic_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "reason",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_remediation_status": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "topic_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_review_plan": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          },
+          "include_terminal": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": "integer"
+          },
+          "due_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next_due_at": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "task_id": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "due_at": {
+                  "type": "integer"
+                },
+                "state": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "task_id",
+                "revision",
+                "due_at",
+                "state"
+              ],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "schema_version",
+          "status",
+          "as_of",
+          "due_count",
+          "next_due_at",
+          "tasks"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_review_reschedule": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string"
+          },
+          "due_at": {
+            "type": "integer"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "task_id",
+          "due_at",
+          "expected_revision",
+          "reason",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "task": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "status",
+          "replayed",
+          "task"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_session_abandon": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "actor_id": {
+            "type": "string"
+          },
+          "handoff_id": {
+            "type": "string"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "include_terminal": {
+            "type": "boolean",
+            "default": false
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor_id",
+          "handoff_id",
+          "expected_revision",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "handoff_id": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "handoff_id",
+          "revision",
+          "status",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_session_handoff": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "actor_id": {
+            "type": "string"
+          },
+          "handoff_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_revision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "pending_question": {
+            "type": "object"
+          },
+          "policy_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expires_at": {
+            "type": "integer"
+          },
+          "event_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor_id",
+          "pending_question",
+          "policy_version",
+          "expires_at",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "handoff_id": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "policy_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "type": "string"
+          },
+          "pending_question": {
+            "type": "object"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "handoff_id",
+          "revision",
+          "policy_version",
+          "status",
+          "pending_question",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_session_handoffs": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "actor_id": {
+            "type": "string"
+          },
+          "handoff_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_revision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "include_terminal": {
+            "type": "boolean",
+            "default": false
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "handoffs": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "schema_version",
+          "status",
+          "handoffs"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_session_resume": {
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "actor_id": {
+            "type": "string"
+          },
+          "handoff_id": {
+            "type": "string"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "include_terminal": {
+            "type": "boolean",
+            "default": false
+          },
+          "as_of": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor_id",
+          "handoff_id",
+          "expected_revision",
+          "event_id"
+        ],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "handoff_id": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "handoff_id",
+          "revision",
+          "status",
+          "replayed"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "mastery_status": {
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": true
+      },
+      "success_result": {
+        "type": "object",
+        "description": "Preserve the original ordinary tool result schema and errors. Additional adaptive evidence is allowed without changing ordinary behavior."
+      }
+    }
+  }
+}

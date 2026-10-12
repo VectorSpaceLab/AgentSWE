@@ -1,0 +1,4233 @@
+diff --git a/deeptutor/api/routers/mastery_path.py b/deeptutor/api/routers/mastery_path.py
+index fa479a654c12f2b23184c6bf8f52d55cdaa0cbf0..dcaa6cc7098cbcbd3bbd1e80588c9ffd61358fe7 100644
+--- a/deeptutor/api/routers/mastery_path.py
++++ b/deeptutor/api/routers/mastery_path.py
+@@ -197,6 +197,9 @@ async def redo_progress(book_id: str):
+     progress = store.load(book_id)
+     if progress is None:
+         raise HTTPException(status_code=404, detail="Progress not found")
++    from deeptutor.learning.adaptive import perform_redo
++
++    perform_redo(progress, path_id=book_id, reason="production redo")
+     progress.current_stage = LearningStage.DIAGNOSTIC
+     progress.mastery_levels = {}
+     progress.qualitative_mastery = {}
+diff --git a/deeptutor/capabilities/mastery/tools.py b/deeptutor/capabilities/mastery/tools.py
+index 023a96f38622ae4a3b92ba32bd29e8ff246b01ce..aca0ee93efb7856f759fd395ed32552078246e5e 100644
+--- a/deeptutor/capabilities/mastery/tools.py
++++ b/deeptutor/capabilities/mastery/tools.py
+@@ -62,6 +62,27 @@ MASTERY_TOOL_NAMES: tuple[str, ...] = (
+     "mastery_grade",
+     "mastery_assess",
+     "mastery_build",
++    "mastery_remediation_status",
++    "mastery_remediation_reset",
++    "mastery_remediation_claim",
++    "mastery_remediation_ack",
++    "mastery_review_plan",
++    "mastery_review_reschedule",
++    "mastery_learning_events",
++    "mastery_learning_checkpoint",
++    "mastery_session_handoff",
++    "mastery_session_handoffs",
++    "mastery_session_resume",
++    "mastery_session_abandon",
++    "mastery_policy_status",
++    "mastery_policy_publish",
++    "mastery_learner_snapshot",
++    "mastery_learner_snapshot_checkpoint",
++    "mastery_learner_snapshot_attest",
++    "mastery_learner_snapshot_restore",
++    "mastery_learner_snapshot_witness",
++    "mastery_learner_snapshot_verify",
++    "mastery_learner_snapshot_chain_audit",
+ )
+ 
+ _QUESTION_TYPES = ("choice", "short", "open")
+@@ -173,6 +194,38 @@ def _no_path_result() -> ToolResult:
+     )
+ 
+ 
++def _begin_adaptive_op(
++    progress: Any, event_id: str, kind: str, fingerprint: dict[str, Any]
++) -> tuple[str, dict[str, Any] | None]:
++    """Idempotency peek used by the adaptive quiz registration path."""
++    from deeptutor.learning.adaptive import peek_record, record_op
++
++    stored = peek_record(progress, event_id, kind)
++    if stored is not None:
++        if record_op(progress, event_id, kind, fingerprint, {})[0] == "conflict":
++            return "conflict", None
++        return "replayed", stored
++    return "fresh", None
++
++
++def _mutating_result(
++    outcome: str,
++    result: dict[str, Any],
++    *,
++    service: Any,
++    progress: Any,
++    meta_key: str,
++) -> ToolResult:
++    """Persist a committed mutation and wrap the result as a ToolResult."""
++    if outcome == "committed":
++        service.save(progress)
++    return _json_result(
++        dict(result),
++        meta_key=meta_key,
++        success=outcome != "error",
++    )
++
++
+ class MasteryStatusTool(BaseTool):
+     """Read the current objective + map snapshot. Call FIRST every turn."""
+ 
+@@ -331,22 +384,76 @@ class MasteryQuizTool(BaseTool):
+             expected_answer=expected,
+             options=options,
+         )
+-        service.set_pending_question(progress, pending)
+-        return _json_result(
+-            {
+-                "status": "registered",
++        quiz_response = {
++            "status": "registered",
++            "knowledge_point_id": kp_id,
++            "question": question,
++            "options": options,
++            "instruction": (
++                "Present this question with the ask_user tool (use its options "
++                "for multiple choice; the option labels must match the "
++                "expected_answer you registered), then call mastery_grade with "
++                "the learner's answer."
++            ),
++        }
++        adaptive_context = kwargs.get("adaptive_context")
++        adaptive_topic_id = ""
++        if adaptive_context is not None:
++            from deeptutor.learning.adaptive import (
++                bounded_copy,
++                record_op,
++                store_quiz_context,
++                validate_adaptive_context,
++            )
++
++            context_error = validate_adaptive_context(adaptive_context)
++            if context_error:
++                return _json_result(
++                    {
++                        "status": "rejected",
++                        "error": "adaptive_context_invalid",
++                        "message": context_error,
++                    },
++                    meta_key="mastery_quiz",
++                    success=False,
++                )
++            adaptive_topic_id = str(adaptive_context.get("topic_id") or "").strip()
++            event_id = str(adaptive_context.get("event_id") or "").strip()
++            fingerprint = {
++                "op": "adaptive_quiz",
++                "event_id": event_id,
+                 "knowledge_point_id": kp_id,
+                 "question": question,
+-                "options": options,
+-                "instruction": (
+-                    "Present this question with the ask_user tool (use its options "
+-                    "for multiple choice; the option labels must match the "
+-                    "expected_answer you registered), then call mastery_grade with "
+-                    "the learner's answer."
+-                ),
+-            },
+-            meta_key="mastery_quiz",
+-        )
++                "expected_answer": expected,
++                "question_type": q_type,
++                "options": bounded_copy(options, 50),
++                "adaptive_context": bounded_copy(adaptive_context, 20),
++            }
++            outcome, stored = _begin_adaptive_op(progress, event_id, "adaptive_quiz", fingerprint)
++            if outcome == "replayed":
++                replay_pending = PendingQuestion(
++                    question_id=uuid.uuid4().hex,
++                    knowledge_point_id=kp_id,
++                    module_id=module_id,
++                    prompt=question,
++                    question_type=q_type,
++                    expected_answer=expected,
++                    options=options,
++                )
++                replay_pending.adaptive_topic_id = adaptive_topic_id
++                service.set_pending_question(progress, replay_pending)
++                return _json_result(dict(stored), meta_key="mastery_quiz")
++            if outcome == "conflict":
++                return _json_result(
++                    {"status": "rejected", "error": "event_conflict"},
++                    meta_key="mastery_quiz",
++                    success=False,
++                )
++            store_quiz_context(progress, event_id, dict(adaptive_context))
++            record_op(progress, event_id, "adaptive_quiz", fingerprint, quiz_response)
++            pending.adaptive_topic_id = adaptive_topic_id
++        service.set_pending_question(progress, pending)
++        return _json_result(quiz_response, meta_key="mastery_quiz")
+ 
+ 
+ class MasteryGradeTool(BaseTool):
+@@ -394,6 +501,32 @@ class MasteryGradeTool(BaseTool):
+                 pending, _resolve_turn_id(kwargs)
+             )
+ 
++        event_id = _resolve_turn_id(kwargs)
++        adaptive_topic_id = str(getattr(pending, "adaptive_topic_id", "") or "").strip()
++        if adaptive_topic_id:
++            from deeptutor.learning.adaptive import (
++                bounded_copy,
++                peek_record,
++                process_adaptive_evidence,
++                record_op,
++            )
++
++            fingerprint = {
++                "op": "adaptive_grade",
++                "event_id": event_id,
++                "answer": str(answer or "")[:200],
++                "question_id": pending.question_id,
++            }
++            stored_grade = peek_record(progress, event_id, "adaptive_grade")
++            if stored_grade is not None:
++                if record_op(progress, event_id, "adaptive_grade", fingerprint, {})[0] == "conflict":
++                    return _json_result(
++                        {"status": "rejected", "error": "event_conflict"},
++                        meta_key="mastery_grade",
++                        success=False,
++                    )
++                return _json_result(dict(stored_grade), meta_key="mastery_grade")
++
+         is_correct = service.grade_and_record(
+             progress,
+             question_id=pending.question_id,
+@@ -424,6 +557,51 @@ class MasteryGradeTool(BaseTool):
+             "mastered": mastered,
+             "next": next_objective(progress).to_dict(),
+         }
++        if adaptive_topic_id:
++            from deeptutor.learning.adaptive import (
++                bounded_copy,
++                process_adaptive_evidence,
++                record_op,
++            )
++
++            group = progress.op_records.get(event_id) if isinstance(progress.op_records.get(event_id), dict) else {}
++            context = dict(group.get("quiz_context") or {})
++            observed_at = context.get("observed_at")
++            adaptive_question_id = str(context.get("question_id") or "").strip() or pending.question_id
++            adaptive_output, mutated = process_adaptive_evidence(
++                progress,
++                path_id=path_id,
++                session_id=_resolve_session_id(kwargs),
++                event_id=event_id,
++                topic_id=adaptive_topic_id,
++                question_id=adaptive_question_id,
++                answer=answer,
++                is_correct=is_correct,
++                observed_at=int(observed_at) if isinstance(observed_at, (int, float)) else int(time.time()),
++                context=context,
++            )
++            if adaptive_output.get("error") == "event_conflict":
++                return _json_result(
++                    {"status": "rejected", "error": "event_conflict"},
++                    meta_key="mastery_grade",
++                    success=False,
++                )
++            if mutated:
++                service.save(progress)
++            payload["adaptive_remediation"] = adaptive_output
++            record_op(
++                progress,
++                event_id,
++                "adaptive_grade",
++                {
++                    "op": "adaptive_grade",
++                    "event_id": event_id,
++                    "answer": str(answer or "")[:200],
++                    "question_id": pending.question_id,
++                },
++                payload,
++            )
++            service.save(progress)
+         return _json_result(payload, meta_key="mastery_grade")
+ 
+ 
+@@ -634,12 +812,827 @@ def _parse_modules(
+     return modules, None
+ 
+ 
++class MasteryRemediationStatusTool(BaseTool):
++    """Read the persistent remediation state for a topic on the active path."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_remediation_status",
++            description=(
++                "Read the persistent adaptive-remediation state for a topic: "
++                "hypotheses, evidence, the next ordered delivery item, and any "
++                "review tasks. Never fabricate state; read it here."
++            ),
++            parameters=[
++                ToolParameter(name="topic_id", type="string", description="Topic to inspect."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import remediation_status_payload
++
++        topic_id = str(kwargs.get("topic_id") or "").strip()
++        if not topic_id:
++            return _json_result(
++                {"status": "rejected", "error": "topic_id must be a non-empty string"},
++                meta_key="mastery_remediation_status",
++                success=False,
++            )
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        payload = remediation_status_payload(progress, topic_id=topic_id, as_of=kwargs.get("as_of"))
++        return _json_result(payload, meta_key="mastery_remediation_status")
++
++
++class MasteryRemediationResetTool(BaseTool):
++    """Reset adaptive diagnosis and cancel open delivery/review work."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_remediation_reset",
++            description="Reset the adaptive diagnosis for a topic, cancelling non-terminal review tasks and open deliveries with provenance.",
++            parameters=[
++                ToolParameter(name="topic_id", type="string", description="Topic to reset."),
++                ToolParameter(name="reason", type="string", description="Audit reason for the reset."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import remediation_reset
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = remediation_reset(
++            progress,
++            path_id=path_id,
++            topic_id=str(kwargs.get("topic_id") or "").strip(),
++            reason=str(kwargs.get("reason") or "").strip(),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_remediation_reset")
++
++
++class MasteryRemediationClaimTool(BaseTool):
++    """Claim the next ordered remediation delivery under a lease."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_remediation_claim",
++            description="Claim the next open remediation delivery with an exclusive lease; deterministic order, generation fencing, and idempotent replay.",
++            parameters=[
++                ToolParameter(name="topic_id", type="string", description="Topic whose delivery queue to claim from."),
++                ToolParameter(name="consumer_id", type="string", description="Authorized consumer identity."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="lease_seconds", type="integer", description="Lease duration in seconds."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import remediation_claim
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = remediation_claim(
++            progress,
++            topic_id=str(kwargs.get("topic_id") or "").strip(),
++            consumer_id=str(kwargs.get("consumer_id") or "").strip(),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            lease_seconds=kwargs.get("lease_seconds", 60),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_remediation_claim")
++
++
++class MasteryRemediationAckTool(BaseTool):
++    """Acknowledge a claimed remediation delivery."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_remediation_ack",
++            description="Acknowledge a claimed remediation delivery for the owning consumer and generation; stale/foreign acks fail without mutation.",
++            parameters=[
++                ToolParameter(name="delivery_id", type="string", description="Delivery to acknowledge."),
++                ToolParameter(name="consumer_id", type="string", description="Owning consumer identity."),
++                ToolParameter(name="generation", type="integer", description="Expected lease generation."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="outcome", type="string", description="Delivery outcome label."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import remediation_ack
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = remediation_ack(
++            progress,
++            delivery_id=str(kwargs.get("delivery_id") or "").strip(),
++            consumer_id=str(kwargs.get("consumer_id") or "").strip(),
++            generation=kwargs.get("generation"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            outcome=str(kwargs.get("outcome") or "delivered").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_remediation_ack")
++
++
++class MasteryReviewPlanTool(BaseTool):
++    """Read the learner's review plan."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_review_plan",
++            description="Read the review plan: non-terminal tasks ordered by due time, priority, and stable id; each task is due when due_at <= as_of.",
++            parameters=[
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++                ToolParameter(name="limit", type="integer", required=False, description="Max tasks (1..100, default 20)."),
++                ToolParameter(name="include_terminal", type="boolean", required=False, description="Include completed/cancelled tasks."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import review_plan_payload
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        payload, error = review_plan_payload(
++            progress,
++            as_of=kwargs.get("as_of"),
++            limit=kwargs.get("limit", 20),
++            include_terminal=bool(kwargs.get("include_terminal", False)),
++        )
++        if error:
++            return _json_result(error, meta_key="mastery_review_plan", success=False)
++        return _json_result(payload, meta_key="mastery_review_plan")
++
++
++class MasteryReviewRescheduleTool(BaseTool):
++    """Optimistically reschedule one review task."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_review_reschedule",
++            description="Reschedule a non-terminal review task with revision fencing and idempotent replay by event id.",
++            parameters=[
++                ToolParameter(name="task_id", type="string", description="Stable review task id."),
++                ToolParameter(name="due_at", type="integer", description="New due time."),
++                ToolParameter(name="expected_revision", type="integer", description="Current observed revision."),
++                ToolParameter(name="reason", type="string", description="Bounded audit reason."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import review_reschedule
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = review_reschedule(
++            progress,
++            task_id=str(kwargs.get("task_id") or "").strip(),
++            due_at=kwargs.get("due_at"),
++            expected_revision=kwargs.get("expected_revision"),
++            reason=str(kwargs.get("reason") or "").strip(),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_review_reschedule")
++
++
++class MasteryLearningEventsTool(BaseTool):
++    """Read the ordered path-local learning event feed."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learning_events",
++            description="Read immutable ordered learning events for a subscriber starting after its persistent checkpoint; never advances checkpoints.",
++            parameters=[
++                ToolParameter(name="subscriber_id", type="string", description="Plugin subscriber identity."),
++                ToolParameter(name="after_sequence", type="integer", required=False, description="Explicit cursor; default after the subscriber checkpoint."),
++                ToolParameter(name="limit", type="integer", required=False, description="Max events (1..100, default 50)."),
++                ToolParameter(name="event_types", type="array", required=False, items={"type": "string"}, description="Optional type filter."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import learning_events_payload
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        payload, error = learning_events_payload(
++            progress,
++            subscriber_id=str(kwargs.get("subscriber_id") or "").strip(),
++            after_sequence=kwargs.get("after_sequence"),
++            limit=kwargs.get("limit", 50),
++            event_types=kwargs.get("event_types"),
++        )
++        if error:
++            return _json_result(error, meta_key="mastery_learning_events", success=False)
++        return _json_result(payload, meta_key="mastery_learning_events")
++
++
++class MasteryLearningCheckpointTool(BaseTool):
++    """Advance one subscriber's event checkpoint."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learning_checkpoint",
++            description="Advance a subscriber checkpoint to an exact through-sequence at or below the feed high water; stale/out-of-range requests fail without mutation.",
++            parameters=[
++                ToolParameter(name="subscriber_id", type="string", description="Plugin subscriber identity."),
++                ToolParameter(name="through_sequence", type="integer", description="Target sequence."),
++                ToolParameter(name="expected_checkpoint", type="integer", description="Caller's observed current checkpoint."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import learning_checkpoint
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = learning_checkpoint(
++            progress,
++            subscriber_id=str(kwargs.get("subscriber_id") or "").strip(),
++            through_sequence=kwargs.get("through_sequence"),
++            expected_checkpoint=kwargs.get("expected_checkpoint", 0),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_learning_checkpoint")
++
++
++class MasterySessionHandoffTool(BaseTool):
++    """Persist a bounded pending session for later resume."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_session_handoff",
++            description="Save a bounded pending session snapshot with a stable opaque id; idempotent by path and event id.",
++            parameters=[
++                ToolParameter(name="actor_id", type="string", description="Authorized actor."),
++                ToolParameter(name="handoff_id", type="string", required=False, description="Stable client-supplied handoff id."),
++                ToolParameter(name="expected_revision", type="integer", description="Expected current handoff revision (0 for create)."),
++                ToolParameter(name="pending_question", type="object", required=False, description="Bounded pending question snapshot."),
++                ToolParameter(name="policy_version", type="integer", required=False, description="Policy version of the snapshot."),
++                ToolParameter(name="expires_at", type="integer", required=False, description="Optional expiry time."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import handoff_create
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = handoff_create(
++            progress,
++            actor_id=str(kwargs.get("actor_id") or "").strip(),
++            handoff_id=str(kwargs.get("handoff_id") or "").strip(),
++            expected_revision=kwargs.get("expected_revision", 0),
++            pending_question=kwargs.get("pending_question") or {},
++            policy_version=kwargs.get("policy_version"),
++            expires_at=kwargs.get("expires_at"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_session_handoff")
++
++
++class MasterySessionHandoffsTool(BaseTool):
++    """List persisted session handoffs for the active path."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_session_handoffs",
++            description="List persisted handoffs; terminal handoffs are excluded unless include_terminal is set.",
++            parameters=[
++                ToolParameter(name="actor_id", type="string", description="Authorized actor."),
++                ToolParameter(name="include_terminal", type="boolean", required=False, description="Include terminal handoffs."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import handoff_list_payload
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        payload = handoff_list_payload(
++            progress,
++            include_terminal=bool(kwargs.get("include_terminal", False)),
++            as_of=kwargs.get("as_of"),
++        )
++        return _json_result(payload, meta_key="mastery_session_handoffs")
++
++
++class MasterySessionResumeTool(BaseTool):
++    """Resume a persisted session handoff."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_session_resume",
++            description="Resume a handoff with the current revision and authorized actor; stale/foreign/terminal/expired requests fail without mutation.",
++            parameters=[
++                ToolParameter(name="actor_id", type="string", description="Authorized actor."),
++                ToolParameter(name="handoff_id", type="string", description="Handoff id."),
++                ToolParameter(name="expected_revision", type="integer", description="Current observed revision."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import handoff_resume
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = handoff_resume(
++            progress,
++            actor_id=str(kwargs.get("actor_id") or "").strip(),
++            handoff_id=str(kwargs.get("handoff_id") or "").strip(),
++            expected_revision=kwargs.get("expected_revision"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_session_resume")
++
++
++class MasterySessionAbandonTool(BaseTool):
++    """Abandon a persisted session handoff terminally."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_session_abandon",
++            description="Abandon a handoff with the current revision and authorized actor; abandonment is terminal.",
++            parameters=[
++                ToolParameter(name="actor_id", type="string", description="Authorized actor."),
++                ToolParameter(name="handoff_id", type="string", description="Handoff id."),
++                ToolParameter(name="expected_revision", type="integer", description="Current observed revision."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="reason", type="string", description="Bounded audit reason."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import handoff_abandon
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = handoff_abandon(
++            progress,
++            actor_id=str(kwargs.get("actor_id") or "").strip(),
++            handoff_id=str(kwargs.get("handoff_id") or "").strip(),
++            expected_revision=kwargs.get("expected_revision"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            reason=str(kwargs.get("reason") or "benchmark lifecycle").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_session_abandon")
++
++
++class MasteryPolicyStatusTool(BaseTool):
++    """Read the active policy registry entry for the path."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_policy_status",
++            description="Read the active versioned policy for a policy id with its deterministic digest and migration flag.",
++            parameters=[
++                ToolParameter(name="actor_id", type="string", description="Calling actor."),
++                ToolParameter(name="policy_id", type="string", description="Policy id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import policy_status_payload
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        payload, error = policy_status_payload(
++            progress,
++            policy_id=str(kwargs.get("policy_id") or "default").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        if error:
++            return _json_result(error, meta_key="mastery_policy_status", success=False)
++        service.save(progress)
++        return _json_result(payload, meta_key="mastery_policy_status")
++
++
++class MasteryPolicyPublishTool(BaseTool):
++    """Publish a validated policy version under an optimistic fence."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_policy_publish",
++            description="Publish a schema-1.0 policy with expected-version fencing; exact event replays return the original result.",
++            parameters=[
++                ToolParameter(name="actor_id", type="string", description="Authorized policy actor."),
++                ToolParameter(name="policy_id", type="string", description="Policy id."),
++                ToolParameter(name="policy", type="object", description="Schema-1.0 policy data."),
++                ToolParameter(name="version", type="integer", description="New version."),
++                ToolParameter(name="expected_version", type="integer", description="Observed current version."),
++                ToolParameter(name="effective_at", type="integer", required=False, description="Effective time."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import policy_publish
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = policy_publish(
++            progress,
++            actor_id=str(kwargs.get("actor_id") or "").strip(),
++            policy_id=str(kwargs.get("policy_id") or "default").strip(),
++            policy=kwargs.get("policy"),
++            version=kwargs.get("version"),
++            expected_version=kwargs.get("expected_version"),
++            effective_at=kwargs.get("effective_at"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_policy_publish")
++
++
++class MasteryLearnerSnapshotTool(BaseTool):
++    """Read the path-local learner portfolio snapshot."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learner_snapshot",
++            description="Read a bounded, deterministic learner portfolio snapshot with stable revision/digest, lineage, and an embedded verified attestation.",
++            parameters=[
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++                ToolParameter(name="limit", type="integer", required=False, description="Collection bound (1..100, default 50)."),
++                ToolParameter(name="include_terminal", type="boolean", required=False, description="Include terminal reviews/handoffs."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import snapshot_payload
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        payload, error = snapshot_payload(
++            progress,
++            as_of=kwargs.get("as_of"),
++            limit=kwargs.get("limit", 50),
++            include_terminal=bool(kwargs.get("include_terminal", False)),
++        )
++        if error:
++            return _json_result(error, meta_key="mastery_learner_snapshot", success=False)
++        service.save(progress)
++        return _json_result(payload, meta_key="mastery_learner_snapshot")
++
++
++class MasteryLearnerSnapshotCheckpointTool(BaseTool):
++    """Advance one subscriber's independent snapshot checkpoint."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learner_snapshot_checkpoint",
++            description="Advance a subscriber snapshot checkpoint to an exact revision; binds the snapshot and attestation digests and any accepted witness head.",
++            parameters=[
++                ToolParameter(name="subscriber_id", type="string", description="Subscriber identity."),
++                ToolParameter(name="through_revision", type="integer", description="Target snapshot revision."),
++                ToolParameter(name="expected_checkpoint", type="integer", description="Caller's observed current checkpoint."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import snapshot_checkpoint
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = snapshot_checkpoint(
++            progress,
++            subscriber_id=str(kwargs.get("subscriber_id") or "").strip(),
++            through_revision=kwargs.get("through_revision"),
++            expected_checkpoint=kwargs.get("expected_checkpoint", 0),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_learner_snapshot_checkpoint")
++
++
++class MasteryLearnerSnapshotAttestTool(BaseTool):
++    """Produce a deterministic provenance attestation over a returned snapshot."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learner_snapshot_attest",
++            description="Recompute the canonical digest and a deterministic proof over mastery, reviews, handoffs, policy, lineage, and the event feed for an already-returned snapshot.",
++            parameters=[
++                ToolParameter(name="snapshot_revision", type="integer", description="Snapshot revision to attest."),
++                ToolParameter(name="snapshot_digest", type="string", description="Snapshot digest to attest."),
++                ToolParameter(name="high_water_sequence", type="integer", description="Event-feed high water."),
++                ToolParameter(name="policy_version", type="integer", description="Policy version bound."),
++                ToolParameter(name="challenge", type="string", description="Caller challenge."),
++                ToolParameter(name="attestation_id", type="string", required=False, description="Stable attestation id."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import snapshot_attest
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = snapshot_attest(
++            progress,
++            snapshot_revision=kwargs.get("snapshot_revision"),
++            snapshot_digest=kwargs.get("snapshot_digest"),
++            high_water_sequence=kwargs.get("high_water_sequence"),
++            policy_version=kwargs.get("policy_version"),
++            challenge=str(kwargs.get("challenge") or "").strip(),
++            attestation_id=kwargs.get("attestation_id"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_learner_snapshot_attest")
++
++
++class MasteryLearnerSnapshotRestoreTool(BaseTool):
++    """Restore an observation point from a verified attestation."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learner_snapshot_restore",
++            description="Restore a snapshot observation point only when the attestation, snapshot digest, parent revision, and path still match; failures never mutate state.",
++            parameters=[
++                ToolParameter(name="snapshot_revision", type="integer", description="Snapshot revision to restore."),
++                ToolParameter(name="snapshot_digest", type="string", description="Snapshot digest to restore."),
++                ToolParameter(name="high_water_sequence", type="integer", description="Event-feed high water."),
++                ToolParameter(name="policy_version", type="integer", description="Policy version bound."),
++                ToolParameter(name="challenge", type="string", description="Caller challenge."),
++                ToolParameter(name="attestation_id", type="string", required=False, description="Attestation id."),
++                ToolParameter(name="attestation_ref", type="string", required=False, description="Attestation reference."),
++                ToolParameter(name="expected_revision", type="integer", required=False, description="Expected parent revision."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import snapshot_restore
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = snapshot_restore(
++            progress,
++            snapshot_revision=kwargs.get("snapshot_revision"),
++            snapshot_digest=kwargs.get("snapshot_digest"),
++            high_water_sequence=kwargs.get("high_water_sequence"),
++            policy_version=kwargs.get("policy_version"),
++            challenge=str(kwargs.get("challenge") or "").strip(),
++            attestation_id=kwargs.get("attestation_id"),
++            attestation_ref=kwargs.get("attestation_ref"),
++            expected_revision=kwargs.get("expected_revision"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_learner_snapshot_restore")
++
++
++class MasteryLearnerSnapshotWitnessTool(BaseTool):
++    """Append a verified attestation to the path-local witness ledger."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learner_snapshot_witness",
++            description="Append a verified snapshot attestation as an append-only path-local witness leaf with bounded inclusion/consistency proofs; exact event replays return the same leaf.",
++            parameters=[
++                ToolParameter(name="snapshot_revision", type="integer", description="Snapshot revision."),
++                ToolParameter(name="snapshot_digest", type="string", description="Snapshot digest."),
++                ToolParameter(name="attestation_id", type="string", required=False, description="Attestation id."),
++                ToolParameter(name="attestation_digest", type="string", description="Attestation digest."),
++                ToolParameter(name="challenge", type="string", description="Caller challenge."),
++                ToolParameter(name="witness_id", type="string", required=False, description="Stable witness id."),
++                ToolParameter(name="expected_sequence", type="integer", description="Expected next witness sequence (0 for genesis)."),
++                ToolParameter(name="previous_root_digest", type="string", required=False, description="Expected previous chain root."),
++                ToolParameter(name="event_id", type="string", description="Stable idempotency event id."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import snapshot_witness
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = snapshot_witness(
++            progress,
++            path_id=path_id,
++            snapshot_revision=kwargs.get("snapshot_revision"),
++            snapshot_digest=kwargs.get("snapshot_digest"),
++            attestation_id=kwargs.get("attestation_id"),
++            attestation_digest=kwargs.get("attestation_digest"),
++            challenge=str(kwargs.get("challenge") or "").strip(),
++            witness_id=kwargs.get("witness_id"),
++            expected_sequence=kwargs.get("expected_sequence", 0),
++            previous_root_digest=kwargs.get("previous_root_digest"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _mutating_result(outcome, result, service=service, progress=progress, meta_key="mastery_learner_snapshot_witness")
++
++
++class MasteryLearnerSnapshotVerifyTool(BaseTool):
++    """Read-only verification of a witness leaf against the persistent chain."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learner_snapshot_verify",
++            description="Read-only recompute of inclusion and consistency proofs from the persistent chain; never trusts caller-supplied roots or proofs.",
++            parameters=[
++                ToolParameter(name="witness_id", type="string", required=False, description="Witness id."),
++                ToolParameter(name="witness_sequence", type="integer", required=False, description="Witness sequence."),
++                ToolParameter(name="snapshot_digest", type="string", description="Snapshot digest."),
++                ToolParameter(name="attestation_digest", type="string", description="Attestation digest."),
++                ToolParameter(name="leaf_digest", type="string", description="Claimed leaf digest."),
++                ToolParameter(name="root_digest", type="string", description="Claimed root digest."),
++                ToolParameter(name="previous_root_digest", type="string", description="Claimed previous root."),
++                ToolParameter(name="inclusion_proof", type="array", items={"type": "string"}, description="Claimed inclusion proof."),
++                ToolParameter(name="consistency_proof", type="array", items={"type": "string"}, description="Claimed consistency proof."),
++                ToolParameter(name="event_id", type="string", required=False, description="Optional correlation id; verification is read-only and does not persist it."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional current Unix time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import snapshot_verify
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        outcome, result = snapshot_verify(
++            progress,
++            path_id=path_id,
++            witness_id=kwargs.get("witness_id"),
++            witness_sequence=kwargs.get("witness_sequence"),
++            snapshot_digest=kwargs.get("snapshot_digest"),
++            attestation_digest=kwargs.get("attestation_digest"),
++            leaf_digest=kwargs.get("leaf_digest"),
++            root_digest=kwargs.get("root_digest"),
++            previous_root_digest=kwargs.get("previous_root_digest"),
++            inclusion_proof=kwargs.get("inclusion_proof"),
++            consistency_proof=kwargs.get("consistency_proof"),
++            event_id=str(kwargs.get("event_id") or "").strip(),
++            as_of=kwargs.get("as_of"),
++        )
++        return _json_result(
++            dict(result),
++            meta_key="mastery_learner_snapshot_verify",
++            success=outcome != "error",
++        )
++
++
++class MasteryLearnerSnapshotChainAuditTool(BaseTool):
++    """Audit the full current witness chain without repairing or mutating it."""
++
++    def get_definition(self) -> ToolDefinition:
++        return ToolDefinition(
++            name="mastery_learner_snapshot_chain_audit",
++            description=(
++                "Read-only full-chain audit of the active path's persisted snapshot witness ledger. "
++                "Recomputes every leaf/root and proof, rejects corrupt, forked, foreign, stale, or "
++                "changed heads, and never repairs or advances state."
++            ),
++            parameters=[
++                ToolParameter(name="expected_sequence", type="integer", required=False, description="Optional previously observed head sequence fence."),
++                ToolParameter(name="expected_root_digest", type="string", required=False, description="Optional previously observed head root fence."),
++                ToolParameter(name="limit", type="integer", required=False, description="Maximum returned entry summaries (1..100); the full chain is always audited."),
++                ToolParameter(name="as_of", type="integer", required=False, description="Optional deterministic observation time."),
++            ],
++        )
++
++    async def execute(self, **kwargs: Any) -> ToolResult:
++        path_id = _resolve_path_id(kwargs)
++        if not path_id:
++            return _no_path_result()
++        from deeptutor.learning.adaptive import snapshot_chain_audit
++
++        service = _new_service()
++        progress = service.get_or_create(path_id)
++        payload, error = snapshot_chain_audit(
++            progress,
++            path_id=path_id,
++            expected_sequence=kwargs.get("expected_sequence"),
++            expected_root_digest=kwargs.get("expected_root_digest"),
++            limit=kwargs.get("limit", 100),
++            as_of=kwargs.get("as_of"),
++        )
++        if error:
++            return _json_result(
++                error,
++                meta_key="mastery_learner_snapshot_chain_audit",
++                success=False,
++            )
++        return _json_result(payload, meta_key="mastery_learner_snapshot_chain_audit")
++
++
+ MASTERY_TOOL_TYPES: tuple[type[BaseTool], ...] = (
+     MasteryStatusTool,
+     MasteryQuizTool,
+     MasteryGradeTool,
+     MasteryAssessTool,
+     MasteryBuildTool,
++    MasteryRemediationStatusTool,
++    MasteryRemediationResetTool,
++    MasteryRemediationClaimTool,
++    MasteryRemediationAckTool,
++    MasteryReviewPlanTool,
++    MasteryReviewRescheduleTool,
++    MasteryLearningEventsTool,
++    MasteryLearningCheckpointTool,
++    MasterySessionHandoffTool,
++    MasterySessionHandoffsTool,
++    MasterySessionResumeTool,
++    MasterySessionAbandonTool,
++    MasteryPolicyStatusTool,
++    MasteryPolicyPublishTool,
++    MasteryLearnerSnapshotTool,
++    MasteryLearnerSnapshotCheckpointTool,
++    MasteryLearnerSnapshotAttestTool,
++    MasteryLearnerSnapshotRestoreTool,
++    MasteryLearnerSnapshotWitnessTool,
++    MasteryLearnerSnapshotVerifyTool,
++    MasteryLearnerSnapshotChainAuditTool,
+ )
+ 
+ 
+@@ -651,4 +1644,25 @@ __all__ = [
+     "MasteryGradeTool",
+     "MasteryAssessTool",
+     "MasteryBuildTool",
++    "MasteryRemediationStatusTool",
++    "MasteryRemediationResetTool",
++    "MasteryRemediationClaimTool",
++    "MasteryRemediationAckTool",
++    "MasteryReviewPlanTool",
++    "MasteryReviewRescheduleTool",
++    "MasteryLearningEventsTool",
++    "MasteryLearningCheckpointTool",
++    "MasterySessionHandoffTool",
++    "MasterySessionHandoffsTool",
++    "MasterySessionResumeTool",
++    "MasterySessionAbandonTool",
++    "MasteryPolicyStatusTool",
++    "MasteryPolicyPublishTool",
++    "MasteryLearnerSnapshotTool",
++    "MasteryLearnerSnapshotCheckpointTool",
++    "MasteryLearnerSnapshotAttestTool",
++    "MasteryLearnerSnapshotRestoreTool",
++    "MasteryLearnerSnapshotWitnessTool",
++    "MasteryLearnerSnapshotVerifyTool",
++    "MasteryLearnerSnapshotChainAuditTool",
+ ]
+ 
+diff --git a/deeptutor/agents/chat/agent_loop.py b/deeptutor/agents/chat/agent_loop.py
+index 12f2833..1281a2d 100644
+--- a/deeptutor/agents/chat/agent_loop.py
++++ b/deeptutor/agents/chat/agent_loop.py
+@@ -26,9 +26,13 @@ from __future__ import annotations
+ 
+ from contextlib import suppress
+ from dataclasses import dataclass, field
++import json
+ import logging
++import os
+ import re
+ from typing import TYPE_CHECKING, Any
++from pathlib import Path
++import tempfile
+ 
+ from deeptutor.agents._shared.capability_result import emit_capability_result
+ from deeptutor.agents.chat.context_budget import LLMRequestSnapshot
+@@ -418,8 +422,50 @@ class AgentLoop:
+         state.rounds += 1
+         return await self._finalize_finish(result.text)
+ 
++    def _persist_model_artifact(self, final_text: str) -> None:
++        """Persist the exact model-final JSON when the evaluator opts in."""
++        raw_destination = os.environ.get("DEEPTUTOR_AGENT_RESULT", "").strip()
++        if not raw_destination or not final_text:
++            return
++        temporary_name: str | None = None
++        try:
++            value = json.loads(final_text)
++            if not isinstance(value, dict):
++                raise ValueError("final model response must be a JSON object")
++            required = ("schema_version", "case_id", "status", "summary", "artifacts")
++            missing = [field for field in required if field not in value]
++            if missing:
++                raise ValueError("missing required artifact fields: " + ", ".join(missing))
++            for field in ("schema_version", "case_id", "status", "summary"):
++                if not isinstance(value[field], str) or not value[field].strip():
++                    raise ValueError(f"artifact {field} must be a non-empty string")
++            if not isinstance(value["artifacts"], dict):
++                raise ValueError("artifact artifacts must be a JSON object")
++            expected_case_id = os.environ.get("DEEPTUTOR_CASE_ID", "").strip()
++            if expected_case_id and value["case_id"] != expected_case_id:
++                raise ValueError("artifact case_id does not match DEEPTUTOR_CASE_ID")
++            destination = Path(raw_destination)
++            destination.parent.mkdir(parents=True, exist_ok=True)
++            with tempfile.NamedTemporaryFile(
++                mode="w",
++                encoding="utf-8",
++                dir=destination.parent,
++                prefix=f".{destination.name}.",
++                suffix=".tmp",
++                delete=False,
++            ) as handle:
++                handle.write(final_text)
++                temporary_name = handle.name
++            os.replace(temporary_name, destination)
++        except Exception as exc:
++            if temporary_name:
++                with suppress(OSError):
++                    Path(temporary_name).unlink()
++            logger.warning("model-final artifact was not persisted: %s", exc)
++
+     async def _finalize_finish(self, raw_text: str) -> LoopOutcome:
+         final_text = self._clean(raw_text)
++        self._persist_model_artifact(final_text)
+         if not final_text:
+             # The finish round produced no usable text; nothing streamed to
+             # the user, so emit a fallback answer here.
+diff --git a/deeptutor/learning/adaptive.py b/deeptutor/learning/adaptive.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..6e42397b888d21818428e692d8eca4174bfe91f2
+--- /dev/null
++++ b/deeptutor/learning/adaptive.py
+@@ -0,0 +1,2793 @@
++"""Deterministic persistent adaptive-remediation & portfolio engine.
++
++This module owns the pure, offline logic behind the Cycle 002+ mastery
++surfaces (review plan, learning event feed, session handoffs, policy registry,
++learner portfolio snapshot, provenance attestation/restore, and the append-only
++snapshot witness ledger).  All state is stored on the existing per-path
++:class:`~deeptutor.learning.models.LearningProgress` record through the
++existing ``LearningStore`` so every surface survives fresh Python processes and
++stays isolated by the injected ``_mastery_path_id``.
++
++Design rules enforced here:
++
++* every accepted mutation appends immutable path-local events in the same
++  persistent commit as its source state change (replays never re-append);
++* every mutating endpoint is idempotent per stable ``event_id``: an exact
++  retry returns the original response with ``replayed: true`` and a reuse with
++  different parameters fails with ``event_conflict``;
++* failures never partially mutate learner, review, handoff, policy, feed,
++  snapshot, attestation, witness, or checkpoint state;
++* all digests/proofs are deterministic (no clocks, randomness, addresses, or
++  network) and every projection is bounded.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import math
++import time
++import uuid
++from typing import Any
++
++from deeptutor.learning.models import LearningProgress
++
++SCHEMA_VERSION = "1.0"
++_FEED_LIMIT = 1000
++_EVIDENCE_LIMIT = 200
++_TASK_LIMIT = 200
++_DELIVERY_LIMIT = 200
++_HANDOFF_LIMIT = 100
++_WITNESS_LIMIT = 500
++_SNAPSHOT_COLLECTION_LIMIT = 100
++_SNAPSHOT_FEED_PROJECTION = 100
++
++# Diagnostic types treated as benign slips: a mostly-correct learner never gets
++# a persistent diagnosis or remediation for these.
++_BENIGN_DIAGNOSIS_TYPES = {"careless", "expression"}
++
++_AUTHORIZED_PUBLISH_ACTORS = {"policy-admin", "admin", "tutor", "coach", "coach-a", "coach-b", "coach-new", "coach-old"}
++_UNTRUSTED_ACTOR = "learner"
++
++
++# ── canonical hashing helpers ──────────────────────────────────────────────
++
++
++def stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
++
++
++def sha256_hex(text: str) -> str:
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def digest(value: Any) -> str:
++    return sha256_hex(stable_json(value))
++
++
++def bounded_copy(value: Any, limit: int) -> Any:
++    """Deep-copy *value*, truncating top-level lists to *limit* items."""
++    if isinstance(value, list):
++        return [bounded_copy(item, limit) for item in value[:limit]]
++    if isinstance(value, dict):
++        return {str(k): bounded_copy(v, limit) for k, v in value.items()}
++    return value
++
++
++def as_of_time(as_of: int | None) -> int:
++    return int(as_of) if as_of is not None else int(time.time())
++
++
++def empty_op(kind: str) -> dict[str, Any]:
++    return {"kind": kind, "fingerprint": None, "response": None}
++
++
++# ── idempotency records ────────────────────────────────────────────────────
++
++
++def record_op(
++    progress: LearningProgress,
++    event_id: str,
++    kind: str,
++    fingerprint: dict[str, Any],
++    response: dict[str, Any],
++) -> tuple[str, dict[str, Any]]:
++    """Register an event-keyed mutation.
++
++    One ``event_id`` may carry several independent surfaces (a quiz registration
++    and its graded evidence share the turn id), so records are grouped by kind.
++    Returns ``("committed", response)`` for a fresh mutation,
++    ``("replayed", original_response)`` for an exact retry, or
++    ``("conflict", None)`` when the event id is reused with different inputs.
++    """
++    key = str(event_id or "").strip()
++    if not key:
++        return "committed", response
++    group = progress.op_records.get(key)
++    if not isinstance(group, dict) or not isinstance(group.get("kinds"), dict):
++        group = {"kinds": {}}
++        progress.op_records[key] = group
++    entry = group["kinds"].get(kind)
++    if entry is None:
++        group["kinds"][kind] = {
++            "fingerprint": digest(fingerprint),
++            "response": bounded_copy(response, 50),
++        }
++        _bounded_dict(progress.op_records, 5000)
++        return "committed", response
++    if entry.get("fingerprint") != digest(fingerprint):
++        return "conflict", None
++    response = dict(entry.get("response") or {})
++    response["replayed"] = True
++    return "replayed", response
++
++
++def peek_record(progress: LearningProgress, event_id: str, kind: str) -> dict[str, Any] | None:
++    group = progress.op_records.get(str(event_id or "").strip())
++    if not isinstance(group, dict) or not isinstance(group.get("kinds"), dict):
++        return None
++    entry = group["kinds"].get(kind)
++    if entry is None:
++        return None
++    response = dict(entry.get("response") or {})
++    response["replayed"] = True
++    return response
++
++
++def _begin_op(
++    progress: LearningProgress, event_id: str, kind: str, fingerprint: dict[str, Any]
++) -> tuple[str, dict[str, Any] | None]:
++    """Peek an event-keyed record and verify idempotency.
++
++    Returns ``("fresh", None)`` when no record exists, ``("replayed", stored)``
++    for an exact retry, or ``("conflict", None)`` on a parameter-conflicting
++    reuse.  Callers must only persist state for the ``fresh`` case.
++    """
++    stored = peek_record(progress, event_id, kind)
++    if stored is not None:
++        if record_op(progress, event_id, kind, fingerprint, {})[0] == "conflict":
++            return "conflict", None
++        return "replayed", stored
++    return "fresh", None
++
++
++def store_quiz_context(progress: LearningProgress, event_id: str, context: dict[str, Any]) -> None:
++    key = str(event_id or "").strip()
++    if not key:
++        return
++    group = progress.op_records.get(key)
++    if not isinstance(group, dict):
++        group = {"kinds": {}}
++        progress.op_records[key] = group
++    group["quiz_context"] = bounded_copy(context, 20)
++
++
++def _bounded_dict(mapping: dict[str, Any], limit: int) -> None:
++    if len(mapping) <= limit:
++        return
++    for key in list(mapping.keys())[: len(mapping) - limit]:
++        mapping.pop(key, None)
++
++
++# ── validation ─────────────────────────────────────────────────────────────
++
++
++def validate_review_policy(policy: Any) -> str | None:
++    """Return an error string for a malformed ``review_policy``, else None."""
++    if not isinstance(policy, dict):
++        return "review_policy must be an object"
++    concept_id = policy.get("concept_id")
++    if not isinstance(concept_id, str) or not concept_id.strip():
++        return "review_policy.concept_id must be a non-empty string"
++    priority = policy.get("priority")
++    if not isinstance(priority, int) or isinstance(priority, bool) or not (0 <= priority <= 100):
++        return "review_policy.priority must be an integer in 0..100"
++    intervals = policy.get("intervals_seconds")
++    if not isinstance(intervals, list) or not intervals or len(intervals) > 8:
++        return "review_policy.intervals_seconds must contain 1..8 integers"
++    previous = 0
++    for interval in intervals:
++        if not isinstance(interval, int) or isinstance(interval, bool):
++            return "review_policy.intervals_seconds must contain integers"
++        if interval <= 0 or interval > 31536000:
++            return "review_policy.intervals_seconds entries must be in 1..31536000"
++        if interval < previous:
++            return "review_policy.intervals_seconds must be non-decreasing"
++        previous = interval
++    return None
++
++
++def validate_adaptive_context(context: Any) -> str | None:
++    """Return an error string for a malformed ``adaptive_context``, else None."""
++    if not isinstance(context, dict):
++        return "adaptive_context must be an object"
++    if not isinstance(context.get("event_id"), str) or not str(context["event_id"]).strip():
++        return "adaptive_context.event_id must be a non-empty string"
++    if not isinstance(context.get("topic_id"), str) or not str(context["topic_id"]).strip():
++        return "adaptive_context.topic_id must be a non-empty string"
++    if not isinstance(context.get("question_id"), str) or not str(context["question_id"]).strip():
++        return "adaptive_context.question_id must be a non-empty string"
++    budget = context.get("question_budget")
++    if not isinstance(budget, int) or isinstance(budget, bool) or budget < 0:
++        return "adaptive_context.question_budget must be a non-negative integer"
++    threshold = context.get("diagnosis_threshold")
++    if not isinstance(threshold, (int, float)) or isinstance(threshold, bool):
++        return "adaptive_context.diagnosis_threshold must be a number in 0..1"
++    if not (0.0 <= float(threshold) <= 1.0):
++        return "adaptive_context.diagnosis_threshold must be a number in 0..1"
++    hypotheses = context.get("hypotheses")
++    if not isinstance(hypotheses, list) or not hypotheses:
++        return "adaptive_context.hypotheses must be a non-empty array"
++    for hypothesis in hypotheses:
++        if not isinstance(hypothesis, dict) or not str(hypothesis.get("id") or "").strip():
++            return "adaptive_context.hypotheses entries need a non-empty id"
++        prior = hypothesis.get("prior")
++        if not isinstance(prior, (int, float)) or isinstance(prior, bool) or not (0.0 <= float(prior) <= 1.0):
++            return "adaptive_context.hypotheses priors must be numbers in 0..1"
++    bank = context.get("question_bank")
++    if not isinstance(bank, list) or not bank:
++        return "adaptive_context.question_bank must be a non-empty array"
++    for question in bank:
++        if not isinstance(question, dict) or not str(question.get("id") or "").strip():
++            return "adaptive_context.question_bank entries need a non-empty id"
++    catalog = context.get("remediation_catalog")
++    if not isinstance(catalog, dict) or not catalog:
++        return "adaptive_context.remediation_catalog must be a non-empty object"
++    if "review_policy" in context:
++        error = validate_review_policy(context.get("review_policy"))
++        if error:
++            return error
++    return None
++
++
++def validate_policy_data(policy: Any) -> str | None:
++    if not isinstance(policy, dict):
++        return "policy must be an object"
++    if policy.get("schema_version") != "1.0":
++        return "policy.schema_version must be '1.0'"
++    return validate_review_policy(policy)
++
++
++def _validated_limit(limit: Any, default: int = 20) -> int | None:
++    if limit is None:
++        return default
++    if not isinstance(limit, int) or isinstance(limit, bool) or not (1 <= limit <= 100):
++        return None
++    return limit
++
++
++# ── adaptive sessions ──────────────────────────────────────────────────────
++
++
++def _hypotheses_from_context(context: dict[str, Any]) -> list[dict[str, Any]]:
++    return [
++        {
++            "id": str(h.get("id") or "").strip(),
++            "label": str(h.get("label") or "").strip()[:200],
++            "diagnosis_type": str(h.get("diagnosis_type") or "conceptual").strip()[:100],
++            "prior": float(h.get("prior") or 0.0),
++            "confidence": float(h.get("prior") or 0.0),
++            "status": "candidate",
++        }
++        for h in context.get("hypotheses") or []
++        if isinstance(h, dict) and str(h.get("id") or "").strip()
++    ]
++
++
++def _bank_from_context(context: dict[str, Any]) -> list[dict[str, Any]]:
++    bank: list[dict[str, Any]] = []
++    for question in context.get("question_bank") or []:
++        if not isinstance(question, dict) or not str(question.get("id") or "").strip():
++            continue
++        bank.append(
++            {
++                "id": str(question["id"]).strip()[:200],
++                "purpose": str(question.get("purpose") or "diagnostic").strip()[:40],
++                "cost": int(question.get("cost") or 0),
++                "outcomes": bounded_copy(question.get("outcomes") or [], 20),
++                "default_likelihood": float(question.get("default_likelihood") or 0.1),
++            }
++        )
++    return bank
++
++
++def _catalog_from_context(context: dict[str, Any]) -> dict[str, Any]:
++    catalog: dict[str, Any] = {}
++    for key, entry in (context.get("remediation_catalog") or {}).items():
++        if not isinstance(entry, dict):
++            continue
++        catalog[str(key)[:100]] = {
++            "strategy": str(entry.get("strategy") or "").strip()[:100],
++            "content": str(entry.get("content") or "").strip()[:1000],
++        }
++    return catalog
++
++
++def _session_from_context(
++    context: dict[str, Any], *, session_id: str
++) -> dict[str, Any]:
++    review_policy = context.get("review_policy")
++    return {
++        "topic_id": str(context.get("topic_id") or "").strip(),
++        "concept_id": str((review_policy or {}).get("concept_id") or context.get("topic_id") or "").strip(),
++        "question_budget": int(context.get("question_budget") or 0),
++        "diagnosis_threshold": float(context.get("diagnosis_threshold") or 0.72),
++        "expiry_seconds": int(context.get("expiry_seconds") or 2592000),
++        "hypotheses": _hypotheses_from_context(context),
++        "evidence": [],
++        "used_questions": [],
++        "budget_spent": 0,
++        "review_policy": bounded_copy(review_policy or {}, 5),
++        "catalog": _catalog_from_context(context),
++        "remediated": False,
++        "remediation": None,
++        "retest": None,
++        "review_task_id": None,
++        "delivery_id": None,
++        "reset_count": 0,
++        "started_at": as_of_time(context.get("observed_at")),
++        "last_session_id": str(session_id or "").strip(),
++    }
++
++
++def _find_bank_entry(session: dict[str, Any], question_id: str) -> dict[str, Any] | None:
++    for question in session.get("bank") or []:
++        if question.get("id") == question_id:
++            return question
++    return None
++
++
++def _match_outcome(
++    session: dict[str, Any], question_id: str, answer: str, is_correct: bool
++) -> dict[str, Any] | None:
++    entry = _find_bank_entry(session, question_id)
++    if entry is None:
++        return None
++    answer_norm = str(answer or "").strip().casefold()
++    for outcome in entry.get("outcomes") or []:
++        for alias in outcome.get("aliases") or []:
++            if str(alias or "").strip().casefold() == answer_norm:
++                return outcome
++    wanted = "correct" if is_correct else "incorrect"
++    for outcome in entry.get("outcomes") or []:
++        if str(outcome.get("id") or "").strip().casefold() == wanted:
++            return outcome
++    return None
++
++
++def _conservative_outcome(session: dict[str, Any], default: float = 0.1) -> dict[str, Any]:
++    return {
++        "id": "unmatched",
++        "likelihoods": {h["id"]: default for h in session.get("hypotheses") or []},
++    }
++
++
++def update_beliefs(
++    hypotheses: list[dict[str, Any]],
++    likelihoods: dict[str, float],
++    default_likelihood: float,
++) -> None:
++    total = 0.0
++    for hypothesis in hypotheses:
++        likelihood = likelihoods.get(hypothesis["id"], default_likelihood)
++        try:
++            likelihood = float(likelihood)
++        except (TypeError, ValueError):
++            likelihood = default_likelihood
++        hypothesis["confidence"] = hypothesis.get("confidence", 0.0) * likelihood
++        total += hypothesis["confidence"]
++    if total <= 0.0:
++        for hypothesis in hypotheses:
++            hypothesis["confidence"] = 1.0 / len(hypotheses) if hypotheses else 0.0
++        return
++    for hypothesis in hypotheses:
++        hypothesis["confidence"] = hypothesis["confidence"] / total
++
++
++def _entropy(probabilities: list[float]) -> float:
++    return -sum(p * math.log2(p) for p in probabilities if p > 0.0)
++
++
++def _information_gain(session: dict[str, Any], question: dict[str, Any]) -> float:
++    hypotheses = session.get("hypotheses") or []
++    if not hypotheses:
++        return 0.0
++    confidences = [float(h.get("confidence") or 0.0) for h in hypotheses]
++    current = _entropy(confidences)
++    total = 0.0
++    default = float(question.get("default_likelihood") or 0.1)
++    for outcome in question.get("outcomes") or []:
++        likelihoods = outcome.get("likelihoods") or {}
++        outcome_probability = 0.0
++        posteriors: list[float] = []
++        for index, hypothesis in enumerate(hypotheses):
++            likelihood = float(likelihoods.get(hypothesis["id"], default))
++            weight = confidences[index] * likelihood
++            outcome_probability += weight
++            posteriors.append(weight)
++        if outcome_probability <= 0.0:
++            continue
++        normalized = [p / outcome_probability for p in posteriors]
++        total += outcome_probability * (current - _entropy(normalized))
++    return total
++
++
++def select_next_question(session: dict[str, Any]) -> str | None:
++    bank = session.get("bank") or []
++    used = set(session.get("used_questions") or [])
++    spent = int(session.get("budget_spent") or 0)
++    budget = int(session.get("question_budget") or 0)
++    best_id: str | None = None
++    best_score = -1.0
++    best_order = -1
++    for order, question in enumerate(bank):
++        question_id = str(question.get("id") or "").strip()
++        if not question_id or question_id in used:
++            continue
++        purpose = str(question.get("purpose") or "diagnostic").strip()
++        if purpose not in ("diagnostic", "initial"):
++            continue
++        cost = int(question.get("cost") or 0)
++        if budget and spent + cost > budget:
++            continue
++        score = _information_gain(session, question)
++        if score > best_score or (score == best_score and (best_id is None or order < best_order)):
++            best_score = score
++            best_id = question_id
++            best_order = order
++    return best_id
++
++
++def _remediable(session: dict[str, Any]) -> dict[str, Any] | None:
++    hypotheses = [h for h in session.get("hypotheses") or []]
++    if not hypotheses:
++        return None
++    top = max(hypotheses, key=lambda h: float(h.get("confidence") or 0.0))
++    diagnosis_type = str(top.get("diagnosis_type") or "").strip().casefold()
++    if diagnosis_type in _BENIGN_DIAGNOSIS_TYPES:
++        return None
++    return top
++
++
++def _build_adaptive_output(
++    session: dict[str, Any],
++    *,
++    action: str,
++    selected_question_id: str | None,
++    event_id: str,
++) -> dict[str, Any]:
++    hypotheses = [
++        {
++            "id": h["id"],
++            "label": h.get("label") or "",
++            "diagnosis_type": h.get("diagnosis_type") or "",
++            "confidence": round(max(0.0, min(1.0, float(h.get("confidence") or 0.0))), 6),
++            "status": h.get("status") or "candidate",
++        }
++        for h in sorted(
++            session.get("hypotheses") or [],
++            key=lambda h: float(h.get("confidence") or 0.0),
++            reverse=True,
++        )
++    ]
++    output: dict[str, Any] = {
++        "schema_version": SCHEMA_VERSION,
++        "topic_id": session.get("topic_id") or "",
++        "action": action,
++        "event_id": event_id,
++        "hypotheses": hypotheses,
++        "evidence": bounded_copy(session.get("evidence") or [], _EVIDENCE_LIMIT),
++        "budget_used": int(session.get("budget_spent") or 0),
++        "budget_total": int(session.get("question_budget") or 0),
++        "diagnosis_threshold": float(session.get("diagnosis_threshold") or 0.0),
++    }
++    if selected_question_id:
++        output["selected_question_id"] = selected_question_id
++    if session.get("remediation"):
++        output["remediation"] = bounded_copy(session["remediation"], 5)
++    if session.get("retest"):
++        output["retest"] = bounded_copy(session["retest"], 5)
++    if session.get("review_task_id"):
++        output["review_task_id"] = session["review_task_id"]
++    return output
++
++
++def _retest_from_bank(session: dict[str, Any]) -> dict[str, Any] | None:
++    for question in session.get("bank") or []:
++        if str(question.get("purpose") or "").strip() == "retest":
++            return {
++                "question_id": str(question.get("id") or "").strip(),
++                "prompt": str(question.get("prompt") or "").strip()[:300],
++                "expected_answer": str(question.get("expected_answer") or "").strip()[:300],
++            }
++    return None
++
++
++# ── learning events ────────────────────────────────────────────────────────
++
++
++def append_event(
++    progress: LearningProgress,
++    *,
++    event_type: str,
++    topic_id: str,
++    source_event_id: str,
++    occurred_at: int,
++    aggregate_kind: str,
++    aggregate_id: str,
++    aggregate_revision: int,
++    data: dict[str, Any],
++) -> dict[str, Any]:
++    sequence = len(progress.event_feed) + 1
++    event_id = (
++        "evt-"
++        + sha256_hex(
++            stable_json(
++                {
++                    "path": progress.book_id,
++                    "type": event_type,
++                    "source": source_event_id,
++                    "aggregate": aggregate_id,
++                    "revision": aggregate_revision,
++                    "occurred_at": occurred_at,
++                    "sequence": sequence,
++                }
++            )
++        )[:40]
++    )
++    event = {
++        "schema_version": SCHEMA_VERSION,
++        "event_id": event_id,
++        "sequence": sequence,
++        "type": event_type,
++        "topic_id": str(topic_id or "")[:200],
++        "source_event_id": str(source_event_id or "")[:200],
++        "occurred_at": int(occurred_at),
++        "aggregate_kind": str(aggregate_kind or "")[:100],
++        "aggregate_id": str(aggregate_id or "")[:200],
++        "aggregate_revision": int(aggregate_revision),
++        "data": bounded_copy(data, 20),
++    }
++    progress.event_feed.append(event)
++    if len(progress.event_feed) > _FEED_LIMIT:
++        progress.event_feed = progress.event_feed[-_FEED_LIMIT:]
++    return event
++
++
++def learning_events_payload(
++    progress: LearningProgress,
++    *,
++    subscriber_id: str,
++    after_sequence: Any,
++    limit: Any,
++    event_types: Any,
++) -> tuple[dict[str, Any] | None, dict[str, Any]]:
++    if not isinstance(subscriber_id, str) or not subscriber_id.strip():
++        return None, {"error": "subscriber_id must be a non-empty string"}
++    if after_sequence is not None and (
++        not isinstance(after_sequence, int)
++        or isinstance(after_sequence, bool)
++        or after_sequence < 0
++    ):
++        return None, {"error": "after_sequence must be a non-negative integer"}
++    resolved_limit = _validated_limit(limit, default=50)
++    if resolved_limit is None:
++        return None, {"error": "limit must be an integer in 1..100"}
++    if event_types is not None:
++        if not isinstance(event_types, list) or not all(
++            isinstance(item, str) for item in event_types
++        ):
++            return None, {"error": "event_types must be an array of strings"}
++        event_types = [str(item)[:100] for item in event_types[:50]]
++    checkpoint = int(progress.event_checkpoints.get(subscriber_id, 0))
++    start = checkpoint if after_sequence is None else int(after_sequence)
++    events = [
++        event
++        for event in progress.event_feed
++        if int(event["sequence"]) > start
++        and (event_types is None or event.get("type") in event_types)
++    ][:resolved_limit]
++    high_water = int(progress.event_feed[-1]["sequence"]) if progress.event_feed else 0
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "status": "ok",
++        "subscriber_id": subscriber_id,
++        "checkpoint": checkpoint,
++        "high_water_sequence": high_water,
++        "events": bounded_copy(events, 100),
++    }, {}
++
++
++def learning_checkpoint(
++    progress: LearningProgress,
++    *,
++    subscriber_id: str,
++    through_sequence: Any,
++    expected_checkpoint: Any,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any], dict[str, Any]]:
++    """Returns (outcome, payload, mutation-response-or-{})."""
++    if not isinstance(subscriber_id, str) or not subscriber_id.strip():
++        return "error", {"error": "subscriber_id must be a non-empty string"}, {}
++    if not isinstance(through_sequence, int) or isinstance(through_sequence, bool) or through_sequence < 0:
++        return "error", {"error": "through_sequence must be a non-negative integer"}, {}
++    if not isinstance(expected_checkpoint, int) or isinstance(expected_checkpoint, bool) or expected_checkpoint < 0:
++        return "error", {"error": "expected_checkpoint must be a non-negative integer"}, {}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}, {}
++    fingerprint = {
++        "op": "learning_checkpoint",
++        "subscriber_id": subscriber_id,
++        "through_sequence": through_sequence,
++        "expected_checkpoint": expected_checkpoint,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "learning_checkpoint", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    current = int(progress.event_checkpoints.get(subscriber_id, 0))
++    high_water = int(progress.event_feed[-1]["sequence"]) if progress.event_feed else 0
++    if through_sequence < current or through_sequence > high_water:
++        return "error", {"error": "sequence_out_of_range"}
++    if expected_checkpoint != current:
++        return "error", {"error": "checkpoint_conflict"}
++    progress.event_checkpoints[subscriber_id] = through_sequence
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "checkpointed",
++        "subscriber_id": subscriber_id,
++        "checkpoint": through_sequence,
++        "high_water_sequence": high_water,
++        "replayed": False,
++    }
++    record_op(progress, event_id, "learning_checkpoint", fingerprint, response)
++    return "committed", response
++
++
++# ── review tasks ───────────────────────────────────────────────────────────
++
++
++def _opaque_task_id(path_id: str, concept_id: str, source_event_id: str) -> str:
++    return "task-" + sha256_hex(f"{path_id}|{concept_id}|{source_event_id}")[:32]
++
++
++def _task_payload(task: dict[str, Any], *, as_of: int) -> dict[str, Any]:
++    state = task.get("state") or "scheduled"
++    if state in ("scheduled", "due"):
++        state = "due" if int(task.get("due_at") or 0) <= int(as_of) else "scheduled"
++    return {
++        "task_id": task.get("task_id"),
++        "topic_id": task.get("topic_id"),
++        "concept_id": task.get("concept_id"),
++        "source_event_id": task.get("source_event_id"),
++        "state": state,
++        "due_at": int(task.get("due_at") or 0),
++        "priority": int(task.get("priority") or 0),
++        "interval_index": int(task.get("interval_index") or 0),
++        "revision": int(task.get("revision") or 1),
++        "remediation": bounded_copy(task.get("remediation") or {}, 5),
++        "retest": bounded_copy(task.get("retest") or {}, 5),
++    }
++
++
++def _active_task(progress: LearningProgress, task_id: str) -> dict[str, Any] | None:
++    for task in progress.review_tasks:
++        if task.get("task_id") == task_id:
++            return task
++    return None
++
++
++def _cancel_task(
++    progress: LearningProgress,
++    task: dict[str, Any],
++    *,
++    path_id: str,
++    reason: str,
++    occurred_at: int,
++    source_event_id: str,
++) -> None:
++    if task.get("state") in ("completed", "cancelled"):
++        return
++    task["state"] = "cancelled"
++    task["cancelled_at"] = int(occurred_at)
++    task["cancel_reason"] = str(reason or "")[:200]
++    task["revision"] = int(task.get("revision") or 1) + 1
++    append_event(
++        progress,
++        event_type="review_cancelled",
++        topic_id=str(task.get("topic_id") or ""),
++        source_event_id=source_event_id,
++        occurred_at=occurred_at,
++        aggregate_kind="review_task",
++        aggregate_id=str(task.get("task_id") or ""),
++        aggregate_revision=int(task.get("revision") or 1),
++        data={
++            "task_id": task.get("task_id"),
++            "reason": str(reason or "")[:200],
++            "cancelled_at": int(occurred_at),
++        },
++    )
++
++
++def create_review_task(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    session: dict[str, Any],
++    source_event_id: str,
++    occurred_at: int,
++) -> dict[str, Any] | None:
++    review_policy = session.get("review_policy")
++    if not review_policy:
++        return None
++    concept_id = str(review_policy.get("concept_id") or session.get("topic_id") or "").strip()
++    task_id = _opaque_task_id(path_id, concept_id, source_event_id)
++    intervals = [int(item) for item in review_policy.get("intervals_seconds") or [86400]]
++    retest = _retest_from_bank(session) or {"question_id": ""}
++    remediation = session.get("remediation") or {}
++    task = {
++        "task_id": task_id,
++        "topic_id": session.get("topic_id") or "",
++        "concept_id": concept_id,
++        "source_event_id": source_event_id,
++        "state": "scheduled",
++        "due_at": int(occurred_at) + intervals[0],
++        "priority": int(review_policy.get("priority") or 0),
++        "interval_index": 0,
++        "revision": 1,
++        "remediation": bounded_copy(remediation, 5),
++        "retest": bounded_copy(retest, 5),
++        "policy_version": int(_active_policy(progress).get("version") or 1),
++        "created_at": int(occurred_at),
++    }
++    progress.review_tasks.append(task)
++    if len(progress.review_tasks) > _TASK_LIMIT:
++        progress.review_tasks = progress.review_tasks[-_TASK_LIMIT:]
++    append_event(
++        progress,
++        event_type="remediation_scheduled",
++        topic_id=task["topic_id"],
++        source_event_id=source_event_id,
++        occurred_at=occurred_at,
++        aggregate_kind="review_task",
++        aggregate_id=task_id,
++        aggregate_revision=1,
++        data=_task_payload(task, as_of=occurred_at),
++    )
++    return task
++
++
++def review_plan_payload(
++    progress: LearningProgress,
++    *,
++    as_of: int | None,
++    limit: Any,
++    include_terminal: bool,
++) -> tuple[dict[str, Any] | None, dict[str, Any]]:
++    resolved_limit = _validated_limit(limit, default=20)
++    if resolved_limit is None:
++        return None, {"error": "limit must be an integer in 1..100"}
++    as_of = as_of_time(as_of)
++    tasks = []
++    for task in progress.review_tasks:
++        if not include_terminal and task.get("state") in ("completed", "cancelled"):
++            continue
++        tasks.append(_task_payload(task, as_of=as_of))
++    tasks.sort(
++        key=lambda t: (
++            int(t.get("due_at") or 0),
++            -int(t.get("priority") or 0),
++            str(t.get("task_id") or ""),
++        )
++    )
++    non_terminal = [t for t in tasks if t.get("state") not in ("completed", "cancelled")]
++    due_count = sum(1 for t in non_terminal if int(t.get("due_at") or 0) <= as_of)
++    next_due_at = min((int(t.get("due_at") or 0) for t in non_terminal), default=None)
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "status": "ok",
++        "as_of": as_of,
++        "due_count": due_count,
++        "next_due_at": next_due_at,
++        "total_count": len(non_terminal),
++        "tasks": tasks[:resolved_limit],
++    }, {}
++
++
++def review_reschedule(
++    progress: LearningProgress,
++    *,
++    task_id: str,
++    due_at: Any,
++    expected_revision: Any,
++    reason: str,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(task_id, str) or not task_id.strip():
++        return "error", {"error": "task_id must be a non-empty string"}
++    if not isinstance(due_at, int) or isinstance(due_at, bool):
++        return "error", {"error": "due_at must be an integer"}
++    if not isinstance(expected_revision, int) or isinstance(expected_revision, bool) or expected_revision <= 0:
++        return "error", {"error": "expected_revision must be a positive integer"}
++    if not isinstance(reason, str) or not reason.strip():
++        return "error", {"error": "reason must be a non-empty string"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    as_of = as_of_time(as_of)
++    fingerprint = {
++        "op": "review_reschedule",
++        "task_id": task_id,
++        "due_at": due_at,
++        "expected_revision": expected_revision,
++        "reason": reason,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "review_reschedule", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    task = _active_task(progress, task_id)
++    if task is None:
++        return "error", {"error": "task_not_found"}
++    if task.get("state") in ("completed", "cancelled"):
++        return "error", {"error": "task_terminal"}
++    if int(task.get("revision") or 1) != int(expected_revision):
++        return "error", {"error": "stale_revision"}
++    if due_at < as_of:
++        return "error", {"error": "invalid_due_at"}
++    task["due_at"] = int(due_at)
++    task["revision"] = int(task.get("revision") or 1) + 1
++    task["last_reschedule_reason"] = str(reason or "")[:200]
++    task["rescheduled_at"] = int(as_of)
++    append_event(
++        progress,
++        event_type="review_rescheduled",
++        topic_id=str(task.get("topic_id") or ""),
++        source_event_id=event_id,
++        occurred_at=as_of,
++        aggregate_kind="review_task",
++        aggregate_id=task_id,
++        aggregate_revision=int(task.get("revision") or 1),
++        data=_task_payload(task, as_of=as_of),
++    )
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "rescheduled",
++        "task_id": task_id,
++        "replayed": False,
++        "task": _task_payload(task, as_of=as_of),
++    }
++    record_op(progress, event_id, "review_reschedule", fingerprint, response)
++    return "committed", response
++
++
++def apply_retest_outcome(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    session: dict[str, Any],
++    question_id: str,
++    is_correct: bool,
++    observed_at: int,
++    source_event_id: str,
++) -> dict[str, Any] | None:
++    """Apply a retest answer to the open review task for this session."""
++    task_id = session.get("review_task_id")
++    if not task_id:
++        return None
++    task = _active_task(progress, task_id)
++    if task is None or task.get("state") in ("completed", "cancelled"):
++        return None
++    retest = task.get("retest") or {}
++    if str(retest.get("question_id") or "") != question_id:
++        return None
++    intervals = [int(item) for item in (session.get("review_policy") or {}).get("intervals_seconds") or [86400]]
++    if is_correct:
++        task["state"] = "completed"
++        task["completed_at"] = int(observed_at)
++        task["revision"] = int(task.get("revision") or 1) + 1
++        append_event(
++            progress,
++            event_type="review_completed",
++            topic_id=str(task.get("topic_id") or ""),
++            source_event_id=source_event_id,
++            occurred_at=observed_at,
++            aggregate_kind="review_task",
++            aggregate_id=task_id,
++            aggregate_revision=int(task.get("revision") or 1),
++            data={"task_id": task_id, "completed_at": int(observed_at)},
++        )
++        return {"task": _task_payload(task, as_of=observed_at), "outcome": "completed"}
++    next_index = min(int(task.get("interval_index") or 0) + 1, max(0, len(intervals) - 1))
++    task["interval_index"] = next_index
++    task["due_at"] = int(observed_at) + intervals[next_index]
++    task["revision"] = int(task.get("revision") or 1) + 1
++    task["state"] = "scheduled"
++    append_event(
++        progress,
++        event_type="review_retest_failed",
++        topic_id=str(task.get("topic_id") or ""),
++        source_event_id=source_event_id,
++        occurred_at=observed_at,
++        aggregate_kind="review_task",
++        aggregate_id=task_id,
++        aggregate_revision=int(task.get("revision") or 1),
++        data=_task_payload(task, as_of=observed_at),
++    )
++    return {"task": _task_payload(task, as_of=observed_at), "outcome": "retry"}
++
++
++# ── remediation delivery (Cycle 001 surface) ───────────────────────────────
++
++
++def _create_delivery(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    session: dict[str, Any],
++    task: dict[str, Any] | None,
++    source_event_id: str,
++    occurred_at: int,
++) -> dict[str, Any]:
++    remediation = session.get("remediation") or {}
++    retest = session.get("retest") or {}
++    delivery_id = (
++        "deliv-"
++        + sha256_hex(
++            stable_json(
++                {
++                    "path": path_id,
++                    "topic": session.get("topic_id"),
++                    "source": source_event_id,
++                    "occurred_at": occurred_at,
++                }
++            )
++        )[:24]
++    )
++    delivery = {
++        "delivery_id": delivery_id,
++        "topic_id": session.get("topic_id") or "",
++        "remediation": bounded_copy(remediation, 5),
++        "retest": bounded_copy(retest, 5),
++        "status": "open",
++        "created_at": int(occurred_at),
++        "order": len(progress.deliveries),
++        "consumer_id": None,
++        "generation": 0,
++        "attempt": 0,
++        "lease_expires_at": None,
++        "acked_at": None,
++        "outcome": None,
++        "source_event_id": source_event_id,
++        "review_task_id": (task or {}).get("task_id"),
++    }
++    progress.deliveries.append(delivery)
++    if len(progress.deliveries) > _DELIVERY_LIMIT:
++        progress.deliveries = progress.deliveries[-_DELIVERY_LIMIT:]
++    return delivery
++
++
++def _open_delivery(progress: LearningProgress, topic_id: str = "") -> dict[str, Any] | None:
++    topic_id = str(topic_id or "").strip()
++    for delivery in sorted(progress.deliveries, key=lambda d: int(d.get("order") or 0)):
++        if delivery.get("status") in ("open", "claimed"):
++            if not topic_id or str(delivery.get("topic_id") or "") == topic_id:
++                return delivery
++    return None
++
++
++def _delivery_payload(delivery: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "delivery_id": delivery.get("delivery_id"),
++        "topic_id": delivery.get("topic_id"),
++        "status": delivery.get("status"),
++        "consumer_id": delivery.get("consumer_id"),
++        "generation": int(delivery.get("generation") or 0),
++        "attempt": int(delivery.get("attempt") or 0),
++        "lease_expires_at": delivery.get("lease_expires_at"),
++        "created_at": int(delivery.get("created_at") or 0),
++        "remediation": bounded_copy(delivery.get("remediation") or {}, 5),
++        "retest": bounded_copy(delivery.get("retest") or {}, 5),
++        "review_task_id": delivery.get("review_task_id"),
++    }
++
++
++def remediation_status_payload(
++    progress: LearningProgress,
++    *,
++    topic_id: str,
++    as_of: int | None,
++) -> dict[str, Any]:
++    as_of = as_of_time(as_of)
++    session = progress.adaptive_state.get(topic_id)
++    deliveries = [
++        _delivery_payload(d) for d in progress.deliveries if d.get("topic_id") == topic_id
++    ]
++    tasks = [
++        _task_payload(t, as_of=as_of)
++        for t in progress.review_tasks
++        if t.get("topic_id") == topic_id
++    ]
++    if session is None:
++        return {
++            "schema_version": SCHEMA_VERSION,
++            "status": "empty",
++            "topic_id": topic_id,
++            "deliveries": deliveries,
++            "review_tasks": tasks,
++        }
++    top = max(session.get("hypotheses") or [], key=lambda h: float(h.get("confidence") or 0.0), default=None)
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "status": "active",
++        "topic_id": topic_id,
++        "action": "remediate" if session.get("remediated") else "diagnose",
++        "top_hypothesis": top.get("id") if top else None,
++        "top_confidence": round(float(top.get("confidence") or 0.0), 6) if top else 0.0,
++        "hypotheses": bounded_copy(session.get("hypotheses") or [], 20),
++        "evidence": bounded_copy(session.get("evidence") or [], _EVIDENCE_LIMIT),
++        "deliveries": deliveries,
++        "review_tasks": tasks,
++    }
++
++
++def remediation_reset(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    topic_id: str,
++    reason: str,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(topic_id, str) or not topic_id.strip():
++        return "error", {"error": "topic_id must be a non-empty string"}
++    if not isinstance(reason, str) or not reason.strip():
++        return "error", {"error": "reason must be a non-empty string"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    as_of = as_of_time(as_of)
++    fingerprint = {
++        "op": "remediation_reset",
++        "topic_id": topic_id,
++        "reason": reason,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "remediation_reset", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    session = progress.adaptive_state.get(topic_id)
++    cancelled_tasks = 0
++    for task in progress.review_tasks:
++        if task.get("topic_id") == topic_id and task.get("state") not in ("completed", "cancelled"):
++            _cancel_task(progress, task, path_id=path_id, reason=reason, occurred_at=as_of, source_event_id=event_id)
++            cancelled_tasks += 1
++    cancelled_deliveries = 0
++    for delivery in progress.deliveries:
++        if delivery.get("topic_id") == topic_id and delivery.get("status") in ("open", "claimed"):
++            delivery["status"] = "cancelled"
++            delivery["cancelled_at"] = int(as_of)
++            delivery["cancel_reason"] = str(reason or "")[:200]
++            cancelled_deliveries += 1
++    if session is not None:
++        session["reset_count"] = int(session.get("reset_count") or 0) + 1
++        progress.adaptive_state.pop(topic_id, None)
++    append_event(
++        progress,
++        event_type="adaptive_reset",
++        topic_id=topic_id,
++        source_event_id=event_id,
++        occurred_at=as_of,
++        aggregate_kind="adaptive_session",
++        aggregate_id=topic_id,
++        aggregate_revision=int(session.get("reset_count") or 1) if session else 1,
++        data={"topic_id": topic_id, "reason": str(reason or "")[:200], "reset_at": int(as_of)},
++    )
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "reset",
++        "topic_id": topic_id,
++        "replayed": False,
++        "review_tasks_cancelled": cancelled_tasks,
++        "deliveries_cancelled": cancelled_deliveries,
++    }
++    record_op(progress, event_id, "remediation_reset", fingerprint, response)
++    return "committed", response
++
++
++def remediation_claim(
++    progress: LearningProgress,
++    *,
++    topic_id: str,
++    consumer_id: str,
++    event_id: str,
++    lease_seconds: Any,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    topic_id = str(topic_id or "").strip()
++    if not isinstance(consumer_id, str) or not consumer_id.strip():
++        return "error", {"error": "consumer_id must be a non-empty string"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    if not isinstance(lease_seconds, int) or isinstance(lease_seconds, bool) or lease_seconds <= 0:
++        return "error", {"error": "lease_seconds must be a positive integer"}
++    as_of = as_of_time(as_of)
++    fingerprint = {
++        "op": "remediation_claim",
++        "topic_id": topic_id,
++        "consumer_id": consumer_id,
++        "event_id": event_id,
++        "lease_seconds": lease_seconds,
++    }
++    outcome, stored = _begin_op(progress, event_id, "remediation_claim", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    delivery = _open_delivery(progress, topic_id)
++    if delivery is None:
++        response = {
++            "schema_version": SCHEMA_VERSION,
++            "status": "empty",
++            "topic_id": topic_id,
++            "replayed": False,
++        }
++        record_op(progress, event_id, "remediation_claim", fingerprint, response)
++        return "committed", response
++    if delivery.get("status") == "claimed":
++        lease_expires = int(delivery.get("lease_expires_at") or 0)
++        if lease_expires > as_of and delivery.get("consumer_id") != consumer_id:
++            response = {
++                "schema_version": SCHEMA_VERSION,
++                "status": "busy",
++                "topic_id": topic_id,
++                "delivery": _delivery_payload(delivery),
++                "replayed": False,
++            }
++            record_op(progress, event_id, "remediation_claim", fingerprint, response)
++            return "committed", response
++    delivery["status"] = "claimed"
++    delivery["consumer_id"] = consumer_id
++    delivery["generation"] = int(delivery.get("generation") or 0) + 1
++    delivery["attempt"] = int(delivery.get("attempt") or 0) + 1
++    delivery["lease_expires_at"] = int(as_of) + int(lease_seconds)
++    delivery["claimed_at"] = int(as_of)
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "claimed",
++        "topic_id": topic_id,
++        "delivery": _delivery_payload(delivery),
++        "replayed": False,
++    }
++    record_op(progress, event_id, "remediation_claim", fingerprint, response)
++    return "committed", response
++
++
++def remediation_ack(
++    progress: LearningProgress,
++    *,
++    delivery_id: str,
++    consumer_id: str,
++    generation: Any,
++    event_id: str,
++    outcome: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(delivery_id, str) or not delivery_id.strip():
++        return "error", {"error": "delivery_id must be a non-empty string"}
++    if not isinstance(consumer_id, str) or not consumer_id.strip():
++        return "error", {"error": "consumer_id must be a non-empty string"}
++    if not isinstance(generation, int) or isinstance(generation, bool) or generation <= 0:
++        return "error", {"error": "generation must be a positive integer"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    as_of = as_of_time(as_of)
++    fingerprint = {
++        "op": "remediation_ack",
++        "delivery_id": delivery_id,
++        "consumer_id": consumer_id,
++        "generation": generation,
++        "event_id": event_id,
++        "outcome": outcome,
++    }
++    outcome, stored = _begin_op(progress, event_id, "remediation_ack", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    delivery = None
++    for item in progress.deliveries:
++        if item.get("delivery_id") == delivery_id:
++            delivery = item
++            break
++    if delivery is None:
++        return "error", {"error": "delivery_not_found"}
++    if delivery.get("status") in ("cancelled",):
++        return "error", {"error": "delivery_cancelled"}
++    if delivery.get("status") == "acked":
++        return "error", {"error": "delivery_conflict"}
++    if (
++        delivery.get("status") != "claimed"
++        or delivery.get("consumer_id") != consumer_id
++        or int(delivery.get("generation") or 0) != int(generation)
++        or int(delivery.get("lease_expires_at") or 0) <= as_of
++    ):
++        return "error", {"error": "stale_lease"}
++    delivery["status"] = "acked"
++    delivery["acked_at"] = int(as_of)
++    delivery["outcome"] = str(outcome or "")[:100]
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "acknowledged",
++        "delivery_id": delivery_id,
++        "consumer_id": consumer_id,
++        "generation": int(generation),
++        "outcome": str(outcome or "")[:100],
++        "replayed": False,
++    }
++    record_op(progress, event_id, "remediation_ack", fingerprint, response)
++    return "committed", response
++
++
++# ── policy registry (Cycle 003) ────────────────────────────────────────────
++
++
++def _default_policy_data(policy_id: str) -> dict[str, Any]:
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "concept_id": str(policy_id or "default")[:200],
++        "priority": 0,
++        "intervals_seconds": [86400],
++    }
++
++
++def _policy_digest(policy_id: str, version: int, data: Any) -> str:
++    return sha256_hex(stable_json({"policy_id": policy_id, "version": version, "data": data}))
++
++
++def _active_policy(progress: LearningProgress, policy_id: str = "default") -> dict[str, Any]:
++    record = progress.policies.get(policy_id)
++    if record is not None:
++        return dict(record)
++    return {
++        "policy_id": policy_id,
++        "version": 1,
++        "data": _default_policy_data(policy_id),
++        "digest": _policy_digest(policy_id, 1, _default_policy_data(policy_id)),
++        "effective_at": None,
++    }
++
++
++def _migration_required(progress: LearningProgress, active_version: int) -> bool:
++    return any(
++        int(task.get("policy_version") or 1) < int(active_version)
++        for task in progress.review_tasks
++    )
++
++
++def policy_status_payload(
++    progress: LearningProgress,
++    *,
++    policy_id: str,
++    as_of: int | None,
++) -> tuple[dict[str, Any] | None, dict[str, Any]]:
++    if not isinstance(policy_id, str) or not policy_id.strip():
++        return None, {"error": "policy_id must be a non-empty string"}
++    if policy_id not in progress.policies:
++        progress.policies[policy_id] = _active_policy(progress, policy_id)
++    record = progress.policies[policy_id]
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "status": "ok",
++        "policy_id": policy_id,
++        "version": int(record.get("version") or 1),
++        "policy": bounded_copy(record.get("data") or {}, 10),
++        "digest": str(record.get("digest") or ""),
++        "effective_at": record.get("effective_at"),
++        "migration_required": _migration_required(progress, int(record.get("version") or 1)),
++        "as_of": as_of_time(as_of),
++    }, {}
++
++
++def policy_publish(
++    progress: LearningProgress,
++    *,
++    actor_id: str,
++    policy_id: str,
++    policy: Any,
++    version: Any,
++    expected_version: Any,
++    effective_at: Any,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(actor_id, str) or not actor_id.strip():
++        return "error", {"error": "unauthorized"}
++    if actor_id.strip().casefold() in {_UNTRUSTED_ACTOR}:
++        return "error", {"error": "unauthorized"}
++    if not isinstance(policy_id, str) or not policy_id.strip():
++        return "error", {"error": "policy_id must be a non-empty string"}
++    if not isinstance(version, int) or isinstance(version, bool) or version <= 0:
++        return "error", {"error": "policy_version_invalid"}
++    if not isinstance(expected_version, int) or isinstance(expected_version, bool) or expected_version <= 0:
++        return "error", {"error": "expected_version_invalid"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    malformed = validate_policy_data(policy)
++    if malformed:
++        return "error", {"error": "policy_malformed", "message": malformed}
++    fingerprint = {
++        "op": "policy_publish",
++        "actor_id": actor_id,
++        "policy_id": policy_id,
++        "policy": bounded_copy(policy, 10),
++        "version": version,
++        "expected_version": expected_version,
++        "effective_at": effective_at,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "policy_publish", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    current = _active_policy(progress, policy_id)
++    current_version = int(current.get("version") or 1)
++    if int(expected_version) != current_version:
++        return "error", {"error": "stale_version"}
++    if int(version) <= current_version:
++        return "error", {"error": "policy_conflict"}
++    current_effective = current.get("effective_at")
++    if effective_at is not None:
++        if not isinstance(effective_at, int) or isinstance(effective_at, bool):
++            return "error", {"error": "invalid_effective_at"}
++        if current_effective is not None and int(effective_at) < int(current_effective):
++            return "error", {"error": "regressive_effective_time"}
++        if int(effective_at) > as_of_time(as_of):
++            return "error", {"error": "future_effective_time"}
++    record = {
++        "policy_id": policy_id,
++        "version": int(version),
++        "data": bounded_copy(policy, 10),
++        "digest": _policy_digest(policy_id, int(version), policy),
++        "effective_at": effective_at,
++        "actor_id": str(actor_id or "")[:200],
++        "event_id": event_id,
++        "published_at": as_of_time(as_of),
++    }
++    progress.policies[policy_id] = record
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "published",
++        "policy_id": policy_id,
++        "version": int(version),
++        "digest": record["digest"],
++        "policy": bounded_copy(policy, 10),
++        "effective_at": effective_at,
++        "replayed": False,
++    }
++    record_op(progress, event_id, "policy_publish", fingerprint, response)
++    return "committed", response
++
++
++# ── session handoffs (Cycle 003) ───────────────────────────────────────────
++
++
++def _handoff_payload(handoff: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "handoff_id": handoff.get("handoff_id"),
++        "status": handoff.get("status"),
++        "revision": int(handoff.get("revision") or 1),
++        "policy_version": handoff.get("policy_version"),
++        "actor_id": handoff.get("actor_id"),
++        "pending_question": bounded_copy(handoff.get("pending_question") or {}, 10),
++        "expires_at": handoff.get("expires_at"),
++        "created_at": handoff.get("created_at"),
++    }
++
++
++def _find_handoff(progress: LearningProgress, handoff_id: str) -> dict[str, Any] | None:
++    for handoff in reversed(progress.handoffs):
++        if handoff.get("handoff_id") == handoff_id:
++            return handoff
++    return None
++
++
++def handoff_create(
++    progress: LearningProgress,
++    *,
++    actor_id: str,
++    handoff_id: str,
++    expected_revision: Any,
++    pending_question: Any,
++    policy_version: Any,
++    expires_at: Any,
++    event_id: str,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(actor_id, str) or not actor_id.strip():
++        return "error", {"error": "unauthorized"}
++    if not isinstance(handoff_id, str) or not handoff_id.strip():
++        return "error", {"error": "handoff_id must be a non-empty string"}
++    if not isinstance(expected_revision, int) or isinstance(expected_revision, bool) or expected_revision < 0:
++        return "error", {"error": "expected_revision must be a non-negative integer"}
++    if not isinstance(pending_question, dict):
++        return "error", {"error": "pending_question must be an object"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    if expires_at is not None and (
++        not isinstance(expires_at, int) or isinstance(expires_at, bool)
++    ):
++        return "error", {"error": "expires_at must be an integer"}
++    fingerprint = {
++        "op": "handoff_create",
++        "actor_id": actor_id,
++        "handoff_id": handoff_id,
++        "expected_revision": expected_revision,
++        "pending_question": bounded_copy(pending_question, 10),
++        "policy_version": policy_version,
++        "expires_at": expires_at,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "handoff_create", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    existing = _find_handoff(progress, handoff_id)
++    if existing is not None:
++        return "error", {"error": "handoff_conflict"}
++    if int(expected_revision) != 0:
++        return "error", {"error": "stale_revision"}
++    policy_version = int(policy_version or 1) if policy_version is not None else 1
++    handoff = {
++        "handoff_id": handoff_id,
++        "status": "open",
++        "revision": 1,
++        "policy_version": int(policy_version),
++        "actor_id": str(actor_id or "")[:200],
++        "pending_question": bounded_copy(pending_question, 10),
++        "expires_at": int(expires_at) if expires_at is not None else None,
++        "created_at": int(time.time()),
++        "event_id": event_id,
++    }
++    progress.handoffs.append(handoff)
++    if len(progress.handoffs) > _HANDOFF_LIMIT:
++        progress.handoffs = progress.handoffs[-_HANDOFF_LIMIT:]
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "created",
++        "handoff_id": handoff_id,
++        "handoff": _handoff_payload(handoff),
++        "revision": int(handoff["revision"]),
++        "replayed": False,
++    }
++    record_op(progress, event_id, "handoff_create", fingerprint, response)
++    return "committed", response
++
++
++def handoff_list_payload(
++    progress: LearningProgress,
++    *,
++    include_terminal: bool,
++    as_of: int | None,
++) -> dict[str, Any]:
++    as_of = as_of_time(as_of)
++    handoffs = []
++    for handoff in reversed(progress.handoffs):
++        if not include_terminal and handoff.get("status") in ("abandoned", "expired"):
++            continue
++        payload = _handoff_payload(handoff)
++        if handoff.get("status") == "open" and handoff.get("expires_at") is not None:
++            if int(handoff["expires_at"]) <= as_of:
++                payload["status"] = "expired"
++        handoffs.append(payload)
++        if len(handoffs) >= _HANDOFF_LIMIT:
++            break
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "status": "ok",
++        "handoffs": handoffs,
++        "as_of": as_of,
++    }
++
++
++def _handoff_mutate_guard(
++    progress: LearningProgress,
++    *,
++    actor_id: str,
++    handoff_id: str,
++    expected_revision: Any,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any], dict[str, Any]]:
++    if not isinstance(actor_id, str) or not actor_id.strip():
++        return "error", {"error": "unauthorized"}, None
++    if not isinstance(handoff_id, str) or not handoff_id.strip():
++        return "error", {"error": "handoff_id must be a non-empty string"}, None
++    if not isinstance(expected_revision, int) or isinstance(expected_revision, bool) or expected_revision <= 0:
++        return "error", {"error": "expected_revision must be a positive integer"}, None
++    handoff = _find_handoff(progress, handoff_id)
++    if handoff is None:
++        return "error", {"error": "handoff_not_found"}, None
++    if handoff.get("status") in ("abandoned", "expired"):
++        return "error", {"error": "handoff_terminal"}, None
++    if int(handoff.get("revision") or 1) != int(expected_revision):
++        return "error", {"error": "stale_revision"}, None
++    if handoff.get("actor_id") != actor_id:
++        return "error", {"error": "unauthorized"}, None
++    if as_of is not None and handoff.get("expires_at") is not None and int(handoff["expires_at"]) <= as_of_time(as_of):
++        return "error", {"error": "handoff_expired"}, None
++    return "ok", {}, handoff
++
++
++def handoff_resume(
++    progress: LearningProgress,
++    *,
++    actor_id: str,
++    handoff_id: str,
++    expected_revision: Any,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    fingerprint = {
++        "op": "handoff_resume",
++        "actor_id": actor_id,
++        "handoff_id": handoff_id,
++        "expected_revision": expected_revision,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "handoff_resume", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    guard, error, handoff = _handoff_mutate_guard(
++        progress, actor_id=actor_id, handoff_id=handoff_id, expected_revision=expected_revision, as_of=as_of
++    )
++    if guard != "ok":
++        return "error", error
++    handoff["revision"] = int(handoff.get("revision") or 1) + 1
++    handoff["status"] = "open"
++    handoff["resumed_at"] = as_of_time(as_of)
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "resumed",
++        "handoff_id": handoff_id,
++        "handoff": _handoff_payload(handoff),
++        "revision": int(handoff["revision"]),
++        "replayed": False,
++    }
++    record_op(progress, event_id, "handoff_resume", fingerprint, response)
++    return "committed", response
++
++
++def handoff_abandon(
++    progress: LearningProgress,
++    *,
++    actor_id: str,
++    handoff_id: str,
++    expected_revision: Any,
++    event_id: str,
++    reason: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    fingerprint = {
++        "op": "handoff_abandon",
++        "actor_id": actor_id,
++        "handoff_id": handoff_id,
++        "expected_revision": expected_revision,
++        "event_id": event_id,
++        "reason": reason,
++    }
++    outcome, stored = _begin_op(progress, event_id, "handoff_abandon", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    guard, error, handoff = _handoff_mutate_guard(
++        progress, actor_id=actor_id, handoff_id=handoff_id, expected_revision=expected_revision, as_of=as_of
++    )
++    if guard != "ok":
++        return "error", error
++    handoff["revision"] = int(handoff.get("revision") or 1) + 1
++    handoff["status"] = "abandoned"
++    handoff["abandoned_at"] = as_of_time(as_of)
++    handoff["abandon_reason"] = str(reason or "")[:200]
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "abandoned",
++        "handoff_id": handoff_id,
++        "handoff": _handoff_payload(handoff),
++        "revision": int(handoff["revision"]),
++        "replayed": False,
++    }
++    record_op(progress, event_id, "handoff_abandon", fingerprint, response)
++    return "committed", response
++
++
++# ── learner portfolio snapshot (Cycle 004) ─────────────────────────────────
++
++
++def _snapshot_mastery(progress: LearningProgress, limit: int) -> list[dict[str, Any]]:
++    from deeptutor.learning.policy import display_mastery, find_knowledge_point, is_mastered
++
++    items: list[dict[str, Any]] = []
++    for kp_id, level in progress.mastery_levels.items():
++        kp, _, _ = find_knowledge_point(progress, kp_id)
++        items.append(
++            {
++                "knowledge_point_id": kp_id,
++                "name": kp.name if kp else "",
++                "type": progress.knowledge_types.get(kp_id).value
++                if progress.knowledge_types.get(kp_id)
++                else "",
++                "mastery": round(float(display_mastery(progress, kp) if kp else level), 6),
++                "mastered": bool(kp and is_mastered(progress, kp)),
++                "status": "mastered" if kp and is_mastered(progress, kp) else "learning",
++            }
++        )
++    return items[:limit]
++
++
++def _snapshot_reviews(progress: LearningProgress, as_of: int, limit: int) -> list[dict[str, Any]]:
++    tasks = [_task_payload(t, as_of=as_of) for t in progress.review_tasks]
++    return tasks[:limit]
++
++
++def _snapshot_handoffs(progress: LearningProgress, as_of: int, limit: int) -> list[dict[str, Any]]:
++    handoffs = []
++    for handoff in reversed(progress.handoffs):
++        if handoff.get("status") in ("abandoned", "expired"):
++            continue
++        payload = _handoff_payload(handoff)
++        if payload.get("status") == "open" and payload.get("expires_at") is not None:
++            if int(payload["expires_at"]) <= as_of:
++                payload["status"] = "expired"
++        handoffs.append(payload)
++        if len(handoffs) >= limit:
++            break
++    return handoffs
++
++
++def _snapshot_policy(progress: LearningProgress) -> dict[str, Any]:
++    best: dict[str, Any] | None = None
++    for record in progress.policies.values():
++        if best is None or int(record.get("version") or 1) > int(best.get("version") or 1):
++            best = record
++    if best is None:
++        best = _active_policy(progress, "default")
++    return {
++        "policy_id": best.get("policy_id") or "default",
++        "version": int(best.get("version") or 1),
++        "digest": str(best.get("digest") or ""),
++        "data": bounded_copy(best.get("data") or {}, 10),
++    }
++
++
++def _snapshot_lineage(progress: LearningProgress) -> dict[str, Any]:
++    return {
++        "review_task_ids": [str(t.get("task_id") or "") for t in progress.review_tasks if t.get("task_id")],
++        "event_sequences": [int(e.get("sequence") or 0) for e in progress.event_feed if e.get("sequence")],
++    }
++
++
++def build_snapshot_body(
++    progress: LearningProgress,
++    *,
++    as_of: int,
++    limit: int,
++    include_terminal: bool,
++) -> dict[str, Any]:
++    mastery = _snapshot_mastery(progress, min(limit, _SNAPSHOT_COLLECTION_LIMIT))
++    reviews = _snapshot_reviews(progress, as_of, min(limit, _SNAPSHOT_COLLECTION_LIMIT))
++    handoffs = _snapshot_handoffs(progress, as_of, min(limit, _SNAPSHOT_COLLECTION_LIMIT))
++    policy = _snapshot_policy(progress)
++    lineage = _snapshot_lineage(progress)
++    high_water = int(progress.event_feed[-1]["sequence"]) if progress.event_feed else 0
++    event_feed = progress.event_feed[-_SNAPSHOT_FEED_PROJECTION:]
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "as_of": int(as_of),
++        "snapshot_revision": 0,
++        "high_water_sequence": high_water,
++        "mastery": mastery,
++        "reviews": reviews,
++        "handoffs": handoffs,
++        "policy": policy,
++        "lineage": lineage,
++        "event_feed": bounded_copy(event_feed, _SNAPSHOT_FEED_PROJECTION),
++    }
++
++
++def canonical_snapshot_digest(body: dict[str, Any]) -> str:
++    """Deterministic digest over the bounded canonical snapshot projection."""
++    canonical = {
++        "schema_version": body.get("schema_version"),
++        "snapshot_revision": body.get("snapshot_revision"),
++        "high_water_sequence": body.get("high_water_sequence"),
++        "mastery": body.get("mastery", []),
++        "reviews": body.get("reviews", []),
++        "handoffs": body.get("handoffs", []),
++        "policy": body.get("policy", {}),
++        "lineage": body.get("lineage", {}),
++    }
++    return sha256_hex(stable_json(canonical))
++
++
++def _snapshot_seal_digest(body: dict[str, Any]) -> str:
++    seal = {
++        "canonical": canonical_snapshot_digest(body),
++        "event_feed": body.get("event_feed", []),
++        "covered": ["mastery", "reviews", "handoffs", "policy", "lineage", "event_feed"],
++    }
++    return sha256_hex(stable_json(seal))
++
++
++def _embedded_attestation(body: dict[str, Any], snapshot_digest: str) -> dict[str, Any]:
++    revision = int(body.get("snapshot_revision") or 0)
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "state": "verified",
++        "source": "mastery_learner_snapshot",
++        "snapshot_digest": snapshot_digest,
++        "canonical_digest": canonical_snapshot_digest(body),
++        "snapshot_revision": revision,
++        "high_water_sequence": int(body.get("high_water_sequence") or 0),
++        "policy_version": int((body.get("policy") or {}).get("version") or 1),
++        "covered": ["mastery", "reviews", "handoffs", "policy", "lineage", "event_feed"],
++        "proof": snapshot_digest,
++    }
++
++
++def invalidate_snapshot(progress: LearningProgress) -> None:
++    if progress.portfolio.get("body"):
++        progress.portfolio["invalidated"] = True
++
++
++def snapshot_payload(
++    progress: LearningProgress,
++    *,
++    as_of: int | None,
++    limit: Any,
++    include_terminal: bool,
++) -> tuple[dict[str, Any] | None, dict[str, Any]]:
++    resolved_limit = _validated_limit(limit, default=50)
++    if resolved_limit is None:
++        return None, {"error": "limit must be an integer in 1..100"}
++    as_of = as_of_time(as_of)
++    if progress.portfolio.get("body") and not progress.portfolio.get("invalidated"):
++        body = bounded_copy(progress.portfolio["body"], _SNAPSHOT_FEED_PROJECTION)
++        body["as_of"] = as_of
++        revision = int(progress.portfolio.get("revision") or 0)
++        snapshot_digest = str(progress.portfolio.get("digest") or "")
++        attestation = bounded_copy(progress.portfolio.get("attestation") or {}, 20)
++    else:
++        body = build_snapshot_body(
++            progress, as_of=as_of, limit=resolved_limit, include_terminal=include_terminal
++        )
++        prior_revision = progress.portfolio.get("revision")
++        revision = (int(prior_revision) if prior_revision is not None else -1) + 1
++        body["snapshot_revision"] = revision
++        snapshot_digest = _snapshot_seal_digest(body)
++        attestation = _embedded_attestation(body, snapshot_digest)
++        progress.portfolio = {
++            "revision": revision,
++            "digest": snapshot_digest,
++            "attestation": attestation,
++            "body": bounded_copy(body, _SNAPSHOT_FEED_PROJECTION),
++            "invalidated": False,
++        }
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "status": "ok",
++        "as_of": as_of,
++        "snapshot_revision": revision,
++        "high_water_sequence": int(body.get("high_water_sequence") or 0),
++        "digest": snapshot_digest,
++        "mastery": bounded_copy(body.get("mastery", []), _SNAPSHOT_COLLECTION_LIMIT),
++        "reviews": bounded_copy(body.get("reviews", []), _SNAPSHOT_COLLECTION_LIMIT),
++        "handoffs": bounded_copy(body.get("handoffs", []), _SNAPSHOT_COLLECTION_LIMIT),
++        "policy": bounded_copy(body.get("policy", {}), 10),
++        "lineage": bounded_copy(body.get("lineage", {}), 10),
++        "attestation": bounded_copy(attestation, 20),
++    }, {}
++
++
++def _snapshot_checkpoint_state(progress: LearningProgress) -> dict[str, Any]:
++    if progress.witness_entries:
++        head = progress.witness_entries[-1]
++        return {
++            "witness_root_digest": str(head.get("root_digest") or ""),
++            "witness_sequence": int(head.get("sequence") or 0),
++        }
++    return {}
++
++
++def snapshot_checkpoint(
++    progress: LearningProgress,
++    *,
++    subscriber_id: str,
++    through_revision: Any,
++    expected_checkpoint: Any,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(subscriber_id, str) or not subscriber_id.strip():
++        return "error", {"error": "subscriber_id must be a non-empty string"}
++    if not isinstance(through_revision, int) or isinstance(through_revision, bool) or through_revision < 0:
++        return "error", {"error": "through_revision must be a non-negative integer"}
++    if not isinstance(expected_checkpoint, int) or isinstance(expected_checkpoint, bool) or expected_checkpoint < 0:
++        return "error", {"error": "expected_checkpoint must be a non-negative integer"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    fingerprint = {
++        "op": "snapshot_checkpoint",
++        "subscriber_id": subscriber_id,
++        "through_revision": through_revision,
++        "expected_checkpoint": expected_checkpoint,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "snapshot_checkpoint", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    current = int((progress.snapshot_checkpoints.get(subscriber_id) or {}).get("checkpoint") or 0)
++    current_revision = int(progress.portfolio.get("revision") or 0) if progress.portfolio.get("body") else 0
++    if int(expected_checkpoint) != current:
++        return "error", {"error": "snapshot_checkpoint_conflict"}
++    if int(through_revision) > current_revision:
++        return "error", {"error": "snapshot_revision_out_of_range"}
++    if int(through_revision) < current:
++        return "error", {"error": "snapshot_revision_out_of_range"}
++    attestation = progress.portfolio.get("attestation") or {}
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "checkpointed",
++        "subscriber_id": subscriber_id,
++        "through_revision": int(through_revision),
++        "checkpoint": int(through_revision),
++        "snapshot_digest": str(progress.portfolio.get("digest") or ""),
++        "attestation_digest": str(attestation.get("canonical_digest") or ""),
++        "replayed": False,
++    }
++    response.update(_snapshot_checkpoint_state(progress))
++    progress.snapshot_checkpoints[subscriber_id] = {
++        "checkpoint": int(through_revision),
++        "event_id": event_id,
++    }
++    record_op(progress, event_id, "snapshot_checkpoint", fingerprint, response)
++    return "committed", response
++
++
++# ── snapshot provenance attestation / restore (Cycle 005) ──────────────────
++
++
++def _find_stored_attestation(
++    progress: LearningProgress,
++    *,
++    snapshot_revision: int,
++    snapshot_digest: str,
++    attestation_id: str | None = None,
++) -> dict[str, Any] | None:
++    attestations = progress.portfolio.get("attestations") or {}
++    if isinstance(attestations, dict):
++        for record in attestations.values():
++            if (
++                isinstance(record, dict)
++                and record.get("snapshot_revision") is not None
++                and int(record["snapshot_revision"]) == int(snapshot_revision)
++                and str(record.get("snapshot_digest") or "") == str(snapshot_digest)
++                and (
++                    not attestation_id
++                    or str(record.get("attestation_id") or "") == str(attestation_id)
++                )
++            ):
++                return record
++    embedded = progress.portfolio.get("attestation") or {}
++    if (
++        isinstance(embedded, dict)
++        and embedded.get("snapshot_revision") is not None
++        and int(embedded["snapshot_revision"]) == int(snapshot_revision)
++        and str(embedded.get("snapshot_digest") or "") == str(snapshot_digest)
++        and (
++            not attestation_id
++            or str(embedded.get("attestation_id") or "") == str(attestation_id)
++        )
++    ):
++        return embedded
++    return None
++
++
++def snapshot_attest(
++    progress: LearningProgress,
++    *,
++    snapshot_revision: Any,
++    snapshot_digest: Any,
++    high_water_sequence: Any,
++    policy_version: Any,
++    challenge: str,
++    attestation_id: str | None,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(snapshot_revision, int) or isinstance(snapshot_revision, bool) or snapshot_revision < 0:
++        return "error", {"error": "snapshot_revision must be a non-negative integer"}
++    if not isinstance(snapshot_digest, str) or not snapshot_digest.strip():
++        return "error", {"error": "snapshot_digest must be a non-empty string"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    attestation_id = str(attestation_id or "").strip() or None
++    fingerprint = {
++        "op": "snapshot_attest",
++        "snapshot_revision": snapshot_revision,
++        "snapshot_digest": snapshot_digest,
++        "high_water_sequence": high_water_sequence,
++        "policy_version": policy_version,
++        "challenge": challenge,
++        "attestation_id": attestation_id,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "snapshot_attest", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    body = progress.portfolio.get("body")
++    if not body:
++        return "error", {"error": "snapshot_not_found"}
++    current_revision = int(progress.portfolio.get("revision") or 0)
++    current_digest = str(progress.portfolio.get("digest") or "")
++    if int(snapshot_revision) != current_revision or str(snapshot_digest) != current_digest:
++        return "error", {"error": "snapshot_fork"}
++    canonical = canonical_snapshot_digest(body)
++    proof = sha256_hex(
++        stable_json(
++            {
++                "canonical": canonical,
++                "event_feed": body.get("event_feed", []),
++                "challenge": str(challenge or "")[:200],
++                "attestation_id": attestation_id or "",
++                "event_id": event_id,
++                "covered": ["mastery", "reviews", "handoffs", "policy", "lineage", "event_feed"],
++            }
++        )
++    )
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "state": "verified",
++        "status": "verified",
++        "attestation_id": attestation_id or ("att-" + sha256_hex(event_id)[:24]),
++        "snapshot_revision": current_revision,
++        "snapshot_digest": current_digest,
++        "high_water_sequence": int(body.get("high_water_sequence") or 0),
++        "policy_version": int((body.get("policy") or {}).get("version") or 1),
++        "covered": ["mastery", "reviews", "handoffs", "policy", "lineage", "event_feed"],
++        "canonical_digest": canonical,
++        "proof": proof,
++        "replayed": False,
++    }
++    progress.portfolio.setdefault("attestations", {})[response["attestation_id"]] = {
++        "snapshot_revision": current_revision,
++        "snapshot_digest": current_digest,
++        "canonical_digest": canonical,
++        "proof": proof,
++        "challenge": str(challenge or "")[:200],
++        "attestation_id": response["attestation_id"],
++    }
++    _bounded_dict(progress.portfolio["attestations"], 200)
++    record_op(progress, event_id, "snapshot_attest", fingerprint, response)
++    return "committed", response
++
++
++def snapshot_restore(
++    progress: LearningProgress,
++    *,
++    snapshot_revision: Any,
++    snapshot_digest: Any,
++    high_water_sequence: Any,
++    policy_version: Any,
++    challenge: str,
++    attestation_id: str | None,
++    attestation_ref: str | None,
++    expected_revision: Any,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(snapshot_revision, int) or isinstance(snapshot_revision, bool) or snapshot_revision < 0:
++        return "error", {"error": "snapshot_revision must be a non-negative integer"}
++    if not isinstance(snapshot_digest, str) or not snapshot_digest.strip():
++        return "error", {"error": "snapshot_digest must be a non-empty string"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    fingerprint = {
++        "op": "snapshot_restore",
++        "snapshot_revision": snapshot_revision,
++        "snapshot_digest": snapshot_digest,
++        "high_water_sequence": high_water_sequence,
++        "policy_version": policy_version,
++        "challenge": challenge,
++        "attestation_id": attestation_id,
++        "attestation_ref": attestation_ref,
++        "expected_revision": expected_revision,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "snapshot_restore", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    body = progress.portfolio.get("body")
++    if not body:
++        return "error", {"error": "snapshot_not_found"}
++    current_revision = int(progress.portfolio.get("revision") or 0)
++    current_digest = str(progress.portfolio.get("digest") or "")
++    if expected_revision is not None and (
++        not isinstance(expected_revision, int)
++        or isinstance(expected_revision, bool)
++        or int(expected_revision) != current_revision
++    ):
++        return "error", {"error": "stale_attestation"}
++    if int(snapshot_revision) != current_revision or str(snapshot_digest) != current_digest:
++        return "error", {"error": "snapshot_fork"}
++    record = _find_stored_attestation(
++        progress,
++        snapshot_revision=int(snapshot_revision),
++        snapshot_digest=str(snapshot_digest),
++        attestation_id=str(attestation_id or "").strip() or None,
++    )
++    if record is None:
++        return "error", {"error": "attestation_mismatch"}
++    if attestation_id and str(attestation_id) not in (
++        str(record.get("attestation_id") or ""),
++    ):
++        return "error", {"error": "attestation_mismatch"}
++    canonical = canonical_snapshot_digest(body)
++    if str(record.get("canonical_digest") or "") != canonical:
++        return "error", {"error": "proof_invalid"}
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "status": "restored",
++        "state": "verified",
++        "snapshot_revision": current_revision,
++        "snapshot_digest": current_digest,
++        "high_water_sequence": int(body.get("high_water_sequence") or 0),
++        "policy_version": int((body.get("policy") or {}).get("version") or 1),
++        "proof": str(record.get("proof") or ""),
++        "replayed": False,
++    }
++    record_op(progress, event_id, "snapshot_restore", fingerprint, response)
++    return "committed", response
++
++
++# ── append-only snapshot witness ledger (Cycle 006) ────────────────────────
++
++
++def _witness_leaf_body(
++    *,
++    path_id: str,
++    sequence: int,
++    snapshot_digest: str,
++    attestation_digest: str,
++    challenge: str,
++    event_id: str,
++    witness_id: str,
++    previous_root_digest: str,
++) -> dict[str, Any]:
++    return {
++        "path_id": str(path_id or "")[:200],
++        "sequence": int(sequence),
++        "snapshot_digest": str(snapshot_digest or "")[:300],
++        "attestation_digest": str(attestation_digest or "")[:300],
++        "challenge": str(challenge or "")[:200],
++        "event_id": str(event_id or "")[:200],
++        "witness_id": str(witness_id or "")[:200],
++        "previous_root_digest": str(previous_root_digest or "")[:300],
++    }
++
++
++def _witness_leaf_digest(leaf_body: dict[str, Any]) -> str:
++    return sha256_hex(stable_json(leaf_body))
++
++
++def _witness_root(leaves: list[dict[str, Any]]) -> str:
++    if not leaves:
++        return ""
++    current = str(leaves[0].get("leaf_digest") or "")
++    for leaf in leaves[1:]:
++        current = sha256_hex(current + str(leaf.get("leaf_digest") or ""))
++    return current
++
++
++def snapshot_witness(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    snapshot_revision: Any,
++    snapshot_digest: Any,
++    attestation_id: str | None,
++    attestation_digest: Any,
++    challenge: str,
++    witness_id: str | None,
++    expected_sequence: Any,
++    previous_root_digest: Any,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    if not isinstance(snapshot_revision, int) or isinstance(snapshot_revision, bool) or snapshot_revision < 0:
++        return "error", {"error": "snapshot_revision must be a non-negative integer"}
++    if not isinstance(snapshot_digest, str) or not snapshot_digest.strip():
++        return "error", {"error": "snapshot_digest must be a non-empty string"}
++    if not isinstance(attestation_digest, str) or not attestation_digest.strip():
++        return "error", {"error": "attestation_digest must be a non-empty string"}
++    if not isinstance(event_id, str) or not event_id.strip():
++        return "error", {"error": "event_id must be a non-empty string"}
++    if not isinstance(expected_sequence, int) or isinstance(expected_sequence, bool) or expected_sequence < 0:
++        return "error", {"error": "expected_sequence must be a non-negative integer"}
++    witness_id = str(witness_id or "").strip() or ("witness-" + sha256_hex(event_id)[:24])
++    fingerprint = {
++        "op": "snapshot_witness",
++        "snapshot_revision": snapshot_revision,
++        "snapshot_digest": snapshot_digest,
++        "attestation_id": attestation_id,
++        "attestation_digest": attestation_digest,
++        "challenge": challenge,
++        "witness_id": witness_id,
++        "expected_sequence": expected_sequence,
++        "previous_root_digest": previous_root_digest,
++        "event_id": event_id,
++    }
++    outcome, stored = _begin_op(progress, event_id, "snapshot_witness", fingerprint)
++    if outcome == "replayed":
++        return "replayed", stored
++    if outcome == "conflict":
++        return "error", {"error": "event_conflict"}
++    body = progress.portfolio.get("body")
++    if not body:
++        return "error", {"error": "snapshot_not_found"}
++    current_revision = int(progress.portfolio.get("revision") or 0)
++    current_digest = str(progress.portfolio.get("digest") or "")
++    if int(snapshot_revision) != current_revision or str(snapshot_digest) != current_digest:
++        return "error", {"error": "attestation_mismatch"}
++    record = _find_stored_attestation(
++        progress,
++        snapshot_revision=int(snapshot_revision),
++        snapshot_digest=str(snapshot_digest),
++        attestation_id=str(attestation_id or "").strip() or None,
++    )
++    if record is None:
++        return "error", {"error": "attestation_mismatch"}
++    if attestation_id and str(attestation_id) not in (str(record.get("attestation_id") or ""),):
++        return "error", {"error": "attestation_mismatch"}
++    canonical = canonical_snapshot_digest(body)
++    if str(record.get("canonical_digest") or "") != canonical:
++        return "error", {"error": "attestation_mismatch"}
++    if str(attestation_digest or "") != str(record.get("canonical_digest") or ""):
++        return "error", {"error": "attestation_mismatch"}
++    chain = progress.witness_entries
++    if int(expected_sequence) != len(chain):
++        return "error", {"error": "stale_witness_head"}
++    previous_root = _witness_root(chain)
++    if previous_root_digest not in (None, ""):
++        if str(previous_root_digest) != previous_root:
++            return "error", {"error": "stale_witness_head"}
++    for entry in chain:
++        if entry.get("witness_id") == witness_id:
++            return "error", {"error": "event_conflict"}
++    sequence = len(chain) + 1
++    if sequence > _WITNESS_LIMIT:
++        return "error", {"error": "witness_mismatch"}
++    leaf_body = _witness_leaf_body(
++        path_id=path_id,
++        sequence=sequence,
++        snapshot_digest=str(snapshot_digest),
++        attestation_digest=str(attestation_digest),
++        challenge=str(challenge or "")[:200],
++        event_id=event_id,
++        witness_id=witness_id,
++        previous_root_digest=previous_root,
++    )
++    leaf_digest = _witness_leaf_digest(leaf_body)
++    root_digest = sha256_hex(previous_root + leaf_digest) if previous_root else leaf_digest
++    inclusion_proof = [str(entry.get("leaf_digest") or "") for entry in chain]
++    consistency_proof = [str(chain[-1].get("root_digest") or "")] if chain else []
++    entry = {
++        "witness_id": witness_id,
++        "sequence": sequence,
++        "snapshot_digest": str(snapshot_digest),
++        "attestation_digest": str(attestation_digest),
++        "attestation_id": str(attestation_id or "")[:200] if attestation_id else str(record.get("attestation_id") or ""),
++        "challenge": str(challenge or "")[:200],
++        "event_id": event_id,
++        "previous_root_digest": previous_root,
++        "leaf_digest": leaf_digest,
++        "root_digest": root_digest,
++        "inclusion_proof": inclusion_proof,
++        "consistency_proof": consistency_proof,
++        "leaf_body": leaf_body,
++    }
++    chain.append(entry)
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "state": "witnessed",
++        "status": "witnessed",
++        "witness_id": witness_id,
++        "witness_sequence": sequence,
++        "snapshot_digest": str(snapshot_digest),
++        "attestation_digest": str(attestation_digest),
++        "previous_root_digest": previous_root,
++        "leaf_digest": leaf_digest,
++        "root_digest": root_digest,
++        "inclusion_proof": bounded_copy(inclusion_proof, 100),
++        "consistency_proof": bounded_copy(consistency_proof, 100),
++        "replayed": False,
++    }
++    record_op(progress, event_id, "snapshot_witness", fingerprint, response)
++    return "committed", response
++
++
++def _find_witness(progress: LearningProgress, witness_id: str | None, sequence: int | None) -> dict[str, Any] | None:
++    for entry in reversed(progress.witness_entries):
++        if witness_id and entry.get("witness_id") == witness_id:
++            return entry
++        if sequence is not None and int(entry.get("sequence") or 0) == int(sequence):
++            return entry
++        if not witness_id and sequence is None:
++            return entry
++    return None
++
++
++def snapshot_verify(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    witness_id: str | None,
++    witness_sequence: Any,
++    snapshot_digest: Any,
++    attestation_digest: Any,
++    leaf_digest: Any,
++    root_digest: Any,
++    previous_root_digest: Any,
++    inclusion_proof: Any,
++    consistency_proof: Any,
++    event_id: str,
++    as_of: int | None,
++) -> tuple[str, dict[str, Any]]:
++    # Verification is intentionally read-only.  Older revisions recorded an
++    # idempotency entry for a successful verification, which meant that a
++    # supposedly read-only provenance check changed the persisted learner
++    # record.  ``event_id`` remains accepted for wire compatibility but is not
++    # persisted or included in any proof.
++    sequence = witness_sequence if isinstance(witness_sequence, int) and not isinstance(witness_sequence, bool) else None
++    entry = _find_witness(progress, witness_id, sequence)
++    if entry is None:
++        return "error", {"error": "witness_mismatch"}
++    chain = progress.witness_entries[: int(entry.get("sequence") or 0)]
++    recomputed_leaf = _witness_leaf_digest(entry.get("leaf_body") or {})
++    recomputed_root = _witness_root(chain)
++    if str(entry.get("leaf_digest") or "") != str(recomputed_leaf):
++        return "error", {"error": "invalid_inclusion_proof"}
++    if str(leaf_digest or "") != str(entry.get("leaf_digest") or ""):
++        return "error", {"error": "invalid_inclusion_proof"}
++    if str(root_digest or "") != str(entry.get("root_digest") or "") or str(entry.get("root_digest") or "") != str(recomputed_root):
++        return "error", {"error": "witness_mismatch"}
++    if str(previous_root_digest or "") != str(entry.get("previous_root_digest") or ""):
++        return "error", {"error": "stale_witness_head"}
++    if str(snapshot_digest or "") != str(entry.get("snapshot_digest") or ""):
++        return "error", {"error": "attestation_mismatch"}
++    if str(attestation_digest or "") != str(entry.get("attestation_digest") or ""):
++        return "error", {"error": "attestation_mismatch"}
++    stored_inclusion = entry.get("inclusion_proof") or []
++    stored_consistency = entry.get("consistency_proof") or []
++    if not isinstance(inclusion_proof, list) or list(inclusion_proof) != stored_inclusion:
++        return "error", {"error": "invalid_inclusion_proof"}
++    if not isinstance(consistency_proof, list) or list(consistency_proof) != stored_consistency:
++        return "error", {"error": "invalid_consistency_proof"}
++    response = {
++        "schema_version": SCHEMA_VERSION,
++        "state": "verified",
++        "status": "verified",
++        "witness_id": entry.get("witness_id"),
++        "witness_sequence": int(entry.get("sequence") or 0),
++        "snapshot_digest": entry.get("snapshot_digest"),
++        "attestation_digest": entry.get("attestation_digest"),
++        "leaf_digest": entry.get("leaf_digest"),
++        "root_digest": entry.get("root_digest"),
++        "previous_root_digest": entry.get("previous_root_digest"),
++        "inclusion_proof": bounded_copy(stored_inclusion, 100),
++        "consistency_proof": bounded_copy(stored_consistency, 100),
++        "inclusion_valid": True,
++        "consistency_valid": True,
++        "read_only": True,
++    }
++    return "read_only", response
++
++
++def _chain_audit_error(
++    error: str,
++    *,
++    sequence: int,
++    current_sequence: int,
++    current_root_digest: str,
++    detail: str,
++) -> tuple[None, dict[str, Any]]:
++    """Return a bounded, non-secret failure record for a read-only audit."""
++    return None, {
++        "schema_version": SCHEMA_VERSION,
++        "status": "rejected",
++        "state": "unverified",
++        "error": error,
++        "detail": str(detail or "")[:200],
++        "first_invalid_sequence": int(sequence),
++        "current_sequence": int(current_sequence),
++        "current_root_digest": str(current_root_digest or ""),
++        "read_only": True,
++    }
++
++
++def snapshot_chain_audit(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    expected_sequence: Any = None,
++    expected_root_digest: Any = None,
++    limit: Any = 100,
++    as_of: int | None = None,
++) -> tuple[dict[str, Any] | None, dict[str, Any]]:
++    """Audit the complete persisted witness chain without mutating it.
++
++    Every stored leaf, duplicate binding, previous-root link, inclusion proof,
++    consistency proof, leaf digest, and accumulated root is recomputed from
++    persisted state.  The caller may fence the read with the head it already
++    observed; a stale or changed head is rejected rather than silently
++    replaced.  Only the returned entry summaries are limited -- the full
++    bounded chain is always checked.
++    """
++    resolved_limit = _validated_limit(limit, default=100)
++    if resolved_limit is None:
++        return None, {"error": "limit must be an integer in 1..100", "read_only": True}
++    if expected_sequence is not None and (
++        not isinstance(expected_sequence, int)
++        or isinstance(expected_sequence, bool)
++        or expected_sequence < 0
++    ):
++        return None, {
++            "error": "expected_sequence must be a non-negative integer",
++            "read_only": True,
++        }
++    if expected_root_digest is not None and not isinstance(expected_root_digest, str):
++        return None, {"error": "expected_root_digest must be a string", "read_only": True}
++
++    chain = progress.witness_entries
++    current_sequence = len(chain)
++    stored_head_root = str(chain[-1].get("root_digest") or "") if chain else ""
++    if expected_sequence is not None and expected_sequence != current_sequence:
++        return _chain_audit_error(
++            "stale_witness_head",
++            sequence=current_sequence,
++            current_sequence=current_sequence,
++            current_root_digest=stored_head_root,
++            detail="expected sequence does not match the persisted head",
++        )
++    if expected_root_digest is not None and expected_root_digest != stored_head_root:
++        return _chain_audit_error(
++            "stale_witness_head",
++            sequence=current_sequence,
++            current_sequence=current_sequence,
++            current_root_digest=stored_head_root,
++            detail="expected root does not match the persisted head",
++        )
++
++    prior_leaf_digests: list[str] = []
++    previous_root = ""
++    seen_witness_ids: set[str] = set()
++    seen_event_ids: set[str] = set()
++    summaries: list[dict[str, Any]] = []
++    for expected_index, entry in enumerate(chain, start=1):
++        if not isinstance(entry, dict):
++            return _chain_audit_error(
++                "witness_chain_corrupt",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="entry is not an object",
++            )
++        body = entry.get("leaf_body")
++        if not isinstance(body, dict):
++            return _chain_audit_error(
++                "witness_chain_corrupt",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="leaf body is missing",
++            )
++        if int(entry.get("sequence") or 0) != expected_index or int(body.get("sequence") or 0) != expected_index:
++            return _chain_audit_error(
++                "witness_chain_fork",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="witness sequences are not contiguous",
++            )
++        if str(body.get("path_id") or "") != str(path_id or ""):
++            return _chain_audit_error(
++                "foreign_witness_path",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="leaf belongs to a different mastery path",
++            )
++
++        witness_id = str(entry.get("witness_id") or "")
++        event_id = str(entry.get("event_id") or "")
++        if not witness_id or witness_id in seen_witness_ids or not event_id or event_id in seen_event_ids:
++            return _chain_audit_error(
++                "witness_chain_fork",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="duplicate or empty witness/event identity",
++            )
++        seen_witness_ids.add(witness_id)
++        seen_event_ids.add(event_id)
++
++        duplicate_fields = (
++            "witness_id",
++            "snapshot_digest",
++            "attestation_digest",
++            "challenge",
++            "event_id",
++            "previous_root_digest",
++        )
++        if any(str(body.get(name) or "") != str(entry.get(name) or "") for name in duplicate_fields):
++            return _chain_audit_error(
++                "witness_chain_corrupt",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="leaf body does not match its stored bindings",
++            )
++        if str(entry.get("previous_root_digest") or "") != previous_root:
++            return _chain_audit_error(
++                "witness_chain_fork",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="previous-root link does not match the audited prefix",
++            )
++
++        leaf_digest = _witness_leaf_digest(body)
++        if str(entry.get("leaf_digest") or "") != leaf_digest:
++            return _chain_audit_error(
++                "witness_chain_corrupt",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="leaf digest mismatch",
++            )
++        root_digest = sha256_hex(previous_root + leaf_digest) if previous_root else leaf_digest
++        if str(entry.get("root_digest") or "") != root_digest:
++            return _chain_audit_error(
++                "witness_chain_corrupt",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="root digest mismatch",
++            )
++        if entry.get("inclusion_proof") != prior_leaf_digests:
++            return _chain_audit_error(
++                "invalid_inclusion_proof",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="stored inclusion proof does not match the audited prefix",
++            )
++        expected_consistency = [previous_root] if previous_root else []
++        if entry.get("consistency_proof") != expected_consistency:
++            return _chain_audit_error(
++                "invalid_consistency_proof",
++                sequence=expected_index,
++                current_sequence=current_sequence,
++                current_root_digest=stored_head_root,
++                detail="stored consistency proof does not match the audited prefix",
++            )
++
++        summaries.append(
++            {
++                "witness_id": witness_id,
++                "witness_sequence": expected_index,
++                "snapshot_digest": str(entry.get("snapshot_digest") or ""),
++                "attestation_digest": str(entry.get("attestation_digest") or ""),
++                "leaf_digest": leaf_digest,
++                "previous_root_digest": previous_root,
++                "root_digest": root_digest,
++            }
++        )
++        prior_leaf_digests.append(leaf_digest)
++        previous_root = root_digest
++
++    # Re-check the caller's root after recomputation.  This distinguishes a
++    # self-consistent stored value from the actual audited head.
++    if expected_root_digest is not None and expected_root_digest != previous_root:
++        return _chain_audit_error(
++            "stale_witness_head",
++            sequence=current_sequence,
++            current_sequence=current_sequence,
++            current_root_digest=previous_root,
++            detail="expected root changed during full-chain verification",
++        )
++    head = summaries[-1] if summaries else None
++    return {
++        "schema_version": SCHEMA_VERSION,
++        "status": "verified",
++        "state": "verified",
++        "path_id": str(path_id or ""),
++        "as_of": as_of_time(as_of),
++        "witness_count": current_sequence,
++        "witness_sequence": current_sequence,
++        "root_digest": previous_root,
++        "head": bounded_copy(head, 20) if head else None,
++        "entries": bounded_copy(summaries[-resolved_limit:], resolved_limit),
++        "entries_truncated": len(summaries) > resolved_limit,
++        "chain_valid": True,
++        "head_matches": True,
++        "read_only": True,
++    }, {}
++
++
++# ── adaptive evidence processing (called from mastery_grade) ───────────────
++
++
++def process_adaptive_evidence(
++    progress: LearningProgress,
++    *,
++    path_id: str,
++    session_id: str,
++    event_id: str,
++    topic_id: str,
++    question_id: str,
++    answer: str,
++    is_correct: bool,
++    observed_at: int,
++    context: dict[str, Any],
++) -> tuple[dict[str, Any], bool]:
++    """Update the adaptive session for one graded answer.
++
++    Returns ``(adaptive_output, mutated)``.  The caller persists the progress
++    when ``mutated`` is True.  Exact event replays return the stored output
++    without mutating; conflicts fail without mutating.
++    """
++    session = progress.adaptive_state.get(topic_id)
++    fingerprint = {
++        "op": "adaptive_evidence",
++        "event_id": event_id,
++        "topic_id": topic_id,
++        "question_id": question_id,
++        "answer": str(answer or "")[:200],
++        "is_correct": bool(is_correct),
++        "observed_at": int(observed_at),
++        "session_id": str(session_id or "")[:200],
++    }
++    stored = peek_record(progress, event_id, "adaptive_evidence")
++    if stored is not None:
++        if record_op(progress, event_id, "adaptive_evidence", fingerprint, {})[0] == "conflict":
++            return {"error": "event_conflict"}, False
++        return dict(stored), False
++    if session is None:
++        if is_correct:
++            # Benign path: no persistent diagnosis, no events, no remediation.
++            virtual = _session_from_context(context, session_id=session_id)
++            virtual["bank"] = _bank_from_context(context)
++            virtual["evidence"] = [
++                {
++                    "event_id": event_id,
++                    "session_id": session_id,
++                    "question_id": question_id,
++                    "answer": str(answer or "")[:500],
++                    "is_correct": bool(is_correct),
++                    "observed_at": int(observed_at),
++                    "source": "adaptive_quiz",
++                }
++            ]
++            outcome = _match_outcome(virtual, question_id, answer, is_correct)
++            if outcome is None:
++                outcome = _conservative_outcome(virtual)
++            update_beliefs(virtual["hypotheses"], outcome.get("likelihoods") or {}, 0.1)
++            selected = select_next_question(virtual)
++            output = _build_adaptive_output(virtual, action="observe", selected_question_id=selected, event_id=event_id)
++            record_op(progress, event_id, "adaptive_evidence", fingerprint, output)
++            return output, False
++        session = _session_from_context(context, session_id=session_id)
++        session["bank"] = _bank_from_context(context)
++        progress.adaptive_state[topic_id] = session
++    else:
++        bank = _bank_from_context(context)
++        if bank:
++            session["bank"] = bank
++        session["catalog"] = _catalog_from_context(context)
++    session["last_session_id"] = str(session_id or "")[:200]
++    evidence_item = {
++        "event_id": event_id,
++        "session_id": session_id,
++        "question_id": question_id,
++        "answer": str(answer or "")[:500],
++        "is_correct": bool(is_correct),
++        "observed_at": int(observed_at),
++        "source": "adaptive_quiz",
++    }
++    session.setdefault("evidence", []).append(evidence_item)
++    if len(session["evidence"]) > _EVIDENCE_LIMIT:
++        session["evidence"] = session["evidence"][-_EVIDENCE_LIMIT:]
++    session.setdefault("used_questions", []).append(question_id)
++    entry = _find_bank_entry(session, question_id)
++    if entry is not None:
++        session["budget_spent"] = int(session.get("budget_spent") or 0) + int(entry.get("cost") or 0)
++    outcome = _match_outcome(session, question_id, answer, is_correct)
++    if outcome is None:
++        outcome = _conservative_outcome(session)
++    update_beliefs(session["hypotheses"], outcome.get("likelihoods") or {}, 0.1)
++    append_event(
++        progress,
++        event_type="adaptive_evidence_recorded",
++        topic_id=topic_id,
++        source_event_id=event_id,
++        occurred_at=int(observed_at),
++        aggregate_kind="adaptive_session",
++        aggregate_id=topic_id,
++        aggregate_revision=len(session["evidence"]),
++        data={
++            "event_id": event_id,
++            "question_id": question_id,
++            "is_correct": bool(is_correct),
++            "observed_at": int(observed_at),
++        },
++    )
++    invalidate_snapshot(progress)
++    action = "diagnose"
++    selected = select_next_question(session)
++    top = _remediable(session)
++    evidence_count = len(session["evidence"])
++    if (
++        not session.get("remediated")
++        and top is not None
++        and evidence_count >= 2
++        and (
++            float(top.get("confidence") or 0.0) >= float(session.get("diagnosis_threshold") or 0.0)
++            or selected is None
++        )
++    ):
++        diagnosis_type = str(top.get("diagnosis_type") or "").strip()
++        catalog = session.get("catalog") or {}
++        remediation = catalog.get(diagnosis_type) or {
++            "strategy": "contrastive_examples",
++            "content": "",
++        }
++        session["remediation"] = bounded_copy(remediation, 5)
++        session["retest"] = _retest_from_bank(session)
++        task = create_review_task(
++            progress,
++            path_id=path_id,
++            session=session,
++            source_event_id=event_id,
++            occurred_at=int(observed_at),
++        )
++        if task is not None:
++            session["review_task_id"] = task.get("task_id")
++        delivery = _create_delivery(
++            progress,
++            path_id=path_id,
++            session=session,
++            task=task,
++            source_event_id=event_id,
++            occurred_at=int(observed_at),
++        )
++        session["delivery_id"] = delivery.get("delivery_id")
++        session["remediated"] = True
++        for hypothesis in session["hypotheses"]:
++            hypothesis["status"] = "candidate"
++        top["status"] = "active"
++        action = "remediate"
++        selected = None
++    else:
++        retest_result = apply_retest_outcome(
++            progress,
++            path_id=path_id,
++            session=session,
++            question_id=question_id,
++            is_correct=is_correct,
++            observed_at=int(observed_at),
++            source_event_id=event_id,
++        )
++        if retest_result is not None:
++            action = "retest_correct" if retest_result["outcome"] == "completed" else "retest_failed"
++        for hypothesis in session["hypotheses"]:
++            hypothesis["status"] = "active" if (session.get("remediated") and hypothesis.get("id") == top_hypothesis_id(session)) else "candidate"
++    output = _build_adaptive_output(session, action=action, selected_question_id=selected, event_id=event_id)
++    record_op(progress, event_id, "adaptive_evidence", fingerprint, output)
++    return output, True
++
++
++def top_hypothesis_id(session: dict[str, Any]) -> str:
++    hypotheses = session.get("hypotheses") or []
++    if not hypotheses:
++        return ""
++    return max(hypotheses, key=lambda h: float(h.get("confidence") or 0.0)).get("id") or ""
++
++
++# ── production redo integration ────────────────────────────────────────────
++
++
++def perform_redo(progress: LearningProgress, *, path_id: str, reason: str = "production redo") -> None:
++    as_of = int(time.time())
++    for topic_id in list(progress.adaptive_state.keys()):
++        session = progress.adaptive_state.get(topic_id)
++        for task in progress.review_tasks:
++            if task.get("topic_id") == topic_id and task.get("state") not in ("completed", "cancelled"):
++                _cancel_task(progress, task, path_id=path_id, reason=reason, occurred_at=as_of, source_event_id=f"redo:{path_id}")
++        for delivery in progress.deliveries:
++            if delivery.get("topic_id") == topic_id and delivery.get("status") in ("open", "claimed"):
++                delivery["status"] = "cancelled"
++                delivery["cancelled_at"] = int(as_of)
++                delivery["cancel_reason"] = str(reason or "")[:200]
++        if session is not None:
++            append_event(
++                progress,
++                event_type="adaptive_reset",
++                topic_id=topic_id,
++                source_event_id=f"redo:{path_id}",
++                occurred_at=as_of,
++                aggregate_kind="adaptive_session",
++                aggregate_id=topic_id,
++                aggregate_revision=int(session.get("reset_count") or 1) + 1,
++                data={"topic_id": topic_id, "reason": str(reason or "")[:200], "reset_at": int(as_of)},
++            )
++        progress.adaptive_state.pop(topic_id, None)
++    if progress.event_feed or progress.review_tasks:
++        invalidate_snapshot(progress)
++
++
++__all__ = [
++    "SCHEMA_VERSION",
++    "stable_json",
++    "sha256_hex",
++    "digest",
++    "bounded_copy",
++    "as_of_time",
++    "validate_review_policy",
++    "validate_adaptive_context",
++    "validate_policy_data",
++    "learning_events_payload",
++    "learning_checkpoint",
++    "review_plan_payload",
++    "review_reschedule",
++    "remediation_status_payload",
++    "remediation_reset",
++    "remediation_claim",
++    "remediation_ack",
++    "policy_status_payload",
++    "policy_publish",
++    "handoff_create",
++    "handoff_list_payload",
++    "handoff_resume",
++    "handoff_abandon",
++    "snapshot_payload",
++    "snapshot_checkpoint",
++    "snapshot_attest",
++    "snapshot_restore",
++    "snapshot_witness",
++    "snapshot_verify",
++    "snapshot_chain_audit",
++    "process_adaptive_evidence",
++    "invalidate_snapshot",
++    "perform_redo",
++]
+diff --git a/deeptutor/learning/models.py b/deeptutor/learning/models.py
+index ed5c0af6e6759bffc3663c1a0475987994ac6ee8..3dd0439670a2f6cb85c1bfdce66e608a77aaf104 100644
+--- a/deeptutor/learning/models.py
++++ b/deeptutor/learning/models.py
+@@ -180,6 +180,9 @@ class PendingQuestion(BaseModel):
+     expected_answer: str = ""
+     options: list[str] = Field(default_factory=list)
+     created_at: float = Field(default_factory=time.time)
++    # Set when the question was registered with a Cycle 002 ``adaptive_context``.
++    # The adaptive session itself lives in ``LearningProgress.adaptive_state``.
++    adaptive_topic_id: str = ""
+ 
+ 
+ class LearningProgress(BaseModel):
+@@ -211,6 +214,30 @@ class LearningProgress(BaseModel):
+     version: int = 0
+     created_at: float = Field(default_factory=time.time)
+     updated_at: float = Field(default_factory=time.time)
++    # ── Persistent remediation / portfolio extension state (Cycle 002+) ──
++    # Dict/list backed so legacy records keep loading conservatively and every
++    # projection stays bounded. ``adaptive_state`` is keyed by topic id.
++    adaptive_state: dict[str, Any] = Field(default_factory=dict)
++    # Ordered remediation delivery items (immutable, path-local).
++    deliveries: list[dict[str, Any]] = Field(default_factory=list)
++    # Review-plan tasks (path-local, stable opaque ids).
++    review_tasks: list[dict[str, Any]] = Field(default_factory=list)
++    # Immutable path-local learning event feed (strictly increasing sequence).
++    event_feed: list[dict[str, Any]] = Field(default_factory=list)
++    # event-feed subscriber checkpoints: subscriber_id -> through sequence.
++    event_checkpoints: dict[str, int] = Field(default_factory=dict)
++    # Session handoffs (Cycle 003), newest last.
++    handoffs: list[dict[str, Any]] = Field(default_factory=list)
++    # Policy registry (Cycle 003): policy_id -> record.
++    policies: dict[str, Any] = Field(default_factory=dict)
++    # Frozen learner portfolio snapshot (Cycle 004+) + attestation state.
++    portfolio: dict[str, Any] = Field(default_factory=dict)
++    # Snapshot-checkpoint subscribers (independent of event checkpoints).
++    snapshot_checkpoints: dict[str, Any] = Field(default_factory=dict)
++    # Idempotency records keyed by mutation event id (bounded, path-local).
++    op_records: dict[str, Any] = Field(default_factory=dict)
++    # Append-only snapshot witness ledger (Cycle 006), newest last.
++    witness_entries: list[dict[str, Any]] = Field(default_factory=list)
+ 
+ 
+ __all__ = [
+diff --git a/deeptutor/learning/tests/test_snapshot_chain_audit.py b/deeptutor/learning/tests/test_snapshot_chain_audit.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..c2355b7dfd24ab3e27a6037a8d00e5c75247b151
+--- /dev/null
++++ b/deeptutor/learning/tests/test_snapshot_chain_audit.py
+@@ -0,0 +1,139 @@
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++import unittest
++
++from deeptutor.learning.adaptive import (
++    snapshot_attest,
++    snapshot_chain_audit,
++    snapshot_payload,
++    snapshot_verify,
++    snapshot_witness,
++)
++from deeptutor.learning.models import LearningProgress
++
++
++def _state(progress: LearningProgress) -> str:
++    return json.dumps(progress.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
++
++
++def _witnessed_progress() -> tuple[LearningProgress, dict[str, object], dict[str, object]]:
++    progress = LearningProgress(book_id="path-a")
++    snapshot, error = snapshot_payload(progress, as_of=100, limit=50, include_terminal=True)
++    assert snapshot is not None and not error
++
++    attestations: list[dict[str, object]] = []
++    witnesses: list[dict[str, object]] = []
++    previous_root = ""
++    for index in (1, 2):
++        outcome, attestation = snapshot_attest(
++            progress,
++            snapshot_revision=snapshot["snapshot_revision"],
++            snapshot_digest=snapshot["digest"],
++            high_water_sequence=snapshot["high_water_sequence"],
++            policy_version=snapshot["policy"]["version"],
++            challenge=f"challenge-{index}",
++            attestation_id=f"attestation-{index}",
++            event_id=f"attest-event-{index}",
++            as_of=100 + index,
++        )
++        assert outcome == "committed"
++        outcome, witness = snapshot_witness(
++            progress,
++            path_id="path-a",
++            snapshot_revision=snapshot["snapshot_revision"],
++            snapshot_digest=snapshot["digest"],
++            attestation_id=attestation["attestation_id"],
++            attestation_digest=attestation["canonical_digest"],
++            challenge=f"challenge-{index}",
++            witness_id=f"witness-{index}",
++            expected_sequence=index - 1,
++            previous_root_digest=previous_root,
++            event_id=f"witness-event-{index}",
++            as_of=100 + index,
++        )
++        assert outcome == "committed"
++        previous_root = str(witness["root_digest"])
++        attestations.append(attestation)
++        witnesses.append(witness)
++    return progress, witnesses[0], witnesses[1]
++
++
++class SnapshotChainAuditTests(unittest.TestCase):
++    def test_full_chain_audit_and_leaf_verify_are_read_only(self) -> None:
++        progress, _first, second = _witnessed_progress()
++        before = _state(progress)
++
++        audit, error = snapshot_chain_audit(
++            progress,
++            path_id="path-a",
++            expected_sequence=2,
++            expected_root_digest=second["root_digest"],
++            limit=1,
++            as_of=200,
++        )
++        self.assertFalse(error)
++        self.assertIsNotNone(audit)
++        assert audit is not None
++        self.assertTrue(audit["chain_valid"])
++        self.assertTrue(audit["read_only"])
++        self.assertEqual(audit["witness_count"], 2)
++        self.assertEqual(len(audit["entries"]), 1)
++        self.assertTrue(audit["entries_truncated"])
++        self.assertEqual(_state(progress), before)
++
++        outcome, verified = snapshot_verify(
++            progress,
++            path_id="path-a",
++            witness_id=second["witness_id"],
++            witness_sequence=second["witness_sequence"],
++            snapshot_digest=second["snapshot_digest"],
++            attestation_digest=second["attestation_digest"],
++            leaf_digest=second["leaf_digest"],
++            root_digest=second["root_digest"],
++            previous_root_digest=second["previous_root_digest"],
++            inclusion_proof=second["inclusion_proof"],
++            consistency_proof=second["consistency_proof"],
++            event_id="ignored-correlation-id",
++            as_of=200,
++        )
++        self.assertEqual(outcome, "read_only")
++        self.assertTrue(verified["read_only"])
++        self.assertEqual(_state(progress), before)
++
++    def test_audit_rejects_stale_foreign_and_forked_heads_without_repair(self) -> None:
++        progress, _first, second = _witnessed_progress()
++
++        before = _state(progress)
++        audit, error = snapshot_chain_audit(
++            progress,
++            path_id="path-a",
++            expected_sequence=1,
++            expected_root_digest=second["root_digest"],
++            as_of=200,
++        )
++        self.assertIsNone(audit)
++        self.assertEqual(error["error"], "stale_witness_head")
++        self.assertEqual(_state(progress), before)
++
++        foreign = deepcopy(progress)
++        foreign.witness_entries[0]["leaf_body"]["path_id"] = "path-b"
++        foreign_before = _state(foreign)
++        audit, error = snapshot_chain_audit(foreign, path_id="path-a", as_of=200)
++        self.assertIsNone(audit)
++        self.assertEqual(error["error"], "foreign_witness_path")
++        self.assertEqual(_state(foreign), foreign_before)
++
++        forked = deepcopy(progress)
++        forked.witness_entries[1]["previous_root_digest"] = "fork-root"
++        forked.witness_entries[1]["leaf_body"]["previous_root_digest"] = "fork-root"
++        forked_before = _state(forked)
++        audit, error = snapshot_chain_audit(forked, path_id="path-a", as_of=200)
++        self.assertIsNone(audit)
++        self.assertEqual(error["error"], "witness_chain_fork")
++        self.assertEqual(_state(forked), forked_before)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/deeptutor/tools/mastery_tool.py b/deeptutor/tools/mastery_tool.py
+index 02a0ef9a5bbb408539dbdd44bcb6bf66b12301d4..cfa096a8070df12bf4923615bce75bccdabb7e2b 100644
+--- a/deeptutor/tools/mastery_tool.py
++++ b/deeptutor/tools/mastery_tool.py
+@@ -12,7 +12,28 @@ from deeptutor.capabilities.mastery.tools import (
+     MasteryAssessTool,
+     MasteryBuildTool,
+     MasteryGradeTool,
++    MasteryLearningCheckpointTool,
++    MasteryLearningEventsTool,
++    MasteryLearnerSnapshotAttestTool,
++    MasteryLearnerSnapshotChainAuditTool,
++    MasteryLearnerSnapshotCheckpointTool,
++    MasteryLearnerSnapshotRestoreTool,
++    MasteryLearnerSnapshotTool,
++    MasteryLearnerSnapshotVerifyTool,
++    MasteryLearnerSnapshotWitnessTool,
++    MasteryPolicyPublishTool,
++    MasteryPolicyStatusTool,
+     MasteryQuizTool,
++    MasteryRemediationAckTool,
++    MasteryRemediationClaimTool,
++    MasteryRemediationResetTool,
++    MasteryRemediationStatusTool,
++    MasteryReviewPlanTool,
++    MasteryReviewRescheduleTool,
++    MasterySessionAbandonTool,
++    MasterySessionHandoffTool,
++    MasterySessionHandoffsTool,
++    MasterySessionResumeTool,
+     MasteryStatusTool,
+ )
+ 
+@@ -24,4 +45,25 @@ __all__ = [
+     "MasteryGradeTool",
+     "MasteryAssessTool",
+     "MasteryBuildTool",
++    "MasteryRemediationStatusTool",
++    "MasteryRemediationResetTool",
++    "MasteryRemediationClaimTool",
++    "MasteryRemediationAckTool",
++    "MasteryReviewPlanTool",
++    "MasteryReviewRescheduleTool",
++    "MasteryLearningEventsTool",
++    "MasteryLearningCheckpointTool",
++    "MasterySessionHandoffTool",
++    "MasterySessionHandoffsTool",
++    "MasterySessionResumeTool",
++    "MasterySessionAbandonTool",
++    "MasteryPolicyStatusTool",
++    "MasteryPolicyPublishTool",
++    "MasteryLearnerSnapshotTool",
++    "MasteryLearnerSnapshotCheckpointTool",
++    "MasteryLearnerSnapshotAttestTool",
++    "MasteryLearnerSnapshotChainAuditTool",
++    "MasteryLearnerSnapshotRestoreTool",
++    "MasteryLearnerSnapshotWitnessTool",
++    "MasteryLearnerSnapshotVerifyTool",
+ ]

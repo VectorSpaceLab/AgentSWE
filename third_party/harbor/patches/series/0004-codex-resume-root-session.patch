@@ -1,0 +1,126 @@
+Subject: [PATCH 0004] Codex resume: resume the single root thread by id instead of `resume --last`
+
+Applies on top of profile 'site'.
+
+--- a/harbor/agents/installed/codex.py
++++ b/harbor/agents/installed/codex.py
+@@ -26,6 +26,43 @@
+ from harbor.utils.trajectory_utils import format_trajectory_json
+ 
+ 
++def _root_session_selector_script(
++    sessions_dir: PurePosixPath,
++    marker_path: PurePosixPath,
++) -> str:
++    """Return the in-container script that selects the one root Codex thread."""
++    return (
++        "python3 - <<'PY'\n"
++        "import json\n"
++        "from pathlib import Path\n"
++        f"sessions = Path({sessions_dir.as_posix()!r})\n"
++        f"marker = Path({marker_path.as_posix()!r})\n"
++        "root_ids = set()\n"
++        "for path in sessions.rglob('*.jsonl'):\n"
++        "    try:\n"
++        "        for line in path.open(encoding='utf-8', errors='replace'):\n"
++        "            try:\n"
++        "                event = json.loads(line)\n"
++        "            except Exception:\n"
++        "                continue\n"
++        "            if event.get('type') != 'session_meta':\n"
++        "                continue\n"
++        "            payload = event.get('payload') or {}\n"
++        "            session_id = payload.get('id')\n"
++        "            if session_id and not payload.get('parent_thread_id'):\n"
++        "                root_ids.add(str(session_id))\n"
++        "    except OSError:\n"
++        "        continue\n"
++        "if len(root_ids) != 1:\n"
++        "    raise SystemExit(\n"
++        "        f'expected exactly one root Codex session, found {sorted(root_ids)!r}'\n"
++        "    )\n"
++        "marker.parent.mkdir(parents=True, exist_ok=True)\n"
++        "marker.write_text(next(iter(root_ids)) + '\\n', encoding='utf-8')\n"
++        "PY"
++    )
++
++
+ class Codex(BaseInstalledAgent):
+     """
+     The Codex agent uses OpenAI's Codex CLI tool to solve tasks.
+@@ -36,6 +73,7 @@
+     _OUTPUT_FILENAME = "codex.txt"
+     _REMOTE_CODEX_HOME = PurePosixPath("/tmp/codex-home")
+     _REMOTE_CODEX_SECRETS_DIR = PurePosixPath("/tmp/codex-secrets")
++    _ROOT_SESSION_MARKER = PurePosixPath("/tmp/codex-secrets/root_session_id")
+     _INSTALL_CHECK_COMMAND = (
+         "if [ -s ~/.nvm/nvm.sh ]; then . ~/.nvm/nvm.sh; fi; "
+         "command -v codex >/dev/null 2>&1"
+@@ -1118,7 +1156,11 @@
+                 "fi\n"
+                 'rm -rf "$CODEX_HOME/sessions"\n'
+                 f"cp -R {shlex.quote(agent_sessions_dir)} "
+-                '"$CODEX_HOME/sessions"'
++                '"$CODEX_HOME/sessions"\n'
++                + _root_session_selector_script(
++                    self._REMOTE_CODEX_HOME / "sessions",
++                    self._ROOT_SESSION_MARKER,
++                )
+             )
+ 
+         if setup_command.strip():
+@@ -1127,12 +1169,21 @@
+                 command=setup_command,
+                 env=env,
+             )
++        resume_arg = ""
++        if self._resume:
++            root_session_marker = shlex.quote(
++                self._ROOT_SESSION_MARKER.as_posix()
++            )
++            resume_arg = f'resume "$(cat {root_session_marker})" '
++        output_path = (
++            EnvironmentPaths.agent_dir / self._OUTPUT_FILENAME
++        ).as_posix()
+         try:
+             await self.exec_as_agent(
+                 environment,
+                 command=(
+                     "if [ -s ~/.nvm/nvm.sh ]; then . ~/.nvm/nvm.sh; fi; "
+-                    f"codex exec {'resume --last ' if self._resume else ''}"
++                    f"codex exec {resume_arg}"
+                     "--dangerously-bypass-approvals-and-sandbox "
+                     "--skip-git-repo-check "
+                     f"--model {model} "
+@@ -1141,25 +1192,22 @@
+                     f"{cli_flags_arg}"
+                     "-- "  # end of flags
+                     f"{escaped_instruction} "
+-                    f"2>&1 </dev/null | tee {
+-                        EnvironmentPaths.agent_dir / self._OUTPUT_FILENAME
+-                    }"
++                    f"2>&1 </dev/null | tee {output_path}"
+                 ),
+                 env=env,
+             )
+         finally:
+             try:
++                persisted_sessions_dir = (
++                    EnvironmentPaths.agent_dir / "sessions"
++                ).as_posix()
+                 await self.exec_as_agent(
+                     environment,
+                     command=(
+                         f"mkdir -p {EnvironmentPaths.agent_dir.as_posix()}\n"
+                         'if [ -d "$CODEX_HOME/sessions" ]; then\n'
+-                        f"  rm -rf {
+-                            (EnvironmentPaths.agent_dir / 'sessions').as_posix()
+-                        }\n"
+-                        f'  cp -R "$CODEX_HOME/sessions" {
+-                            (EnvironmentPaths.agent_dir / "sessions").as_posix()
+-                        }\n'
++                        f"  rm -rf {persisted_sessions_dir}\n"
++                        f'  cp -R "$CODEX_HOME/sessions" {persisted_sessions_dir}\n'
+                         "fi"
+                     ),
+                     env=env,

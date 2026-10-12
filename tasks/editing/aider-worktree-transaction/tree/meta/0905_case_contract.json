@@ -1,0 +1,328 @@
+{
+  "schema_version": "agentswe-edit-case-contract-v1",
+  "task": "aider",
+  "sibling": "@@AGENTSWE_EDITING_TASKS@@/aider-worktree-transaction/tree",
+  "dev_cases": [
+    "dev_001",
+    "dev_002"
+  ],
+  "hidden_cases": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "inventory": {
+    "dev": [
+      "dev_001",
+      "dev_002"
+    ],
+    "hidden": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ]
+  },
+  "cases": {
+    "dev_001": {
+      "natural_user_goal": "Safely publish a prepared repository change from the supplied worktree and show evidence that the resulting set is isolated and complete.",
+      "primary_failure_axis": "quarantined repository-set publication",
+      "secondary_axes": [
+        "worktree registration",
+        "exactly-once lifecycle evidence"
+      ],
+      "meaningful_dynamic_facts": [
+        "repository identity",
+        "transaction nonce",
+        "worktree revision",
+        "receipt digest"
+      ],
+      "candidate_visible_inputs": [
+        "user goal",
+        "case repository",
+        "allowed action client",
+        "observed Git evidence"
+      ],
+      "evaluator_only_oracle": [
+        "private object visibility",
+        "expected closure state",
+        "score weights"
+      ]
+    },
+    "dev_002": {
+      "natural_user_goal": "Inspect and recover an interrupted worktree transaction, preserving external authorship and reporting what cannot be safely completed.",
+      "primary_failure_axis": "partial decision and admission takeover",
+      "secondary_axes": [
+        "foreign writer fencing",
+        "honest recovery"
+      ],
+      "meaningful_dynamic_facts": [
+        "lease generation",
+        "participant prefix",
+        "foreign author identity",
+        "recovery receipt"
+      ],
+      "candidate_visible_inputs": [
+        "incident goal",
+        "inspect/create/run/status/recover/attest affordances",
+        "real command output"
+      ],
+      "evaluator_only_oracle": [
+        "authoritative terminal state",
+        "private lease and admission token",
+        "expected recovery path"
+      ]
+    },
+    "test_001": {
+      "natural_user_goal": "Admit a bounded repository transaction without overlapping another owner and publish only a verified decision.",
+      "primary_failure_axis": "admission and bounded DAG ownership",
+      "secondary_axes": [
+        "concurrent disjoint work"
+      ],
+      "meaningful_dynamic_facts": [
+        "tenant/repository identity",
+        "lease generation",
+        "operation receipt"
+      ],
+      "candidate_visible_inputs": [
+        "case repository",
+        "allowed action interface",
+        "command observations"
+      ],
+      "evaluator_only_oracle": [
+        "private overlap graph",
+        "expected ownership decision",
+        "hidden score rubric"
+      ]
+    },
+    "test_002": {
+      "natural_user_goal": "Close a quarantined worktree transaction exactly once and promote it only after its artifacts are verified.",
+      "primary_failure_axis": "quarantine closure and exactly-once cleanup",
+      "secondary_axes": [
+        "object pruning",
+        "hook/filter evidence"
+      ],
+      "meaningful_dynamic_facts": [
+        "candidate object IDs",
+        "worktree registration",
+        "cleanup receipt"
+      ],
+      "candidate_visible_inputs": [
+        "user goal",
+        "dynamic fixture",
+        "allowed actions",
+        "observed Git status"
+      ],
+      "evaluator_only_oracle": [
+        "private object visibility",
+        "expected closure receipt",
+        "terminal state"
+      ]
+    },
+    "test_003": {
+      "natural_user_goal": "Recover a transaction that durably recorded only a participant prefix and finish only the exact safe suffix.",
+      "primary_failure_axis": "durable decision-prefix recovery",
+      "secondary_axes": [
+        "no duplicate effect"
+      ],
+      "meaningful_dynamic_facts": [
+        "participant prefix",
+        "operation generation",
+        "suffix receipt"
+      ],
+      "candidate_visible_inputs": [
+        "crash report",
+        "inspect/recover actions",
+        "actual repository evidence"
+      ],
+      "evaluator_only_oracle": [
+        "private suffix contents",
+        "expected idempotency result",
+        "score weights"
+      ]
+    },
+    "test_004": {
+      "natural_user_goal": "Resolve a component conflict while preserving a foreign author’s change and completing only disjoint work.",
+      "primary_failure_axis": "component conflict ownership",
+      "secondary_axes": [
+        "foreign-writer preservation"
+      ],
+      "meaningful_dynamic_facts": [
+        "component identity",
+        "foreign author",
+        "transaction generation"
+      ],
+      "candidate_visible_inputs": [
+        "conflict goal",
+        "worktree and Git evidence",
+        "allowed recovery interface"
+      ],
+      "evaluator_only_oracle": [
+        "private conflict graph",
+        "expected ownership outcome",
+        "hidden reference state"
+      ]
+    },
+    "test_005": {
+      "natural_user_goal": "Perform an authorized reverse decision and restore the exact dirty state of two repositories without overwriting unrelated work.",
+      "primary_failure_axis": "reverse decision with dirty-state fencing",
+      "secondary_axes": [
+        "symlink/mode preservation",
+        "CAS rollback"
+      ],
+      "meaningful_dynamic_facts": [
+        "two-repository revision",
+        "dirty snapshot digest",
+        "rollback receipt"
+      ],
+      "candidate_visible_inputs": [
+        "rollback request",
+        "observable snapshots",
+        "allowed rollback/status interface"
+      ],
+      "evaluator_only_oracle": [
+        "private baseline snapshot",
+        "expected CAS result",
+        "exact final state"
+      ]
+    },
+    "test_006": {
+      "natural_user_goal": "Report integrity and compatibility status for a potentially obstructed or stale transaction without mutating it unsafely.",
+      "primary_failure_axis": "integrity/status compatibility",
+      "secondary_axes": [
+        "stale/foreign receipt rejection"
+      ],
+      "meaningful_dynamic_facts": [
+        "alias/fence identity",
+        "ledger digest",
+        "obstruction marker"
+      ],
+      "candidate_visible_inputs": [
+        "status task",
+        "dynamic worktree",
+        "inspect/verify affordances"
+      ],
+      "evaluator_only_oracle": [
+        "private corruption mutation",
+        "expected status decision",
+        "hidden receipt lineage"
+      ]
+    }
+  },
+  "real_product_lower_entry": "evaluator/harness/run_lower_agent_case.py -> patched Aider python -m aider -> case action client",
+  "real_lower_entry": "evaluator/harness/run_lower_agent_case.py",
+  "primary_user_goal_by_case": {
+    "dev_001": "Safely publish a prepared repository change.",
+    "dev_002": "Recover an interrupted worktree transaction without taking over foreign work.",
+    "test_001": "Admit a bounded repository transaction without overlap.",
+    "test_002": "Close a quarantined worktree exactly once.",
+    "test_003": "Recover a durable participant prefix safely.",
+    "test_004": "Resolve a component conflict while preserving foreign authorship.",
+    "test_005": "Restore two repositories after an authorized reverse decision.",
+    "test_006": "Report integrity and compatibility status without unsafe mutation."
+  },
+  "primary_failure_axis_by_case": {
+    "dev_001": "quarantined repository-set publication",
+    "dev_002": "partial decision and admission takeover",
+    "test_001": "admission and bounded DAG ownership",
+    "test_002": "quarantine closure and exactly-once cleanup",
+    "test_003": "durable decision-prefix recovery",
+    "test_004": "component conflict ownership",
+    "test_005": "reverse decision with dirty-state fencing",
+    "test_006": "integrity/status compatibility"
+  },
+  "secondary_failure_axes_by_case": {
+    "dev_001": [
+      "worktree registration",
+      "exactly-once lifecycle evidence"
+    ],
+    "dev_002": [
+      "foreign writer fencing",
+      "honest recovery"
+    ],
+    "test_001": [
+      "concurrent disjoint work"
+    ],
+    "test_002": [
+      "object pruning",
+      "hook/filter evidence"
+    ],
+    "test_003": [
+      "no duplicate effect"
+    ],
+    "test_004": [
+      "foreign-writer preservation"
+    ],
+    "test_005": [
+      "symlink/mode preservation",
+      "CAS rollback"
+    ],
+    "test_006": [
+      "stale/foreign receipt rejection"
+    ]
+  },
+  "dynamic_facts": {
+    "all_cases": [
+      "repository/tenant identity",
+      "transaction nonce",
+      "workspace revision",
+      "receipt/ledger digest"
+    ],
+    "private": [
+      "expected closure state",
+      "lease/admission oracle",
+      "hidden corruption mutation"
+    ]
+  },
+  "candidate_visible_inputs": {
+    "all_cases": [
+      "natural user goal",
+      "dynamic case repository",
+      "allowed action interface",
+      "observed Git/product evidence"
+    ]
+  },
+  "evaluator_only_oracle": {
+    "all_cases": [
+      "private object visibility",
+      "expected terminal state",
+      "hidden inventory",
+      "score rubric and weights"
+    ]
+  },
+  "product_api_entry": "input/repository/aider/__main__.py",
+  "broker_model": "deepseek-flash",
+  "broker_effort": "high",
+  "native_harness_role": "materialize dynamic Git fixtures, collect process/ledger facts, classify infrastructure and provide evidence; no direct Result score",
+  "formal_one_stop_entry": "harbor/formal_one_stop.py",
+  "artifact": "case-local agent_result.json authored by the Aider lower loop in the evaluator fixture",
+  "agent_authored_artifact": "case-local agent_result.json authored by the Aider lower loop in the evaluator fixture",
+  "result_judge": {
+    "entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "logical_requests_per_scoreable_hidden": 1,
+    "completed_responses_required": 1
+  },
+  "result_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+  "code_judge": {
+    "entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "logical_requests": 1,
+    "expected_frozen_digest": true
+  },
+  "code_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+  "known_overlap_or_leakage": [
+    "hidden inventory and evaluator oracle remain private by contract",
+    "judge prompts, score weights, and credentials remain evaluator-only"
+  ],
+  "leakage": [],
+  "readiness": "REPAIR",
+  "readiness_reason": "Provider-free repair and self-tests are in scope; formal readiness still requires a real post-freeze six-hidden smoke and provider usage evidence."
+}

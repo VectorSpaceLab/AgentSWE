@@ -1,0 +1,58 @@
+[
+  {
+    "registry_hint": "PX-7026",
+    "display": "Taylor Morgan",
+    "role": "Coordinator",
+    "observed_at": "2026-07-21T10:00:00Z",
+    "profile": "profiles/k586-current.html"
+  },
+  {
+    "registry_hint": null,
+    "display": "Robin Rivera",
+    "role": "Curator",
+    "observed_at": "2026-07-16T10:00:00Z",
+    "profile": "profiles/k149-current.json"
+  },
+  {
+    "registry_hint": "PX-7009",
+    "display": "A. Kim",
+    "role": "Researcher",
+    "observed_at": "2026-07-18T10:00:00Z",
+    "profile": "profiles/k195-current.vcf"
+  },
+  {
+    "registry_hint": "PX-7004",
+    "display": "Sam Chen",
+    "role": "Engineer",
+    "observed_at": "2026-07-13T10:00:00Z",
+    "profile": "profiles/k080-current.json"
+  },
+  {
+    "registry_hint": "PX-7029",
+    "display": "A. Kim",
+    "role": "Archivist",
+    "observed_at": "2026-07-10T10:00:00Z",
+    "profile": "profiles/k655-current.html"
+  },
+  {
+    "registry_hint": "PX-7001",
+    "display": "M. Chen",
+    "role": "Curator",
+    "observed_at": "2026-07-10T10:00:00Z",
+    "profile": "profiles/k011-current.json"
+  },
+  {
+    "registry_hint": "PX-7003",
+    "display": "Alex Patel",
+    "role": "Researcher",
+    "observed_at": "2026-07-12T10:00:00Z",
+    "profile": "profiles/k057-current.vcf"
+  },
+  {
+    "registry_hint": "PX-7020",
+    "display": "Lee Okafor",
+    "role": "Coordinator",
+    "observed_at": "2026-07-15T10:00:00Z",
+    "profile": "profiles/k448-current.html"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "schema_version": "agentswe-openhands-network-cleanup/v1",
+  "completed_at": "2026-09-08T08:02:00+00:00",
+  "ownership_basis": {
+    "compose_project": "builder_task__txuhufa__env",
+    "working_directory": "@@AGENTSWE_EDITING_RUNS@@/smoke/deeptutor/0908-smoke-current-003/builder_task/environment",
+    "label": "com.docker.compose.project.working_dir"
+  },
+  "removed_containers": [
+    {
+      "id": "94322eb50974",
+      "name": "builder_task__txuhufa__env-harbor-docker-egress-control-sidecar-1",
+      "status_before": "Exited (143)"
+    }
+  ],
+  "removed_networks": [
+    {
+      "name": "builder_task__txuhufa__env_default",
+      "subnet": "172.29.0.0/16",
+      "containers_before": 0
+    }
+  ],
+  "unowned_empty_network_left_untouched": "candidate_test_003_task__yqfnqpb__env_default",
+  "unrelated_resources_touched": false
+}

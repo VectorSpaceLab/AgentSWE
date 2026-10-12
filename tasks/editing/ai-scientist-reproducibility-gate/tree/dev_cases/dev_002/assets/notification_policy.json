@@ -1,0 +1,1 @@
+{"schema_version":1,"project_id":"public-repro","policy_version":"notify-2026-01","topic":"release-events","allowed_owners":["worker-a","worker-b"]}

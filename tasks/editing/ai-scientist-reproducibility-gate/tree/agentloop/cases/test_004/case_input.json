@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "case_id": "test_004",
+  "scenario": "policy_migration_takeover_and_scoped_cleanup",
+  "evaluator_nonce": "runtime-generated",
+  "oracle": "evaluator-private"
+}

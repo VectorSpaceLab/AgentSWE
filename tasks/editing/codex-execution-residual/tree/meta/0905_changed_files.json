@@ -1,0 +1,45 @@
+{
+  "schema_version": "0905-edit-changed-files-v1",
+  "task": "codex",
+  "files": [
+    "evaluator/formal_finalize.py",
+    "evaluator/harness/run_lower_agent_case.py",
+    "evaluator/test_0905_contracts.py",
+    "harbor/formal_one_stop.py",
+    "meta/0905_case_contract.json",
+    "meta/0905_changed_files.json",
+    "meta/0905_migration_note.md",
+    "evaluator/code_rubric.md"
+  ],
+  "last_static_repair_files": ["harbor/formal_one_stop.py", "evaluator/formal_finalize.py", "evaluator/harness/run_lower_agent_case.py", "evaluator/test_0905_contracts.py", "evaluator/code_rubric.md"],
+  "last_static_repair_commands": ["PYTHONPYCACHEPREFIX=/tmp/0909-codex-pycache python3 -m py_compile harbor/formal_one_stop.py evaluator/formal_finalize.py evaluator/harness/run_lower_agent_case.py", "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -q evaluator/test_0905_contracts.py", "PYTHONDONTWRITEBYTECODE=1 python3 harbor/formal_one_stop.py --benchmark . --run-dir /tmp/codex-pilot-self-test-3 --pilot-self-test"],
+  "last_static_repair_result": "Code judging continues to use a dedicated independent rubric; hidden attestation measures frozen-tree stability; lower artifact authorship and launcher/timeout infrastructure failures are fail-closed. A non-formal pilot now mounts only dev_001, requires two distinct feedback-bound Candidate submissions, freezes before starting an independent zero-call hidden broker for test_001 and test_002, and uses independent xhigh Result judging without publishing formal scores. Explicit deterministic Compose subnet allocation avoids exhausted Docker default pools. Provider-free tests and pilot self-test pass.",
+  "provider_calls": 0,
+  "heavy_containers_started": true,
+  "current_repair_provider_calls": 0,
+  "current_repair_heavy_containers_started": true,
+  "readiness": "REPAIR",
+  "current_smoke_attempts": [
+    {
+      "run_id": "0910-smoke-current-001",
+      "status": "not_started",
+      "publishable": false,
+      "reason": "The outer shell reaped the background process before the pilot one-stop created its run directory; no broker or Docker evidence was produced"
+    },
+    {
+      "run_id": "0910-smoke-current-002",
+      "status": "pilot_builder_integration_incomplete",
+      "publishable": false,
+      "reason": "The real pilot reached Harbor/Compose startup but Docker could not allocate a default network IPv4 pool before any Builder call. Current-run public and Builder brokers were cleaned with owned CID receipts; no Candidate, lower, hidden, or judge phase started"
+    }
+  ],
+  "repair_delta": [
+    "pilot mode is explicitly non-formal and exposes only dev_001 to the Builder",
+    "pilot requires exactly two distinct feedback-bound Candidate submissions before freezing",
+    "pilot closes and proves public lower broker cleanup before starting hidden",
+    "pilot starts an independent hidden medium broker only after freeze and verifies zero initial calls and failures",
+    "pilot invokes the evaluator-owned independent xhigh Result judge for test_001 and test_002 while keeping formal_result_publishable=false",
+    "pilot self-test and provider-free contract coverage include public inventory, hidden isolation, subnet allocation, and cleanup gate",
+    "Compose default network receives a deterministic non-overlapping RFC 2544 /24 to avoid exhausted Docker default pools"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "origin_path": "@@AGENTSWE_LEGACY_DATA@@/0910-edit-repair/stage/claude-native-recovery-001/task/harbor/native_builder_evidence.py",
+  "origin_sha256": "368e67ec4b30ceffa6d95738c4d9f377d1b164c366804c493b5cee19773d9cb0",
+  "adaptation": "Codex public feedback is a complete projected Markdown string rather than a JSON object; all other native recovery and feedback checks preserved."
+}

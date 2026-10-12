@@ -1,0 +1,7 @@
+{
+  "task_decision_correctness": 30,
+  "provenance_fidelity": 30,
+  "concrete_task_completion": 10,
+  "honest_recovery_or_refusal": 25,
+  "artifact_clarity_and_safety": 5
+}

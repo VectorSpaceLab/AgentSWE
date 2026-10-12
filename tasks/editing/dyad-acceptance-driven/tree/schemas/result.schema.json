@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "case_id", "classification", "failure_class", "attribution", "score", "model_protocol", "broker", "artifact_present", "static_stage_a"],
+  "properties": {
+    "schema_version": {"const": "dyad-agentloop-case-result-v2"},
+    "case_id": {"type": "string", "pattern": "^(dev_[0-9]{3}|test_[0-9]{3})$"},
+    "classification": {"enum": ["valid", "candidate_failure", "infrastructure-invalid"]},
+    "failure_class": {"type": ["string", "null"]},
+    "attribution": {
+      "type": "object",
+      "required": ["owner", "candidate_behavior_evaluable"],
+      "properties": {
+        "owner": {"enum": ["candidate", "evaluator/provider"]},
+        "candidate_behavior_evaluable": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "model_protocol": {
+      "type": "object",
+      "required": ["model", "reasoning_effort", "transport"],
+      "properties": {
+        "model": {"const": "gpt-5.6-sol"},
+        "reasoning_effort": {"const": "medium"},
+        "transport": {"const": "evaluator-owned-responses-broker"}
+      },
+      "additionalProperties": true
+    },
+    "broker": {
+      "type": "object",
+      "required": ["before", "after"],
+      "properties": {
+        "before": {"type": "object"},
+        "after": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "artifact_present": {"type": "boolean"},
+    "score": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+    "static_stage_a": {"const": false}
+  },
+  "additionalProperties": true
+}

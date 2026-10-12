@@ -1,0 +1,50 @@
+[
+  {
+    "object_ref": "MX-3331",
+    "title": "Cloud Index 31",
+    "category": "textile",
+    "detail": "details/object-081.html",
+    "annex": true,
+    "revision": "2026-06-15"
+  },
+  {
+    "object_ref": "MX-3332",
+    "title": "Cedar Map 32",
+    "category": "model",
+    "detail": "details/object-110.html",
+    "annex": true,
+    "revision": "2026-06-16"
+  },
+  {
+    "object_ref": "MX-3333",
+    "title": "Quiet Engine 33",
+    "category": "drawing",
+    "detail": "details/object-139.html",
+    "annex": true,
+    "revision": "2026-06-17"
+  },
+  {
+    "object_ref": "MX-3334",
+    "title": "Tidal Notes 34",
+    "category": "photograph",
+    "detail": "details/object-168.html",
+    "annex": true,
+    "revision": "2026-06-18"
+  },
+  {
+    "object_ref": "MX-3335",
+    "title": "Glass Horizon 35",
+    "category": "textile",
+    "detail": "details/object-197.html",
+    "annex": true,
+    "revision": "2026-06-19"
+  },
+  {
+    "object_ref": "OLD-MX-836",
+    "title": "Signal Garden 36",
+    "category": "model",
+    "detail": "details/object-226.html",
+    "annex": true,
+    "revision": "2026-06-20"
+  }
+]

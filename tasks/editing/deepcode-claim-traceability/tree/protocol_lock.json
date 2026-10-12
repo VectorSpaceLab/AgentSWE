@@ -1,0 +1,12 @@
+{
+  "schema_version": "deepcode-agentloop-protocol-lock-v1",
+  "owner": "owner-17",
+  "benchmark_id": "deepcode-claim-traceability-agentloop-v1",
+  "builder": {"model": "gpt-5.6-sol", "reasoning_effort": "xhigh", "session": "single-continuous"},
+  "lower_agent": {"product": "patched DeepCode repository", "entrypoint": "deepcode.py exec", "model": "gpt-5.6-sol", "reasoning_effort": "medium", "transport": "evaluator-owned-responses-broker"},
+  "lifecycle": {"candidate_rounds": "up_to_10", "max_dev_rounds": 10, "feedback_revisions": "fresh_after_each_acceptance", "distinct_digest_required": true, "dev_passed_is_automatic_freeze": false, "freeze": "latest_accepted_on_builder_exit_or_max_dev_rounds", "hidden": "strictly_after_freeze"},
+  "candidate_visibility": {"public_inputs": ["input", "dev_cases"], "hidden_cases": false, "evaluator_source": false, "real_credential": false, "placeholder_credential": true},
+  "result_axis": "agent-loop-result-only",
+  "code_axis": "independent-eight-dimension-code-rubric",
+  "status": "PARTIAL_STATIC_ONLY"
+}

@@ -1,0 +1,194 @@
+[
+  {
+    "record_ref": "QL-5132",
+    "price": 94.23,
+    "signature_status": "valid",
+    "signed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5131",
+    "price": 96.15,
+    "signature_status": "valid",
+    "signed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5130",
+    "price": 90.77,
+    "signature_status": "expired",
+    "signed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5129",
+    "price": 92.69,
+    "signature_status": "valid",
+    "signed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5128",
+    "price": 87.31,
+    "signature_status": "valid",
+    "signed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5127",
+    "price": 89.23,
+    "signature_status": "valid",
+    "signed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5126",
+    "price": 83.85,
+    "signature_status": "valid",
+    "signed_at": "2026-07-09T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5125",
+    "price": 85.77,
+    "signature_status": "valid",
+    "signed_at": "2026-07-08T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5124",
+    "price": 80.39,
+    "signature_status": "expired",
+    "signed_at": "2026-07-19T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5123",
+    "price": 82.31,
+    "signature_status": "valid",
+    "signed_at": "2026-07-18T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5122",
+    "price": 76.93,
+    "signature_status": "valid",
+    "signed_at": "2026-07-17T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5121",
+    "price": 78.85,
+    "signature_status": "valid",
+    "signed_at": "2026-07-16T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5120",
+    "price": 73.47,
+    "signature_status": "valid",
+    "signed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5119",
+    "price": 75.39,
+    "signature_status": "valid",
+    "signed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5118",
+    "price": 70.01,
+    "signature_status": "expired",
+    "signed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5117",
+    "price": 71.93,
+    "signature_status": "valid",
+    "signed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5116",
+    "price": 66.55,
+    "signature_status": "valid",
+    "signed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5115",
+    "price": 68.47,
+    "signature_status": "valid",
+    "signed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5114",
+    "price": 63.09,
+    "signature_status": "valid",
+    "signed_at": "2026-07-09T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5113",
+    "price": 65.01,
+    "signature_status": "valid",
+    "signed_at": "2026-07-08T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5112",
+    "price": 59.63,
+    "signature_status": "expired",
+    "signed_at": "2026-07-19T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5111",
+    "price": 61.55,
+    "signature_status": "valid",
+    "signed_at": "2026-07-18T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5110",
+    "price": 56.17,
+    "signature_status": "valid",
+    "signed_at": "2026-07-17T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5109",
+    "price": 58.09,
+    "signature_status": "valid",
+    "signed_at": "2026-07-16T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5108",
+    "price": 52.71,
+    "signature_status": "valid",
+    "signed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5107",
+    "price": 54.63,
+    "signature_status": "valid",
+    "signed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5106",
+    "price": 49.25,
+    "signature_status": "expired",
+    "signed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5105",
+    "price": 51.17,
+    "signature_status": "valid",
+    "signed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5104",
+    "price": 45.79,
+    "signature_status": "valid",
+    "signed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5103",
+    "price": 47.71,
+    "signature_status": "valid",
+    "signed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5102",
+    "price": 42.33,
+    "signature_status": "valid",
+    "signed_at": "2026-07-09T12:00:00Z"
+  },
+  {
+    "record_ref": "QL-5101",
+    "price": 44.25,
+    "signature_status": "valid",
+    "signed_at": "2026-07-08T12:00:00Z"
+  }
+]

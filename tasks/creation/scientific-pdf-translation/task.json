@@ -1,0 +1,90 @@
+{
+  "id": "scientific-pdf-translation",
+  "family": "creation",
+  "short": "pdf",
+  "title": "Scientific PDF translation",
+  "version": "v3",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "creation_harbor_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "task-base",
+    "ubuntu-base",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "trusted-browser"
+  ],
+  "envs": [
+    "scientific-pdf-translation-agent-v2"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [
+      "git"
+    ],
+    "disk_gb": 20
+  },
+  "protocol": {
+    "case_timeout_sec": 600,
+    "dev_cases": [
+      "dev_001",
+      "dev_002"
+    ],
+    "heldout_cases": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ],
+    "max_dev_rounds": 10,
+    "builder_session_sec": 28800
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "heldout_cases": [
+      "test_001"
+    ],
+    "builder_session_sec": 3600
+  },
+  "upstream": {
+    "repo": "https://github.com/PDFMathTranslate/PDFMathTranslate",
+    "commit": "44c4d5b332705797c1df17fadde2022e7c49f5de",
+    "license": "AGPL-3.0",
+    "role": "requirement source only; no upstream code or assets copied; case PDFs are synthetic",
+    "redistribute_a0": true
+  },
+  "runner_config": {
+    "n_concurrent": 2,
+    "harbor_profile": "creation"
+  },
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "runs": [
+      30.0,
+      12.5,
+      53.3
+    ],
+    "mean_at_3": 31.93,
+    "sd": 20.47
+  },
+  "notes": [
+    "Lite fix included: verify_score fatal filter.",
+    "Release fix (2026-10-09): benchmark/evaluator/evidence_bundle.py, which the adapter copies over both eval-template copies, now equals them. It had kept the 2-argument validate_quality_review, so every evaluation reaching the PDF quality review failed with a TypeError and no score. judge_format release (default) applies the rules the paper's Lite runs used; exact applies the stricter rules, which reject a review the release rules repair.",
+    "Release change (2026-10-10): adapter/eval-template/solution/run_eval.py normalize_evaluation_state reads the judge's prose (assessment, major_errors) as an infrastructure marker only when it holds the standalone token INFRASTRUCTURE_ERROR or INFRASTRUCTURE_INVALID (underscores, any case, no letter, digit or underscore immediately before or after). The previous rule turned every non-alphanumeric into '_' and matched substrings, so prose such as 'evaluator-side infrastructure errors' voided a scored case. The harness, the transport and the judge's structured evaluation_state mark infrastructure as before, and verify_score.py reads the state run_eval writes."
+  ]
+}

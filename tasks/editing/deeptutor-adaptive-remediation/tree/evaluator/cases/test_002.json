@@ -1,0 +1,11 @@
+{
+  "case_id": "test_002",
+  "visibility": "hidden",
+  "seed_mode": "accepted_reschedule_stale_writer",
+  "prompt_file": "test_cases/test_002/input.md",
+  "required_tools_any": ["mastery_review_plan", "mastery_review_reschedule", "mastery_learning_events"],
+  "provenance_tools_any": ["mastery_learner_snapshot", "mastery_learner_snapshot_checkpoint"],
+  "max_model_calls": 12,
+  "max_tool_calls": 24,
+  "require_safe_refusal": true
+}

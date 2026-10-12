@@ -1,0 +1,54 @@
+%PDF-1.4
+%synthetic-v4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 370 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Signed revision notice RN-8) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 704 Tm (The approved lot-specific blank for plate O-441 is 0.070 absorbance units.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 676 Tm (Do not use the draft universal blank of 0.050 for this plate.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 648 Tm (RN-8 supersedes worksheet header note OM-6-draft.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 356 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 744 Tm (Well validity correction) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 704 Tm (Control-Q well B07 is invalid because of a confirmed pipette skip.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 676 Tm (Control-Q well B08 remains valid and may be evaluated alone.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 648 Tm (No Orchid-K well is invalidated by this notice.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000023 00000 n 
+0000000072 00000 n 
+0000000135 00000 n 
+0000000205 00000 n 
+0000000280 00000 n 
+0000000701 00000 n 
+0000000837 00000 n 
+0000001244 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+1380
+%%EOF

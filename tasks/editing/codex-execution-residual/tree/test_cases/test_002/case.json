@@ -1,0 +1,7 @@
+{
+  "case_id": "test_002",
+  "scenario": "partial_side_effect",
+  "required_actions": ["partial_side_effect", "reconcile_probe"],
+  "max_action_invocations": 2,
+  "spill": false
+}

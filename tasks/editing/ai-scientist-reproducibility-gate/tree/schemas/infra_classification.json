@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "candidate_failures": ["candidate_delivery_failure", "candidate_build_failure", "candidate_product_failure", "candidate_contract_failure", "candidate_timeout", "candidate_no_observable_behavior"],
+  "infrastructure_invalid": ["broker_failure", "provider_failure", "credential_mount_failure", "evaluator_failure", "mount_isolation_failure", "docker_failure", "timeout_before_product_start"],
+  "rule": "Only candidate-owned failures may receive Candidate zero; evaluator/provider/credential/mount failures are N/A or infrastructure-invalid."
+}

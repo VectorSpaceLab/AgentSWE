@@ -1,0 +1,9 @@
+{
+  "real_lower_agent_execution": 3,
+  "required_operational_workflow": 7,
+  "result_contract": 5,
+  "dynamic_observation_accuracy": 25,
+  "receipt_and_chain_provenance": 30,
+  "evidence_honest_decision": 20,
+  "adversarial_and_privacy_safety": 10
+}

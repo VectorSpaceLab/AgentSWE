@@ -1,0 +1,19 @@
+{
+  "schema_version": "agentswe-edit-static-audit/v1",
+  "benchmark_id": "claude-policy-provenance-agentloop-v1",
+  "audit_date": "2026-09-02",
+  "source_write_policy": "read-only source and read-only legacy/staging paths",
+  "source_git_status": "dirty_preexisting_state_observed; no source write performed",
+  "checks": {
+    "agentloop_self_test": {"status": "passed", "network_calls": 0, "formal_result_claimed": false},
+    "native_evaluator_self_test": {"status": "passed", "checks": 29, "result_axis": "legacy_mechanism_only"},
+    "json_syntax": "passed",
+    "python_syntax": "passed",
+    "node_javascript_syntax": "passed",
+    "shell_syntax": "passed",
+    "rust_build": "not_applicable_no_cargo",
+    "real_broker_success_calls": 0
+  },
+  "stage_status": "PARTIAL",
+  "reason": "static checks do not establish real lower-agent behavior; Stage B requires a successful evaluator-owned gpt-5.6-sol/medium broker call and post-freeze hidden smoke"
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "case_id": "test_003",
+  "scenario": "partial_worker_recovery_and_corrupt_capsule_rejection",
+  "evaluator_nonce": "runtime-generated",
+  "oracle": "evaluator-private"
+}

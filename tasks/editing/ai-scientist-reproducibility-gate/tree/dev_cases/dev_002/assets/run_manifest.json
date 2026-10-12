@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "run_id": "run-public-002",
+  "project_id": "public-repro",
+  "replay": {
+    "command": ["python", "replay.py"],
+    "working_directory": ".",
+    "timeout_seconds": 10,
+    "script_path": "replay.py",
+    "script_sha256": "cddf5e19c119727d6d48714f7235c0c3e431e8185875aa949fabc07165eb7baf"
+  },
+  "workers": [
+    {"worker_id": "w-cedar-17", "experiment_id": "exp-cedar-single", "seed": 17, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "daaa6b73b2b8214d98faece0bcd797d7727270451f1c2d96b39127f7ac014c88"},
+    {"worker_id": "w-cedar-retry", "experiment_id": "exp-cedar-single", "seed": 17, "status": "failed", "failure_class": "worker_error", "error": "single worker retry exhausted"}
+  ],
+  "failure_policy": {"allow_partial": true, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "public-lab/stability-study/publish-002", "global_process_scan": false}
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "registry_hint": "PX-7011",
+    "display": "Mina Chen",
+    "role": "Archivist",
+    "observed_at": "2026-07-20T10:00:00Z",
+    "profile": "profiles/k241-current.html"
+  },
+  {
+    "registry_hint": "PX-7030",
+    "display": "Lee Okafor",
+    "role": "Analyst",
+    "observed_at": "2026-07-11T10:00:00Z",
+    "profile": "profiles/k678-current.vcf"
+  },
+  {
+    "registry_hint": "PX-7005",
+    "display": "J. Chen",
+    "role": "Archivist",
+    "observed_at": "2026-07-14T10:00:00Z",
+    "profile": "profiles/k103-current.html"
+  },
+  {
+    "registry_hint": "PX-7021",
+    "display": "Mina Chen old",
+    "role": "Former Researcher",
+    "observed_at": "2025-12-01T09:00:00Z",
+    "profile": "profiles/k471-zz-old.json"
+  },
+  {
+    "registry_hint": "PX-7023",
+    "display": "Alex Patel",
+    "role": "Archivist",
+    "observed_at": "2026-07-18T10:00:00Z",
+    "profile": "profiles/k517-current.html"
+  },
+  {
+    "registry_hint": "PX-7010",
+    "display": "Lee Okafor",
+    "role": "Engineer",
+    "observed_at": "2026-07-19T10:00:00Z",
+    "profile": "profiles/k218-current.json"
+  },
+  {
+    "registry_hint": "PX-7013",
+    "display": "A. Patel",
+    "role": "Curator",
+    "observed_at": "2026-07-22T10:00:00Z",
+    "profile": "profiles/k287-current.json"
+  },
+  {
+    "registry_hint": null,
+    "display": "Ming Silva",
+    "role": "Engineer",
+    "observed_at": "2026-07-17T10:00:00Z",
+    "profile": "profiles/k494-current.json"
+  },
+  {
+    "registry_hint": "PX-7013",
+    "display": "Alex Patel old",
+    "role": "Former Curator",
+    "observed_at": "2025-12-13T09:00:00Z",
+    "profile": "profiles/k287-zz-old.json"
+  },
+  {
+    "registry_hint": null,
+    "display": "Ming Silva",
+    "role": "Coordinator",
+    "observed_at": "2026-07-11T10:00:00Z",
+    "profile": "profiles/k034-current.html"
+  }
+]

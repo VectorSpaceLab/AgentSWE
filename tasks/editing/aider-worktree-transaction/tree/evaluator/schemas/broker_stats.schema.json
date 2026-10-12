@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "protocol", "runtime", "calls"],
+  "properties": {
+    "schema_version": {"const": "agentswe-broker-stats-v1"},
+    "protocol": {"type": "object", "required": ["model", "reasoning_effort", "candidate_credential"]},
+    "runtime": {"type": "object", "required": ["calls", "failures", "input_tokens", "output_tokens", "total_tokens"]},
+    "calls": {"type": "array"}
+  },
+  "additionalProperties": true
+}

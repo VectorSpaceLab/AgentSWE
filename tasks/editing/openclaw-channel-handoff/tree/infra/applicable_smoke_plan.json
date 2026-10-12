@@ -1,0 +1,46 @@
+{
+  "schema_version": "openclaw-applicable-smoke-v1",
+  "status": "plan-only",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "py_compile",
+        "broker/responses_broker.py",
+        "adapters/materialize_candidate.py",
+        "lower_agent/launcher.py",
+        "controller/two_round_controller.py",
+        "evaluator/case_service.py",
+        "evaluator/code_score_runner.py",
+        "infra/self_test.py"
+      ],
+      "executed": false
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "lower_agent/launcher.mjs"
+      ],
+      "executed": false
+    },
+    {
+      "command": [
+        "pnpm",
+        "install",
+        "--offline",
+        "--frozen-lockfile"
+      ],
+      "executed": false
+    },
+    {
+      "command": [
+        "pnpm",
+        "build:strict-smoke"
+      ],
+      "executed": false
+    }
+  ],
+  "warning": "Build/API/Docker smoke is intentionally not run during Stage A."
+}

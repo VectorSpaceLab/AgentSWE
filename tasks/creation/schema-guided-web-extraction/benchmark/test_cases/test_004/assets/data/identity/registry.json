@@ -1,0 +1,202 @@
+[
+  {
+    "sensor_id": "SN-9040",
+    "serial": "SERIAL-70039",
+    "location": "Field 9"
+  },
+  {
+    "sensor_id": "SN-9039",
+    "serial": "SERIAL-70038",
+    "location": "Lab West"
+  },
+  {
+    "sensor_id": "SN-9038",
+    "serial": "SERIAL-70037",
+    "location": "Pier 2"
+  },
+  {
+    "sensor_id": "SN-9037",
+    "serial": "SERIAL-70036",
+    "location": "Tunnel 3"
+  },
+  {
+    "sensor_id": "SN-9036",
+    "serial": "SERIAL-70035",
+    "location": null
+  },
+  {
+    "sensor_id": "SN-9035",
+    "serial": "SERIAL-70034",
+    "location": "Field 9"
+  },
+  {
+    "sensor_id": "SN-9034",
+    "serial": "SERIAL-70033",
+    "location": "Lab West"
+  },
+  {
+    "sensor_id": "SN-9033",
+    "serial": "SERIAL-70032",
+    "location": "Pier 2"
+  },
+  {
+    "sensor_id": "SN-9032",
+    "serial": "SERIAL-70031",
+    "location": "Tunnel 3"
+  },
+  {
+    "sensor_id": "SN-9031",
+    "serial": "SERIAL-70030",
+    "location": "Roof A"
+  },
+  {
+    "sensor_id": "SN-9030",
+    "serial": "SERIAL-70029",
+    "location": "Field 9"
+  },
+  {
+    "sensor_id": "SN-9029",
+    "serial": "SERIAL-70028",
+    "location": null
+  },
+  {
+    "sensor_id": "SN-9028",
+    "serial": "SERIAL-70027",
+    "location": "Pier 2"
+  },
+  {
+    "sensor_id": "SN-9027",
+    "serial": "SERIAL-70026",
+    "location": "Tunnel 3"
+  },
+  {
+    "sensor_id": "SN-9026",
+    "serial": "SERIAL-70025",
+    "location": "Roof A"
+  },
+  {
+    "sensor_id": "SN-9025",
+    "serial": "SERIAL-70024",
+    "location": "Field 9"
+  },
+  {
+    "sensor_id": "SN-9024",
+    "serial": "SERIAL-70023",
+    "location": "Lab West"
+  },
+  {
+    "sensor_id": "SN-9023",
+    "serial": "SERIAL-70022",
+    "location": "Pier 2"
+  },
+  {
+    "sensor_id": "SN-9022",
+    "serial": "SERIAL-70021",
+    "location": null
+  },
+  {
+    "sensor_id": "SN-9021",
+    "serial": "SERIAL-70020",
+    "location": "Roof A"
+  },
+  {
+    "sensor_id": "SN-9020",
+    "serial": "SERIAL-70019",
+    "location": "Field 9"
+  },
+  {
+    "sensor_id": "SN-9019",
+    "serial": "SERIAL-70018",
+    "location": "Lab West"
+  },
+  {
+    "sensor_id": "SN-9018",
+    "serial": "SERIAL-70017",
+    "location": "Pier 2"
+  },
+  {
+    "sensor_id": "SN-9017",
+    "serial": "SERIAL-70016",
+    "location": "Tunnel 3"
+  },
+  {
+    "sensor_id": "SN-9016",
+    "serial": "SERIAL-70015",
+    "location": "Roof A"
+  },
+  {
+    "sensor_id": "SN-9015",
+    "serial": "SERIAL-70014",
+    "location": null
+  },
+  {
+    "sensor_id": "SN-9014",
+    "serial": "SERIAL-70013",
+    "location": "Lab West"
+  },
+  {
+    "sensor_id": "SN-9013",
+    "serial": "SERIAL-70012",
+    "location": "Pier 2"
+  },
+  {
+    "sensor_id": "SN-9012",
+    "serial": "SERIAL-70011",
+    "location": "Tunnel 3"
+  },
+  {
+    "sensor_id": "SN-9011",
+    "serial": "SERIAL-70010",
+    "location": "Roof A"
+  },
+  {
+    "sensor_id": "SN-9010",
+    "serial": "SERIAL-70009",
+    "location": "Field 9"
+  },
+  {
+    "sensor_id": "SN-9009",
+    "serial": "SERIAL-70008",
+    "location": "Lab West"
+  },
+  {
+    "sensor_id": "SN-9008",
+    "serial": "SERIAL-70007",
+    "location": null
+  },
+  {
+    "sensor_id": "SN-9007",
+    "serial": "SERIAL-70006",
+    "location": "Tunnel 3"
+  },
+  {
+    "sensor_id": "SN-9006",
+    "serial": "SERIAL-70005",
+    "location": "Roof A"
+  },
+  {
+    "sensor_id": "SN-9005",
+    "serial": "SERIAL-70004",
+    "location": "Field 9"
+  },
+  {
+    "sensor_id": "SN-9004",
+    "serial": "SERIAL-70003",
+    "location": "Lab West"
+  },
+  {
+    "sensor_id": "SN-9003",
+    "serial": "SERIAL-70002",
+    "location": "Pier 2"
+  },
+  {
+    "sensor_id": "SN-9002",
+    "serial": "SERIAL-70001",
+    "location": "Tunnel 3"
+  },
+  {
+    "sensor_id": "SN-9001",
+    "serial": "SERIAL-70000",
+    "location": null
+  }
+]

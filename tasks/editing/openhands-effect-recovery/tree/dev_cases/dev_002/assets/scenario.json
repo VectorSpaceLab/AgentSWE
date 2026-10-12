@@ -1,0 +1,24 @@
+{
+  "backendId": "public-backend-a",
+  "foreignBackendId": "public-backend-b",
+  "conversationId": "public-tab-fencing",
+  "ownerTabId": "public-tab-owner",
+  "viewerTabId": "public-tab-viewer",
+  "workspace": { "digest": "sha256:public-tree-b", "version": "git:public-b" },
+  "lateSettlementTakeover": true,
+  "replacementWatchABA": true,
+  "replayUsesDistinctUiEventId": true,
+  "dispatcherReconnectHandoff": true,
+  "syncFrozenTabTakeover": true,
+  "syncSameTabReincarnation": true,
+  "workspaceCommitReconciliation": true,
+  "effect": {
+    "deliveryId": "public-delivery-read-1",
+    "effectId": "public-read-1",
+    "idempotencyKey": "read:public-status",
+    "toolName": "read_file",
+    "kind": "read_only",
+    "retryClass": "replay_safe",
+    "resultMetadata": { "digestAlgorithm": "sha256" }
+  }
+}

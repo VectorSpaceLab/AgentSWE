@@ -1,0 +1,6 @@
+{
+  "schema_version": "deepcode-agentloop-infra-classification-v1",
+  "candidate_failure": ["invalid_patch", "build_failure", "missing_agent_artifact", "agent_strategy_failure", "contract_failure"],
+  "infrastructure_invalid": ["broker_unavailable", "broker_infrastructure_error", "provider_failure", "credential_infrastructure_error", "protocol_infrastructure_error", "credential_mount_failure", "case_mount_failure", "evaluator_failure", "container_or_process_failure"],
+  "policy": "infrastructure-invalid is N/A and does not become Candidate 0; valid Candidate failures may score 0 or be capped by the case rubric"
+}

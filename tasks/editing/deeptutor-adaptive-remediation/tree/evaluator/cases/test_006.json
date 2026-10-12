@@ -1,0 +1,11 @@
+{
+  "case_id": "test_006",
+  "visibility": "hidden",
+  "seed_mode": "stale_chain_head",
+  "prompt_file": "test_cases/test_006/input.md",
+  "required_tools_any": ["mastery_learner_snapshot", "mastery_learner_snapshot_witness", "mastery_learner_snapshot_chain_audit"],
+  "provenance_tools_any": ["mastery_learner_snapshot_verify", "mastery_learner_snapshot_checkpoint"],
+  "max_model_calls": 12,
+  "max_tool_calls": 26,
+  "require_safe_refusal": true
+}

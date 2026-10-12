@@ -1,0 +1,1150 @@
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import re
+import shutil
+import signal
+import stat
+import subprocess
+import sys
+import time
+from typing import Any
+import zipfile
+
+
+BENCHMARK_ROOT = Path(__file__).resolve().parents[1]
+PRISTINE_REPOSITORY = BENCHMARK_ROOT / "input" / "repository"
+REQUIRED_DELIVERY = ("solution.patch", "edit_report.json", "run_report.json")
+SCIENTIFIC_OUTPUTS = ("claim_ledger.json", "verification_report.json", "validated_writeup.md")
+PROVENANCE_OUTPUTS = ("reproducibility_run.json",)
+RECEIPT_NAMES = ("transaction_receipt.json", "budget_receipt.json")
+AUX_OUTPUTS = ("attestation.json", "notification_receipt.json")
+RELEASE_OUTPUTS = (*SCIENTIFIC_OUTPUTS, "reproducibility_capsule.zip", *PROVENANCE_OUTPUTS, *AUX_OUTPUTS)
+MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
+SOURCE_TREE_SHA256 = "ea87e48ce5da9e883f150eb9d56b31e4064a1897321f282e5d7001b65b87c960"
+
+
+class HarnessError(RuntimeError):
+    pass
+
+
+def read_json(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise HarnessError(f"cannot parse JSON {path}: {exc}") from exc
+
+
+def file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def canonical_sha256(value: Any) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def tree_digest(root: Path) -> str:
+    digest = hashlib.sha256()
+    if not root.exists():
+        return digest.hexdigest()
+    for path in sorted(root.rglob("*")):
+        if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc":
+            digest.update(path.relative_to(root).as_posix().encode("utf-8"))
+            digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def snapshot_source_hash() -> str:
+    digest = hashlib.sha256()
+    for path in sorted(PRISTINE_REPOSITORY.rglob("*")):
+        if path.is_file():
+            relative = path.relative_to(BENCHMARK_ROOT).as_posix()
+            digest.update(f"{file_sha256(path)}  {relative}\n".encode("utf-8"))
+    return digest.hexdigest()
+
+
+def run_checked(command: list[str], cwd: Path, timeout: int = 120) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(command, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise HarnessError(f"command timed out: {' '.join(command)}") from exc
+
+
+def patch_paths(patch_text: str) -> set[str]:
+    paths: set[str] = set()
+    for line in patch_text.splitlines():
+        if not line.startswith("+++ "):
+            continue
+        value = line[4:].split("\t", 1)[0]
+        if value != "/dev/null":
+            paths.add(value[2:] if value.startswith("b/") else value)
+    return paths
+
+
+def allowed_patch_path(value: str) -> bool:
+    path = Path(value)
+    if path.is_absolute() or ".." in path.parts or not path.parts:
+        return False
+    if value in {"launch_scientist_bfts.py", "README.md", "requirements.txt"}:
+        return True
+    if path.parts[0] == "tests":
+        return path.suffix in {".py", ".json", ".md", ".txt", ".csv"}
+    if path.parts[0] != "ai_scientist":
+        return False
+    forbidden = {"ideas", "fewshot_examples", "blank_icbinb_latex", "blank_icml_latex"}
+    if len(path.parts) > 1 and path.parts[1] in forbidden:
+        return False
+    return path.suffix in {".py", ".json", ".md", ".txt", ".yaml", ".yml"} or path.name == "__init__.py"
+
+
+def _regular_file(path: Path) -> bool:
+    try:
+        return stat.S_ISREG(path.lstat().st_mode)
+    except OSError:
+        return False
+
+
+def validate_delivery(submission: Path) -> tuple[str, dict[str, Any], dict[str, Any]]:
+    if not submission.is_dir():
+        raise HarnessError("submission is not a directory")
+    entries = {path.name for path in submission.iterdir()}
+    required = set(REQUIRED_DELIVERY)
+    if entries != required:
+        raise HarnessError(f"delivery must contain exactly {list(REQUIRED_DELIVERY)}; missing={sorted(required - entries)}, extra={sorted(entries - required)}")
+    if any(not _regular_file(submission / name) for name in REQUIRED_DELIVERY):
+        raise HarnessError("all three delivery entries must be top-level regular files, not links or directories")
+
+    try:
+        patch_text = (submission / "solution.patch").read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        raise HarnessError(f"solution.patch is not readable UTF-8: {exc}") from exc
+    if not patch_text.strip() or "diff --git" not in patch_text:
+        raise HarnessError("solution.patch is empty or not a Git unified patch")
+    paths = patch_paths(patch_text)
+    rejected = sorted(path for path in paths if not allowed_patch_path(path))
+    if not paths or rejected:
+        raise HarnessError(f"patch has no allowed paths or touches forbidden paths: {rejected}")
+
+    edit_report = read_json(submission / "edit_report.json")
+    if not isinstance(edit_report, dict):
+        raise HarnessError("edit_report.json must be an object")
+    edit_keys = ("schema_version", "feature_summary", "changed_paths", "commands_and_results", "compatibility_notes", "limitations")
+    if any(key not in edit_report for key in edit_keys):
+        raise HarnessError("edit_report.json is missing required fields")
+    if not isinstance(edit_report["changed_paths"], list) or not all(isinstance(item, str) for item in edit_report["changed_paths"]):
+        raise HarnessError("edit_report.json changed_paths must be a string array")
+
+    run_report = read_json(submission / "run_report.json")
+    if not isinstance(run_report, dict) or run_report.get("schema_version") != "1.0":
+        raise HarnessError("run_report.json must be a schema_version '1.0' object")
+    if not isinstance(run_report.get("status"), str) or not run_report["status"].strip():
+        raise HarnessError("run_report.json status must be a nonempty string")
+    if run_report.get("artifact_paths") != list(REQUIRED_DELIVERY):
+        raise HarnessError(f"run_report.json artifact_paths must equal {list(REQUIRED_DELIVERY)}")
+    errors = run_report.get("errors")
+    if not isinstance(errors, list) or not all(isinstance(item, str) for item in errors):
+        raise HarnessError("run_report.json errors must be a string array")
+    runtime = run_report.get("runtime_seconds")
+    if not isinstance(runtime, (int, float)) or isinstance(runtime, bool) or not math.isfinite(runtime) or runtime < 0:
+        raise HarnessError("run_report.json runtime_seconds must be a finite nonnegative number")
+    peak = run_report.get("peak_memory_bytes")
+    if not isinstance(peak, int) or isinstance(peak, bool) or peak < 0:
+        raise HarnessError("run_report.json peak_memory_bytes must be a nonnegative integer")
+    api_calls = run_report.get("api_calls")
+    if not isinstance(api_calls, dict) or set(api_calls) != {"gateway", "serper", "web_retrieval"}:
+        raise HarnessError("run_report.json api_calls must contain exactly gateway, serper, and web_retrieval")
+    for key, value in api_calls.items():
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise HarnessError(f"run_report.json api_calls.{key} must be a nonnegative integer")
+    return patch_text, edit_report, run_report
+
+
+def initialize_repository(repo: Path) -> None:
+    commands = (
+        ["git", "init", "-q"],
+        ["git", "config", "user.email", "benchmark@example.invalid"],
+        ["git", "config", "user.name", "Benchmark Harness"],
+        ["git", "add", "-A"],
+        ["git", "commit", "-q", "-m", "pristine benchmark snapshot"],
+    )
+    if any(run_checked(command, repo).returncode for command in commands):
+        raise HarnessError("could not initialize pristine repository")
+
+
+def focused_upstream_regression(repo: Path) -> None:
+    expected = {
+        "launch_scientist_bfts.py": {"parse_arguments"},
+        "ai_scientist/perform_writeup.py": {"perform_writeup", "compile_latex"},
+        "ai_scientist/perform_icbinb_writeup.py": {"perform_writeup", "compile_latex"},
+    }
+    for relative, functions in expected.items():
+        try:
+            tree = ast.parse((repo / relative).read_text(encoding="utf-8"), filename=relative)
+        except (OSError, UnicodeError, SyntaxError) as exc:
+            raise HarnessError(f"focused upstream parse regression failed for {relative}: {exc}") from exc
+        present = {node.name for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))}
+        if functions - present:
+            raise HarnessError(f"focused upstream regression removed functions from {relative}: {sorted(functions - present)}")
+
+
+def prepare_submission(submission: Path, work_dir: Path) -> dict[str, Any]:
+    patch_text, edit_report, run_report = validate_delivery(submission)
+    delivery_hashes = {name: file_sha256(submission / name) for name in REQUIRED_DELIVERY}
+    repo = work_dir / "repository"
+    if repo.exists():
+        shutil.rmtree(repo)
+    shutil.copytree(PRISTINE_REPOSITORY, repo, symlinks=True)
+    initialize_repository(repo)
+    patch_file = submission / "solution.patch"
+    check = run_checked(["git", "apply", "--check", str(patch_file)], repo)
+    if check.returncode:
+        raise HarnessError(f"patch apply check failed: {check.stderr.strip()}")
+    applied = run_checked(["git", "apply", str(patch_file)], repo)
+    if applied.returncode:
+        raise HarnessError(f"patch application failed: {applied.stderr.strip()}")
+    if run_checked(["git", "apply", "--check", str(patch_file)], repo).returncode == 0:
+        raise HarnessError("solution.patch is applicable more than once")
+    intent = sorted(path for path in patch_paths(patch_text) if (repo / path).exists())
+    if intent and run_checked(["git", "add", "-N", "-f", "--", *intent], repo).returncode:
+        raise HarnessError("could not register newly added patch paths")
+    changed_result = run_checked(["git", "diff", "--name-only", "HEAD"], repo)
+    changed = {line.strip() for line in changed_result.stdout.splitlines() if line.strip()}
+    if not changed or changed != patch_paths(patch_text):
+        raise HarnessError("patch path headers do not match applied changes")
+    if set(edit_report["changed_paths"]) != changed or len(edit_report["changed_paths"]) != len(changed):
+        raise HarnessError("edit_report.json changed_paths does not exactly match the applied patch")
+    compiled = run_checked([sys.executable, "-m", "compileall", "-q", "ai_scientist", "launch_scientist_bfts.py"], repo)
+    if compiled.returncode:
+        raise HarnessError(f"Python compile gate failed: {compiled.stderr.strip()}")
+    focused_upstream_regression(repo)
+    help_result = run_checked([sys.executable, "-m", "ai_scientist.claim_verification", "--help"], repo, timeout=30)
+    if delivery_hashes != {name: file_sha256(submission / name) for name in REQUIRED_DELIVERY}:
+        raise HarnessError("submission delivery changed during preflight")
+    return {
+        "repository": repo,
+        "changed_paths": sorted(changed),
+        "edit_report": edit_report,
+        "run_report": run_report,
+        "compile_gate": "passed",
+        "entry_available": help_result.returncode == 0,
+        "entry_evidence": (help_result.stderr or help_result.stdout)[-1000:],
+        "delivery_hashes": delivery_hashes,
+    }
+
+
+def process_tree_rss(root_pid: int) -> int:
+    entries: dict[int, tuple[int, int]] = {}
+    for status_path in Path("/proc").glob("[0-9]*/status"):
+        try:
+            pid = int(status_path.parent.name)
+            ppid = rss = 0
+            for line in status_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+                if line.startswith("PPid:"):
+                    ppid = int(line.split()[1])
+                elif line.startswith("VmRSS:"):
+                    rss = int(line.split()[1]) * 1024
+            entries[pid] = (ppid, rss)
+        except (OSError, ValueError, IndexError):
+            continue
+    descendants = {root_pid}
+    while True:
+        added = {pid for pid, (ppid, _) in entries.items() if ppid in descendants} - descendants
+        if not added:
+            break
+        descendants.update(added)
+    return sum(entries.get(pid, (0, 0))[1] for pid in descendants)
+
+
+def sanitized_environment() -> dict[str, str]:
+    environment = os.environ.copy()
+    for key in list(environment):
+        if key.endswith("_API_KEY") or key in {"SERPER_TOKEN", "AWS_SECRET_ACCESS_KEY", "AWS_ACCESS_KEY_ID"}:
+            environment.pop(key, None)
+    environment.update({
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "HTTP_PROXY": "http://127.0.0.1:1",
+        "HTTPS_PROXY": "http://127.0.0.1:1",
+        "ALL_PROXY": "http://127.0.0.1:1",
+        "NO_PROXY": "",
+    })
+    return environment
+
+
+def run_monitored(command: list[str], cwd: Path, timeout: int) -> dict[str, Any]:
+    started = time.monotonic()
+    proc = subprocess.Popen(
+        command,
+        cwd=cwd,
+        env=sanitized_environment(),
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        start_new_session=True,
+    )
+    peak = 0
+    timed_out = memory_exceeded = False
+    while proc.poll() is None:
+        peak = max(peak, process_tree_rss(proc.pid))
+        if peak > MEMORY_LIMIT_BYTES or time.monotonic() - started > timeout:
+            memory_exceeded = peak > MEMORY_LIMIT_BYTES
+            timed_out = not memory_exceeded
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            break
+        time.sleep(0.02)
+    stdout, stderr = proc.communicate()
+    return {
+        "returncode": proc.returncode,
+        "stdout": stdout,
+        "stderr": stderr,
+        "runtime_seconds": time.monotonic() - started,
+        "peak_memory_bytes": peak,
+        "timed_out": timed_out,
+        "memory_exceeded": memory_exceeded,
+        "command_surface": "launcher" if "launch_scientist_bfts.py" in command else "module",
+    }
+
+
+def load_context(case_root: Path) -> dict[str, Any]:
+    context = read_json(case_root / "assets" / "transaction_context.json")
+    if not isinstance(context, dict):
+        raise HarnessError("transaction_context.json must be an object")
+    required = {"tenant_id", "verification_id", "request_id", "owner_id", "generation", "project_id", "capsule_policy", "usage_statement", "budget_policy", "run_manifest"}
+    missing = required - set(context)
+    if missing:
+        raise HarnessError(f"transaction context missing {sorted(missing)}")
+    return context
+
+
+def transaction_command(
+    repo: Path,
+    workspace: Path,
+    output: Path,
+    ledger: Path,
+    session_store: Path,
+    budget_store: Path,
+    context: dict[str, Any],
+    operation: str,
+    surface: str = "module",
+    takeover_generation: int | None = None,
+) -> list[str]:
+    if surface == "launcher":
+        command = [sys.executable, "launch_scientist_bfts.py", "--verify-claims-only"]
+        prefix = "--claim-"
+    else:
+        command = [sys.executable, "-m", "ai_scientist.claim_verification"]
+        prefix = "--"
+    values = {
+        "workspace": workspace,
+        "output": output,
+        "ledger": ledger,
+        "replay-tolerance": context.get("replay_tolerance", "0.000001"),
+        "session-store": session_store,
+        "tenant-id": context["tenant_id"],
+        "verification-id": context["verification_id"],
+        "request-id": context["request_id"],
+        "owner-id": context["owner_id"],
+        "generation": context["generation"],
+        "operation": operation,
+        "project-id": context["project_id"],
+        "capsule-policy": context["capsule_policy"],
+        "usage-statement": context["usage_statement"],
+        "budget-policy": context["budget_policy"],
+        "budget-store": budget_store,
+        "run-manifest": context["run_manifest"],
+        "attestation-store": str(output.parent / context.get("attestation_store", "aux-attestations")),
+        "notification-store": str(output.parent / context.get("notification_store", "aux-outbox")),
+        "attestation-policy": context.get("attestation_policy", ""),
+        "notification-policy": context.get("notification_policy", ""),
+    }
+    for name, value in values.items():
+        command.extend([prefix + name, str(value)])
+    if takeover_generation is not None:
+        command.extend([prefix + "takeover-generation", str(takeover_generation)])
+    return command
+
+
+def run_transaction(
+    repo: Path,
+    workspace: Path,
+    output: Path,
+    ledger: Path,
+    session_store: Path,
+    budget_store: Path,
+    context: dict[str, Any],
+    operation: str,
+    surface: str = "module",
+    takeover_generation: int | None = None,
+    timeout: int = 120,
+) -> dict[str, Any]:
+    output.mkdir(parents=True, exist_ok=True)
+    run = run_monitored(
+        transaction_command(repo, workspace, output, ledger, session_store, budget_store, context, operation, surface, takeover_generation),
+        repo,
+        timeout,
+    )
+    run.update({"operation": operation, "output": str(output), "context": dict(context)})
+    for name in (*RECEIPT_NAMES, *AUX_OUTPUTS, *PROVENANCE_OUTPUTS, "error.json", *SCIENTIFIC_OUTPUTS):
+        path = output / name
+        if path.is_file():
+            try:
+                run[name] = read_json(path) if path.suffix == ".json" else path.read_text(encoding="utf-8")
+            except HarnessError as exc:
+                run[f"{name}_parse_error"] = str(exc)
+    run["artifact_hashes"] = {name: file_sha256(output / name) for name in RELEASE_OUTPUTS if (output / name).is_file()}
+    return run
+
+
+def ordinary_probe(repo: Path, workspace: Path, output: Path, ledger: Path, timeout: int = 120) -> dict[str, Any]:
+    output.mkdir(parents=True, exist_ok=True)
+    run = run_monitored([
+        sys.executable,
+        "-m",
+        "ai_scientist.claim_verification",
+        "--workspace",
+        str(workspace),
+        "--output",
+        str(output),
+        "--ledger",
+        str(ledger),
+        "--replay-tolerance",
+        "0.000001",
+    ], repo, timeout)
+    run.update({"operation": "ordinary", "output": str(output)})
+    return run
+
+
+def find_key(value: Any, names: set[str]) -> Any:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if str(key).lower() in names:
+                return child
+        for child in value.values():
+            found = find_key(child, names)
+            if found is not None:
+                return found
+    elif isinstance(value, list):
+        for child in value:
+            found = find_key(child, names)
+            if found is not None:
+                return found
+    return None
+
+
+def lower_corpus(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, ensure_ascii=True).lower()
+
+
+def token_group_present(corpus: str, group: tuple[str, ...]) -> bool:
+    return any(token.lower() in corpus for token in group)
+
+
+def expected_charge(workspace: Path, context: dict[str, Any]) -> int:
+    usage = read_json(workspace / context["usage_statement"])
+    policy = read_json(workspace / context["budget_policy"])
+    calls: dict[str, dict[str, Any]] = {}
+    for call in usage["calls"]:
+        previous = calls.get(call["call_id"])
+        if previous is not None and previous != call:
+            raise HarnessError("fixture has conflicting duplicate call IDs")
+        calls[call["call_id"]] = call
+    total = 0
+    for call in calls.values():
+        rates = policy["rates"][call["model"]]
+        total += (call["prompt_tokens"] * rates["prompt_micros_per_million"] + 999_999) // 1_000_000
+        total += (call["completion_tokens"] * rates["completion_micros_per_million"] + 999_999) // 1_000_000
+    return total
+
+
+def release_outputs(output: Path) -> tuple[dict[str, Any], dict[str, Any], str] | None:
+    if any(not (output / name).is_file() for name in SCIENTIFIC_OUTPUTS):
+        return None
+    try:
+        ledger = read_json(output / "claim_ledger.json")
+        report = read_json(output / "verification_report.json")
+        writeup = (output / "validated_writeup.md").read_text(encoding="utf-8")
+    except (HarnessError, OSError, UnicodeError):
+        return None
+    if not isinstance(ledger, dict) or not isinstance(ledger.get("claims"), list) or not isinstance(report, dict) or not writeup.strip():
+        return None
+    return ledger, report, writeup
+
+
+def science_checks(spec: Any, output: Path) -> tuple[bool, bool, str]:
+    artifacts = release_outputs(output)
+    if artifacts is None:
+        return False, False, "no parseable scientific artifact set"
+    ledger, report, writeup = artifacts
+    corpus = lower_corpus({"ledger": ledger, "report": report})
+    claims = ledger["claims"]
+    bindings = (
+        len(claims) >= spec.min_claims
+        and all(token.lower() in corpus for token in spec.experiment_ids + spec.config_paths + spec.dataset_tokens + spec.metric_tokens)
+        and all(re.search(rf"(?<!\d){seed}(?!\d)", corpus) for seed in spec.seeds)
+        and bool(re.search(r"\b[0-9a-f]{64}\b", corpus))
+    )
+    issues = all(token_group_present(corpus, group) for _, group in spec.issue_groups)
+    values = all(token_group_present(corpus, group) for group in spec.numeric_evidence_groups)
+    decision = str(find_key(report, {"decision", "release_decision"})).lower()
+    writeup_lower = writeup.lower()
+    safe = all(phrase.lower() not in writeup_lower for phrase in spec.banned_writeup)
+    safe = safe and all(token_group_present(writeup_lower, group) for group in spec.required_writeup_groups + spec.preserve_groups)
+    unresolved = lower_corpus(find_key(report, {"unresolved_items", "unresolved", "followups", "follow_up"}))
+    followup_ok = all(token_group_present(unresolved, group) for group in spec.unresolved_groups)
+    evidence = issues and values and decision in spec.decisions and safe and followup_ok
+    return bindings, evidence, f"claims={len(claims)}, bindings={bindings}, issues={issues}, values={values}, decision={decision!r}, safe={safe}, unresolved={followup_ok}"
+
+
+def _evidence_references(manifest: dict[str, Any], workspace: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Return an independently derived evidence reference ledger and metric view."""
+    declared: dict[str, str | None] = {}
+    metrics: list[dict[str, Any]] = []
+
+    def add(path: Any, digest: Any) -> None:
+        if isinstance(path, str) and path and not Path(path).is_absolute() and ".." not in Path(path).parts:
+            declared.setdefault(path, digest if isinstance(digest, str) else None)
+
+    for experiment in manifest.get("experiments", []):
+        if not isinstance(experiment, dict):
+            continue
+        for field in ("config", "log"):
+            value = experiment.get(field)
+            if isinstance(value, dict):
+                add(value.get("path"), value.get("sha256"))
+        ablation = experiment.get("ablation")
+        if isinstance(ablation, dict):
+            add(ablation.get("log_path"), ablation.get("log_sha256"))
+        for metric in experiment.get("metrics", []):
+            if not isinstance(metric, dict):
+                continue
+            raw = metric.get("raw_artifact")
+            summary = metric.get("reported_summary")
+            if isinstance(raw, dict):
+                add(raw.get("path"), raw.get("sha256"))
+                raw_path = raw.get("path")
+                observed = file_sha256(workspace / raw_path) if isinstance(raw_path, str) and (workspace / raw_path).is_file() else None
+                metrics.append({"experiment_id": experiment.get("experiment_id"), "metric": metric.get("name"), "path": raw_path, "declared_sha256": raw.get("sha256"), "observed_sha256": observed, "status": "verified" if observed == raw.get("sha256") else ("missing" if observed is None else "integrity_error")})
+            if isinstance(summary, dict):
+                add(summary.get("path"), summary.get("sha256"))
+        
+    for figure in manifest.get("figures", []):
+        if isinstance(figure, dict):
+            add(figure.get("path"), figure.get("sha256"))
+    for replay in manifest.get("replays", []):
+        if isinstance(replay, dict):
+            command = replay.get("command")
+            script_path = replay.get("script_path")
+            if script_path is None and isinstance(command, list) and len(command) > 1:
+                script_path = command[1]
+            add(script_path, replay.get("script_sha256"))
+
+    references = []
+    for path in sorted(declared):
+        candidate = workspace / path
+        observed = file_sha256(candidate) if candidate.is_file() and not candidate.is_symlink() else None
+        expected = declared[path]
+        references.append({"path": path, "declared_sha256": expected, "observed_sha256": observed, "status": "verified" if observed == expected else ("missing" if observed is None else "integrity_error")})
+    metrics.sort(key=lambda item: (str(item.get("experiment_id")), str(item.get("metric")), str(item.get("path"))))
+    return references, metrics
+
+
+def scientific_evidence_attestation(output: Path, workspace: Path) -> tuple[bool, str]:
+    """Check a v4 evidence ledger whose observations are recomputed by the evaluator."""
+    try:
+        artifacts = release_outputs(output)
+        manifest = read_json(workspace / "evidence_manifest.json")
+        if artifacts is None or not isinstance(manifest, dict):
+            return False, "missing scientific artifacts or evidence manifest"
+        ledger, report, _ = artifacts
+        references, metrics = _evidence_references(manifest, workspace)
+        status = "verified" if all(item["status"] == "verified" for item in references) else "blocked"
+        payload = {"schema_version": 1, "attestation_version": "4", "manifest_sha256": file_sha256(workspace / "evidence_manifest.json"), "references": references, "metrics": metrics, "status": status}
+        digest = canonical_sha256(payload)
+        expected = {**payload, "digest": digest}
+        passed = ledger.get("evidence_attestation") == expected and report.get("evidence_attestation") == expected and report.get("evidence_attestation_digest") == digest
+        return passed, f"references={len(references)}, metrics={len(metrics)}, status={status!r}, digest_bound={passed}"
+    except Exception as exc:
+        return False, f"evidence attestation validation error: {type(exc).__name__}: {exc}"
+
+
+def scientific_claim_contract(spec: Any, output: Path, workspace: Path) -> tuple[bool, str]:
+    """Bind semantic science-check results to the final claim payload."""
+    try:
+        artifacts = release_outputs(output)
+        manifest = read_json(workspace / "evidence_manifest.json")
+        if artifacts is None or not isinstance(manifest, dict):
+            return False, "missing scientific artifacts or evidence manifest"
+        ledger, report, writeup = artifacts
+        bindings, evidence, _ = science_checks(spec, output)
+        claims = ledger.get("claims", [])
+        contract_payload = {
+            "schema_version": 1,
+            "contract_version": "5",
+            "decision": str(report.get("decision", report.get("release_decision", ""))).lower(),
+            "expected_decision": str(manifest.get("release_policy", {}).get("required_decision", "")).lower(),
+            "claim_refs": sorted([[str(item.get("claim_id", "")), str(item.get("experiment_id", ""))] for item in claims if isinstance(item, dict)]),
+            "issue_kinds": sorted(str(item.get("kind", "")) for item in report.get("issues", []) if isinstance(item, dict)),
+            "unresolved_items": sorted(str(item) for item in report.get("unresolved_items", []) if isinstance(item, str)),
+            "science_checks": {"bindings": bool(bindings), "evidence": bool(evidence)},
+            "evidence_attestation_digest": ledger.get("evidence_attestation", {}).get("digest"),
+            "writeup_sha256": file_sha256(output / "validated_writeup.md"),
+        }
+        expected = {**contract_payload, "digest": canonical_sha256(contract_payload)}
+        tx = read_json(output / "transaction_receipt.json")
+        passed = bindings and evidence and ledger.get("claim_contract") == expected and report.get("claim_contract") == expected and tx.get("claim_contract_digest") == expected["digest"]
+        return passed, f"bindings={bindings}, evidence={evidence}, contract_digest_bound={passed}"
+    except Exception as exc:
+        return False, f"claim contract validation error: {type(exc).__name__}: {exc}"
+
+
+def science_gate_check(output: Path, workspace: Path) -> tuple[bool, str]:
+    """Validate the recomputable transaction-to-science decision fence."""
+    try:
+        report = read_json(output / "verification_report.json")
+        tx = read_json(output / "transaction_receipt.json")
+        evidence = read_json(workspace / "evidence_manifest.json")
+        policy = evidence.get("release_policy", {}) if isinstance(evidence, dict) else {}
+        decision = str(report.get("decision", report.get("release_decision", ""))).lower()
+        blocking_keys = {
+            "block_on_data_leakage", "require_matching_comparison_splits",
+            "block_on_selective_reporting", "require_negative_results",
+            "require_equal_comparison_budget", "require_effective_ablation",
+            "block_on_invalid_ablation", "block_on_false_significance",
+            "block_on_integrity_error", "never_reuse_stale_success",
+            "require_config_log_consistency", "require_figure_raw_consistency",
+        }
+        expected = policy.get("required_decision")
+        if not isinstance(expected, str) or not expected.strip():
+            expected = "block" if any(policy.get(key) is True for key in blocking_keys) or policy.get("insufficient_stability_evidence") == "block" else decision
+        expected = expected.lower()
+        payload = {
+            "schema_version": 1,
+            "gate_version": "3",
+            "decision": decision,
+            "evidence_manifest_sha256": file_sha256(workspace / "evidence_manifest.json"),
+            "policy_sha256": canonical_sha256(policy),
+            "ledger_sha256": file_sha256(output / "claim_ledger.json"),
+            "report_sha256": file_sha256(output / "verification_report.json"),
+            "writeup_sha256": file_sha256(output / "validated_writeup.md"),
+        }
+        gate = tx.get("science_gate")
+        digest = canonical_sha256(payload)
+        capsule_manifest_ok = False
+        capsule = output / "reproducibility_capsule.zip"
+        if capsule.is_file():
+            with zipfile.ZipFile(capsule, "r") as archive:
+                manifest = json.loads(archive.read("capsule_manifest.json").decode("utf-8"))
+                capsule_manifest_ok = manifest.get("science_gate_digest") == digest
+        attestation_ok = True
+        attestation = output / "attestation.json"
+        if attestation.is_file():
+            attestation_ok = read_json(attestation).get("science_gate_digest") == digest
+        notice_ok = True
+        notice = output / "notification_receipt.json"
+        if notice.is_file():
+            notice_ok = read_json(notice).get("science_gate_digest") == digest
+        evidence_ok, evidence_detail = scientific_evidence_attestation(output, workspace)
+        valid = isinstance(gate, dict) and all(gate.get(key) == value for key, value in payload.items()) and gate.get("digest") == digest and decision == expected and capsule_manifest_ok and attestation_ok and notice_ok and evidence_ok
+        return valid, f"decision={decision!r}, expected={expected!r}, receipt_gate={isinstance(gate, dict)}, digest={isinstance(gate, dict) and gate.get('digest') == digest}, capsule_gate={capsule_manifest_ok}, attestation_gate={attestation_ok}, notice_gate={notice_ok}, evidence_attestation={evidence_detail}"
+    except Exception as exc:
+        return False, f"science gate validation error: {type(exc).__name__}: {exc}"
+
+
+def _manifest_member_path(member: dict[str, Any]) -> str | None:
+    for key in ("path", "archive_path", "name"):
+        if isinstance(member.get(key), str):
+            return member[key]
+    return None
+
+
+def inspect_capsule(capsule: Path, workspace: Path, context: dict[str, Any]) -> dict[str, Any]:
+    result = {"valid": False, "structure": False, "manifest": False, "capsule_id": None, "evidence": "capsule missing"}
+    if not capsule.is_file():
+        return result
+    try:
+        policy = read_json(workspace / context["capsule_policy"])
+        budget_policy = read_json(workspace / context["budget_policy"])
+        with zipfile.ZipFile(capsule, "r") as archive:
+            infos = archive.infolist()
+            names = [info.filename for info in infos]
+            expected = {"capsule_manifest.json", *(f"release/{name}" for name in (*SCIENTIFIC_OUTPUTS, *PROVENANCE_OUTPUTS)), *(f"evidence/{item['path']}" for item in policy["members"])}
+            metadata_ok = all(
+                info.date_time == (1980, 1, 1, 0, 0, 0)
+                and info.compress_type == zipfile.ZIP_STORED
+                and info.extra == b""
+                and info.comment == b""
+                and ((info.external_attr >> 16) & 0o777) == 0o644
+                for info in infos
+            )
+            structure = len(names) == len(set(names)) and names == sorted(names) and set(names) == expected and metadata_ok
+            manifest = json.loads(archive.read("capsule_manifest.json").decode("utf-8"))
+            members = manifest.get("members")
+            listed: dict[str, dict[str, Any]] = {}
+            if isinstance(members, list):
+                for item in members:
+                    if isinstance(item, dict) and _manifest_member_path(item):
+                        listed[_manifest_member_path(item)] = item
+            member_names = expected - {"capsule_manifest.json"}
+            hashes_ok = set(listed) == member_names
+            for name in member_names:
+                item = listed.get(name, {})
+                payload = archive.read(name)
+                hashes_ok = hashes_ok and item.get("sha256") == hashlib.sha256(payload).hexdigest() and item.get("size") == len(payload)
+            for item in policy["members"]:
+                name = f"evidence/{item['path']}"
+                hashes_ok = hashes_ok and archive.read(name) == (workspace / item["path"]).read_bytes() and listed.get(name, {}).get("role") == item["role"]
+            without_id = dict(manifest)
+            capsule_id = without_id.pop("capsule_id", None)
+            id_ok = isinstance(capsule_id, str) and capsule_id == canonical_sha256(without_id)
+            identity_ok = (
+                manifest.get("project_id") == context["project_id"]
+                and manifest.get("policy_version") == budget_policy["policy_version"]
+                and manifest.get("currency") == budget_policy["currency"]
+                and manifest.get("charge_micros") == expected_charge(workspace, context)
+            )
+            result.update({
+                "valid": structure and hashes_ok and id_ok and identity_ok,
+                "structure": structure,
+                "manifest": hashes_ok and id_ok and identity_ok,
+                "capsule_id": capsule_id,
+                "evidence": f"entries={len(names)}, exact/ordered/metadata={structure}, member hashes={hashes_ok}, capsule ID={id_ok}, identity/budget={identity_ok}",
+            })
+    except (OSError, KeyError, TypeError, ValueError, UnicodeError, zipfile.BadZipFile, json.JSONDecodeError, HarnessError) as exc:
+        result["evidence"] = f"capsule validation error: {type(exc).__name__}: {exc}"
+    return result
+
+
+def budget_check(receipt: Any, context: dict[str, Any], charge: int, status: str, reserved: int, settled: int) -> tuple[bool, str]:
+    if not isinstance(receipt, dict) or receipt.get("schema_version") != 1:
+        return False, "budget receipt missing or wrong schema"
+    corpus = lower_corpus(receipt)
+    snapshot = find_key(receipt, {"project_snapshot", "budget_snapshot", "snapshot"})
+    if not isinstance(snapshot, dict):
+        snapshot = receipt
+    request_status = find_key(receipt, {"budget_status", "request_status", "entry_status", "status"})
+    ok = (
+        find_key(receipt, {"project_id"}) == context["project_id"]
+        and find_key(receipt, {"policy_version"}) is not None
+        and find_key(receipt, {"charge_micros"}) == charge
+        and str(request_status).lower() == status
+        and find_key(snapshot, {"reserved_micros"}) == reserved
+        and find_key(snapshot, {"settled_micros"}) == settled
+        and context["project_id"].lower() in corpus
+    )
+    return ok, f"status={request_status!r}, charge={find_key(receipt, {'charge_micros'})!r}, reserved={find_key(snapshot, {'reserved_micros'})!r}, settled={find_key(snapshot, {'settled_micros'})!r}"
+
+
+def transaction_identity(receipt: Any, context: dict[str, Any], phase: str | None = None) -> bool:
+    if not isinstance(receipt, dict) or receipt.get("schema_version") != 1:
+        return False
+    for key in ("tenant_id", "verification_id", "request_id", "owner_id", "generation"):
+        if find_key(receipt, {key}) != context[key]:
+            return False
+    if phase is not None and str(find_key(receipt, {"phase", "transaction_status", "status"})).lower() != phase:
+        return False
+    return bool(re.fullmatch(r"[0-9a-f]{64}", str(find_key(receipt, {"request_fingerprint"}))))
+
+
+def structured_error(run: dict[str, Any], concepts: tuple[tuple[str, ...], ...]) -> tuple[bool, str]:
+    error = run.get("error.json")
+    corpus = lower_corpus(error) if isinstance(error, dict) else (run.get("stderr", "") + run.get("stdout", "")).lower()
+    schema = isinstance(error, dict) and error.get("schema_version") == 1
+    errors = find_key(error, {"errors"}) if isinstance(error, dict) else None
+    concepts_ok = all(any(token in corpus for token in group) for group in concepts)
+    ok = run.get("returncode") not in (None, 0) and schema and isinstance(errors, list) and bool(errors) and concepts_ok
+    return ok, f"rc={run.get('returncode')}, structured={schema}, nonempty errors={bool(errors)}, concepts={concepts_ok}"
+
+
+def integration_score(repo: Path, changed_paths: set[str]) -> tuple[bool, str]:
+    writeups = []
+    for relative in ("ai_scientist/perform_writeup.py", "ai_scientist/perform_icbinb_writeup.py"):
+        text = (repo / relative).read_text(encoding="utf-8", errors="ignore").lower()
+        writeups.append(relative in changed_paths and "claim" in text and any(token in text for token in ("verif", "release", "capsule")))
+    launcher = (repo / "launch_scientist_bfts.py").read_text(encoding="utf-8", errors="ignore").lower()
+    launcher_ok = "verify-claims-only" in launcher and "claim-project-id" in launcher and "claim-budget-store" in launcher
+    default_off = any(token in launcher for token in ("claim_workspace", "claim-workspace", "verify_claims_only"))
+    claim_path = repo / "ai_scientist" / "claim_verification.py"
+    claim_module = claim_path.read_text(encoding="utf-8", errors="ignore").lower() if claim_path.is_file() else ""
+    aux_ok = all(token in claim_module for token in ("attestation", "notification", "policy_version"))
+    provenance_ok = all(token in claim_module for token in ("run_manifest", "reproducibility_run", "cleanup_scope")) and "global" not in launcher
+    passed = all(writeups) and launcher_ok and default_off and aux_ok and provenance_ok
+    return passed, f"write-up call paths={writeups}, launcher governed route={launcher_ok}, default-off={default_off}, durable aux surfaces={aux_ok}, scoped provenance={provenance_ok}"
+
+
+def inspect_provenance(output: Path, workspace: Path, context: dict[str, Any]) -> dict[str, Any]:
+    result = {"binding": False, "workers": False, "policy": False, "cleanup": False, "journal_id": None, "evidence": "provenance missing"}
+    try:
+        manifest = read_json(workspace / context["run_manifest"])
+        record = read_json(output / "reproducibility_run.json")
+        if not isinstance(manifest, dict) or not isinstance(record, dict):
+            raise ValueError("manifest or record is not an object")
+        workers = manifest.get("workers")
+        if not isinstance(workers, list) or not workers:
+            raise ValueError("manifest has no workers")
+        manifest_hash = file_sha256(workspace / context["run_manifest"])
+        binding = (
+            record.get("schema_version") == 1
+            and record.get("project_id") == context["project_id"]
+            and record.get("run_id") == manifest.get("run_id")
+            and record.get("manifest_sha256") == manifest_hash
+            and record.get("journal_id") == hashlib.sha256(f"{context['project_id']}|{manifest.get('run_id')}|{manifest_hash}".encode()).hexdigest()
+        )
+        expected_workers = []
+        for item in workers:
+            expected_workers.append({key: item.get(key) for key in ("worker_id", "experiment_id", "seed", "status", "failure_class", "result_path", "result_sha256") if key in item or key in {"worker_id", "seed", "status"}})
+        actual_workers = record.get("workers")
+        workers_ok = isinstance(actual_workers, list) and actual_workers == expected_workers
+        policy = manifest.get("failure_policy", {})
+        fatal = set(policy.get("fatal_failure_classes", []))
+        failed = [item for item in workers if item.get("status") != "succeeded"]
+        fatal_seen = any(item.get("failure_class") in fatal for item in failed)
+        expected_decision = "blocked" if fatal_seen or (failed and not policy.get("allow_partial", False)) else ("partial" if failed else "complete")
+        policy_ok = record.get("decision") == expected_decision and record.get("successful_workers") == [item["worker_id"] for item in workers if item.get("status") == "succeeded"] and record.get("failed_workers") == [item["worker_id"] for item in workers if item.get("status") != "succeeded"]
+        cleanup = record.get("cleanup")
+        scope = manifest.get("cleanup_scope", {})
+        cleanup_ok = (
+            isinstance(cleanup, dict)
+            and cleanup.get("scope_id") == scope.get("scope_id")
+            and cleanup.get("global_process_scan") is False
+            and cleanup.get("unrelated_processes_preserved") is True
+            and set(cleanup.get("terminated_worker_ids", [])) <= {item.get("worker_id") for item in workers}
+            and all(not Path(str(value)).is_absolute() for value in (record.get("replay", {}).get("working_directory", "."),))
+        )
+        result.update({"binding": binding, "workers": workers_ok, "policy": policy_ok, "cleanup": cleanup_ok, "journal_id": record.get("journal_id"), "evidence": f"binding={binding}, workers={workers_ok}, decision/policy={policy_ok}, scoped cleanup={cleanup_ok}"})
+    except Exception as exc:
+        result["evidence"] = f"provenance validation error: {type(exc).__name__}: {exc}"
+    return result
+
+
+def provenance_retry_stable(root: Path, journal_id: str | None, output: Path) -> tuple[bool, str]:
+    if not journal_id or not (output / "reproducibility_run.json").is_file():
+        return False, "no final provenance record"
+    target = (output / "reproducibility_run.json").read_bytes()
+    matching = []
+    for path in sorted(root.rglob("reproducibility_run.json")):
+        try:
+            value = read_json(path)
+        except HarnessError:
+            continue
+        if isinstance(value, dict) and value.get("journal_id") == journal_id:
+            matching.append(path)
+    stable = bool(matching) and all(path.read_bytes() == target for path in matching)
+    return stable, f"matching durable provenance copies={len(matching)}, byte-identical={stable}"
+
+
+def auxiliary_checks(output: Path, context: dict[str, Any]) -> tuple[bool, bool, bool, bool, str]:
+    """Validate durable attestation and notification artifacts without trusting self-reported flags."""
+    try:
+        attestation = read_json(output / "attestation.json")
+        notice = read_json(output / "notification_receipt.json")
+        if not isinstance(attestation, dict) or not isinstance(notice, dict):
+            raise ValueError("auxiliary artifacts are not objects")
+        tx = read_json(output / "transaction_receipt.json")
+        commit_id, capsule_id = find_key(tx, {"commit_id"}), find_key(tx, {"capsule_id"})
+        att_bound = attestation.get("schema_version") == 1 and attestation.get("project_id") == context["project_id"] and attestation.get("commit_id") == commit_id and attestation.get("capsule_id") == capsule_id and attestation.get("status") == "valid"
+        # The attested release is the five-artifact publication set. The
+        # provenance journal must be digest-fenced with the scientific
+        # outputs and capsule.
+        release_names = (*SCIENTIFIC_OUTPUTS, "reproducibility_capsule.zip", *PROVENANCE_OUTPUTS)
+        release_digest = canonical_sha256({name: file_sha256(output / name) for name in release_names}) if all((output / name).is_file() for name in release_names) else ""
+        digest_ok = att_bound and attestation.get("release_digest") == release_digest
+        outbox_bound = notice.get("schema_version") == 1 and notice.get("project_id") == context["project_id"] and notice.get("commit_id") == commit_id and notice.get("attestation_id") == attestation.get("attestation_id") and notice.get("status") == "delivered"
+        store = Path(output.parent / context.get("notification_store", "outbox")) / (hashlib.sha256(context["project_id"].encode()).hexdigest() + ".json")
+        durable = outbox_bound and store.is_file() and notice.get("event_id") in read_json(store).get("events", {})
+        return att_bound, digest_ok, outbox_bound, durable, f"attestation bound={att_bound}, digest={digest_ok}; notification bound={outbox_bound}, durable={durable}"
+    except Exception as exc:
+        return False, False, False, False, f"auxiliary artifacts unavailable: {exc}"
+
+
+def _store_files(root: Path) -> dict[str, str]:
+    files: dict[str, str] = {}
+    if not root.is_dir():
+        return files
+    for path in sorted(root.rglob("*")):
+        if path.is_file() and not path.is_symlink():
+            files[path.as_posix()] = file_sha256(path)
+    return files
+
+
+def publication_state(root: Path, session_store: Path, budget_store: Path, context: dict[str, Any]) -> dict[str, Any]:
+    """Snapshot exactly what input/03 §29 calls published, plus settled totals.
+
+    Published bytes are the attestation store, the notification store and any
+    committed release copy under the session store. Settled totals come from the
+    budget store. Both are read as actual store bytes, never as a receipt field.
+    """
+    published: dict[str, str] = {}
+    published.update(_store_files(root / str(context.get("attestation_store", "aux-attestations"))))
+    published.update(_store_files(root / str(context.get("notification_store", "aux-outbox"))))
+    if session_store.is_dir():
+        for path in sorted(session_store.rglob("committed")):
+            if path.is_dir() and not path.is_symlink():
+                published.update(_store_files(path))
+    settled: dict[str, Any] = {}
+    for path in sorted(budget_store.rglob("*.json")):
+        if path.is_symlink() or not path.is_file():
+            continue
+        try:
+            value = read_json(path)
+        except Exception:
+            continue
+        if isinstance(value, dict):
+            settled[str(value.get("project_id", path.name))] = value.get("settled_micros")
+    return {"published": published, "settled": settled}
+
+
+def publication_boundary(steps: list[tuple[str, dict[str, Any], dict[str, Any]]]) -> tuple[bool, str]:
+    """Check the commit-only publication boundary over consecutive snapshots.
+
+    ``steps`` is a list of ``(operation, before, after)``. Only ``commit`` and
+    ``verify`` may add published bytes or move a settled total, and no operation
+    may modify or remove bytes that were already published (input/03 §15, §18,
+    §19, §29).
+    """
+    problems: list[str] = []
+    for operation, before, after in steps:
+        published_before, published_after = before["published"], after["published"]
+        added = sorted(set(published_after) - set(published_before))
+        removed = sorted(set(published_before) - set(published_after))
+        modified = sorted(name for name in set(published_before) & set(published_after)
+                          if published_before[name] != published_after[name])
+        if modified or removed:
+            problems.append(f"{operation} rewrote or removed {len(modified) + len(removed)} already-published file(s)")
+        if operation not in ("commit", "verify"):
+            if added:
+                problems.append(f"{operation} published {len(added)} file(s)")
+            if before["settled"] != after["settled"]:
+                problems.append(f"{operation} changed a durable settled total")
+    return not problems, "; ".join(problems) or "publication stayed inside the commit-only boundary"
+
+
+def durable_session_record(session_store: Path, receipt: Any, phase: str) -> tuple[bool, str]:
+    """Enumerate the disclosed session store the way the hidden evaluator does.
+
+    The internal layout is the product's choice; what is required is a record,
+    findable under ``--session-store`` and matched by ``request_fingerprint``,
+    that carries the phase the response receipt claims (input/02 lifecycle,
+    input/03 §29).
+    """
+    fingerprint = find_key(receipt, {"request_fingerprint"})
+    if not isinstance(fingerprint, str) or not fingerprint:
+        return False, "transaction receipt carries no request_fingerprint"
+    if not session_store.is_dir():
+        return False, "no durable session store was created"
+    phases: list[str] = []
+    for path in sorted(session_store.rglob("*.json")):
+        if path.is_symlink() or not path.is_file():
+            continue
+        try:
+            value = read_json(path)
+        except Exception:
+            continue
+        if not isinstance(value, dict):
+            continue
+        identity = value.get("identity")
+        if isinstance(identity, dict):
+            value = {**identity, **value}
+        if value.get("request_fingerprint") == fingerprint and isinstance(value.get("phase"), str):
+            phases.append(value["phase"])
+    return phase in phases, f"durable phases for this request fingerprint={sorted(set(phases))}, required={phase!r}"
+
+
+def add_assertion(assertions: list[dict[str, Any]], assertion_id: str, points: int, passed: bool, evidence: str) -> None:
+    assertions.append({"id": assertion_id, "earned": points if passed else 0, "possible": points, "passed": bool(passed), "evidence": evidence})
+
+
+def finalize(case_id: str, assertions: list[dict[str, Any]], runs: list[dict[str, Any]], input_unchanged: bool) -> dict[str, Any]:
+    public_manifest = read_json(BENCHMARK_ROOT / "dev_cases" / "public_assertions.json")["cases"].get(case_id, {})
+    if not public_manifest or {item["id"]: item["possible"] for item in assertions} != public_manifest or sum(public_manifest.values()) != 100:
+        raise HarnessError(f"public assertion arithmetic for {case_id} does not total 100")
+    score = sum(item["earned"] for item in assertions)
+    if not input_unchanged:
+        score = min(score, 35)
+    return {
+        "case_id": case_id,
+        "valid": True,
+        "score": score,
+        "assertions": assertions,
+        "integrity_ceiling_applied": not input_unchanged,
+        "runtime_seconds": round(sum(run.get("runtime_seconds", 0) for run in runs), 4),
+        "peak_memory_bytes": max((run.get("peak_memory_bytes", 0) for run in runs), default=0),
+        "operation_summary": [{"operation": run.get("operation"), "returncode": run.get("returncode"), "timed_out": run.get("timed_out", False), "memory_exceeded": run.get("memory_exceeded", False)} for run in runs],
+    }
+
+
+def _public_atomic(prepared: dict[str, Any], spec: Any, case_root: Path, root: Path, timeout: int) -> dict[str, Any]:
+    repo = Path(prepared["repository"])
+    workspace = root / "workspace"
+    shutil.copytree(case_root / "assets", workspace)
+    context = load_context(case_root)
+    ledger, sessions, budgets = root / "ledger.json", root / "sessions", root / "budgets"
+    before_workspace, before_repo = tree_digest(workspace), tree_digest(repo)
+    first_out, retry_out, status_out = root / "first", root / "retry", root / "status"
+    boundary_before = publication_state(root, sessions, budgets, context)
+    first = run_transaction(repo, workspace, first_out, ledger, sessions, budgets, context, "verify", timeout=timeout)
+    boundary_after_first = publication_state(root, sessions, budgets, context)
+    first_hashes = dict(first["artifact_hashes"])
+    first_tx, first_budget = first.get(RECEIPT_NAMES[0]), first.get(RECEIPT_NAMES[1])
+    if first_out.exists():
+        shutil.rmtree(first_out)
+    retry = run_transaction(repo, workspace, retry_out, ledger, sessions, budgets, context, "verify", surface="launcher", timeout=timeout)
+    boundary_after_retry = publication_state(root, sessions, budgets, context)
+    status = run_transaction(repo, workspace, status_out, ledger, sessions, budgets, context, "status", timeout=timeout)
+    boundary_after_status = publication_state(root, sessions, budgets, context)
+    boundary_ok, boundary_evidence = publication_boundary([
+        ("verify", boundary_before, boundary_after_first),
+        ("verify", boundary_after_first, boundary_after_retry),
+        ("status", boundary_after_retry, boundary_after_status)])
+    durable_ok, durable_evidence = durable_session_record(sessions, retry.get(RECEIPT_NAMES[0]), "committed")
+    runs = [first, retry, status]
+    charge = expected_charge(workspace, context)
+    capsule = inspect_capsule(retry_out / "reproducibility_capsule.zip", workspace, context)
+    bindings, evidence, science_evidence = science_checks(spec, retry_out)
+    settled_ok, settled_evidence = budget_check(retry.get(RECEIPT_NAMES[1]), context, charge, "settled", 0, charge)
+    status_ok, status_evidence = budget_check(status.get(RECEIPT_NAMES[1]), context, charge, "settled", 0, charge)
+    same_ids = all(
+        find_key(first_tx, {key}) and find_key(first_tx, {key}) == find_key(retry.get(RECEIPT_NAMES[0]), {key})
+        for key in ("commit_id", "capsule_id")
+    ) and find_key(first_budget, {"settlement_id"}) == find_key(retry.get(RECEIPT_NAMES[1]), {"settlement_id"})
+    byte_stable = first_hashes and first_hashes == retry["artifact_hashes"] and set(first_hashes) == set(RELEASE_OUTPUTS)
+    assertions: list[dict[str, Any]] = []
+    add_assertion(assertions, "SCIENCE.CLAIMS_BINDINGS", 4, bindings, science_evidence)
+    add_assertion(assertions, "SCIENCE.DECISION_EVIDENCE", 4, evidence, science_evidence)
+    evidence_attested, evidence_attestation_detail = scientific_evidence_attestation(retry_out, workspace)
+    claim_contract_ok, claim_contract_detail = scientific_claim_contract(spec, retry_out, workspace)
+    add_assertion(assertions, "SCIENCE.CLAIM_CONTRACT", 8, claim_contract_ok, claim_contract_detail)
+    add_assertion(assertions, "CAPSULE.EXACT_STRUCTURE", 2, capsule["structure"], capsule["evidence"])
+    add_assertion(assertions, "CAPSULE.MANIFEST_BINDINGS", 2, capsule["manifest"], capsule["evidence"])
+    add_assertion(assertions, "CAPSULE.DETERMINISTIC_RETRY", 0, byte_stable, f"first/retry release hashes stable={byte_stable}")
+    add_assertion(assertions, "BUDGET.EXACT_CHARGE", 2, charge == 9000 and settled_ok, f"expected charge={charge}; {settled_evidence}")
+    add_assertion(assertions, "BUDGET.SETTLE_ONCE", 2, settled_ok and status_ok, f"retry {settled_evidence}; status {status_evidence}")
+    add_assertion(assertions, "BUDGET.RECEIPT_IDEMPOTENCY", 2, same_ids, f"commit/capsule/settlement IDs stable={same_ids}")
+    add_assertion(assertions, "CROSS.ATOMIC_PUBLICATION", 2, capsule["valid"] and settled_ok and set(retry["artifact_hashes"]) == set(RELEASE_OUTPUTS), "valid capsule, complete release set, and settled budget observed together")
+    add_assertion(assertions, "CROSS.LOST_RESPONSE_RECOVERY", 0, byte_stable and same_ids and all(run["returncode"] == 0 for run in runs), "lost response restored exact bytes and identifiers without a second charge")
+    add_assertion(assertions, "STATE.DURABLE_SESSION_RECORD", 2, durable_ok, durable_evidence)
+    add_assertion(assertions, "CROSS.PUBLICATION_BOUNDARY", 2, boundary_ok, boundary_evidence)
+    att_bound, att_digest, note_bound, note_durable, aux_evidence = auxiliary_checks(retry_out, context)
+    add_assertion(assertions, "ATTESTATION.BOUND_AND_DURABLE", 3, att_bound, aux_evidence)
+    add_assertion(assertions, "ATTESTATION.DIGEST_FENCING", 3, att_digest, aux_evidence)
+    add_assertion(assertions, "OUTBOX.EVENT_BOUND_AND_IDEMPOTENT", 3, note_bound, aux_evidence)
+    add_assertion(assertions, "OUTBOX.DURABLE_RETRY", 3, note_durable, aux_evidence)
+    integrated, integration_evidence = integration_score(repo, set(prepared["changed_paths"]))
+    add_assertion(assertions, "INTEGRATION.PRODUCTION_PATHS", 0, integrated, integration_evidence)
+    provenance = inspect_provenance(retry_out, workspace, context)
+    provenance_stable, provenance_evidence = provenance_retry_stable(root, provenance.get("journal_id"), retry_out)
+    add_assertion(assertions, "PROVENANCE.MANIFEST_BINDING", 12, provenance["binding"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.WORKER_DECISIONS", 12, provenance["workers"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.FAILURE_POLICY", 12, provenance["policy"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.CLEANUP_SCOPE", 10, provenance["cleanup"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.RETRY_DURABLE", 10, provenance_stable, provenance_evidence)
+    result = finalize(spec.case_id, assertions, runs, before_workspace == tree_digest(workspace) and before_repo == tree_digest(repo))
+    gate_ok, gate_evidence = science_gate_check(retry_out, workspace)
+    semantic_gate_ok = gate_ok and claim_contract_ok
+    result["science_gate"] = {"passed": semantic_gate_ok, "evidence": gate_evidence + "; " + claim_contract_detail}
+    if not semantic_gate_ok:
+        result["safety_ceiling_applied"] = 35
+        result["score"] = min(result["score"], 35)
+    return result
+
+
+def _public_restart(prepared: dict[str, Any], spec: Any, case_root: Path, root: Path, timeout: int) -> dict[str, Any]:
+    repo = Path(prepared["repository"])
+    workspace = root / "workspace"
+    shutil.copytree(case_root / "assets", workspace)
+    context = load_context(case_root)
+    ledger, sessions, budgets = root / "ledger.json", root / "sessions", root / "budgets"
+    ledger.write_text('{"schema_version":1,"claims":[],"sentinel":"unchanged"}\n', encoding="utf-8")
+    before_ledger = file_sha256(ledger)
+    before_workspace, before_repo = tree_digest(workspace), tree_digest(repo)
+    prepare_out, status1_out, commit_out, status2_out = root / "prepare", root / "status-pre", root / "commit", root / "status-post"
+    boundary_before = publication_state(root, sessions, budgets, context)
+    prepare = run_transaction(repo, workspace, prepare_out, ledger, sessions, budgets, context, "prepare", timeout=timeout)
+    boundary_after_prepare = publication_state(root, sessions, budgets, context)
+    prepared_durable, prepared_durable_evidence = durable_session_record(sessions, prepare.get(RECEIPT_NAMES[0]), "prepared")
+    prepare_isolated = file_sha256(ledger) == before_ledger and not any((prepare_out / name).exists() for name in RELEASE_OUTPUTS)
+    status1 = run_transaction(repo, workspace, status1_out, ledger, sessions, budgets, context, "status", timeout=timeout)
+    boundary_after_status1 = publication_state(root, sessions, budgets, context)
+    commit = run_transaction(repo, workspace, commit_out, ledger, sessions, budgets, context, "commit", surface="launcher", timeout=timeout)
+    boundary_after_commit = publication_state(root, sessions, budgets, context)
+    committed_durable, committed_durable_evidence = durable_session_record(sessions, commit.get(RECEIPT_NAMES[0]), "committed")
+    status2 = run_transaction(repo, workspace, status2_out, ledger, sessions, budgets, context, "status", timeout=timeout)
+    boundary_after_status2 = publication_state(root, sessions, budgets, context)
+    boundary_ok, boundary_evidence = publication_boundary([
+        ("prepare", boundary_before, boundary_after_prepare),
+        ("status", boundary_after_prepare, boundary_after_status1),
+        ("commit", boundary_after_status1, boundary_after_commit),
+        ("status", boundary_after_commit, boundary_after_status2)])
+    durable_ok = prepared_durable and committed_durable
+    durable_evidence = f"prepare: {prepared_durable_evidence}; commit: {committed_durable_evidence}"
+    runs = [prepare, status1, commit, status2]
+    charge = expected_charge(workspace, context)
+    capsule = inspect_capsule(commit_out / "reproducibility_capsule.zip", workspace, context)
+    bindings, evidence, science_evidence = science_checks(spec, commit_out)
+    reserved_ok, reserved_evidence = budget_check(prepare.get(RECEIPT_NAMES[1]), context, charge, "reserved", charge, 0)
+    pre_status_ok, pre_status_evidence = budget_check(status1.get(RECEIPT_NAMES[1]), context, charge, "reserved", charge, 0)
+    settled_ok, settled_evidence = budget_check(status2.get(RECEIPT_NAMES[1]), context, charge, "settled", 0, charge)
+    stage_path = find_key(prepare.get(RECEIPT_NAMES[0]), {"stage_path"})
+    stage_capsule = None
+    if isinstance(stage_path, str) and not Path(stage_path).is_absolute() and ".." not in Path(stage_path).parts:
+        stage_capsule = sessions / stage_path / "reproducibility_capsule.zip"
+    staged = inspect_capsule(stage_capsule, workspace, context) if isinstance(stage_capsule, Path) else {"structure": False, "manifest": False, "valid": False, "evidence": "safe stage_path missing"}
+    same_capsule = staged.get("valid") and capsule["valid"] and file_sha256(stage_capsule) == file_sha256(commit_out / "reproducibility_capsule.zip")
+    assertions: list[dict[str, Any]] = []
+    add_assertion(assertions, "SCIENCE.CLAIMS_BINDINGS", 4, bindings, science_evidence)
+    add_assertion(assertions, "SCIENCE.DECISION_EVIDENCE", 4, evidence, science_evidence)
+    evidence_attested, evidence_attestation_detail = scientific_evidence_attestation(commit_out, workspace)
+    claim_contract_ok, claim_contract_detail = scientific_claim_contract(spec, commit_out, workspace)
+    add_assertion(assertions, "SCIENCE.CLAIM_CONTRACT", 8, claim_contract_ok, claim_contract_detail)
+    add_assertion(assertions, "CAPSULE.STAGED_STRUCTURE", 2, staged.get("structure", False), staged.get("evidence", ""))
+    add_assertion(assertions, "CAPSULE.STAGED_MANIFEST", 2, staged.get("manifest", False), staged.get("evidence", ""))
+    add_assertion(assertions, "CAPSULE.COMMIT_SAME_BYTES", 0, bool(same_capsule), f"staged and committed capsule bytes identical={bool(same_capsule)}")
+    add_assertion(assertions, "BUDGET.EXACT_RESERVATION", 2, charge == 5500 and reserved_ok, f"charge={charge}; {reserved_evidence}")
+    add_assertion(assertions, "BUDGET.READ_ONLY_STATUS", 2, pre_status_ok, pre_status_evidence)
+    add_assertion(assertions, "BUDGET.SETTLEMENT_TRANSITION", 2, settled_ok, settled_evidence)
+    add_assertion(assertions, "CROSS.PREPARE_ISOLATION", 2, prepare_isolated and reserved_ok and staged.get("valid", False), f"ledger/release isolation={prepare_isolated}, reservation={reserved_ok}, staged capsule={staged.get('valid', False)}")
+    all_ok = all(run["returncode"] == 0 for run in runs)
+    add_assertion(assertions, "CROSS.RESTART_COMMIT", 0, all_ok and capsule["valid"] and settled_ok, "separate-process prepare/status/launcher commit/status completed with one valid release and settlement")
+    add_assertion(assertions, "STATE.DURABLE_SESSION_RECORD", 2, durable_ok, durable_evidence)
+    add_assertion(assertions, "CROSS.PUBLICATION_BOUNDARY", 2, boundary_ok, boundary_evidence)
+    att_bound, att_digest, note_bound, note_durable, aux_evidence = auxiliary_checks(commit_out, context)
+    add_assertion(assertions, "ATTESTATION.BOUND_AND_DURABLE", 3, att_bound, aux_evidence)
+    add_assertion(assertions, "ATTESTATION.DIGEST_FENCING", 3, att_digest, aux_evidence)
+    add_assertion(assertions, "OUTBOX.EVENT_BOUND_AND_IDEMPOTENT", 3, note_bound, aux_evidence)
+    add_assertion(assertions, "OUTBOX.DURABLE_RETRY", 3, note_durable, aux_evidence)
+    integrated, integration_evidence = integration_score(repo, set(prepared["changed_paths"]))
+    add_assertion(assertions, "INTEGRATION.PRODUCTION_PATHS", 0, integrated, integration_evidence)
+    provenance = inspect_provenance(commit_out, workspace, context)
+    provenance_stable, provenance_evidence = provenance_retry_stable(root, provenance.get("journal_id"), commit_out)
+    add_assertion(assertions, "PROVENANCE.MANIFEST_BINDING", 12, provenance["binding"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.WORKER_DECISIONS", 12, provenance["workers"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.FAILURE_POLICY", 12, provenance["policy"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.CLEANUP_SCOPE", 10, provenance["cleanup"], provenance["evidence"])
+    add_assertion(assertions, "PROVENANCE.RETRY_DURABLE", 10, provenance_stable, provenance_evidence)
+    result = finalize(spec.case_id, assertions, runs, before_workspace == tree_digest(workspace) and before_repo == tree_digest(repo))
+    gate_ok, gate_evidence = science_gate_check(commit_out, workspace)
+    semantic_gate_ok = gate_ok and claim_contract_ok
+    result["science_gate"] = {"passed": semantic_gate_ok, "evidence": gate_evidence + "; " + claim_contract_detail}
+    if not semantic_gate_ok:
+        result["safety_ceiling_applied"] = 35
+        result["score"] = min(result["score"], 35)
+    return result
+
+
+def execute_case(prepared: dict[str, Any], spec: Any, case_root: Path, work_dir: Path, timeout: int = 120) -> dict[str, Any]:
+    root = work_dir / "cases" / spec.case_id
+    if root.exists():
+        shutil.rmtree(root)
+    root.mkdir(parents=True)
+    if spec.case_id == "dev_001":
+        return _public_atomic(prepared, spec, case_root, root, timeout)
+    if spec.case_id == "dev_002":
+        return _public_restart(prepared, spec, case_root, root, timeout)
+    raise HarnessError(f"unknown public case {spec.case_id}")

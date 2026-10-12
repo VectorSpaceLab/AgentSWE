@@ -1,0 +1,105 @@
+{
+  "id": "pinchbench-openclaw",
+  "family": "optimization",
+  "short": "pinch",
+  "title": "PinchBench OpenClaw agent optimization",
+  "tier": "T1",
+  "lite": true,
+  "status": "runnable",
+  "runner": "optimization_native_v1",
+  "roles": [
+    "builder",
+    "runtime",
+    "judge"
+  ],
+  "services": [],
+  "images": [
+    "builder-codex",
+    "egress-sidecar-base",
+    "harbor-kernel-probe",
+    "env-builder",
+    "opt-python312",
+    "opt-pinchbench-runtime"
+  ],
+  "envs": [
+    "optimization-python311"
+  ],
+  "host": {
+    "docker": true,
+    "cgroup_v2": false,
+    "systemd_delegation": false,
+    "kvm": false,
+    "docker_socket_in_container": false,
+    "host_tools": [],
+    "disk_gb": 20
+  },
+  "upstream": {
+    "repo": "https://github.com/pinchbench/skill",
+    "commit": "819384ae830492365b8363fc26bc2602e73f216d",
+    "license": "MIT",
+    "redistribute_a0": true
+  },
+  "notes": [
+    "Hybrid and LLM-judge grading use the JUDGE effort and output floor on the RUNTIME provider and model (the evaluator broker's judge token); of the JUDGE role only its effort is used.",
+    "Per-host guard: at most 4 concurrent Optimization runs.",
+    "Evaluator brokers reach the RUNTIME provider directly (Responses wire) with a key file mounted only into them, as in the paper's Lite runs; Chat-only runtime providers need the unified broker here.",
+    "Release change (2026-10-11): runners/optimization/adapter.py collect_eval treats an Eval trial that Harbor ended with an exception before the evaluator wrote its score contract (for example an environment start or verifier timeout on a loaded Docker host) as an infrastructure failure of the evaluation, as collect_candidate already did for Candidate trials, so the infrastructure resume replays it: the dev controller replays a dev evaluation as a new phase, and a held-out phase resumes. Before, the missing contract raised FileNotFoundError, which was not classified as infrastructure: a dev evaluation was dropped (the Builder had to submit again) and a held-out evaluation ended the run. A trial whose contract exists is scored from that contract as before, and a missing contract without a Harbor trial exception still fails the phase.",
+    "Release change (2026-10-11): an evaluation phase that raises closes its controller_logs/<phase>/infrastructure_resume_state.json (status infrastructure_error or failed, finished_at and the error). `agentswe status` reads the dev controller's last error from both of its record shapes (a resume pause: error_type, at, error_message; a submission that ended: infrastructure_error, finished_at) and shows the phase `baseline` while the starter is evaluated; `agentswe result` adds evaluation_phase_status. `agentswe stop` also removes the run's containers that mount its Harbor job directories under <home>/jobs or whose compose working directory or compose files are under the run directory (an exited verifier container was left behind before); it never selects containers by name, and other runs in the same home are not matched."
+  ],
+  "lite_reference": {
+    "builder": "deepseek-flash/max",
+    "S": [
+      22.82,
+      18.63,
+      31.59
+    ],
+    "mean_at_3": 24.35,
+    "sd": 6.61
+  },
+  "runner_config": {
+    "benchmark_name": "pinchbench-openclaw-agent-optimization-v1",
+    "python_runtime_env": "optimization-python311",
+    "harbor_profile": "site",
+    "n_concurrent": 4,
+    "agent_import_path": "resumable_provider_codex_agent:ResumableDeepSeekCodex",
+    "host_exports": [
+      {
+        "image": "opt-python312",
+        "path": "/python",
+        "dest": "tools/cpython-3.12"
+      },
+      {
+        "image": "opt-pinchbench-runtime",
+        "path": "/node",
+        "dest": "snapshots/node-runtime"
+      },
+      {
+        "image": "opt-pinchbench-runtime",
+        "path": "/openclaw",
+        "dest": "snapshots/openclaw-runtime"
+      },
+      {
+        "image": "opt-pinchbench-runtime",
+        "path": "/pinchbench",
+        "dest": "snapshots/pinchbench-skill"
+      },
+      {
+        "image": "opt-pinchbench-runtime",
+        "path": "/yaml-site",
+        "dest": "snapshots/pyyaml-site"
+      }
+    ]
+  },
+  "protocol": {
+    "dev_rounds": 5,
+    "max_dev_rounds": 5,
+    "builder_session_sec": 57600,
+    "score": "S = 100*min(1, (J(candidate)-J(a0)) / (100-J(a0))) on the held-out split"
+  },
+  "smoke": {
+    "max_dev_rounds": 1,
+    "dev_cases_n": 1,
+    "heldout_cases_n": 2,
+    "builder_session_sec": 3600
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "workspaceConflictSafePlan": true,
+  "workspaceOrderedCommit": true,
+  "workspaceDelayedResponseFence": true,
+  "workspaceProjectionIsolation": true,
+  "staleHighCursor": 9999,
+  "workspaceMixedConflict": true,
+  "aba": true,
+  "workspaceDurableRefusal": true,
+  "workspaceConflictResolvedAfterRestart": true,
+  "runtimeEventDiscipline": true,
+  "effectDeliveryProbe": true
+}

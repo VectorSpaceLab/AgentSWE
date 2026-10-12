@@ -1,0 +1,7 @@
+# OSWorld-Verified Desktop Task `dev_005`
+
+Use a multimodal desktop agent to complete this task in the evaluator-owned VM/application snapshot:
+
+> I have calculated the total work hours from the everday hours. And I have an hourly rate. Now I want to multiply the total hours with the hourly rate to get a total earned amount. However, I can't get a correct answer by directly multiply the two cells. Here the "total hours" is of time and "hourly rate" is just a number. How can I get the correct product of them? Help me fill in the cell the correct answer. Don't touch irrelevant blank regions.
+
+Return a live agent specification preserving the row ID. The evaluator, VM snapshot, screenshots, action trace, and validator are authoritative.

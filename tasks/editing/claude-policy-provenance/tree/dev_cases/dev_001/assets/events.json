@@ -1,0 +1,9 @@
+[
+  {"session_id":"public-one","hook_event_name":"PreToolUse","tool_name":"Write","tool_use_id":"write-1","tool_input":{"file_path":"src/app.py","content":"print(1)"},"expect":"allow"},
+  {"session_id":"public-one","hook_event_name":"PreToolUse","tool_name":"Read","tool_use_id":"read-1","tool_input":{"file_path":".env"},"expect":"deny"},
+  {"session_id":"public-one","hook_event_name":"PreToolUse","tool_name":"Bash","tool_use_id":"bash-1","tool_input":{"command":"pytest src"},"expect":"allow"},
+  {"session_id":"public-one","hook_event_name":"PreToolUse","tool_name":"Bash","tool_use_id":"bash-2","tool_input":{"command":"rm src/app.py"},"expect":"deny"},
+  {"session_id":"public-one","hook_event_name":"PreToolUse","tool_name":"Bash","tool_use_id":"shell-authority-a","tool_input":{"command":"bash -lc 'printf ok > tmp/run.log 2>&1'"},"expect":"allow"},
+  {"session_id":"public-one","hook_event_name":"PreToolUse","tool_name":"Bash","tool_use_id":"shell-authority-b","tool_input":{"command":"bash -lc 'printf ok &>tmp/run.log'"},"expect":"allow"},
+  {"session_id":"public-one","hook_event_name":"PreToolUse","tool_name":"Bash","tool_use_id":"shell-authority-deny","tool_input":{"command":"bash -lc 'printf nope > .env 2>&1'"},"expect":"deny"}
+]

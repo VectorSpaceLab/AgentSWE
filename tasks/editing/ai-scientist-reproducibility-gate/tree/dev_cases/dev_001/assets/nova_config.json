@@ -1,0 +1,1 @@
+{"dataset": "mini_cls_v1", "epochs": 10, "metric": "accuracy", "seeds": [11, 22, 33], "split_id": "split-public-a"}

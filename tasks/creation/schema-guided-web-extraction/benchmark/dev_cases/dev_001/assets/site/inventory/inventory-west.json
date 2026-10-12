@@ -1,0 +1,92 @@
+[
+  {
+    "asset_id": "AU-2024",
+    "stock": 16,
+    "warehouse": "Tacoma",
+    "observed_at": "2026-07-15T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2022",
+    "stock": 2,
+    "warehouse": "Albany",
+    "observed_at": "2026-07-13T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2020",
+    "stock": 17,
+    "warehouse": "Tacoma",
+    "observed_at": "2026-07-11T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2018",
+    "stock": 3,
+    "warehouse": "Albany",
+    "observed_at": "2026-07-09T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2016",
+    "stock": 18,
+    "warehouse": "Tacoma",
+    "observed_at": "2026-07-15T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2014",
+    "stock": 4,
+    "warehouse": "Albany",
+    "observed_at": "2026-07-13T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2012",
+    "stock": 19,
+    "warehouse": "Tacoma",
+    "observed_at": "2026-07-11T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2010",
+    "stock": 5,
+    "warehouse": "Albany",
+    "observed_at": "2026-07-09T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2008",
+    "stock": 20,
+    "warehouse": "Tacoma",
+    "observed_at": "2026-07-15T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2006",
+    "stock": 6,
+    "warehouse": "Albany",
+    "observed_at": "2026-07-13T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2004",
+    "stock": 21,
+    "warehouse": "Tacoma",
+    "observed_at": "2026-07-11T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2002",
+    "stock": 7,
+    "warehouse": "Albany",
+    "observed_at": "2026-07-09T08:00:00Z"
+  },
+  {
+    "asset_id": "AU-2001",
+    "stock": 9,
+    "warehouse": "Legacy Bay",
+    "observed_at": "2025-12-31T23:00:00Z"
+  },
+  {
+    "asset_id": "AU-2009",
+    "stock": 36,
+    "warehouse": "Legacy Bay",
+    "observed_at": "2025-12-31T23:00:00Z"
+  },
+  {
+    "asset_id": "AU-2017",
+    "stock": 34,
+    "warehouse": "Legacy Bay",
+    "observed_at": "2025-12-31T23:00:00Z"
+  }
+]

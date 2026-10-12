@@ -1,0 +1,7 @@
+{
+  "case_id": "test_006",
+  "scenario": "spill_restart_stability",
+  "required_actions": ["spill_restart"],
+  "max_action_invocations": 1,
+  "spill": true
+}

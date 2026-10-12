@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "run_id": "run-upsilon-v1",
+  "project_id": "project-policy",
+  "replay": {"command": ["python", "replay.py"], "working_directory": ".", "timeout_seconds": 10, "script_path": "replay.py", "script_sha256": "eb24a137627f6085dd20b37aa0d0737e4aa9d069c605c1f9b1457cb26640e294"},
+  "workers": [{"worker_id": "ups-base", "experiment_id": "exp-base", "seed": 5, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "aa804b90bb091cb50d88c79bb9d90e3ad3f99a6d73de1a09959b9411122b31d3"}, {"worker_id": "ups-delta", "experiment_id": "exp-delta", "seed": 5, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "aa804b90bb091cb50d88c79bb9d90e3ad3f99a6d73de1a09959b9411122b31d3"}],
+  "failure_policy": {"allow_partial": false, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "lab-upsilon/release-u4/policy-old", "global_process_scan": false}
+}

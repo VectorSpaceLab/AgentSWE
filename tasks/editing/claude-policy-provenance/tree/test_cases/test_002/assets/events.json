@@ -1,0 +1,5 @@
+[
+  {"session_id":"transaction-main","hook_event_name":"PreToolUse","tool_name":"Write","tool_use_id":"shared-event","tool_input":{"file_path":"src/main.py","content":"one"}},
+  {"session_id":"transaction-main","hook_event_name":"PreToolUse","tool_name":"Write","tool_use_id":"shared-event","tool_input":{"file_path":"tmp/conflict.py","content":"two"}},
+  {"session_id":"transaction-main","hook_event_name":"PostToolUse","tool_name":"Write","tool_use_id":"shared-event","tool_input":{"file_path":"src/main.py","content":"one"},"tool_response":{"status":"ok"}}
+]

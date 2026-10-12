@@ -1,0 +1,242 @@
+[
+  {
+    "sensor_id": "SN-9040",
+    "reading": 33.91,
+    "quality": "rejected",
+    "observed_at": "2026-07-17T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9039",
+    "reading": 35.2,
+    "quality": "valid",
+    "observed_at": "2026-07-16T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9038",
+    "reading": 32.69,
+    "quality": "valid",
+    "observed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9037",
+    "reading": 33.98,
+    "quality": "valid",
+    "observed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9036",
+    "reading": 31.47,
+    "quality": "valid",
+    "observed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9035",
+    "reading": 32.76,
+    "quality": "rejected",
+    "observed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9034",
+    "reading": 30.25,
+    "quality": "valid",
+    "observed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9033",
+    "reading": 31.54,
+    "quality": "valid",
+    "observed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9032",
+    "reading": 29.03,
+    "quality": "valid",
+    "observed_at": "2026-07-09T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9031",
+    "reading": 30.32,
+    "quality": "valid",
+    "observed_at": "2026-07-08T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9030",
+    "reading": 27.81,
+    "quality": "rejected",
+    "observed_at": "2026-07-22T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9029",
+    "reading": 29.1,
+    "quality": "valid",
+    "observed_at": "2026-07-21T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9028",
+    "reading": 26.59,
+    "quality": "valid",
+    "observed_at": "2026-07-20T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9027",
+    "reading": 27.88,
+    "quality": "valid",
+    "observed_at": "2026-07-19T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9026",
+    "reading": 25.37,
+    "quality": "valid",
+    "observed_at": "2026-07-18T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9025",
+    "reading": 26.66,
+    "quality": "rejected",
+    "observed_at": "2026-07-17T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9024",
+    "reading": 24.15,
+    "quality": "valid",
+    "observed_at": "2026-07-16T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9023",
+    "reading": 25.44,
+    "quality": "valid",
+    "observed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9022",
+    "reading": 22.93,
+    "quality": "valid",
+    "observed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9021",
+    "reading": 24.22,
+    "quality": "valid",
+    "observed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9020",
+    "reading": 21.71,
+    "quality": "rejected",
+    "observed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9019",
+    "reading": 23.0,
+    "quality": "valid",
+    "observed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9018",
+    "reading": 20.49,
+    "quality": "valid",
+    "observed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9017",
+    "reading": 21.78,
+    "quality": "valid",
+    "observed_at": "2026-07-09T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9016",
+    "reading": 19.27,
+    "quality": "valid",
+    "observed_at": "2026-07-08T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9015",
+    "reading": 20.56,
+    "quality": "rejected",
+    "observed_at": "2026-07-22T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9014",
+    "reading": 18.05,
+    "quality": "valid",
+    "observed_at": "2026-07-21T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9013",
+    "reading": 19.34,
+    "quality": "valid",
+    "observed_at": "2026-07-20T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9012",
+    "reading": 16.83,
+    "quality": "valid",
+    "observed_at": "2026-07-19T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9011",
+    "reading": 18.12,
+    "quality": "valid",
+    "observed_at": "2026-07-18T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9010",
+    "reading": 15.61,
+    "quality": "rejected",
+    "observed_at": "2026-07-17T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9009",
+    "reading": 16.9,
+    "quality": "valid",
+    "observed_at": "2026-07-16T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9008",
+    "reading": 14.39,
+    "quality": "valid",
+    "observed_at": "2026-07-15T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9007",
+    "reading": 15.68,
+    "quality": "valid",
+    "observed_at": "2026-07-14T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9006",
+    "reading": 13.17,
+    "quality": "valid",
+    "observed_at": "2026-07-13T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9005",
+    "reading": 14.46,
+    "quality": "rejected",
+    "observed_at": "2026-07-12T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9004",
+    "reading": 11.95,
+    "quality": "valid",
+    "observed_at": "2026-07-11T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9003",
+    "reading": 13.24,
+    "quality": "valid",
+    "observed_at": "2026-07-10T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9002",
+    "reading": 10.73,
+    "quality": "valid",
+    "observed_at": "2026-07-09T12:00:00Z"
+  },
+  {
+    "sensor_id": "SN-9001",
+    "reading": 12.02,
+    "quality": "valid",
+    "observed_at": "2026-07-08T12:00:00Z"
+  }
+]

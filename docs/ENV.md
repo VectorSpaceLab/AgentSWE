@@ -1,0 +1,558 @@
+# Configuration and host notes
+
+All settings live in `.env` (git-ignored; start from `.env.example`) or the process environment,
+which takes precedence. `--env-file <path>` reads another file instead; it must name an existing file.
+`python3 -m agentswe config` prints the resolved values without keys.
+
+## Model roles
+
+| Role | Used for | Variables |
+|---|---|---|
+| BUILDER | the coding agent under evaluation (Codex CLI) | `AGENTSWE_BUILDER_{BASE_URL,API_KEY,WIRE,MODEL,EFFORT}` |
+| RUNTIME | the model a built or edited agent calls during evaluation, only via the evaluator broker; also the τ³ user simulator | `AGENTSWE_RUNTIME_{...}` |
+| JUDGE | Result judges, LLM graders (in Optimization only the JUDGE effort is used, on the RUNTIME provider and model) | `AGENTSWE_JUDGE_{...}` |
+| SEARCH | Serper-compatible search (tier-2 tasks) | `AGENTSWE_SEARCH_{BASE_URL,API_KEY}` |
+
+In Creation and Optimization runs every model call goes through a broker that holds the role's key; an Editing run
+gives its Builder the key itself ("Where the keys are", below). See `docs/ENV.providers.md` for wires, effort
+spellings and the protocol constants that are not configurable.
+
+Editing runs use only the official DeepSeek API: the Builder, the lower agent and the Result judge all call
+`https://api.deepseek.com/v1` with one key, the lower agent with `deepseek-flash` at effort high and the judge with
+`deepseek-flash` at effort max. `agentswe setup` and `agentswe run` refuse any other Editing provider setting, and
+`agentswe probe-roles --family editing` warns about one. Creation and Optimization accept other providers
+(`docs/ENV.providers.md`).
+
+`BASE_URL` is the OpenAI-style base including `/v1`; the Responses endpoint is `BASE_URL + /responses`.
+Unset `BASE_URL`, `API_KEY` or `WIRE` fall back to `AGENTSWE_DEFAULT_*`.
+
+Keys can stay in a credential file you already have:
+`AGENTSWE_DEFAULT_API_KEY=@file:/path/to/credentials.env#VARIABLE_NAME`.
+
+### Where the keys are
+
+- **Creation and Optimization.** The CLI writes each key a run needs to a 0600 file under
+  `AGENTSWE_HOME/secrets/<run_id>/` and deletes these files when the run's controller exits. Codex, the coding
+  agent under test, reaches the model through the run's builder broker (`broker/`, a container that mounts the
+  BUILDER key file) with a per-run random token that only this broker accepts. The RUNTIME key goes only to brokers:
+  in Creation to the runtime provider broker (the JUDGE key to the judge provider broker), in Optimization to the
+  task's evaluator (`evaluator.env`), whose brokers make the model calls of the agents under test. Each Creation
+  provider broker accepts only its own per-run token (the evaluator broker holds the runtime one, Result judges the
+  judge one), and the judge and statistics roles of the Optimization evaluator brokers take per-case random tokens
+  that only the evaluator's grader and controller receive. Built candidates and Optimization agents under test hold
+  the public placeholder tokens only. `agentswe stop` deletes the same files as a normal exit.
+- **Editing.** All three roles use one provider key (`agentswe run` refuses different keys). The CLI writes it to a
+  single 0600 file, `AGENTSWE_HOME/secrets/editing/credential.env`, shared by the home's Editing runs;
+  `agentswe result` and `agentswe stop` delete it once no other Editing run in the home is live (`agentswe freeze`
+  writes it again for its held-out and finalize stages and deletes it the same way). The lower-agent and
+  Result-judge brokers mount that file read-only, and the edited product and its lower agents get the placeholder
+  token `broker-only-placeholder`. The Builder has no broker: as in the paper's Editing protocol, Codex calls the
+  provider with the real key (through the CONNECT proxy of "Editing runs" when the run uses it). The task's Builder
+  harness writes the key to a 0600 `auth.json` (`auth_mode apikey`) in a tmpfs directory under `/dev/shm`, and
+  Harbor uploads that file into the Builder container as `/tmp/codex-secrets/auth.json`. **During the Builder
+  session, Codex and every command it runs in that container can read the key.** The host copy is deleted when the
+  Builder session ends, and Harbor removes the container copy (best effort) after Codex exits. Each run says so in
+  its `builder_transport.json`: `"transport": "native_codex_direct"`, `"credential_method": "Harbor
+  CODEX_AUTH_JSON_PATH"`, `"builder_broker_started": false`.
+
+Give BUILDER a key you can revoke, used only for AgentSWE and ideally with a spending limit; for Editing that is the
+key of all three roles. Revoke it after the runs if Builder logs or workspaces leave the host.
+
+### Creation judge format (`AGENTSWE_JUDGE_FORMAT`)
+
+`AGENTSWE_JUDGE_FORMAT` (in `.env`) sets how three Creation tasks check their Result-judge outputs. The eval manifest
+of each case records the value.
+
+- `release` (default): the `evidence-grounded-document-qa` and `authorized-vulnerability-validation` evaluators bind
+  the judge's output to its request identity (any repair is recorded in the score contract), and
+  `scientific-pdf-translation` applies one set of review rules in evaluation and in independent verification: the
+  repairing rules that the paper's Lite PDF runs executed.
+- `exact`: the QA and Security judges must echo their request identity verbatim, as the paper's runs required, and
+  the PDF task applies the stricter review rules without repairs. Use `exact` with a paper-strength judge, for
+  example when comparing with the paper's main table under `AGENTSWE_PROFILE=paper`.
+
+## Search credentials
+
+The search-enabled tasks (tier T2 in `agentswe list`: Web research, PPTX, BrowseComp) need both
+`AGENTSWE_SEARCH_BASE_URL` and `AGENTSWE_SEARCH_API_KEY`; neither has a default, and the key never falls back to a
+model key. For Serper:
+
+```dotenv
+AGENTSWE_SEARCH_BASE_URL=https://google.serper.dev
+AGENTSWE_SEARCH_API_KEY=...            # or @file:/path/to/credentials.env#SERPER_API_KEY
+```
+
+`doctor <task>` fails a T2 task when either is missing, and `probe-roles` sends one search query through the search
+broker. `AGENTSWE_SEARCH_WIRE=legacy-proxy` is only for a provider that speaks the published runs' own request shape
+(`docs/ENV.providers.md`).
+
+Built agents never receive a real search key: they call the evaluator's search broker with the
+placeholder token `search-placeholder`, and the broker holds `AGENTSWE_SEARCH_API_KEY`. Note for
+comparisons with the published results: in the published runs, candidates of the search-enabled
+Creation tasks were given the real search token directly.
+
+Candidates reach the broker through a per-run TLS front named `search.example.com`, whose certificate is
+signed by a per-run CA. The candidate container trusts that CA through `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`,
+`CURL_CA_BUNDLE` and `NODE_EXTRA_CA_CERTS`. The bundle is also bind-mounted read-only over the default trust
+stores: the system bundle, the OpenSSL capath entry, and every certifi `cacert.pem` and conda `ssl/cert.pem` in the
+mounted environment prefixes. A client that ignores those variables therefore verifies the front too, as every
+client verified the publicly trusted endpoint in the published runs. The launch manifest's search record lists
+the overridden paths and the bundle sha256.
+
+The bundle starts from the host's `/etc/ssl/certs/ca-certificates.crt`, the Debian/Ubuntu location. On a host without
+that file the bundle holds only the per-run CA, and candidates of the T2 tasks cannot verify public TLS endpoints. The
+host's `openssl` makes the per-run CA and certificate.
+
+## Editing runs
+
+Editing runs use only the official DeepSeek API ("Model roles", above). They start system-scope systemd units
+(`systemd-run` without `--user`) for the formal run, the readiness smoke and the loopback proxy, so run every Editing
+command (`setup`, `run`, `status`, `result`, `stop`, `freeze`) as root, or as a user that polkit allows to start
+system units, and always as the same user: `agentswe freeze` refuses a caller who does not own the run directory.
+`AGENTSWE_HOME` defaults to `~/.local/share/agentswe` of the calling user, and `sudo` can reset `HOME` and drop
+exported variables, so a command run through `sudo` may look in another home and report that setup has not run. Set
+`AGENTSWE_HOME` in `.env`, which every command reads from the repository whoever runs it. The Editing control plane,
+its systemd units and the tasks' one-stop scripts run under the host's `/usr/bin/python3`, not under the Python that
+runs `agentswe`, so `/usr/bin/python3` must be Python 3.10 or newer. Only `--builder codex` is available. After
+changing the Editing Builder's model or effort, run `agentswe setup <editing task>` again before `run`.
+
+`agentswe setup` runs one at a time per `AGENTSWE_HOME`: a second setup in the same home logs "another setup is
+running in <home>; waiting" and starts when the first ends. An Editing setup keeps the rendered control plane
+(`editing/control`, `editing/tools`) as installed when the release renders it the same, and refuses to replace it, or
+a task tree, while an Editing run that uses it is live in the home: wait for the run to finish or use another
+`AGENTSWE_HOME`.
+
+`agentswe run <editing task> --builder codex` starts a formal run directly: the five-hour Builder session, then the
+six hidden cases. Before launching it checks that the task tree rendered under `AGENTSWE_HOME` still equals the
+snapshot `setup` recorded and that the release template is unchanged, and refuses otherwise (run `agentswe setup`
+again). `--smoke` runs the shorter readiness profile (one dev case, two submissions, one hidden case) and is a
+useful first check that the host runs the whole pipeline; it is optional. A smoke keeps some of the evaluator's
+exited containers for inspection; `agentswe stop <run_id>` removes them. `setup` prints `audit_readiness exit 2
+(informational ...)` and smoke summaries say `admission_required: true`: both are about the readiness admission
+above, which a release install does not need. A smoke's summaries say `result_axis`
+"N/A"; `agentswe result` adds a `smoke` block read from the run dir: each dev round's classification and validity
+(`valid`, from the tree's own validity field, which `valid_field` names), the held-out case's state and judged Result
+(`result_score`, from the readiness result contract; a score elsewhere in the summaries, such as OpenHands'
+`pilot_evaluation`, is a deterministic pre-judge check), the party a failure is attributed to, the contract paths,
+and the reason when the run stopped at the infrastructure gate (from the summaries, or from
+`builder_observer_events.jsonl` when the last submission was not consumed because of an infrastructure failure, as
+in a Claude smoke that ended unfrozen). The readiness admission that the
+published formal runs required (a smoke whose evidence is reviewed and admitted per task and host) is a
+benchmark-construction gate and is not needed for a release install; `AGENTSWE_EDITING_REQUIRE_ADMISSION=1`
+restores it.
+
+In formal runs the Builder's model traffic leaves the host through an HTTP CONNECT proxy on `127.0.0.1:7890`, as
+on the published runs' hosts: each task's Builder relay accepts only a CONNECT to `api.deepseek.com:443` and
+forwards it to that port. In `--smoke` runs only OpenWiki, OpenHands and OpenClaw use the port; the other Editing
+tasks' Builders then connect to the provider directly. Before launching an Editing run, `agentswe run` checks the port. A proxy already listening there (Clash,
+mihomo, gost or another HTTP CONNECT proxy) is used as is; if nothing listens, agentswe starts its own
+(`agentswe/loopback_proxy.py`: standard library only, CONNECT only, loopback only, direct egress) as the transient
+systemd unit `agentswe-loopback-proxy`, which keeps running for later runs (`systemctl stop agentswe-loopback-proxy`
+stops it); a port held by a service that does not answer CONNECT stops the run with a message. The launch manifest
+records which proxy was used (`builder_proxy`), and `agentswe doctor <editing task>` reports the port's state.
+
+The Builder container starts through Harbor (`AGENTSWE_HOME/harbor/venv-site`) and the host's own `docker compose`
+plugin; the private plugin `setup` installs for older hosts is used by Creation runs and `doctor`. Each Editing task
+limits its Builder to 8 CPUs with `cpu_quota`/`cpu_period`; Harbor patch 0007 (`third_party/harbor`) keeps Harbor's
+`cpus` override out of such a compose, so the container starts under any compose version (Compose 2.40 otherwise
+sends both, and the Docker daemon refuses the container).
+
+### When the Editing Builder budget ends
+
+A formal Editing run gives the Builder 5 hours and up to 5 accepted submissions (`task.json` `protocol`:
+`builder_session_sec`, `max_dev_rounds`). Development ends when the Builder exits, uses up its submissions or uses up
+its time; the last accepted submission is then frozen and scored on the six held-out cases, and a Builder with no
+accepted submission scores 0.
+
+Each task runs its held-out cases only after a Builder session that ended by itself or after its last submission.
+When the 5 hours run out first, the run stops before the held-out cases: the unit ends `failed` (exit status 2) and
+the summary's status is `builder_integration_incomplete`, `builder_lifecycle_incomplete` or
+`formal_evidence_incomplete`, depending on the task. `agentswe result` then adds a `budget_exhausted` block with
+`accepted_submissions`, `latest_accepted` (its number, and its id and digest where the task records them), the rule,
+and `held_out: "not run"`:
+
+- with no accepted submission: `scored: true`, `score: 0` and `score_basis`. The 0 follows from the rule, not from
+  the finalizer, so the result has no `formal_result_publishable`.
+- otherwise: `scored: false`, and `next` names the step that scores the run: `agentswe freeze <run_id>` (below) for
+  `aider-worktree-transaction`, `deeptutor-adaptive-remediation` and `openwiki-change-impact`. For the other Editing
+  tasks no freeze command is available yet, so such a run has no score.
+
+The block appears only when the last Builder segment (`builder_segment_receipt.json`) ended on Harbor's agent
+timeout (`AgentTimeoutError`) or within 10 minutes of the deadline, the only native Builder evidence error is the
+missing terminal event, and no held-out case has started. Some tasks record this cut as Builder exit 125 (their trial
+gate refuses any Harbor exception), which still counts. Smoke runs, runs that finished normally and runs stopped by
+any other infrastructure failure get no block. The two manual freeze scripts of earlier releases
+(`runners/editing/tools/manual_freeze_budget_exhausted.py`, `lite_manual_freeze.py`) were bound to specific recorded
+runs and could not run in an install; they have been removed.
+
+#### Freezing a budget-cut run: `agentswe freeze`
+
+```bash
+python3 -m agentswe freeze <run_id>                        # check (read-only): the preconditions and the plan
+python3 -m agentswe freeze <run_id> --stage all --apply    # freeze, held-out cases, finalize
+```
+
+`agentswe freeze` applies the rule to such a run after it has ended, through the task tree's own code: `freeze` (the
+tree's controller freezes the latest accepted submission), `hidden` (the six held-out cases, with a fresh lower-agent
+broker started the way the formal run starts it) and `finalize` (the tree's finalizer with a fresh Result-judge
+broker; `summary.json` and `one_stop_summary.json` are rewritten the way the formal run writes them). `--stage`
+selects one of them or `all`; without `--apply` a stage only checks its preconditions and prints its plan, and
+`check` (the default) is read-only. After `finalize`, `agentswe result` reports the run's `result_axis` like that of
+any formal run.
+
+- Run it as the owner of the run directory, after the run has ended. The `hidden` and `finalize` stages call the
+  models as a formal run's held-out phase does, and take about as long (up to an hour): keep the terminal open. For
+  them the command writes the credential file `run` writes and removes it afterwards, as `result` and `stop` do.
+- It refuses unless the run is the budget cut `agentswe result` reports: the unit has ended and no container uses
+  the run directory; the task tree and the Result judge are unchanged since the launch; the last Builder segment
+  ended on Harbor's agent timeout (or within 10 minutes of the deadline) and was not resumed; the only native
+  evidence error is the missing terminal event; the summary has the task's gate status; 1 to 5 distinct accepted
+  submissions, the latest one unchanged since it was accepted; and no held-out evidence or aggregation yet. A run
+  with no accepted submission is refused: its Result is 0.
+- Each file it rewrites is first copied to `<name>.pre-manual-freeze` (it refuses when such a copy exists that it did
+  not make). `manual_freeze/manual_freeze_record.json` records the decision: reason
+  `budget_exhausted_freeze_latest_accepted`, `manual: true`, the operator (`--operator`, default the user running
+  it), timestamps and each stage's result; `summary.json` carries a `manual_freeze` note.
+- The freeze manifest keeps the freeze reason each task's held-out runner and finalizer accept. The
+  `aider-worktree-transaction` finalizer requires the Builder session to be proven continuous: the command sets
+  `same_session` from the tree's own native-evidence check with the allowance the tree already grants a Builder
+  interrupted after its last submission, and only when the strict check failed for the missing terminal event alone;
+  the strict result stays in the attestation.
+- Every other Editing task refuses: the command does not support it yet.
+
+## When an evaluation fails on infrastructure
+
+- Creation does not resume an evaluation that fails on infrastructure. A development submission whose evaluation
+  fails that way does not use up a submission, and the builder may submit again. A held-out evaluation that fails
+  that way ends the run without a score; `agentswe result` reports the failure and the last infrastructure error.
+  A development evaluation is also discarded, without using up a submission, when the builder's own environment
+  changes while it runs (for example a command that writes caches such as `__pycache__` into it); the run log says
+  "Builder environment changed during Dev evaluation", and the builder submits again.
+  Resuming is off by default. `AGENTSWE_EVAL_RESUME_ENABLED=1`, exported in the shell that runs `agentswe run` (the
+  Creation controller takes these variables from the process environment, not from `.env`), retries an evaluation
+  that failed on infrastructure after a wait that starts at `AGENTSWE_EVAL_RESUME_MIN_WAIT_SEC` (default 30) and
+  doubles up to `AGENTSWE_EVAL_RESUME_MAX_WAIT_SEC` (default 300), at most `AGENTSWE_EVAL_RESUME_MAX_ATTEMPTS` times
+  (default 0, no limit). It applies to development evaluations in every Creation task, and to the held-out phase of
+  `scientific-pdf-translation`, `document-to-editable-pptx`, `desktop-gui-automation` and `web-research-report`
+  (recorded in `hidden_infrastructure_resume_state.json`); in the other six tasks a held-out failure still ends the
+  run.
+- Editing resumes a Builder session that an infrastructure failure cut off, in the same Codex session, at most twice
+  and only within the time left in the 5-hour budget. A development evaluation that fails on infrastructure does not
+  use up a submission. Held-out cases are not re-run.
+- Optimization resumes the evaluation (next section).
+
+### When a Result-judge prompt does not fit the judge context
+
+This applies to the five Creation tasks whose judge prompt carries the whole candidate output:
+`repository-bug-repair`, `database-analytics`, `formal-theorem-proving`, `schema-guided-web-extraction` and
+`web-research-report`. The other Creation tasks put only named deliverables or text files in the judge prompt;
+`scientific-pdf-translation`, `document-to-editable-pptx`, `authorized-vulnerability-validation` and
+`evidence-grounded-document-qa` record a prompt over their size budget as an infrastructure error, and
+`desktop-gui-automation` truncates it.
+
+- The default judge has a context of 1,048,576 tokens. The provider counts the request's 100,000-token output limit
+  against that context, so 948,576 tokens remain for the prompt.
+- The first judge request always carries the full prompt, unchanged.
+- The eval tries once more with reduced evidence in either of these cases:
+  - the provider answers HTTP 400 and the body says the context length was exceeded;
+  - the provider answers HTTP 400 with no message, and an upper estimate of the prompt is above 900,000 tokens.
+    The estimate counts each control character (NUL included) as 1 token, each non-ASCII character as 1 token per
+    UTF-8 byte, and each other character as 0.8 tokens. It counts typical prompts 2 to 4 times high.
+- The reduced prompt is built in steps, in this order. The estimate is recomputed after each step, and the eval stops
+  at the first step whose prompt fits under 900,000, or under 95% of the room the provider says is left for input
+  when that is smaller:
+  1. repeated values in the harness evidence become references to the copy that is kept;
+  2. binary files (a NUL byte, or not valid UTF-8) become a `path`, size and sha256 marker;
+  3. files that are neither required deliverables nor listed in `run_report.json` (`artifact_paths` or
+     `artifacts`) become the same marker. The required deliverables are those of each task's delivery contract:
+     - `repository-bug-repair`: `solution.patch`, `repair_report.json`, `migration_report.json`, `run_report.json`;
+     - `database-analytics`: `answer.json`, `queries.json`, `result.csv`, `chart.json`, `dashboard.html`,
+       `decision.json`, `lineage.json`, `run_report.json` and `results/`;
+     - `formal-theorem-proving`: `solution.patch`, `proof_report.json`, `run_report.json`;
+     - `schema-guided-web-extraction`: `records.json`, `evidence.json`, `interaction_trace.json`,
+       `session_summary.json`, `run_report.json` and `screenshots/`;
+     - `web-research-report`: `report.md`, `sources.json`, `evidence_graph.json`, `run_report.json` (the optional
+       `diagnostics/` directory is not evaluated).
+- Where the judge also receives images (`database-analytics`, `schema-guided-web-extraction`,
+  `web-research-report`), the reduced request carries the same images, and the estimate counts them.
+- The reduced prompt is sent once.
+- If it still does not fit, or the retry fails, the case is an infrastructure error, as before.
+- The case's `eval_result.json` gains three fields, none of them read by scoring:
+  - `evidence_reduced: true`;
+  - `prompt_reduction`, the receipt: the trigger and a redacted body sample, the steps, and the prompt sizes before
+    and after. The same receipt is also written to `prompt_reduction.json`.
+  - `judge_http_errors`, a redacted sample (at most 2,000 characters, credentials removed) of every judge 4xx body.
+- In `formal-theorem-proving`, `api_receipt` then lists the transport attempts of both requests, each marked
+  `original` or `reduced`.
+- `verify_score.py` scores such a case as any other.
+- `agentswe result` reports `evidence_reduced`: the held-out cases judged on reduced evidence, their count, and the
+  count of dev cases judged that way.
+- To check that first requests are unchanged, `tools/verify_judge_inputs.py` replays archived judge inputs offline.
+
+## Optimization runs
+
+An Optimization run resumes an evaluation that fails on infrastructure (a Harbor environment that does not start,
+for example on a host with a slow Docker Hub) without limit, as in the paper's protocol: the run waits and starts
+the same evaluation again rather than scoring the failure. `agentswe status <run_id>` shows, under `infrastructure`,
+the current evaluation phase, how many times it has resumed, its last infrastructure error (type, short message and
+the attempt's `stderr.log`), and where the controller logs are (`<run dir>/controller_logs`). A run that keeps
+resuming will not finish on its own; `agentswe stop <run_id>` ends it.
+
+An Eval trial that Harbor ends with an exception before the evaluator has written its score contract (an environment
+start or verifier timeout on a loaded Docker host, for example) is such an infrastructure failure; a trial the
+evaluator scored is scored as before. A development evaluation that fails this way is replayed by the dev controller
+as a new phase (up to `AGENTSWE_EVAL_RESUME_MAX_ATTEMPTS` = 3 times, waiting 30 to 180 s, as in the paper's Lite runs)
+and does not use up a round; a held-out phase resumes without limit. The Optimization runner sets these values
+itself; the `AGENTSWE_EVAL_RESUME_*` variables of your environment do not change them. A phase that ends with an
+error records it in its `infrastructure_resume_state.json` (status `infrastructure_error` or `failed`), and
+`agentswe result` lists every phase's final status under `evaluation_phase_status`. `agentswe stop` removes the run's containers, including exited
+Harbor verifier containers whose mounts are under the run's Harbor job directories in `<home>/jobs`; it finds them by
+mounts and compose labels under the run directory and those job directories, never by name.
+
+The OSWorld provider container is not pinned to CPUs unless `OSWORLD_PROVIDER_CPUSET` and
+`OSWORLD_PROVIDER_CPUSET_MEMS` are set (in `.env` or the environment; Docker `--cpuset-cpus` / `--cpuset-mems`, for
+example `0-15,128-143` and `0` as on the paper hosts); the pinning is performance isolation only and no score
+depends on it.
+
+A scored evaluation row is kept in `<home>/runs/optimization/row_cache`, shared by the runs of a home, and reused by
+a later evaluation of the same candidate on the same case under the same evaluation configuration (RUNTIME
+Responses URL, model and effort, JUDGE effort, BrowseComp's search base URL and wire, OSWorld's
+`AGENTSWE_OSWORLD_EFFORT` and `AGENTSWE_OSWORLD_SCHEMA_STRICT`): runs with the same configuration share the
+starter's rows, as the paper's Lite runs did, and a run with another configuration scores them again. Each phase's
+`row_cache_manifest.json` lists its hits and the configuration.
+
+## Before comparing results
+
+The held-out cases ship in this public repository, and Builders run with network access. Harbor keeps held-out
+inputs out of the Builder's workspace, not off the network. A result is only meaningful if the builder did not look the
+held-out cases up, so report the builder's settings (model, effort, harness, network and search access) with your
+scores, and note this when you compare them with other results.
+
+The released `desktop-gui-automation` evaluator is not the evaluator that scored the paper's GUI column, so GUI scores
+from this release are not comparable with that column.
+
+### Where Builder-visible task text differs from the evaluation
+
+The release keeps the task text that the paper's Builders received. In some tasks that text describes something
+other than what the evaluation does. The evaluation follows each task's `task.json` `protocol`, and the `notes` of each
+affected task describe the difference:
+
+- Creation freeze. In `authorized-vulnerability-validation`, `evidence-grounded-document-qa`, `formal-theorem-proving`,
+  `repository-bug-repair` and `schema-guided-web-extraction`, the Builder instruction says the controller freezes the
+  submission as soon as every dev case is valid with a dev mean above 60, and then answers `frozen: true`. The
+  controller freezes only when the Builder session ends (the Builder exits or its time runs out): it takes the final
+  workspace, or the latest evaluated submission when the workspace is not structurally valid. The pass rule in the
+  dev feedback (mean above 60) is informational. The other five Creation tasks' instructions describe the freeze as
+  it happens.
+- Editing lower model. The task documents of `ai-scientist-reproducibility-gate`, `codex-execution-residual`,
+  `deepcode-claim-traceability` (its `tree/README.md`, which the Builder receives), `openclaw-channel-handoff` and
+  `openhands-effect-recovery` say the edited agent's model calls go to gpt-5.6-sol at effort medium. They go to
+  `deepseek-flash` at effort high, the Editing runtime of the paper's runs and of both profiles. The
+  `codex-execution-residual` and `openhands-effect-recovery` documents also name gpt-5.6-sol/xhigh as the Builder; the
+  Builder is the configured builder model.
+- Editing budget. `dyad-acceptance-driven`, `openclaw-channel-handoff` and `openhands-effect-recovery` give the Builder
+  session as 28,800 s (8 hours), and `deeptutor-adaptive-remediation` allows up to ten accepted submissions. A formal
+  run gives the Builder 5 hours (18,000 s) and at most 5 accepted submissions; the Builder's generated instruction
+  states the 5 submissions.
+- Editing Builder services. `ai-scientist-reproducibility-gate`, `deepcode-claim-traceability`,
+  `dyad-acceptance-driven` and `openwiki-change-impact` offer the Builder an optional GATEWAY Responses API
+  (`GATEWAY_API_KEY`) and Serper search (`SERPER_TOKEN`), and `openhands-effect-recovery` says these credentials may
+  exist. The Builder container provides neither the services nor the credentials.
+- DeepCode rubric. `deepcode-claim-traceability/tree/README.md` lists rubric weights (12/8/8/12/3/57) that are not the
+  judge's. The Result judge scores the dimensions of `evaluator/result_dimensions.json` (20/20/25/20/15).
+
+### Scoring-path behaviours
+
+The release keeps the paper's scoring rules. These behaviours of the scoring path matter when you read or compare
+scores:
+
+- Per-case model-call budgets are not enforced. The evaluator broker records a candidate's calls but does not cap them
+  per case. Where a Creation task checks the per-case budget its documents state (for example 300 runtime requests,
+  at most 100 with images), it checks the counts the candidate reports in its own `run_report.json`.
+- Terminal-Bench accepts a static command plan. Besides the documented `terminus2_live` agent, a prediction row may
+  carry a list of 1 to 40 shell commands, which the evaluator runs in the task container without model calls and
+  scores with the official tests.
+- Some candidate outputs end in an infrastructure error instead of a 0, for example a Terminal-Bench `max_turns` that
+  is not an integer, or a PPTX delivery that leads the evaluator's independent source review past its limit of 40
+  sources. In development the submission does not use up a round. In a held-out phase the run ends without a score
+  (Creation, Editing), or the phase resumes without limit (Optimization; `agentswe stop` ends such a run).
+- Creation held-out cases are not replayed. An infrastructure failure in the held-out phase ends the run without a
+  score unless resuming is turned on ("When an evaluation fails on infrastructure").
+- Optimization needs exactly 5 accepted development rounds. A Builder that exits, or runs out of time, before its
+  fifth accepted round gets no held-out evaluation and no S (status `builder_exited_before_required_dev_rounds`).
+- In `openhands-effect-recovery`, a candidate product server that does not start, or a candidate error inside the
+  evaluator's `/state` route, counts as lower-agent infrastructure, not as a 0. A held-out case that ends this way
+  leaves the run without a Result.
+
+## Release assets
+
+Some setup inputs exist only in the AgentSWE release asset store (see `THIRD_PARTY.md` for the list and
+licenses): the Editing environment archives (OpenClaw runtime, Dyad dependencies; the Codex cargo home is optional
+because its recipe fetches the same crates), the Terminal-Bench dependency image, repository snapshots, wheels, an
+Alpine ISO and the uv binary, and the OSWorld source, kernel, initrd and task files. The store is published as the assets of one
+GitHub release of this repository, which is the default:
+
+    AGENTSWE_RELEASE_ASSETS_URL=https://github.com/VectorSpaceLab/AgentSWE/releases/download/assets-v1
+
+`setup` downloads each file once into `AGENTSWE_HOME/cache/downloads` (resumable, through `AGENTSWE_BUILD_PROXY`
+when set), checks its size and sha256 against the pin in `task.json` or `env.json`, and stops on a mismatch. It
+tries the release asset store first and a file's upstream locations after it; an upstream that sends no byte before
+the connection times out is skipped at once.
+
+A GitHub release has no directories, so each file is published under a flat name derived from its pin: the first
+16 hex digits of its sha256, `__`, and its file name with every character outside `[A-Za-z0-9._-]` replaced by `_`
+(`osworld/fixture-downloads/eval/<id>/New Large Language Models Gold.xlsx` is
+`987ada3caca9919d__New_Large_Language_Models_Gold.xlsx`). The release's `release-assets-manifest.json` maps each
+asset to its release path (the path the pins and `THIRD_PARTY.md` name), sha256 and size. A copy of the store kept
+as a directory tree on another server or bucket, each file at its release path, works as well: setup requests flat
+names when the URL contains `/releases/download/` and release paths otherwise, and
+`AGENTSWE_RELEASE_ASSETS_LAYOUT=flat` or `tree` overrides that choice.
+
+A directory that already holds the Editing archives can be named with `AGENTSWE_ENV_ARCHIVE_DIR` instead. A pinned
+file placed by hand in `AGENTSWE_HOME/cache/downloads/` is used as is when its size and sha256 match the pin and it
+is named `<first 16 hex digits of its sha256>__<file name>`, the file name being the last component of the pinned
+path, unchanged (unlike the flat release-asset name above, no character is replaced:
+`987ada3caca9919d__New Large Language Models Gold.xlsx`). Seven inputs are not in the store and come from their
+upstream hosts only, still pinned by sha256: the OSWorld VM image `Ubuntu.qcow2.zip` (12.3 GB, huggingface.co), the
+Terminal-Bench `install-windows-3.11` disk image `win311.img` (archive.org), the two Yelp review files of
+Terminal-Bench `train-fasttext` (huggingface.co) and three OSWorld VLC task files, two videos and the evaluator's
+gold audio file (huggingface.co). On a host that cannot reach them, place them in the download cache under the same
+form of name:
+
+- `b795b6cd4c69b252__Ubuntu.qcow2.zip`
+- `58fb76014dccf13e__win311.img`
+- `bf06d5969bff93ec__test-00000-of-00001.parquet`
+- `da3ca3dcc52b1e2e__train-00000-of-00001.parquet`
+- `2ce569323956383d__1ae2aceb-de6f-58d6-b675-f23abf4fac2c_Rick Astley - Never Gonna Give You Up (Official Music Video).mp4`
+- `b1c90b75d9508759__3e627622-52f2-5491-b1d6-d90f200d39ca_Baby Justin Bieber.mp4`
+- `d79d63242cb7c0d4__baby_gold.mp3`
+
+OSWorld's evaluator-side files (gold files and post-configuration scripts) are pinned assets too, so
+`DesktopEnv.evaluate()` reads them from the attempt's cache and the host needs no access to huggingface.co. Two
+OSWorld cases still need internet access from inside the VM at evaluation (test_006 and test_019; see the task's
+notes).
+
+Publishing the store (maintainers): `python3 tools/release_assets.py build --store <tree copy> --out <dir>
+--repo <org>/<repo>` writes
+the upload set, the pinned files under their flat names with a README, the archive license notes and texts,
+`SHA256SUMS` and the manifest (`tools/release_assets.py check` lists the names and fails on a collision).
+`tools/publish_release_assets.sh <org>/<repo> assets-v1 <dir>` (bash, curl and python3; Linux or macOS) creates the
+release if it is missing, uploads what is not there yet, skipping assets already present with the same size and
+retrying failures, and compares the release's assets with the manifest. It reads the token from `GITHUB_TOKEN` (a
+fine-grained token with Contents read and write on the repository, or a classic token with the `repo` scope;
+`public_repo` suffices for a public repository) or from an authenticated `gh` (`gh auth token`), and never puts it on
+a command line.
+
+## Hosts with restricted network access
+
+| Symptom | Setting |
+|---|---|
+| Docker Hub unreachable or slow (image builds sit at `load metadata for docker.io/...`; Optimization environments time out while starting) | a Docker daemon registry mirror (`registry-mirrors` in `/etc/docker/daemon.json`) covers every pull and build; without one, `AGENTSWE_DOCKER_REGISTRY=<Docker Hub mirror host>` makes setup's image builds and the Optimization templates name their `docker.io` base images (pinned by digest) through that mirror. Images that setup pulls by reference (for example the OSWorld provider image) still come through the daemon |
+| ghcr.io unreachable (Terminal-Bench) | `AGENTSWE_GHCR_REGISTRY=<ghcr.io mirror host>`; `AGENTSWE_DEBIAN_MIRROR` for the Debian packages of one Terminal-Bench image |
+| apt or PyPI slow inside the Terminal-Bench task images | the controller builds each case's task image during the run and installs its packages there; `AGENTSWE_TERMINALBENCH_APT_MIRROR=<mirror base>` rewrites `archive.ubuntu.com`, `security.ubuntu.com` and `deb.debian.org` to `<mirror base>/ubuntu`, `/debian` and `/debian-security`, so the base must serve all three (for example `http://mirrors.tuna.tsinghua.edu.cn`); `AGENTSWE_TERMINALBENCH_PIP_INDEX=<PyPI simple index>` (default `https://pypi.org/simple`) |
+| Terminal-Bench `qemu-startup` / `qemu-alpine-ssh` images (Debian 11 base) | their apt sources always come from the Debian archive, whose bullseye security updates have left deb.debian.org and regular mirrors; `AGENTSWE_TERMINALBENCH_DEBIAN_ARCHIVE=<archive base>` (default `http://archive.debian.org`, serving `/debian` and `/debian-security`), for example a mirror of it at `<mirror>/debian-archive` |
+| github.com, PyPI or the apt archive unreachable from the Terminal-Bench containers | 34 of the 40 held-out and 5 of the 10 dev Terminal-Bench cases keep their upstream verifier `test.sh`, which installs its test tools when it runs: curl from the apt archive, uv with astral's installer (the script from astral.sh, which redirects to releases.astral.sh; the uv release archive from github.com), then pytest and the test packages from PyPI (pypi.org, files.pythonhosted.org). A verifier that fails there runs no test; the controller records that as an infrastructure failure, which is retried and shown under `infrastructure` in `agentswe status`, not as a 0. `AGENTSWE_TERMINALBENCH_GITHUB_DOWNLOAD_BASE=<mirror of the github.com release downloads>` reaches these verifiers as `UV_INSTALLER_GITHUB_BASE_URL`, so the installer fetches `<base>/astral-sh/uv/releases/download/<version>/<archive>` (uv 0.7.13; 0.8.14 for `financial-document-processor`; the current release for `install-windows-3.11`). astral.sh, releases.astral.sh and PyPI must still be reachable (with the base set, the installer takes the uv archive only from it): `AGENTSWE_TERMINALBENCH_PIP_INDEX` does not reach the verifiers, and `AGENTSWE_TERMINALBENCH_APT_MIRROR` reaches their apt only in the 26 of these 39 images whose Dockerfile runs apt (the rewritten apt sources stay in the image) |
+| PyPI downloads stall | `AGENTSWE_PIP_INDEX_URL=<PyPI mirror>/simple/` |
+| conda-forge slow | `AGENTSWE_CONDA_CHANNEL=<conda-forge mirror>` (package URLs in env specs are rewritten to it) |
+| npm / Node.js downloads slow | `AGENTSWE_NPM_REGISTRY`, `AGENTSWE_NODE_DIST_URL` |
+| apt inside image builds slow | `AGENTSWE_APT_MIRROR=<ubuntu mirror base>`; image builds first use their pinned apt snapshot (snapshot.ubuntu.com) and retry on the mirror only if that fails (package versions may then drift; setup records it) |
+| GitHub release downloads stall | `AGENTSWE_DOCKER_PLUGIN_SOURCE=ubuntu` (compose/buildx from Ubuntu packages, `AGENTSWE_UBUNTU_MIRROR`, extracted, not installed); `AGENTSWE_PBS_BASE_URL=<mirror of the python-build-standalone release downloads>` (the Optimization Python image) |
+| codeload.github.com unreachable | `AGENTSWE_GITHUB_CODELOAD=<mirror>` (tau3 and PinchBench runtime images; the Editing a0 source fetches when they fall back to the commit tarball) |
+| git fetches of the Editing a0 sources hang | `AGENTSWE_A0_SOURCE=codeload` fetches the pinned commit as a tarball from codeload (each file is then checked against the task's `a0/en-upstream.sha256`); `AGENTSWE_A0_GIT_TIMEOUT` (seconds, default 900) bounds the git fetch before that fallback |
+| Playwright or Chrome for Testing downloads stall | `AGENTSWE_PLAYWRIGHT_DOWNLOAD_HOST=<Playwright CDN mirror>` replaces `https://cdn.playwright.dev/dbazure/download/playwright` (the browsers of the GUI, PPTX, Web, Schema and PDF task environments; Dyad's ffmpeg zip); `AGENTSWE_CFT_BASE_URL=<Chrome for Testing mirror>` replaces `https://storage.googleapis.com/chrome-for-testing-public` (the trusted-browser image's Chrome; Dyad's Chrome and headless-shell zips). The Chrome for Testing zips and Dyad's ffmpeg zip are checked against pinned sha256 digests, so a mirror cannot change them; the Creation environments' `playwright install` checks that each pinned browser revision is present, not its bytes |
+| uv's Python downloads stall (Editing) | `AGENTSWE_UV_PYTHON_INSTALL_MIRROR=<python-build-standalone mirror>` |
+
+### Behind an HTTP proxy
+
+`AGENTSWE_BUILD_PROXY=http://<proxy>` (with `AGENTSWE_BUILD_NO_PROXY`, default `localhost,127.0.0.1`) is used for
+two kinds of setup download: the environment builds (`envs/`; they then run on the host network, so a proxy on
+the host's loopback works) and the pinned files setup fetches on the host with curl (release assets, the OSWorld VM
+image, Terminal-Bench task assets, the large inputs some `env.json` files list). Every one of these downloads is
+checked against a pinned sha256, so the proxy cannot change content. It is not used for:
+
+- the image builds under `images/` (Docker builds on the default bridge network): give them the mirrors above
+  (`AGENTSWE_DOCKER_REGISTRY`, `AGENTSWE_PBS_BASE_URL`, `AGENTSWE_GITHUB_CODELOAD`, `AGENTSWE_CFT_BASE_URL`,
+  `AGENTSWE_NPM_REGISTRY`, `AGENTSWE_NODE_DIST_URL`, `AGENTSWE_PIP_INDEX_URL`);
+- Docker's own pulls, which follow the daemon's proxy or registry-mirror configuration;
+- setup's own tool downloads (micromamba, the compose/buildx plugins, Harbor's `pip install`), which honour the
+  usual `https_proxy` / `http_proxy` variables of the shell that runs `agentswe setup`;
+- model and search traffic during runs: the brokers ignore ambient proxy variables; Creation's provider brokers
+  connect directly or through `AGENTSWE_EVALUATOR_PROXY_URL` (an HTTP proxy on the host's loopback only), and
+  Optimization's brokers connect directly; an Editing Builder's traffic
+  goes through the CONNECT proxy on `127.0.0.1:7890` (Editing runs, above).
+
+### Downloads with fixed URLs
+
+A few inputs listed under `downloads` in an `env.json` or `images.json` are fetched on the host from fixed URLs that
+the mirror settings above do not rewrite: the PPTX environment's three conda packages (conda.anaconda.org) and two
+Ubuntu packages (archive.ubuntu.com), the `pptx-libreoffice` image's LibreOffice tarball
+(downloadarchive.documentfoundation.org) and one Ubuntu package, and the Lean toolchain of `formal-theorem-proving`
+(github.com). They go through `AGENTSWE_BUILD_PROXY` when it is set. On a host that reaches none of these, fetch each
+file elsewhere and place it in `AGENTSWE_HOME/cache/downloads/` under the plain `name` of its `downloads` entry, with
+no sha256 prefix (release assets and the upstream-only files of "Release assets" use
+`<first 16 hex digits of its sha256>__<file name>` instead); setup checks it against the pinned sha256 and uses it
+as is.
+
+### Inputs pinned by version only
+
+Release assets and every `downloads` entry are checked against a sha256, and base images are pinned by digest. A
+few build inputs are pinned by version only, so an upstream republish or a mirror could change their bytes:
+
+- the Playwright browsers of the Creation environments (`playwright install` checks each pinned revision is
+  present);
+- `uv` in the `opt-tau3-runtime` image (`pip install uv==<version>`);
+- `python3` from apt in the test images of the `desktop-gui-automation` and `evidence-grounded-document-qa`
+  templates, and `ca-certificates`/`curl` in the fetch stages of the `opt-tau3-runtime` and
+  `opt-pinchbench-runtime` images (from archive.ubuntu.com, or `AGENTSWE_APT_MIRROR`); the fetch stages are
+  discarded, so the runtime images themselves do not contain them.
+- the Terminal-Bench task images, which the controller builds from the upstream task Dockerfiles during a run,
+  as Terminal-Bench does: their apt and pip steps install the versions current at build time. Seven held-out
+  cases start from floating base tags (`python:3.11`, `python:3.11-slim`, `python:3.10-slim-bookworm`,
+  `debian:13.0-slim`, `debian:bullseye-slim`, `ubuntu:24.04`); `mteb-leaderboard` pins only `mteb` itself; and
+  `custom-memory-heap-crash` downloads the gcc source from github.com inside its build. The cases on the pinned
+  Terminal-Bench base images install their test dependencies from the pinned wheelhouse.
+- the test tools of the other Terminal-Bench verifiers, installed when the verifier runs: in 34 of the 40 held-out
+  and 5 of the 10 dev cases, curl from the apt archive, uv from github.com with astral's installer (uv 0.7.13;
+  0.8.14 for `financial-document-processor`; whatever release is current for `install-windows-3.11`), then pytest
+  and the test packages from PyPI (pinned by version except `install-windows-3.11`'s pytest); `hf-model-inference`
+  and `fix-code-vulnerability` install pytest from PyPI with pip. The uv installer checks no checksum, so a mirror
+  named by `AGENTSWE_TERMINALBENCH_GITHUB_DOWNLOAD_BASE` must serve the release's own files. A container that
+  cannot reach these gets an infrastructure failure (retried, and shown in `agentswe status`), not a 0.
+
+## Docker address pools
+
+Runs create small Docker networks from address pools; give each `AGENTSWE_HOME` pools that no other workload on
+the host allocates from (another AgentSWE home included) and that do not overlap the host's routes:
+
+| Variable | Default | Used by |
+|---|---|---|
+| `AGENTSWE_NETWORK_POOL` | `10.246.0.0/16` | Creation runs (per-job /28 networks) |
+| `AGENTSWE_OPTIMIZATION_POOL` | `198.18.0.0/15` | every Optimization run (/28 networks of the compose templates) |
+| `AGENTSWE_TAU3_POOL` | `198.18.0.0/15` | tau3-retail controller |
+| `AGENTSWE_PINCHBENCH_POOL` | `100.64.0.0/10` | pinchbench-openclaw controller |
+
+The defaults are benchmarking and shared-address ranges that some networks route (DHCP host routes, VPNs such as
+Tailscale use 100.64.0.0/10); `doctor <task>` warns when a pool the task uses overlaps a host route or an existing
+Docker network. It cannot see the pools another AgentSWE home has configured but not yet used, so when several
+homes share a host, give each one its own ranges.
+
+## Where a run's logs are
+
+`agentswe run` prints the run id and its launch log. `agentswe status` gives each run's directory; under it,
+`controller_logs/` (Creation, Optimization) holds the evaluator's log for every attempt, and Harbor's job
+directories are under `AGENTSWE_HOME/jobs/`. An Editing run's directory holds its readiness or formal records;
+`agentswe result` summarizes them.
+
+## Host checks
+
+`agentswe doctor <task>` checks Docker, cgroup version, compose >= 2.20 and buildx (setup installs
+private plugins under `AGENTSWE_HOME` if needed), disk space, the docker0 address used for the
+evaluator broker, overlap of `AGENTSWE_NETWORK_POOL` (and, for Optimization tasks, of the pools above) with existing
+routes and Docker networks, the configured roles, whether each role's base URL answers at all (a request without
+the key, so HTTP 401 is expected), and task-specific host tools. It warns when the host is not Linux x86-64, when
+`AGENTSWE_HOME` has less free disk than the task's `host.disk_gb`, when a task that needs cgroup v2 or systemd
+finds neither, and, for Editing tasks, when it does not run as root (Editing starts system-scope units). It sends no model request: `agentswe probe-roles`
+sends one short request per role with its key (and one search query when search is configured).
+
+`AGENTSWE_MAX_CONCURRENT_RUNS` (default 4) caps live runs per `AGENTSWE_HOME` on a host; more
+concurrent Optimization runs created enough per-case Docker networks to trigger a udevd storm.

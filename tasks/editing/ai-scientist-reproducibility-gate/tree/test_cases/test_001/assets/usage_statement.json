@@ -1,0 +1,1 @@
+{"schema_version":1,"run_id":"restart-lost","calls":[{"call_id":"a","model":"gpt-5.6-sol","prompt_tokens":1333,"completion_tokens":211},{"call_id":"b","model":"gpt-5.6-sol","prompt_tokens":377,"completion_tokens":89}]}

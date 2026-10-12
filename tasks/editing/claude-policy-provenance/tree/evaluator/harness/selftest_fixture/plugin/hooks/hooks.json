@@ -1,0 +1,1 @@
+{"hooks":{"PreToolUse":[{"matcher":"*","hooks":[{"type":"command","command":"python3 ${CLAUDE_PLUGIN_ROOT}/hooks/policy_hook.py"}]}],"PostToolUse":[{"matcher":"*","hooks":[{"type":"command","command":"python3 ${CLAUDE_PLUGIN_ROOT}/hooks/policy_hook.py"}]}]}}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "run_id": "run-tau-fatal",
+  "project_id": "project-recovery",
+  "replay": {"command": ["python", "replay.py"], "working_directory": ".", "timeout_seconds": 10, "script_path": "replay.py", "script_sha256": "b7711fa2388a55fd58af851072024329fe450f3ee5d786bf9539b68999ceddf3"},
+  "workers": [{"worker_id": "tau-pool", "experiment_id": "exp-archive-7", "seed": 9, "status": "failed", "failure_class": "pool_broken", "error": "worker pool terminated before journal flush"}],
+  "failure_policy": {"allow_partial": true, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "lab-tau/release-t3/fatal-probe", "global_process_scan": false}
+}

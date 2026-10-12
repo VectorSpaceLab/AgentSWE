@@ -1,0 +1,37 @@
+vendor,week,known_defects,defects_detected,known_good_parts,good_parts_rejected,parts_inspected,run_hours,scheduled_hours,unavailable_hours
+Northline Vision,1,184,178,4816,129,5000,5.5,42,1.0
+Northline Vision,2,191,185,5009,134,5200,5.7,42,0.8
+Northline Vision,3,176,170,4924,118,5100,5.6,42,1.2
+Northline Vision,4,203,197,5297,141,5500,6.0,42,0.9
+Northline Vision,5,188,182,5112,126,5300,5.8,42,1.4
+Northline Vision,6,214,207,5586,151,5800,6.2,42,0.7
+Northline Vision,7,197,191,5403,139,5600,6.0,42,1.1
+Northline Vision,8,205,199,5695,147,5900,6.3,42,0.6
+Northline Vision,9,219,212,5981,158,6200,6.6,42,1.0
+Northline Vision,10,226,219,6174,166,6400,6.8,42,0.8
+Northline Vision,11,211,204,6089,153,6300,6.7,42,1.3
+Northline Vision,12,232,225,6468,171,6700,7.1,42,0.7
+Oriole Systems,1,184,180,4816,91,5000,6.1,42,1.5
+Oriole Systems,2,191,187,5009,95,5200,6.3,42,1.3
+Oriole Systems,3,176,172,4924,88,5100,6.2,42,1.7
+Oriole Systems,4,203,198,5297,101,5500,6.6,42,1.2
+Oriole Systems,5,188,184,5112,97,5300,6.4,42,1.8
+Oriole Systems,6,214,209,5586,106,5800,7.0,42,1.1
+Oriole Systems,7,197,192,5403,103,5600,6.8,42,1.4
+Oriole Systems,8,205,200,5695,108,5900,7.1,42,1.0
+Oriole Systems,9,219,214,5981,114,6200,7.4,42,1.6
+Oriole Systems,10,226,220,6174,117,6400,7.7,42,1.2
+Oriole Systems,11,211,206,6089,116,6300,7.6,42,1.9
+Oriole Systems,12,232,226,6468,123,6700,8.0,42,1.1
+VectorSight,1,184,181,4816,166,5000,5.0,42,0.6
+VectorSight,2,191,188,5009,171,5200,5.2,42,0.5
+VectorSight,3,176,173,4924,164,5100,5.1,42,0.8
+VectorSight,4,203,200,5297,181,5500,5.5,42,0.4
+VectorSight,5,188,185,5112,174,5300,5.3,42,0.9
+VectorSight,6,214,211,5586,190,5800,5.8,42,0.4
+VectorSight,7,197,194,5403,184,5600,5.6,42,0.7
+VectorSight,8,205,202,5695,194,5900,5.9,42,0.3
+VectorSight,9,219,216,5981,203,6200,6.2,42,0.6
+VectorSight,10,226,223,6174,210,6400,6.4,42,0.5
+VectorSight,11,211,208,6089,207,6300,6.3,42,0.8
+VectorSight,12,232,229,6468,220,6700,6.7,42,0.4

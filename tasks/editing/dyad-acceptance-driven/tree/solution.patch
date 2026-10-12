@@ -1,0 +1,630 @@
+diff --git a/src/first_prompt/state.ts b/src/first_prompt/state.ts
+index 71dc8d5..75065c7 100644
+--- a/src/first_prompt/state.ts
++++ b/src/first_prompt/state.ts
+@@ -15,7 +15,7 @@
+  * deterministically before navigation.
+  */
+ 
+-export type FirstPromptChatMode = "build" | "ask" | "local-agent" | "plan";
++export type FirstPromptChatMode = "build" | "ask" | "local-agent" | "plan" | "acceptance";
+ 
+ export interface FirstPromptAttachment {
+   readonly file: File;
+diff --git a/src/hooks/useTestRunEvents.ts b/src/hooks/useTestRunEvents.ts
+index 9457ad9..9a72eb7 100644
+--- a/src/hooks/useTestRunEvents.ts
++++ b/src/hooks/useTestRunEvents.ts
+@@ -43,7 +43,7 @@ export function useTestRunEvents() {
+   const activeRunByAppId = useRef(
+     new Map<
+       number,
+-      { generation: number; source: "panel" | "agent"; startedAt: number }
++      { generation: number; source: "panel" | "agent" | "acceptance"; startedAt: number }
+     >(),
+   );
+   const pendingOutputRef = useRef(new Map<number, string>());
+@@ -116,7 +116,7 @@ export function useTestRunEvents() {
+           startedAt,
+         });
+         discardPendingOutput(appId);
+-        if (payload.source === "agent") {
++        if (payload.source === "agent" || payload.source === "acceptance") {
+           applyStarted({
+             appId,
+             testFile,
+@@ -140,7 +140,7 @@ export function useTestRunEvents() {
+         return;
+       }
+       const activeRun = activeRunByAppId.current.get(appId);
+-      if (!activeRun || activeRun.source !== "agent") {
++      if (!activeRun || (activeRun.source !== "agent" && activeRun.source !== "acceptance")) {
+         return;
+       }
+       const runGeneration = activeRun.generation;
+diff --git a/src/ipc/handlers/acceptance_handlers.test.ts b/src/ipc/handlers/acceptance_handlers.test.ts
+new file mode 100644
+index 0000000..be30bd6
+--- /dev/null
++++ b/src/ipc/handlers/acceptance_handlers.test.ts
+@@ -0,0 +1,32 @@
++// @vitest-environment node
++import { beforeEach, describe, expect, it, vi } from "vitest";
++
++const handlers = new Map<string, unknown>();
++vi.mock("electron", () => ({
++  ipcMain: { handle: vi.fn((channel: string, handler: unknown) => handlers.set(channel, handler)) },
++}));
++vi.mock("../utils/telemetry", () => ({ sendTelemetryException: vi.fn() }));
++vi.mock("../utils/test_utils", () => ({ IS_TEST_BUILD: true }));
++
++const { registerAcceptanceHandlers } = await import("./acceptance_handlers");
++const { getRegisteredHandlerForTesting } = await import("./base");
++const { VALID_INVOKE_CHANNELS, VALID_RECEIVE_CHANNELS } = await import("../preload/channels");
++
++describe("Acceptance product entry", () => {
++  beforeEach(() => { handlers.clear(); registerAcceptanceHandlers(); });
++
++  it("registers every typed invoke surface and exposes it through preload", () => {
++    const channels = [
++      "acceptance:get-run", "acceptance:get-latest-run", "acceptance:control-run",
++      "acceptance:get-control-receipt", "acceptance:start-preview", "acceptance:get-preview", "acceptance:get-attestation",
++    ];
++    for (const channel of channels) {
++      expect(handlers.has(channel)).toBe(true);
++      expect(() => getRegisteredHandlerForTesting(channel)).not.toThrow();
++      expect(VALID_INVOKE_CHANNELS).toContain(channel);
++    }
++    expect(VALID_RECEIVE_CHANNELS).toEqual(expect.arrayContaining([
++      "acceptance:run-updated", "acceptance:preview-updated", "acceptance:attestation-updated",
++    ]));
++  });
++});
+diff --git a/src/ipc/handlers/acceptance_handlers.ts b/src/ipc/handlers/acceptance_handlers.ts
+new file mode 100644
+index 0000000..a266dec
+--- /dev/null
++++ b/src/ipc/handlers/acceptance_handlers.ts
+@@ -0,0 +1,72 @@
++import fs from "node:fs/promises";
++import path from "node:path";
++import type { IpcMainInvokeEvent } from "electron";
++import { and, eq } from "drizzle-orm";
++import { db } from "@/db";
++import { apps, chats } from "@/db/schema";
++import { getDyadAppPath } from "@/paths/paths";
++import { DyadError, DyadErrorKind } from "@/errors/dyad_error";
++import { broadcastToRegisteredWindows } from "@/ipc/utils/window_broadcast";
++import { createTypedHandler } from "./base";
++import { runAppTestsWithIsolation, normalizeRunTestFile } from "./tests_handlers";
++import { acceptanceContracts } from "../types/acceptance";
++import { acceptanceRevision, acceptanceTestFingerprint, createAttestation, createReceipt, createSession, digest, ensureAcceptanceRun, getAttestation, getReceipt, getRun, getSession, updateSession } from "../services/acceptance_store";
++
++async function owned(appId: number, chatId: number) {
++  const row = await db.select({ app: apps, chat: chats }).from(chats).innerJoin(apps, eq(chats.appId, apps.id)).where(and(eq(apps.id, appId), eq(chats.id, chatId))).get();
++  if (!row) throw new DyadError("Acceptance app/chat ownership check failed", DyadErrorKind.Auth);
++  return row.app;
++}
++function emit(event: IpcMainInvokeEvent, channel: string, payload: unknown): void { broadcastToRegisteredWindows(event.sender, channel, payload); }
++async function assertTarget(appPath: string, testFile: string): Promise<string> {
++  const normalized = normalizeRunTestFile(testFile); if (!normalized) throw new DyadError(`Invalid acceptance test target: ${testFile}`, DyadErrorKind.Validation);
++  const root = path.resolve(appPath); const target = path.resolve(root, normalized); if (!target.startsWith(`${root}${path.sep}`)) throw new DyadError("Acceptance target escapes app", DyadErrorKind.Auth);
++  const stat = await fs.lstat(target).catch(() => null); if (!stat?.isFile() || stat.isSymbolicLink()) throw new DyadError("Acceptance target must be a regular file", DyadErrorKind.Validation);
++  return normalized;
++}
++
++export async function registerAcceptanceRunForChat(appId: number, chatId: number, appPath: string) { return ensureAcceptanceRun(appId, chatId, appPath); }
++
++export function registerAcceptanceHandlers(): void {
++  createTypedHandler(acceptanceContracts.getLatestRun, async (_event, input) => getRun(input));
++  createTypedHandler(acceptanceContracts.getRun, async (_event, input) => getRun(input));
++  createTypedHandler(acceptanceContracts.getPreview, async (_event, input) => getSession(input));
++  createTypedHandler(acceptanceContracts.getAttestation, async (_event, input) => getAttestation(input));
++  createTypedHandler(acceptanceContracts.getControlReceipt, async (_event, input) => getReceipt(input));
++  createTypedHandler(acceptanceContracts.controlRun, async (_event, input) => {
++    await owned(input.appId, input.chatId); const run = await getRun(input); if (!run || run.runId !== input.runId) throw new DyadError("Acceptance run not found", DyadErrorKind.NotFound);
++    if (run.generation !== input.expectedGeneration) throw new DyadError("Stale Acceptance generation", DyadErrorKind.Conflict);
++    if (input.command === "freeze") { run.status = "frozen"; run.controlSequence += 1; }
++    if (input.command === "unfreeze") throw new DyadError("Acceptance freeze is immutable", DyadErrorKind.Precondition);
++    if (input.command === "cancel") { run.status = "cancelled"; run.controlSequence += 1; }
++    const receipt = await createReceipt({ appId: input.appId, chatId: input.chatId, runId: input.runId, operationId: input.operationId, command: input.command, generation: run.generation, controlSequence: run.controlSequence, status: run.status });
++    emit(_event, "acceptance:run-updated", run); return receipt;
++  });
++  createTypedHandler(acceptanceContracts.startPreview, async (event, input) => {
++    const app = await owned(input.appId, input.chatId); const run = await getRun(input); if (!run || run.runId !== input.runId) throw new DyadError("Acceptance run not found", DyadErrorKind.NotFound);
++    if (run.generation !== input.expectedGeneration) throw new DyadError("Stale Acceptance generation", DyadErrorKind.Conflict);
++    if (run.status === "frozen") throw new DyadError("Acceptance run is frozen", DyadErrorKind.Precondition);
++    const appPath = getDyadAppPath(app.path); const testFile = await assertTarget(appPath, input.target.testFile); const target = { testFile, grep: input.target.grep };
++    const startedRevision = await acceptanceRevision(appPath); const testFingerprint = await acceptanceTestFingerprint(appPath, testFile);
++    const session = await createSession({ appId: input.appId, chatId: input.chatId, runId: input.runId, generation: input.expectedGeneration, operationId: input.operationId, target, startedRevision, testFingerprint });
++    emit(event, "acceptance:preview-updated", session);
++    if (session.immutable) return session;
++    void (async () => {
++      try {
++        await updateSession(session.sessionId, { status: "setup" }); emit(event, "acceptance:preview-updated", await getSession(inputWithSession(input, session.sessionId)));
++        await updateSession(session.sessionId, { status: "running" }); emit(event, "acceptance:preview-updated", await getSession(inputWithSession(input, session.sessionId)));
++        const result = await runAppTestsWithIsolation({ event, appId: input.appId, testFile, grep: input.target.grep ?? undefined, source: "acceptance" });
++        const currentFingerprint = await acceptanceTestFingerprint(appPath, testFile);
++        const finishedRevision = await acceptanceRevision(appPath);
++        const status = result.infraError?.message.toLowerCase().includes("abort") ? "cancelled" : currentFingerprint !== testFingerprint || finishedRevision !== startedRevision ? "invalidated" : result.infraError ? "infrastructure" : result.results.length > 0 && result.results.every((x) => x.status === "passed") ? "passed" : "failed";
++        const attestation = await createAttestation({ schemaVersion: 1, runId: input.runId, sessionId: session.sessionId, appId: input.appId, chatId: input.chatId, generation: input.expectedGeneration, startedRevision, finishedRevision, testFingerprint, outcome: status, resultDigest: digest(result), completedSequence: (await getSession(inputWithSession(input, session.sessionId)))?.sequence ?? 1 });
++        const updated = await updateSession(session.sessionId, { status, finishedRevision, attestationId: attestation.attestationId }); emit(event, "acceptance:preview-updated", updated); emit(event, "acceptance:attestation-updated", attestation);
++      } catch (error) {
++        const finishedRevision = await acceptanceRevision(appPath).catch(() => startedRevision); const attestation = await createAttestation({ schemaVersion: 1, runId: input.runId, sessionId: session.sessionId, appId: input.appId, chatId: input.chatId, generation: input.expectedGeneration, startedRevision, finishedRevision, testFingerprint, outcome: "infrastructure", resultDigest: digest({ error: String(error) }), completedSequence: 1 });
++        const updated = await updateSession(session.sessionId, { status: "infrastructure", finishedRevision, attestationId: attestation.attestationId }); emit(event, "acceptance:preview-updated", updated); emit(event, "acceptance:attestation-updated", attestation);
++      }
++    })();
++    return session;
++  });
++}
++function inputWithSession(input: { appId: number; chatId: number }, sessionId: string) { return { ...input, sessionId }; }
+diff --git a/src/ipc/handlers/chat_stream_handlers.ts b/src/ipc/handlers/chat_stream_handlers.ts
+index 7671ae8..46ffac8 100644
+--- a/src/ipc/handlers/chat_stream_handlers.ts
++++ b/src/ipc/handlers/chat_stream_handlers.ts
+@@ -77,6 +77,7 @@ import { MAX_CHAT_TURNS_IN_CONTEXT } from "@/constants/settings_constants";
+ import { validateChatContext } from "../utils/context_paths_utils";
+ import { getProviderOptions, getAiHeaders } from "../utils/provider_options";
+ import { sanitizeMcpToolResult } from "../utils/mcp_result_sanitizer";
++import { registerAcceptanceRunForChat } from "./acceptance_handlers";
+ 
+ import {
+   clearPendingLocalAgentInputsForChat,
+@@ -1567,11 +1568,19 @@ ${componentSnippet}
+           }
+         }
+ 
+-        const isLocalAgentMode = selectedChatMode === "local-agent";
++        const isAcceptanceMode = selectedChatMode === "acceptance";
++        const isLocalAgentMode = selectedChatMode === "local-agent" || isAcceptanceMode;
+         const isAskMode = selectedChatMode === "ask";
+         const isPlanMode = selectedChatMode === "plan";
+         const willUseLocalAgentStream =
+           isLocalAgentBackedMode(selectedChatMode);
++        if (isAcceptanceMode) {
++          await registerAcceptanceRunForChat(
++            updatedChat.app.id,
++            req.chatId,
++            getDyadAppPath(updatedChat.app.path),
++          );
++        }
+ 
+         // Agent/ask/plan modes reach referenced apps via tool calls (`app_name`
+         // on read-only tools), so we only need name/path pairs — skip the heavy
+diff --git a/src/ipc/handlers/tests_handlers.ts b/src/ipc/handlers/tests_handlers.ts
+index b088294..79393cb 100644
+--- a/src/ipc/handlers/tests_handlers.ts
++++ b/src/ipc/handlers/tests_handlers.ts
+@@ -54,6 +54,7 @@ import {
+   type PreparedIsolation,
+ } from "../services/isolated_test_db";
+ import { readTestScreenshotDataUrl } from "../utils/test_screenshot";
++import { cancelAcceptanceSessionsForApp } from "../services/acceptance_store";
+ import { readSettings } from "@/main/settings";
+ import { DyadError, DyadErrorKind, isDyadError } from "@/errors/dyad_error";
+ 
+@@ -513,7 +514,7 @@ export interface RunTestsWithIsolationOptions {
+   parallel?: boolean;
+   timeoutMs?: number;
+   /** Stamped onto `tests:run-state` so the panel ignores its own runs. */
+-  source: "panel" | "agent";
++  source: "panel" | "agent" | "acceptance";
+   /**
+    * Aborts the run when the caller's own lifecycle ends (e.g. the agent turn is
+    * cancelled). Wired into the same AbortController the Stop button uses, so
+@@ -786,6 +787,7 @@ export function registerTestsHandlers() {
+ 
+   createTypedHandler(testsContracts.stopAppTests, async (_event, params) => {
+     testRunControllers.get(params.appId)?.controller.abort();
++    await cancelAcceptanceSessionsForApp(params.appId);
+     return { ok: true as const };
+   });
+ 
+diff --git a/src/ipc/handlers/token_count_handlers.ts b/src/ipc/handlers/token_count_handlers.ts
+index ef68c83..5b4148d 100644
+--- a/src/ipc/handlers/token_count_handlers.ts
++++ b/src/ipc/handlers/token_count_handlers.ts
+@@ -84,7 +84,9 @@ export function registerTokenCountHandlers() {
+       let systemPrompt = constructSystemPrompt({
+         aiRules: await readAiRules(getDyadAppPath(chat.app.path)),
+         chatMode:
+-          selectedChatMode === "local-agent" ? "build" : selectedChatMode,
++          selectedChatMode === "local-agent" || selectedChatMode === "acceptance"
++            ? "build"
++            : selectedChatMode,
+         enableTurboEditsV2: isTurboEditsV2Enabled(settings),
+         themePrompt,
+         frameworkType,
+diff --git a/src/ipc/ipc_host.ts b/src/ipc/ipc_host.ts
+index dd09636..c4019e8 100644
+--- a/src/ipc/ipc_host.ts
++++ b/src/ipc/ipc_host.ts
+@@ -54,6 +54,7 @@ import { registerFirstPromptHandlers } from "./handlers/first_prompt_handlers";
+ import { registerWindowInfrastructureHandlers } from "./handlers/window_infrastructure_handlers";
+ import { registerDistributedMachineHandlers } from "./handlers/distributed_machine_handlers";
+ import { registerImageGenerationHandlers } from "./handlers/image_generation_handlers";
++import { registerAcceptanceHandlers } from "./handlers/acceptance_handlers";
+ 
+ export function registerIpcHandlers() {
+   // Register all IPC handlers by category
+@@ -113,4 +114,5 @@ export function registerIpcHandlers() {
+   registerWindowInfrastructureHandlers();
+   registerDistributedMachineHandlers();
+   registerImageGenerationHandlers();
++  registerAcceptanceHandlers();
+ }
+diff --git a/src/ipc/preload/channels.ts b/src/ipc/preload/channels.ts
+index 7196093..b46c3e5 100644
+--- a/src/ipc/preload/channels.ts
++++ b/src/ipc/preload/channels.ts
+@@ -69,6 +69,7 @@ import {
+   distributedMachineContracts,
+   distributedMachineEvents,
+ } from "../types/distributed_machines";
++import { acceptanceContracts, acceptanceEvents } from "../types/acceptance";
+ 
+ // =============================================================================
+ // Invoke Channels (derived from all contracts)
+@@ -136,6 +137,7 @@ export const VALID_INVOKE_CHANNELS = [
+   ...getInvokeChannels(userInputContracts),
+   ...getInvokeChannels(windowInfrastructureContracts),
+   ...getInvokeChannels(distributedMachineContracts),
++  ...getInvokeChannels(acceptanceContracts),
+   ...getInvokeChannels(imageGenerationContracts),
+ 
+   // Test-only channels
+@@ -180,6 +182,7 @@ export const VALID_RECEIVE_CHANNELS = [
+   ...getReceiveChannels(imageGenerationEvents),
+   ...getReceiveChannels(windowInfrastructureEvents),
+   ...getReceiveChannels(distributedMachineEvents),
++  ...getReceiveChannels(acceptanceEvents),
+ ] as const;
+ 
+ // =============================================================================
+diff --git a/src/ipc/services/acceptance_store.test.ts b/src/ipc/services/acceptance_store.test.ts
+new file mode 100644
+index 0000000..c57911d
+--- /dev/null
++++ b/src/ipc/services/acceptance_store.test.ts
+@@ -0,0 +1,45 @@
++// @vitest-environment node
++import fs from "node:fs/promises";
++import os from "node:os";
++import path from "node:path";
++import { afterEach, beforeEach, describe, expect, it } from "vitest";
++import { acceptanceContracts, acceptanceEvents } from "../types/acceptance";
++import { createAttestation, createSession, ensureAcceptanceRun, getAttestation, getRun, resetAcceptanceStoreForTesting, updateSession } from "./acceptance_store";
++
++describe("typed Acceptance ledger", () => {
++  let userData: string;
++  let appPath: string;
++  beforeEach(async () => {
++    userData = await fs.mkdtemp(path.join(os.tmpdir(), "dyad-acceptance-"));
++    appPath = await fs.mkdtemp(path.join(os.tmpdir(), "dyad-app-"));
++    await fs.mkdir(path.join(appPath, "e2e-tests"));
++    await fs.writeFile(path.join(appPath, "e2e-tests", "acceptance.spec.ts"), "test('acceptance', async () => {});\n");
++    process.env.DYAD_DEV_USER_DATA_DIR = userData;
++    resetAcceptanceStoreForTesting();
++  });
++  afterEach(async () => {
++    resetAcceptanceStoreForTesting();
++    await fs.rm(userData, { recursive: true, force: true });
++    await fs.rm(appPath, { recursive: true, force: true });
++  });
++
++  it("exposes typed channels/events and persists an acceptance run across reload", async () => {
++    expect(acceptanceContracts.startPreview.channel).toBe("acceptance:start-preview");
++    expect(acceptanceEvents.attestationUpdated.channel).toBe("acceptance:attestation-updated");
++    const run = await ensureAcceptanceRun(1, 2, appPath);
++    resetAcceptanceStoreForTesting();
++    expect(await getRun({ appId: 1, chatId: 2, runId: run.runId })).toEqual(run);
++  });
++
++  it("deduplicates operation ids and freezes terminal attestation", async () => {
++    const run = await ensureAcceptanceRun(1, 2, appPath);
++    const input = { appId: 1, chatId: 2, runId: run.runId, generation: 0, operationId: "op-1", target: { testFile: "e2e-tests/acceptance.spec.ts", grep: null }, startedRevision: "rev-a", testFingerprint: "test-a" };
++    const first = await createSession(input);
++    const retry = await createSession(input);
++    expect(retry).toEqual(first);
++    const attestation = await createAttestation({ schemaVersion: 1, runId: run.runId, sessionId: first.sessionId, appId: 1, chatId: 2, generation: 0, startedRevision: "rev-a", finishedRevision: "rev-b", testFingerprint: "test-a", outcome: "passed", resultDigest: "digest", completedSequence: 3 });
++    await updateSession(first.sessionId, { status: "passed", finishedRevision: "rev-b", attestationId: attestation.attestationId });
++    expect(await getAttestation({ appId: 1, chatId: 2, attestationId: attestation.attestationId })).toEqual(attestation);
++    expect((await updateSession(first.sessionId, { status: "failed" })).status).toBe("passed");
++  });
++});
+diff --git a/src/ipc/services/acceptance_store.ts b/src/ipc/services/acceptance_store.ts
+new file mode 100644
+index 0000000..1703260
+--- /dev/null
++++ b/src/ipc/services/acceptance_store.ts
+@@ -0,0 +1,84 @@
++import crypto from "node:crypto";
++import fs from "node:fs/promises";
++import path from "node:path";
++import { getUserDataPath } from "@/paths/paths";
++import type { AcceptanceControlReceipt, AcceptancePreviewSession, AcceptanceRunSnapshot, AcceptanceTestAttestation } from "../types/acceptance";
++
++type State = { runs: AcceptanceRunSnapshot[]; sessions: AcceptancePreviewSession[]; receipts: AcceptanceControlReceipt[]; attestations: AcceptanceTestAttestation[] };
++const empty = (): State => ({ runs: [], sessions: [], receipts: [], attestations: [] });
++let state: State | undefined;
++let writeChain = Promise.resolve();
++const filePath = () => path.join(getUserDataPath(), "acceptance-ledger.json");
++const id = (prefix: string) => `${prefix}_${crypto.randomUUID()}`;
++const digest = (value: unknown) => crypto.createHash("sha256").update(JSON.stringify(value)).digest("hex");
++
++async function load(): Promise<State> {
++  if (state) return state;
++  try { state = JSON.parse(await fs.readFile(filePath(), "utf8")) as State; } catch { state = empty(); }
++  return state;
++}
++async function persist(): Promise<void> {
++  const snapshot = JSON.stringify(state ?? empty(), null, 2) + "\n";
++  writeChain = writeChain.then(async () => {
++    await fs.mkdir(path.dirname(filePath()), { recursive: true });
++    const tmp = `${filePath()}.${process.pid}.tmp`;
++    await fs.writeFile(tmp, snapshot, { mode: 0o600 });
++    await fs.rename(tmp, filePath());
++  });
++  await writeChain;
++}
++export function resetAcceptanceStoreForTesting(): void { state = undefined; }
++export async function acceptanceRevision(appPath: string): Promise<string> {
++  const entries: Array<{ path: string; data: string }> = [];
++  async function walk(dir: string): Promise<void> { for (const entry of await fs.readdir(dir, { withFileTypes: true }).catch(() => [])) { if (["node_modules", ".git", "out", "dist"].includes(entry.name)) continue; const full = path.join(dir, entry.name); const rel = path.relative(appPath, full).split(path.sep).join("/"); if (entry.isDirectory()) await walk(full); else if (entry.isFile() && (/^(src|e2e-tests)\//.test(rel) || /^(package|pnpm-lock|yarn.lock|package-lock)\./.test(rel))) entries.push({ path: rel, data: (await fs.readFile(full)).toString("base64") }); } }
++  await walk(appPath); entries.sort((a, b) => a.path.localeCompare(b.path)); return digest(entries);
++}
++export async function acceptanceTestFingerprint(appPath: string, testFile: string): Promise<string> { return digest({ testFile, bytes: (await fs.readFile(path.join(appPath, testFile))).toString("base64") }); }
++async function targetForApp(appPath: string): Promise<string> {
++  const root = path.join(appPath, "e2e-tests");
++  const files: string[] = [];
++  async function walk(dir: string): Promise<void> { for (const entry of await fs.readdir(dir, { withFileTypes: true }).catch(() => [])) { const full = path.join(dir, entry.name); if (entry.isDirectory()) await walk(full); else if (/\.spec\.(ts|tsx|js|jsx)$/.test(entry.name)) files.push(path.relative(appPath, full).split(path.sep).join("/")); } }
++  await walk(root); files.sort();
++  return files[0] ?? "e2e-tests/acceptance.spec.ts";
++}
++export async function ensureAcceptanceRun(appId: number, chatId: number, appPath: string): Promise<AcceptanceRunSnapshot> {
++  const s = await load(); const existing = s.runs.find((r) => r.appId === appId && r.chatId === chatId);
++  if (existing) return existing;
++  const target = await targetForApp(appPath);
++  const run: AcceptanceRunSnapshot = { schemaVersion: 1, runId: id("run"), appId, chatId, status: "draft", generation: 0, controlSequence: 0, specificationHash: digest({ appId, chatId, target }), requirements: ["candidate acceptance evidence"], evidence: [{ source: "acceptance-chat", ordinaryChat: false }], testRuns: [{ sessionId: "pending", target: { testFile: target, grep: null }, status: "queued", attestationId: null }], changedPaths: [], unresolved: [], integrityViolations: [], repairBudget: 2 };
++  s.runs.push(run); await persist(); return run;
++}
++export async function getRun(scope: { appId: number; chatId: number; runId?: string }): Promise<AcceptanceRunSnapshot | null> { const s = await load(); return s.runs.find((r) => r.appId === scope.appId && r.chatId === scope.chatId && (!scope.runId || r.runId === scope.runId)) ?? null; }
++export async function getSession(scope: { appId: number; chatId: number; sessionId: string }): Promise<AcceptancePreviewSession | null> { const s = await load(); return s.sessions.find((x) => x.appId === scope.appId && x.chatId === scope.chatId && x.sessionId === scope.sessionId) ?? null; }
++export async function getAttestation(scope: { appId: number; chatId: number; attestationId: string }): Promise<AcceptanceTestAttestation | null> { const s = await load(); return s.attestations.find((x) => x.appId === scope.appId && x.chatId === scope.chatId && x.attestationId === scope.attestationId) ?? null; }
++export async function getReceipt(scope: { appId: number; chatId: number; receiptId: string }): Promise<AcceptanceControlReceipt | null> { const s = await load(); return s.receipts.find((x) => x.appId === scope.appId && x.chatId === scope.chatId && x.receiptId === scope.receiptId) ?? null; }
++export async function cancelAcceptanceSessionsForApp(appId: number): Promise<void> {
++  const s = await load();
++  let changed = false;
++  for (const session of s.sessions) {
++    if (session.appId === appId && !session.immutable && ["queued", "setup", "running"].includes(session.status)) {
++      session.status = "cancelled";
++      session.sequence += 1;
++      session.immutable = true;
++      changed = true;
++    }
++  }
++  if (changed) await persist();
++}
++export async function createSession(input: { appId: number; chatId: number; runId: string; generation: number; operationId: string; target: { testFile: string; grep: string | null }; startedRevision: string; testFingerprint: string }): Promise<AcceptancePreviewSession> {
++  const s = await load(); const prior = s.sessions.find((x) => x.operationId === input.operationId);
++  if (prior) {
++    const same = prior.appId === input.appId && prior.chatId === input.chatId &&
++      prior.runId === input.runId && prior.generation === input.generation &&
++      prior.target.testFile === input.target.testFile && prior.target.grep === input.target.grep &&
++      prior.startedRevision === input.startedRevision && prior.testFingerprint === input.testFingerprint;
++    if (!same) throw new Error("Acceptance operationId conflict");
++    return prior;
++  }
++  const session: AcceptancePreviewSession = { schemaVersion: 1, sessionId: id("session"), ...input, status: "queued", finishedRevision: null, sequence: 1, attestationId: null, immutable: false };
++  s.sessions.push(session); const run = s.runs.find((x) => x.runId === input.runId); if (run) { run.status = "previewing"; run.testRuns = run.testRuns.filter((x) => x.sessionId !== "pending").concat({ sessionId: session.sessionId, target: input.target, status: session.status, attestationId: null }); } await persist(); return session;
++}
++export async function updateSession(sessionId: string, update: Partial<AcceptancePreviewSession>): Promise<AcceptancePreviewSession> { const s = await load(); const session = s.sessions.find((x) => x.sessionId === sessionId); if (!session) throw new Error("Acceptance session not found"); if (session.immutable) return session; Object.assign(session, update, { sequence: session.sequence + 1 }); if (["passed", "failed", "cancelled", "infrastructure", "invalidated"].includes(session.status)) session.immutable = true; const run = s.runs.find((x) => x.runId === session.runId); if (run) { const row = run.testRuns.find((x) => x.sessionId === session.sessionId); if (row) Object.assign(row, { status: session.status, attestationId: session.attestationId }); if (session.status === "passed") run.status = "passed"; else if (session.status === "failed" || session.status === "infrastructure") run.status = "failed"; } await persist(); return session; }
++export async function createAttestation(input: Omit<AcceptanceTestAttestation, "attestationId" | "immutable">): Promise<AcceptanceTestAttestation> { const s = await load(); const prior = s.attestations.find((x) => x.sessionId === input.sessionId); if (prior) return prior; const attestation = { ...input, attestationId: id("att"), immutable: true as const }; s.attestations.push(attestation); await persist(); return attestation; }
++export async function createReceipt(input: Omit<AcceptanceControlReceipt, "receiptId" | "immutable">): Promise<AcceptanceControlReceipt> { const s = await load(); const prior = s.receipts.find((x) => x.operationId === input.operationId); if (prior) return prior; const receipt = { ...input, receiptId: id("receipt"), immutable: true as const }; s.receipts.push(receipt); await persist(); return receipt; }
++export { digest };
+diff --git a/src/ipc/types/acceptance.ts b/src/ipc/types/acceptance.ts
+new file mode 100644
+index 0000000..ba02953
+--- /dev/null
++++ b/src/ipc/types/acceptance.ts
+@@ -0,0 +1,58 @@
++import { z } from "zod";
++import { createClient, createEventClient, defineContract, defineEvent } from "../contracts/core";
++
++export const AcceptanceRunStatusSchema = z.enum(["draft", "previewing", "frozen", "passed", "failed", "cancelled", "invalidated"]);
++export const AcceptancePreviewStatusSchema = z.enum(["queued", "setup", "running", "passed", "failed", "cancelled", "infrastructure", "invalidated"]);
++
++const ScopeSchema = z.object({ appId: z.number().int().positive(), chatId: z.number().int().positive() });
++const TargetSchema = z.object({ testFile: z.string(), grep: z.string().nullable().default(null) });
++
++export const AcceptanceTestAttestationSchema = z.object({
++  schemaVersion: z.literal(1), attestationId: z.string(), runId: z.string(), sessionId: z.string(),
++  appId: z.number(), chatId: z.number(), generation: z.number().int().nonnegative(),
++  startedRevision: z.string(), finishedRevision: z.string(), testFingerprint: z.string(),
++  outcome: z.enum(["passed", "failed", "cancelled", "infrastructure", "invalidated"]),
++  resultDigest: z.string(), completedSequence: z.number().int().positive(), immutable: z.literal(true),
++});
++export type AcceptanceTestAttestation = z.infer<typeof AcceptanceTestAttestationSchema>;
++
++export const AcceptancePreviewSessionSchema = z.object({
++  schemaVersion: z.literal(1), sessionId: z.string(), runId: z.string(), ...ScopeSchema.shape,
++  generation: z.number().int().nonnegative(), operationId: z.string(), target: TargetSchema,
++  status: AcceptancePreviewStatusSchema, startedRevision: z.string(), testFingerprint: z.string(),
++  finishedRevision: z.string().nullable(), sequence: z.number().int().positive(),
++  attestationId: z.string().nullable(), immutable: z.boolean(),
++});
++export type AcceptancePreviewSession = z.infer<typeof AcceptancePreviewSessionSchema>;
++
++export const AcceptanceRunSnapshotSchema = z.object({
++  schemaVersion: z.literal(1), runId: z.string(), ...ScopeSchema.shape,
++  status: AcceptanceRunStatusSchema, generation: z.number().int().nonnegative(), controlSequence: z.number().int().nonnegative(),
++  specificationHash: z.string(), requirements: z.array(z.string()), evidence: z.array(z.record(z.string(), z.unknown())),
++  testRuns: z.array(z.object({ sessionId: z.string(), target: TargetSchema, status: AcceptancePreviewStatusSchema, attestationId: z.string().nullable() })),
++  changedPaths: z.array(z.string()), unresolved: z.array(z.string()), integrityViolations: z.array(z.string()), repairBudget: z.number().int().nonnegative(),
++});
++export type AcceptanceRunSnapshot = z.infer<typeof AcceptanceRunSnapshotSchema>;
++
++export const AcceptanceControlCommandSchema = ScopeSchema.extend({ runId: z.string(), expectedGeneration: z.number().int().nonnegative(), operationId: z.string(), command: z.enum(["freeze", "unfreeze", "cancel"]) });
++export const AcceptanceControlReceiptSchema = z.object({ receiptId: z.string(), ...ScopeSchema.shape, runId: z.string(), operationId: z.string(), command: z.string(), generation: z.number(), controlSequence: z.number(), status: z.string(), immutable: z.literal(true) });
++export type AcceptanceControlReceipt = z.infer<typeof AcceptanceControlReceiptSchema>;
++export const AcceptancePreviewCommandSchema = ScopeSchema.extend({ runId: z.string(), expectedGeneration: z.number().int().nonnegative(), operationId: z.string(), target: TargetSchema, presentation: z.literal("preview") });
++
++export const acceptanceContracts = {
++  getRun: defineContract({ channel: "acceptance:get-run", input: ScopeSchema.extend({ runId: z.string() }), output: AcceptanceRunSnapshotSchema.nullable() }),
++  getLatestRun: defineContract({ channel: "acceptance:get-latest-run", input: ScopeSchema, output: AcceptanceRunSnapshotSchema.nullable() }),
++  controlRun: defineContract({ channel: "acceptance:control-run", input: AcceptanceControlCommandSchema, output: AcceptanceControlReceiptSchema }),
++  getControlReceipt: defineContract({ channel: "acceptance:get-control-receipt", input: ScopeSchema.extend({ receiptId: z.string() }), output: AcceptanceControlReceiptSchema.nullable() }),
++  startPreview: defineContract({ channel: "acceptance:start-preview", input: AcceptancePreviewCommandSchema, output: AcceptancePreviewSessionSchema }),
++  getPreview: defineContract({ channel: "acceptance:get-preview", input: ScopeSchema.extend({ sessionId: z.string() }), output: AcceptancePreviewSessionSchema.nullable() }),
++  getAttestation: defineContract({ channel: "acceptance:get-attestation", input: ScopeSchema.extend({ attestationId: z.string() }), output: AcceptanceTestAttestationSchema.nullable() }),
++} as const;
++
++export const acceptanceEvents = {
++  runUpdated: defineEvent({ channel: "acceptance:run-updated", payload: AcceptanceRunSnapshotSchema }),
++  previewUpdated: defineEvent({ channel: "acceptance:preview-updated", payload: AcceptancePreviewSessionSchema }),
++  attestationUpdated: defineEvent({ channel: "acceptance:attestation-updated", payload: AcceptanceTestAttestationSchema }),
++} as const;
++export const acceptanceClient = createClient(acceptanceContracts);
++export const acceptanceEventClient = createEventClient(acceptanceEvents);
+diff --git a/src/ipc/types/index.ts b/src/ipc/types/index.ts
+index ab86957..5474dee 100644
+--- a/src/ipc/types/index.ts
++++ b/src/ipc/types/index.ts
+@@ -136,6 +136,12 @@ export {
+   distributedMachineClient,
+   distributedMachineEventClient,
+ } from "./distributed_machines";
++export {
++  acceptanceContracts,
++  acceptanceEvents,
++  acceptanceClient,
++  acceptanceEventClient,
++} from "./acceptance";
+ 
+ // =============================================================================
+ // Type Exports
+diff --git a/src/ipc/types/tests.ts b/src/ipc/types/tests.ts
+index 090e3a9..67cbe7b 100644
+--- a/src/ipc/types/tests.ts
++++ b/src/ipc/types/tests.ts
+@@ -341,7 +341,7 @@ export type TestOutputPayload = z.infer<typeof TestOutputPayloadSchema>;
+  */
+ export const TestsRunStatePayloadSchema = z.object({
+   appId: z.number(),
+-  source: z.enum(["panel", "agent"]),
++  source: z.enum(["panel", "agent", "acceptance"]),
+   state: z.enum(["started", "finished"]),
+   /** Single spec targeted, when set; absent = whole suite. */
+   testFile: z.string().optional(),
+diff --git a/src/lib/chatModeToast.ts b/src/lib/chatModeToast.ts
+index fd2982f..b68b575 100644
+--- a/src/lib/chatModeToast.ts
++++ b/src/lib/chatModeToast.ts
+@@ -12,6 +12,8 @@ export function getChatModeDisplayName(mode: ChatMode, isPro: boolean): string {
+       return isPro ? "Agent" : "Basic Agent";
+     case "plan":
+       return "Plan";
++    case "acceptance":
++      return "Acceptance";
+   }
+ }
+ 
+diff --git a/src/lib/schemas.ts b/src/lib/schemas.ts
+index a4b53e2..7bdd857 100644
+--- a/src/lib/schemas.ts
++++ b/src/lib/schemas.ts
+@@ -18,7 +18,7 @@ export const ChatSummarySchema = z.object({
+   appId: z.number(),
+   title: z.string().nullable(),
+   createdAt: z.date(),
+-  chatMode: z.enum(["build", "ask", "local-agent", "plan"]).nullable(),
++  chatMode: z.enum(["build", "ask", "local-agent", "plan", "acceptance"]).nullable(),
+   isFavorite: z.boolean(),
+ });
+ 
+@@ -158,13 +158,14 @@ export const StoredChatModeSchema = z.enum([
+   "agent", // DEPRECATED: converted to "build" on read
+   "local-agent",
+   "plan",
++  "acceptance",
+ ]);
+ export type StoredChatMode = z.infer<typeof StoredChatModeSchema>;
+ 
+ /**
+  * Active chat modes (excludes deprecated values)
+  */
+-export const ChatModeSchema = z.enum(["build", "ask", "local-agent", "plan"]);
++export const ChatModeSchema = z.enum(["build", "ask", "local-agent", "plan", "acceptance"]);
+ export type ChatMode = z.infer<typeof ChatModeSchema>;
+ 
+ /**
+@@ -175,7 +176,7 @@ export type ChatMode = z.infer<typeof ChatModeSchema>;
+  * what's actually sent to the model.
+  */
+ export function isLocalAgentBackedMode(mode: ChatMode | undefined): boolean {
+-  return mode === "local-agent" || mode === "ask" || mode === "plan";
++  return mode === "local-agent" || mode === "ask" || mode === "plan" || mode === "acceptance";
+ }
+ 
+ export const GitHubSecretsSchema = z.object({
+diff --git a/src/prompts/system_prompt.ts b/src/prompts/system_prompt.ts
+index e2c0965..a3782f2 100644
+--- a/src/prompts/system_prompt.ts
++++ b/src/prompts/system_prompt.ts
+@@ -660,7 +660,7 @@ export const constructSystemPrompt = ({
+   rebuildAppToolAvailable,
+ }: {
+   aiRules: string | undefined;
+-  chatMode?: "build" | "ask" | "local-agent" | "plan";
++  chatMode?: "build" | "ask" | "local-agent" | "plan" | "acceptance";
+   enableTurboEditsV2: boolean;
+   themePrompt?: string;
+   /** If true, use read-only mode for local-agent (ask mode with tools) */
+@@ -706,7 +706,7 @@ export const constructSystemPrompt = ({
+     return constructPlanModePrompt(aiRules, themePrompt);
+   }
+ 
+-  if (chatMode === "local-agent") {
++  if (chatMode === "local-agent" || chatMode === "acceptance") {
+     return constructLocalAgentPrompt(aiRules, themePrompt, {
+       readOnly,
+       basicAgentMode,
+diff --git a/src/testing/hybrid_chat_harness.tsx b/src/testing/hybrid_chat_harness.tsx
+index 55a850a..6dca736 100644
+--- a/src/testing/hybrid_chat_harness.tsx
++++ b/src/testing/hybrid_chat_harness.tsx
+@@ -448,7 +448,7 @@ export interface HybridChatHarness extends ChatFlowHarness {
+    * aria-label to reflect it (which persists chatMode onto the chat row).
+    */
+   selectChatMode: (
+-    mode: "build" | "ask" | "plan" | "local-agent",
++    mode: "build" | "ask" | "plan" | "local-agent" | "acceptance",
+   ) => Promise<void>;
+ 
+   /** Insert a new chat row (same app by default) and return its id. */
+@@ -736,7 +736,7 @@ export async function setupHybridChatHarness(
+           chatId: number;
+           appId: number;
+           attachments: readonly FileAttachment[];
+-          requestedChatMode?: "build" | "ask" | "local-agent" | "plan";
++          requestedChatMode?: "build" | "ask" | "local-agent" | "plan" | "acceptance";
+         }) =>
+           chatStreamManager.ensure(request.chatId).send({
+             type: "submit",
+@@ -1360,7 +1360,7 @@ export async function setupHybridChatHarness(
+     };
+ 
+     const selectChatMode = async (
+-      mode: "build" | "ask" | "plan" | "local-agent",
++      mode: "build" | "ask" | "plan" | "local-agent" | "acceptance",
+     ): Promise<void> => {
+       // One matcher per mode works for both the option text and the trigger's
+       // resulting aria-label ("Chat mode: <name>"): Build/Ask/Plan match verbatim;
+@@ -1371,6 +1371,7 @@ export async function setupHybridChatHarness(
+         ask: /Ask/,
+         plan: /Plan/,
+         "local-agent": /Agent/,
++        acceptance: /Acceptance/,
+       };
+       const trigger = await screen.findByTestId("chat-mode-selector");
+       await selectFromBaseUiSelect(trigger, matcher[mode]);

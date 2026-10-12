@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="96" viewBox="0 0 360 96" role="img" aria-labelledby="title desc">
+  <title id="title">Metrovale Fleet mark</title>
+  <desc id="desc">A navy M-shaped route with a teal charging point beside the words Metrovale Fleet.</desc>
+  <rect width="360" height="96" fill="#FFFFFF"/>
+  <path d="M18 70V24l27 28 27-28v46" fill="none" stroke="#17324D" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter"/>
+  <circle cx="72" cy="24" r="9" fill="#00A6A6"/>
+  <text x="100" y="47" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#17324D">Metrovale</text>
+  <text x="100" y="73" font-family="Arial, sans-serif" font-size="22" fill="#4A4F55">FLEET</text>
+</svg>

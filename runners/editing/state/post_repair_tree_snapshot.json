@@ -1,0 +1,159 @@
+{
+  "created_at": "2026-09-15T05:50:39.940324+00:00",
+  "digest_exclusions": [
+    ".formal_runs",
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".runtime",
+    "__pycache__",
+    "artifacts",
+    "node_modules",
+    "outputs"
+  ],
+  "registry_digest": "b69462a3807f1f698c42f3acc904189ea0372a51ce6b93d09c12a663452214e3",
+  "schema_version": "agentswe-edit-tree-snapshot-v1",
+  "tasks": {
+    "ai-scientist": {
+      "sibling": {
+        "bytes": 10690720,
+        "digest": "146b3247aebd2387d0f5646d2fe90c7434dcced804fb491dc6e7837efbf16ba5",
+        "files": 469,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/ai-scientist-reproducibility-gate/tree"
+      },
+      "source": {
+        "bytes": 6016837,
+        "digest": "4b67f04deb7e0926c191900d52ca63501990713566220d459c8e0775c656eca6",
+        "files": 232,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/16-edit-ai-scientist-reproducibility-gate-v5"
+      }
+    },
+    "aider": {
+      "sibling": {
+        "bytes": 81585061,
+        "digest": "5e326be4a55e55368f39fd3083e913af379603f51796270f9a63752d86fb3b10",
+        "files": 917,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/aider-worktree-transaction/tree"
+      },
+      "source": {
+        "bytes": 78014373,
+        "digest": "3e422293c23765d2a2d0070ac8338fe4460c00fe06188c176351a2fd7fe15726",
+        "files": 756,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/12-edit-aider-worktree-transaction"
+      }
+    },
+    "claude": {
+      "sibling": {
+        "bytes": 18253654,
+        "digest": "eb7bc40e7bca47dea741382ac5807bb03d91eed352531989605a4f840a089d9e",
+        "files": 481,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/claude-policy-provenance/tree"
+      },
+      "source": {
+        "bytes": 13647167,
+        "digest": "f57880df47a6a82832d1f0efd83bcc37b686403c17d466a23b173eefbacb76e6",
+        "files": 301,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/11-edit-claude-policy-provenance-v3"
+      }
+    },
+    "codex": {
+      "sibling": {
+        "bytes": 60024099,
+        "digest": "45ebfe4d9d32aaa22a2201e3db55e2677fecb3c3a693cd81e0812a5c428163af",
+        "files": 5973,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/codex-execution-residual/tree"
+      },
+      "source": {
+        "bytes": 56253797,
+        "digest": "627791944f7fbe489d6ab547f99ce4a2647d96ed31c12d87d9d681419104a4c0",
+        "files": 5833,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/15-edit-codex-execution-residual-v3"
+      }
+    },
+    "deepcode": {
+      "sibling": {
+        "bytes": 18736872,
+        "digest": "73cba75175cf0ab999070597ac650fe04645b576a0d2acc0ea0cb50a8bb45e97",
+        "files": 976,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/deepcode-claim-traceability/tree"
+      },
+      "source": {
+        "bytes": 15106257,
+        "digest": "014e7f2bbcaaacf5f6fd7c35840e4b36a28dcf09e15af9b4a953cc05ab4ef278",
+        "files": 807,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/17-edit-deepcode-claim-traceability"
+      }
+    },
+    "deeptutor": {
+      "sibling": {
+        "bytes": 122615100,
+        "digest": "8661bea4aaea774c64c3cd148f6891be010dd0e06507ba0d5ebbb97d55719ca8",
+        "files": 14356,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/deeptutor-adaptive-remediation/tree"
+      },
+      "source": {
+        "bytes": 9371030,
+        "digest": "fa052ba5e3515e5eaf6103467f6b94801f132db956e777d83d44c181595a0f05",
+        "files": 1309,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/deeptutor-adaptive-remediation/a0src"
+      }
+    },
+    "dyad": {
+      "sibling": {
+        "bytes": 58736259,
+        "digest": "978c06531e79c3f5f133797a15fee85b68f9d6e5a9134a4f82ecf56f758fcf5b",
+        "files": 5965,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/dyad-acceptance-driven/tree"
+      },
+      "source": {
+        "bytes": 27313850,
+        "digest": "80a9af39a13a73a5274f91844d846b3d6b10547083152607cf5f2866ca69585d",
+        "files": 2925,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/19-edit-dyad-acceptance-driven"
+      }
+    },
+    "openclaw": {
+      "sibling": {
+        "bytes": 385747626,
+        "digest": "4d3247c0945dca3b977b081b3d3905186f01db631a1a85cdb485cdb373a52b04",
+        "files": 30110,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/openclaw-channel-handoff/tree"
+      },
+      "source": {
+        "bytes": 382307909,
+        "digest": "ef8e0cff7173bc55376a546bcad796fe8709606beb1a26489e301fbd8cd98bc6",
+        "files": 29903,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/14-edit-openclaw-channel-handoff"
+      }
+    },
+    "openhands": {
+      "sibling": {
+        "bytes": 16025435,
+        "digest": "46358b32faa95b166d8db894aee80001c8331c5e16c26cc50aca932ffb370cbf",
+        "files": 2169,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/openhands-effect-recovery/tree"
+      },
+      "source": {
+        "bytes": 11035517,
+        "digest": "c4c781e8daa18b806e2052675321594a4f47430bd7e1ae8fd0094a65b2975198",
+        "files": 1942,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/13-edit-openhands-effect-recovery"
+      }
+    },
+    "openwiki": {
+      "sibling": {
+        "bytes": 5748506,
+        "digest": "617e59844607cb5b58266c053b7a3634b818593e4e5706d5282d6b0f4aebcade",
+        "files": 492,
+        "path": "@@AGENTSWE_EDITING_TASKS@@/openwiki-change-impact/tree"
+      },
+      "source": {
+        "bytes": 3055215,
+        "digest": "d757a562c26bf4575f17a8ea95b9b74f2f1b3e0ed8fc4afb9e055fac0af1cc57",
+        "files": 332,
+        "path": "@@AGENTSWE_EDITING_SOURCES@@/20-edit-openwiki-change-impact"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# Developer case 002 — crash recovery, thread route, and media
+
+You are operating a synthetic OpenClaw deployment with a fresh shared state
+directory. A task is created through the legacy schema and migrated to the
+current schema. A thread-routed user result includes a small attachment. A
+provider accepts a media operation and the Gateway loses its response before
+completion; a peer Gateway later recovers the operation and must finish it
+without sending duplicate bytes or a duplicate channel message.
+
+Drive the real OpenClaw Gateway agent through its production entry. Preserve
+the exact thread route and stable effect/upload identities. Inspect only the
+redacted state and receipts made available by the case client. Treat a partial
+media receipt, an empty platform message identity, and connector acceptance as
+insufficient for verified completion. Compression/restart must preserve
+monotonic state and completed effects. Never put attachment bytes, provider
+credentials, callback tokens, or internal payloads into the final artifact.
+
+Write `agent_result.json` and `run_report.json` in the requested output
+directory using the documented schemas. Record uncertainty honestly when the
+available evidence cannot prove final delivery.

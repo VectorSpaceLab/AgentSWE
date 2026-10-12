@@ -1,0 +1,28 @@
+{
+  "version": 4,
+  "shards": [
+    {
+      "id": "a",
+      "path": "primary/shard-a.json",
+      "expected_records": 8
+    },
+    {
+      "id": "b",
+      "path": "primary/shard-b.json",
+      "expected_records": 8,
+      "on_parse_or_checksum_failure": {
+        "snapshot": "fallback/shard-b.snapshot.json",
+        "sha256": "28f5fafa9895cff5776d55d8e2c41dc11810075d65474325e2aa095c6268c72a",
+        "journal": "fallback/journal.ndjson",
+        "journal_order": "sequence_ascending"
+      }
+    },
+    {
+      "id": "c",
+      "path": "primary/shard-c.json",
+      "expected_records": 8
+    }
+  ],
+  "prohibited_mirror": "http://127.0.0.1:9/private-recovery",
+  "maximum_local_reads": 9
+}

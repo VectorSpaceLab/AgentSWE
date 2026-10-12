@@ -1,0 +1,72 @@
+%PDF-1.4
+%synthetic-v4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 492 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 742 Tm (Larkspur Cold-Chain Release Protocol v3.1) Tj ET
+BT /F2 12 Tf 1 0 0 1 54 705 Tm (Section 1 - Scope) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 680 Tm (The protocol applies to six-hour vaccine-container qualification runs.) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 660 Tm (Recorded temperatures must be corrected using a calibration offset valid on the run date.) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 620 Tm (The Larkspur food warehouse protocol is unrelated and uses different limits.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 607 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 742 Tm (Section 2 - Release decision) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 704 Tm (Corrected temperature = recorded temperature + signed calibration offset.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (A pallet passes only if every corrected reading is at or below 8.0 C.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 652 Tm (A mean below the limit cannot override a single excursion.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 626 Tm (If any linked probe lacks a valid calibration, place the pallet on hold.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 584 Tm (Report each pallet mean to one decimal place after applying offsets.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 480 >>
+stream
+BT /F2 18 Tf 1 0 0 1 54 742 Tm (Section 3 - Evidence boundaries) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 704 Tm (Release logs establish temperature performance only.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 678 Tm (This protocol contains no product shelf-life extension rule.) Tj ET
+BT /F1 11 Tf 1 0 0 1 54 652 Tm (Packaging color and courier route do not affect the temperature calculation.) Tj ET
+BT /F1 10 Tf 1 0 0 1 54 610 Tm (Revision note: v3.1 supersedes v3.0 for runs after 2026-01-01.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000023 00000 n 
+0000000072 00000 n 
+0000000142 00000 n 
+0000000212 00000 n 
+0000000287 00000 n 
+0000000830 00000 n 
+0000000966 00000 n 
+0000001624 00000 n 
+0000001760 00000 n 
+0000002291 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+2428
+%%EOF

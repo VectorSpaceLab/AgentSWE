@@ -1,0 +1,8 @@
+risk_id,vendor,risk,rating,status,owner,mitigation,trigger
+R1,Northline Vision,Lighting variation on reflective parts,High,Open,Quality Engineering,Run production-light validation on both lines,Detection below 96 percent in any of first four production weeks
+R2,Northline Vision,Model update approval process,Medium,Open,IT Quality,Contract change-control appendix,Vendor requests unscheduled model update
+R3,Oriole Systems,Lower observed throughput,High,Open,Operations,Two-shift capacity trial,Throughput below 820 parts per hour for two weeks
+R4,Oriole Systems,Portal export mapping,Medium,Mitigating,IT Applications,Complete mapping test before acceptance,More than 1 percent records fail export validation
+R5,VectorSight,Initial capex exceeds board ceiling,Critical,Open,CFO,Obtain binding reduction before signature,Initial capex remains above 4000000 dollars
+R6,VectorSight,High false-reject burden,High,Open,Quality Engineering,Threshold tuning with locked validation set,False-reject rate exceeds 3 percent in acceptance test
+R7,All,Operator work-instruction adoption,Medium,Open,Plant Manager,Shift training and observed signoff,Fewer than 90 percent operators pass observed task

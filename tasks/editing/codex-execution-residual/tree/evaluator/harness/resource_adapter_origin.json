@@ -1,0 +1,9 @@
+{
+  "sources": {
+    "@@AGENTSWE_EDITING_TASKS@@/aider-worktree-transaction/tree/evaluator/harness/owned_resources.py": "9c137c5eaf9ed371423012feaae1aadfef694c4c24eea92887e3fda7fbe26936",
+    "@@AGENTSWE_EDITING_TASKS@@/aider-worktree-transaction/tree/evaluator/harness/case_envelope.py": "e0eeec2e3b87b5013941ca3ec8eafb10833360b3c4fbd4f03c467e9cf79cfd8e",
+    "@@AGENTSWE_EDITING_TASKS@@/aider-worktree-transaction/tree/evaluator/harness/turn_lifecycle.py": "1a5babf38ef5af710e28f19fed1ff7fa1da5c2425f217faa1f481691d7c9992e",
+    "@@AGENTSWE_EDITING_TASKS@@/aider-worktree-transaction/tree/evaluator/harness/test_0910_turn_boundary.py": "892a7cab0319a4872a030c0be51afd344ef0e1666087cc8f287ca73ec30d4ac8"
+  },
+  "adaptation": "Task-owned Codex aggregate parent and exact active Docker CID failure boundary; full lower case including fixture, product, model, observation and cleanup."
+}

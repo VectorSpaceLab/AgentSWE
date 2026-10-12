@@ -1,0 +1,124 @@
+{
+  "agent_authored_artifact": "case-local agent_result.json and run_report.json emitted by the Gateway-driven model run",
+  "broker_effort": "high",
+  "broker_model": "deepseek-flash",
+  "candidate_visible_inputs": "Natural task input, redacted route aliases, Gateway RPC actions, connector-visible receipt fields, and placeholder broker credential.",
+  "cases": {
+    "test_001": {
+      "natural_user_goal": "Continue one direct-channel task under concurrent Gateway recovery and deliver at most once.",
+      "primary_failure_axis": "concurrent owner fencing (secondary: receipt binding)"
+    },
+    "test_002": {
+      "natural_user_goal": "Complete a delivery after grant rotation without stale-child access.",
+      "primary_failure_axis": "grant rotation (secondary: content confidentiality)"
+    },
+    "test_003": {
+      "natural_user_goal": "Reconcile an accepted but unverified provider operation before claiming delivery.",
+      "primary_failure_axis": "accepted-versus-verified delivery (secondary: stable dispatch identity)"
+    },
+    "test_004": {
+      "natural_user_goal": "Migrate a direct route to a thread while preserving exact channel identity.",
+      "primary_failure_axis": "thread route migration (secondary: session continuity)"
+    },
+    "test_005": {
+      "natural_user_goal": "Resume a multipart attachment after response loss without resending accepted blocks.",
+      "primary_failure_axis": "attachment resume (secondary: media identity)"
+    },
+    "test_006": {
+      "natural_user_goal": "Complete one callback after restart/compaction while suppressing a late replay.",
+      "primary_failure_axis": "callback replay (secondary: compaction durability)"
+    }
+  },
+  "cases_note": "evaluator/semantic_finalize.task_rubric reads this block to append the case-local interpretation to the staged rubric; without it every hidden case received the generic default (observed in 0919-fw-004).",
+  "code_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/code_judge_runner.py",
+  "dev_cases": [
+    "dev_001",
+    "dev_002"
+  ],
+  "dynamic_facts": {
+    "test_001": [
+      "owner lease",
+      "peer route",
+      "task nonce"
+    ],
+    "test_002": [
+      "grant generation",
+      "dispatch receipt"
+    ],
+    "test_003": [
+      "provider acceptance receipt",
+      "message identity"
+    ],
+    "test_004": [
+      "peer/thread route",
+      "migration generation"
+    ],
+    "test_005": [
+      "upload identity",
+      "observed offset",
+      "block digest"
+    ],
+    "test_006": [
+      "callback token digest",
+      "checkpoint revision",
+      "event ordering"
+    ]
+  },
+  "evaluator_only_oracle": "Exact peer/thread route, lease/grant generation, callback token, attachment digest, expected decision, judge prompt, hidden inventory, and real provider credential.",
+  "formal_one_stop_entry": "harbor/formal_one_stop.py",
+  "hidden_cases": [
+    "test_001",
+    "test_002",
+    "test_003",
+    "test_004",
+    "test_005",
+    "test_006"
+  ],
+  "known_overlap_or_leakage": [
+    "Mature route/connector themes preserved.",
+    "Real paid smoke was not run in this provider-free repair."
+  ],
+  "native_harness_role": "case_service/hidden_executor validate dynamic facts, Gateway health, receipts, isolation, and provenance; they do not compute formal semantic Result.",
+  "primary_failure_axis_by_case": {
+    "test_001": "concurrent owner fencing",
+    "test_002": "grant rotation",
+    "test_003": "accepted-versus-verified delivery",
+    "test_004": "thread route migration",
+    "test_005": "attachment resume",
+    "test_006": "callback replay"
+  },
+  "primary_user_goal_by_case": {
+    "test_001": "Continue one direct-channel task under concurrent Gateway recovery and deliver at most once.",
+    "test_002": "Complete a delivery after grant rotation without stale-child access.",
+    "test_003": "Reconcile an accepted but unverified provider operation before claiming delivery.",
+    "test_004": "Migrate a direct route to a thread while preserving exact channel identity.",
+    "test_005": "Resume a multipart attachment after response loss without resending accepted blocks.",
+    "test_006": "Complete one callback after restart/compaction while suppressing a late replay."
+  },
+  "product_api_entry": "input/repository/openclaw.mjs",
+  "readiness": "REPAIR",
+  "real_lower_entry": "lower_agent/launcher.py",
+  "result_judge_entry": "@@AGENTSWE_EDITING_CONTROL@@/result_judge.py",
+  "secondary_failure_axes_by_case": {
+    "test_001": [
+      "receipt binding"
+    ],
+    "test_002": [
+      "content confidentiality"
+    ],
+    "test_003": [
+      "stable dispatch identity"
+    ],
+    "test_004": [
+      "session continuity"
+    ],
+    "test_005": [
+      "media identity"
+    ],
+    "test_006": [
+      "compaction durability"
+    ]
+  },
+  "sibling": "@@AGENTSWE_EDITING_TASKS@@/openclaw-channel-handoff/tree",
+  "task": "openclaw"
+}

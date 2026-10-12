@@ -1,0 +1,15 @@
+{
+  "schema_version": "agentswe-edit-code-rubric/v1",
+  "independent_from_result": true,
+  "dimensions": [
+    {"id":"interface_lifecycle","weight":15},
+    {"id":"requirement_mechanism_coverage","weight":20},
+    {"id":"analysis_evidence_integrity","weight":15},
+    {"id":"safety_privacy_side_effects","weight":15},
+    {"id":"recovery_honest_failure","weight":10},
+    {"id":"testability_observability","weight":10},
+    {"id":"maintainability_generalization","weight":10},
+    {"id":"resource_discipline","weight":5}
+  ],
+  "score_contract": "raw_dimension_scores_sum_to_100; report Result separately"
+}

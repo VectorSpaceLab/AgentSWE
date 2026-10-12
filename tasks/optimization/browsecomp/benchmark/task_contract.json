@@ -1,0 +1,967 @@
+{
+  "benchmark_id": "browsecomp-search-agent-optimization-v1",
+  "contamination_policy": {
+    "answers_or_solutions_forbidden": true,
+    "hidden_or_evaluator_material_forbidden": true,
+    "static_terminalbench_solver_forbidden": true,
+    "task_id_branches_forbidden": true
+  },
+  "editable_space": [
+    "run_harness.py",
+    "agent/**"
+  ],
+  "evaluation": {
+    "cli": "python run_harness.py --input <input.jsonl> --output <predictions.jsonl> --run-dir <run_dir>",
+    "infrastructure_failure": "not official, not cached as zero, and does not consume a dev round",
+    "ordinary_candidate_failure": "official zero and consumes a dev round",
+    "primary_metric": "official mean score over rows",
+    "relative_improvement_definition": "(candidate_score-baseline_score)/abs(baseline_score); null when baseline_score is zero",
+    "reported_metrics": [
+      "baseline_score",
+      "candidate_score",
+      "absolute_improvement",
+      "relative_improvement"
+    ],
+    "same_evaluator_runtime_model_and_budget": true,
+    "same_path_for_baseline_and_candidate": true,
+    "score_only_final_task_outcomes": true
+  },
+  "fixed_space": {
+    "budgets": {
+      "model_calls": 20,
+      "search_calls": 20,
+      "visit_calls": 20
+    },
+    "evaluator": "OpenAI simple-evals BrowseComp-compatible grader",
+    "model": "gpt-5.6-sol",
+    "runtime": "Harbor Candidate/Eval plus evaluator-owned model/search/visit broker"
+  },
+  "initial_artifact": {
+    "digest": "57c0f0b22298dff48c20b82b50c8dd2bd5e8b67882a15702b998357873277b42",
+    "entrypoint": "run_harness.py",
+    "kind": "starter_harness",
+    "name": "Clean Basic Search ReAct",
+    "path": "starter_harness"
+  },
+  "schema_version": "3.0",
+  "splits": {
+    "dev": {
+      "cases": [
+        {
+          "case_id": "dev_001",
+          "category": "Music",
+          "source_id": "398",
+          "upstream_id": "browsecomp::398"
+        },
+        {
+          "case_id": "dev_002",
+          "category": "Science & technology",
+          "source_id": "642",
+          "upstream_id": "browsecomp::642"
+        },
+        {
+          "case_id": "dev_003",
+          "category": "Art",
+          "source_id": "1067",
+          "upstream_id": "browsecomp::1067"
+        },
+        {
+          "case_id": "dev_004",
+          "category": "Art",
+          "source_id": "4",
+          "upstream_id": "browsecomp::4"
+        },
+        {
+          "case_id": "dev_005",
+          "category": "Geography",
+          "source_id": "81",
+          "upstream_id": "browsecomp::81"
+        },
+        {
+          "case_id": "dev_006",
+          "category": "History",
+          "source_id": "1016",
+          "upstream_id": "browsecomp::1016"
+        },
+        {
+          "case_id": "dev_007",
+          "category": "TV shows & movies",
+          "source_id": "638",
+          "upstream_id": "browsecomp::638"
+        },
+        {
+          "case_id": "dev_008",
+          "category": "Sports",
+          "source_id": "1251",
+          "upstream_id": "browsecomp::1251"
+        },
+        {
+          "case_id": "dev_009",
+          "category": "TV shows & movies",
+          "source_id": "867",
+          "upstream_id": "browsecomp::867"
+        },
+        {
+          "case_id": "dev_010",
+          "category": "Sports",
+          "source_id": "858",
+          "upstream_id": "browsecomp::858"
+        },
+        {
+          "case_id": "dev_011",
+          "category": "Other",
+          "source_id": "653",
+          "upstream_id": "browsecomp::653"
+        },
+        {
+          "case_id": "dev_012",
+          "category": "Other",
+          "source_id": "797",
+          "upstream_id": "browsecomp::797"
+        },
+        {
+          "case_id": "dev_013",
+          "category": "Science & technology",
+          "source_id": "1076",
+          "upstream_id": "browsecomp::1076"
+        },
+        {
+          "case_id": "dev_014",
+          "category": "Music",
+          "source_id": "136",
+          "upstream_id": "browsecomp::136"
+        },
+        {
+          "case_id": "dev_015",
+          "category": "Music",
+          "source_id": "986",
+          "upstream_id": "browsecomp::986"
+        },
+        {
+          "case_id": "dev_016",
+          "category": "Other",
+          "source_id": "68",
+          "upstream_id": "browsecomp::68"
+        },
+        {
+          "case_id": "dev_017",
+          "category": "Science & technology",
+          "source_id": "1095",
+          "upstream_id": "browsecomp::1095"
+        },
+        {
+          "case_id": "dev_018",
+          "category": "Science & technology",
+          "source_id": "598",
+          "upstream_id": "browsecomp::598"
+        },
+        {
+          "case_id": "dev_019",
+          "category": "Science & technology",
+          "source_id": "206",
+          "upstream_id": "browsecomp::206"
+        },
+        {
+          "case_id": "dev_020",
+          "category": "TV shows & movies",
+          "source_id": "1237",
+          "upstream_id": "browsecomp::1237"
+        },
+        {
+          "case_id": "dev_021",
+          "category": "Art",
+          "source_id": "736",
+          "upstream_id": "browsecomp::736"
+        },
+        {
+          "case_id": "dev_022",
+          "category": "Other",
+          "source_id": "1111",
+          "upstream_id": "browsecomp::1111"
+        },
+        {
+          "case_id": "dev_023",
+          "category": "Science & technology",
+          "source_id": "183",
+          "upstream_id": "browsecomp::183"
+        },
+        {
+          "case_id": "dev_024",
+          "category": "Sports",
+          "source_id": "1041",
+          "upstream_id": "browsecomp::1041"
+        },
+        {
+          "case_id": "dev_025",
+          "category": "TV shows & movies",
+          "source_id": "195",
+          "upstream_id": "browsecomp::195"
+        },
+        {
+          "case_id": "dev_026",
+          "category": "History",
+          "source_id": "138",
+          "upstream_id": "browsecomp::138"
+        },
+        {
+          "case_id": "dev_027",
+          "category": "History",
+          "source_id": "311",
+          "upstream_id": "browsecomp::311"
+        },
+        {
+          "case_id": "dev_028",
+          "category": "Politics",
+          "source_id": "1134",
+          "upstream_id": "browsecomp::1134"
+        },
+        {
+          "case_id": "dev_029",
+          "category": "History",
+          "source_id": "126",
+          "upstream_id": "browsecomp::126"
+        },
+        {
+          "case_id": "dev_030",
+          "category": "TV shows & movies",
+          "source_id": "1241",
+          "upstream_id": "browsecomp::1241"
+        },
+        {
+          "case_id": "dev_031",
+          "category": "Politics",
+          "source_id": "242",
+          "upstream_id": "browsecomp::242"
+        },
+        {
+          "case_id": "dev_032",
+          "category": "Art",
+          "source_id": "1044",
+          "upstream_id": "browsecomp::1044"
+        },
+        {
+          "case_id": "dev_033",
+          "category": "Politics",
+          "source_id": "1155",
+          "upstream_id": "browsecomp::1155"
+        },
+        {
+          "case_id": "dev_034",
+          "category": "Sports",
+          "source_id": "687",
+          "upstream_id": "browsecomp::687"
+        },
+        {
+          "case_id": "dev_035",
+          "category": "Sports",
+          "source_id": "788",
+          "upstream_id": "browsecomp::788"
+        },
+        {
+          "case_id": "dev_036",
+          "category": "TV shows & movies",
+          "source_id": "1211",
+          "upstream_id": "browsecomp::1211"
+        },
+        {
+          "case_id": "dev_037",
+          "category": "Geography",
+          "source_id": "766",
+          "upstream_id": "browsecomp::766"
+        },
+        {
+          "case_id": "dev_038",
+          "category": "Other",
+          "source_id": "259",
+          "upstream_id": "browsecomp::259"
+        },
+        {
+          "case_id": "dev_039",
+          "category": "Video games",
+          "source_id": "1182",
+          "upstream_id": "browsecomp::1182"
+        },
+        {
+          "case_id": "dev_040",
+          "category": "TV shows & movies",
+          "source_id": "1209",
+          "upstream_id": "browsecomp::1209"
+        },
+        {
+          "case_id": "dev_041",
+          "category": "Art",
+          "source_id": "130",
+          "upstream_id": "browsecomp::130"
+        },
+        {
+          "case_id": "dev_042",
+          "category": "Video games",
+          "source_id": "844",
+          "upstream_id": "browsecomp::844"
+        },
+        {
+          "case_id": "dev_043",
+          "category": "Sports",
+          "source_id": "304",
+          "upstream_id": "browsecomp::304"
+        },
+        {
+          "case_id": "dev_044",
+          "category": "Science & technology",
+          "source_id": "881",
+          "upstream_id": "browsecomp::881"
+        },
+        {
+          "case_id": "dev_045",
+          "category": "Science & technology",
+          "source_id": "333",
+          "upstream_id": "browsecomp::333"
+        },
+        {
+          "case_id": "dev_046",
+          "category": "TV shows & movies",
+          "source_id": "611",
+          "upstream_id": "browsecomp::611"
+        },
+        {
+          "case_id": "dev_047",
+          "category": "Video games",
+          "source_id": "1199",
+          "upstream_id": "browsecomp::1199"
+        },
+        {
+          "case_id": "dev_048",
+          "category": "Science & technology",
+          "source_id": "1126",
+          "upstream_id": "browsecomp::1126"
+        },
+        {
+          "case_id": "dev_049",
+          "category": "Music",
+          "source_id": "952",
+          "upstream_id": "browsecomp::952"
+        },
+        {
+          "case_id": "dev_050",
+          "category": "History",
+          "source_id": "298",
+          "upstream_id": "browsecomp::298"
+        }
+      ],
+      "count": 50
+    },
+    "hidden": {
+      "cases": [
+        {
+          "case_id": "test_001",
+          "category": "Music",
+          "source_id": "997",
+          "upstream_id": "browsecomp::997"
+        },
+        {
+          "case_id": "test_002",
+          "category": "Sports",
+          "source_id": "127",
+          "upstream_id": "browsecomp::127"
+        },
+        {
+          "case_id": "test_003",
+          "category": "Geography",
+          "source_id": "44",
+          "upstream_id": "browsecomp::44"
+        },
+        {
+          "case_id": "test_004",
+          "category": "Music",
+          "source_id": "1194",
+          "upstream_id": "browsecomp::1194"
+        },
+        {
+          "case_id": "test_005",
+          "category": "Geography",
+          "source_id": "692",
+          "upstream_id": "browsecomp::692"
+        },
+        {
+          "case_id": "test_006",
+          "category": "Art",
+          "source_id": "761",
+          "upstream_id": "browsecomp::761"
+        },
+        {
+          "case_id": "test_007",
+          "category": "Politics",
+          "source_id": "865",
+          "upstream_id": "browsecomp::865"
+        },
+        {
+          "case_id": "test_008",
+          "category": "Science & technology",
+          "source_id": "683",
+          "upstream_id": "browsecomp::683"
+        },
+        {
+          "case_id": "test_009",
+          "category": "Other",
+          "source_id": "820",
+          "upstream_id": "browsecomp::820"
+        },
+        {
+          "case_id": "test_010",
+          "category": "Art",
+          "source_id": "294",
+          "upstream_id": "browsecomp::294"
+        },
+        {
+          "case_id": "test_011",
+          "category": "Other",
+          "source_id": "1023",
+          "upstream_id": "browsecomp::1023"
+        },
+        {
+          "case_id": "test_012",
+          "category": "Music",
+          "source_id": "110",
+          "upstream_id": "browsecomp::110"
+        },
+        {
+          "case_id": "test_013",
+          "category": "Video games",
+          "source_id": "727",
+          "upstream_id": "browsecomp::727"
+        },
+        {
+          "case_id": "test_014",
+          "category": "History",
+          "source_id": "1089",
+          "upstream_id": "browsecomp::1089"
+        },
+        {
+          "case_id": "test_015",
+          "category": "Video games",
+          "source_id": "757",
+          "upstream_id": "browsecomp::757"
+        },
+        {
+          "case_id": "test_016",
+          "category": "Science & technology",
+          "source_id": "1221",
+          "upstream_id": "browsecomp::1221"
+        },
+        {
+          "case_id": "test_017",
+          "category": "Geography",
+          "source_id": "15",
+          "upstream_id": "browsecomp::15"
+        },
+        {
+          "case_id": "test_018",
+          "category": "Science & technology",
+          "source_id": "572",
+          "upstream_id": "browsecomp::572"
+        },
+        {
+          "case_id": "test_019",
+          "category": "Other",
+          "source_id": "829",
+          "upstream_id": "browsecomp::829"
+        },
+        {
+          "case_id": "test_020",
+          "category": "Other",
+          "source_id": "346",
+          "upstream_id": "browsecomp::346"
+        },
+        {
+          "case_id": "test_021",
+          "category": "Politics",
+          "source_id": "1236",
+          "upstream_id": "browsecomp::1236"
+        },
+        {
+          "case_id": "test_022",
+          "category": "TV shows & movies",
+          "source_id": "783",
+          "upstream_id": "browsecomp::783"
+        },
+        {
+          "case_id": "test_023",
+          "category": "Other",
+          "source_id": "366",
+          "upstream_id": "browsecomp::366"
+        },
+        {
+          "case_id": "test_024",
+          "category": "TV shows & movies",
+          "source_id": "340",
+          "upstream_id": "browsecomp::340"
+        },
+        {
+          "case_id": "test_025",
+          "category": "TV shows & movies",
+          "source_id": "810",
+          "upstream_id": "browsecomp::810"
+        },
+        {
+          "case_id": "test_026",
+          "category": "Geography",
+          "source_id": "1079",
+          "upstream_id": "browsecomp::1079"
+        },
+        {
+          "case_id": "test_027",
+          "category": "Science & technology",
+          "source_id": "1002",
+          "upstream_id": "browsecomp::1002"
+        },
+        {
+          "case_id": "test_028",
+          "category": "History",
+          "source_id": "827",
+          "upstream_id": "browsecomp::827"
+        },
+        {
+          "case_id": "test_029",
+          "category": "Other",
+          "source_id": "1022",
+          "upstream_id": "browsecomp::1022"
+        },
+        {
+          "case_id": "test_030",
+          "category": "Other",
+          "source_id": "46",
+          "upstream_id": "browsecomp::46"
+        },
+        {
+          "case_id": "test_031",
+          "category": "Other",
+          "source_id": "1152",
+          "upstream_id": "browsecomp::1152"
+        },
+        {
+          "case_id": "test_032",
+          "category": "Other",
+          "source_id": "182",
+          "upstream_id": "browsecomp::182"
+        },
+        {
+          "case_id": "test_033",
+          "category": "Music",
+          "source_id": "230",
+          "upstream_id": "browsecomp::230"
+        },
+        {
+          "case_id": "test_034",
+          "category": "Music",
+          "source_id": "1263",
+          "upstream_id": "browsecomp::1263"
+        },
+        {
+          "case_id": "test_035",
+          "category": "History",
+          "source_id": "762",
+          "upstream_id": "browsecomp::762"
+        },
+        {
+          "case_id": "test_036",
+          "category": "Science & technology",
+          "source_id": "450",
+          "upstream_id": "browsecomp::450"
+        },
+        {
+          "case_id": "test_037",
+          "category": "Politics",
+          "source_id": "53",
+          "upstream_id": "browsecomp::53"
+        },
+        {
+          "case_id": "test_038",
+          "category": "Science & technology",
+          "source_id": "568",
+          "upstream_id": "browsecomp::568"
+        },
+        {
+          "case_id": "test_039",
+          "category": "TV shows & movies",
+          "source_id": "453",
+          "upstream_id": "browsecomp::453"
+        },
+        {
+          "case_id": "test_040",
+          "category": "TV shows & movies",
+          "source_id": "719",
+          "upstream_id": "browsecomp::719"
+        },
+        {
+          "case_id": "test_041",
+          "category": "TV shows & movies",
+          "source_id": "1009",
+          "upstream_id": "browsecomp::1009"
+        },
+        {
+          "case_id": "test_042",
+          "category": "Art",
+          "source_id": "972",
+          "upstream_id": "browsecomp::972"
+        },
+        {
+          "case_id": "test_043",
+          "category": "Sports",
+          "source_id": "1184",
+          "upstream_id": "browsecomp::1184"
+        },
+        {
+          "case_id": "test_044",
+          "category": "History",
+          "source_id": "909",
+          "upstream_id": "browsecomp::909"
+        },
+        {
+          "case_id": "test_045",
+          "category": "Music",
+          "source_id": "786",
+          "upstream_id": "browsecomp::786"
+        },
+        {
+          "case_id": "test_046",
+          "category": "TV shows & movies",
+          "source_id": "1132",
+          "upstream_id": "browsecomp::1132"
+        },
+        {
+          "case_id": "test_047",
+          "category": "TV shows & movies",
+          "source_id": "890",
+          "upstream_id": "browsecomp::890"
+        },
+        {
+          "case_id": "test_048",
+          "category": "TV shows & movies",
+          "source_id": "728",
+          "upstream_id": "browsecomp::728"
+        },
+        {
+          "case_id": "test_049",
+          "category": "Other",
+          "source_id": "709",
+          "upstream_id": "browsecomp::709"
+        },
+        {
+          "case_id": "test_050",
+          "category": "Politics",
+          "source_id": "234",
+          "upstream_id": "browsecomp::234"
+        },
+        {
+          "case_id": "test_051",
+          "category": "Geography",
+          "source_id": "203",
+          "upstream_id": "browsecomp::203"
+        },
+        {
+          "case_id": "test_052",
+          "category": "Art",
+          "source_id": "266",
+          "upstream_id": "browsecomp::266"
+        },
+        {
+          "case_id": "test_053",
+          "category": "Other",
+          "source_id": "734",
+          "upstream_id": "browsecomp::734"
+        },
+        {
+          "case_id": "test_054",
+          "category": "Sports",
+          "source_id": "798",
+          "upstream_id": "browsecomp::798"
+        },
+        {
+          "case_id": "test_055",
+          "category": "Video games",
+          "source_id": "37",
+          "upstream_id": "browsecomp::37"
+        },
+        {
+          "case_id": "test_056",
+          "category": "Geography",
+          "source_id": "70",
+          "upstream_id": "browsecomp::70"
+        },
+        {
+          "case_id": "test_057",
+          "category": "TV shows & movies",
+          "source_id": "885",
+          "upstream_id": "browsecomp::885"
+        },
+        {
+          "case_id": "test_058",
+          "category": "Other",
+          "source_id": "769",
+          "upstream_id": "browsecomp::769"
+        },
+        {
+          "case_id": "test_059",
+          "category": "Video games",
+          "source_id": "882",
+          "upstream_id": "browsecomp::882"
+        },
+        {
+          "case_id": "test_060",
+          "category": "Politics",
+          "source_id": "596",
+          "upstream_id": "browsecomp::596"
+        },
+        {
+          "case_id": "test_061",
+          "category": "Art",
+          "source_id": "582",
+          "upstream_id": "browsecomp::582"
+        },
+        {
+          "case_id": "test_062",
+          "category": "Other",
+          "source_id": "373",
+          "upstream_id": "browsecomp::373"
+        },
+        {
+          "case_id": "test_063",
+          "category": "TV shows & movies",
+          "source_id": "846",
+          "upstream_id": "browsecomp::846"
+        },
+        {
+          "case_id": "test_064",
+          "category": "History",
+          "source_id": "965",
+          "upstream_id": "browsecomp::965"
+        },
+        {
+          "case_id": "test_065",
+          "category": "TV shows & movies",
+          "source_id": "536",
+          "upstream_id": "browsecomp::536"
+        },
+        {
+          "case_id": "test_066",
+          "category": "Sports",
+          "source_id": "511",
+          "upstream_id": "browsecomp::511"
+        },
+        {
+          "case_id": "test_067",
+          "category": "Science & technology",
+          "source_id": "313",
+          "upstream_id": "browsecomp::313"
+        },
+        {
+          "case_id": "test_068",
+          "category": "Sports",
+          "source_id": "232",
+          "upstream_id": "browsecomp::232"
+        },
+        {
+          "case_id": "test_069",
+          "category": "Geography",
+          "source_id": "850",
+          "upstream_id": "browsecomp::850"
+        },
+        {
+          "case_id": "test_070",
+          "category": "TV shows & movies",
+          "source_id": "513",
+          "upstream_id": "browsecomp::513"
+        },
+        {
+          "case_id": "test_071",
+          "category": "Art",
+          "source_id": "1077",
+          "upstream_id": "browsecomp::1077"
+        },
+        {
+          "case_id": "test_072",
+          "category": "Music",
+          "source_id": "1252",
+          "upstream_id": "browsecomp::1252"
+        },
+        {
+          "case_id": "test_073",
+          "category": "Other",
+          "source_id": "1034",
+          "upstream_id": "browsecomp::1034"
+        },
+        {
+          "case_id": "test_074",
+          "category": "TV shows & movies",
+          "source_id": "624",
+          "upstream_id": "browsecomp::624"
+        },
+        {
+          "case_id": "test_075",
+          "category": "Science & technology",
+          "source_id": "444",
+          "upstream_id": "browsecomp::444"
+        },
+        {
+          "case_id": "test_076",
+          "category": "Sports",
+          "source_id": "1049",
+          "upstream_id": "browsecomp::1049"
+        },
+        {
+          "case_id": "test_077",
+          "category": "Music",
+          "source_id": "1103",
+          "upstream_id": "browsecomp::1103"
+        },
+        {
+          "case_id": "test_078",
+          "category": "Sports",
+          "source_id": "726",
+          "upstream_id": "browsecomp::726"
+        },
+        {
+          "case_id": "test_079",
+          "category": "Other",
+          "source_id": "47",
+          "upstream_id": "browsecomp::47"
+        },
+        {
+          "case_id": "test_080",
+          "category": "History",
+          "source_id": "744",
+          "upstream_id": "browsecomp::744"
+        },
+        {
+          "case_id": "test_081",
+          "category": "Science & technology",
+          "source_id": "244",
+          "upstream_id": "browsecomp::244"
+        },
+        {
+          "case_id": "test_082",
+          "category": "Science & technology",
+          "source_id": "1056",
+          "upstream_id": "browsecomp::1056"
+        },
+        {
+          "case_id": "test_083",
+          "category": "Science & technology",
+          "source_id": "58",
+          "upstream_id": "browsecomp::58"
+        },
+        {
+          "case_id": "test_084",
+          "category": "History",
+          "source_id": "274",
+          "upstream_id": "browsecomp::274"
+        },
+        {
+          "case_id": "test_085",
+          "category": "History",
+          "source_id": "30",
+          "upstream_id": "browsecomp::30"
+        },
+        {
+          "case_id": "test_086",
+          "category": "Sports",
+          "source_id": "973",
+          "upstream_id": "browsecomp::973"
+        },
+        {
+          "case_id": "test_087",
+          "category": "Science & technology",
+          "source_id": "103",
+          "upstream_id": "browsecomp::103"
+        },
+        {
+          "case_id": "test_088",
+          "category": "Music",
+          "source_id": "1201",
+          "upstream_id": "browsecomp::1201"
+        },
+        {
+          "case_id": "test_089",
+          "category": "Science & technology",
+          "source_id": "1028",
+          "upstream_id": "browsecomp::1028"
+        },
+        {
+          "case_id": "test_090",
+          "category": "TV shows & movies",
+          "source_id": "1020",
+          "upstream_id": "browsecomp::1020"
+        },
+        {
+          "case_id": "test_091",
+          "category": "TV shows & movies",
+          "source_id": "855",
+          "upstream_id": "browsecomp::855"
+        },
+        {
+          "case_id": "test_092",
+          "category": "Science & technology",
+          "source_id": "1106",
+          "upstream_id": "browsecomp::1106"
+        },
+        {
+          "case_id": "test_093",
+          "category": "Geography",
+          "source_id": "765",
+          "upstream_id": "browsecomp::765"
+        },
+        {
+          "case_id": "test_094",
+          "category": "History",
+          "source_id": "664",
+          "upstream_id": "browsecomp::664"
+        },
+        {
+          "case_id": "test_095",
+          "category": "Other",
+          "source_id": "1118",
+          "upstream_id": "browsecomp::1118"
+        },
+        {
+          "case_id": "test_096",
+          "category": "Sports",
+          "source_id": "612",
+          "upstream_id": "browsecomp::612"
+        },
+        {
+          "case_id": "test_097",
+          "category": "Art",
+          "source_id": "603",
+          "upstream_id": "browsecomp::603"
+        },
+        {
+          "case_id": "test_098",
+          "category": "Other",
+          "source_id": "442",
+          "upstream_id": "browsecomp::442"
+        },
+        {
+          "case_id": "test_099",
+          "category": "Science & technology",
+          "source_id": "1046",
+          "upstream_id": "browsecomp::1046"
+        },
+        {
+          "case_id": "test_100",
+          "category": "Other",
+          "source_id": "3",
+          "upstream_id": "browsecomp::3"
+        }
+      ],
+      "count": 100
+    }
+  },
+  "track_semantics": "optimize a runnable initial agent; do not build from an empty submission",
+  "upstream": {
+    "dev_size": 50,
+    "hidden_size": 100,
+    "seed": 20260529,
+    "source": "Arena Track A search_agent_family frozen validation/test",
+    "source_manifest": "${AGENTSWE_HOME}/arena-src/AutonomousOptimizationArena-TrackA-main/tracks/track_a_harness_engineering/search_agent_family/data/manifest.json"
+  }
+}

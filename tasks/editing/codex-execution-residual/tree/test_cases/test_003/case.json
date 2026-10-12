@@ -1,0 +1,7 @@
+{
+  "case_id": "test_003",
+  "scenario": "adversarial_tail_control",
+  "required_actions": ["hostile_tail", "benign_control"],
+  "max_action_invocations": 2,
+  "spill": false
+}

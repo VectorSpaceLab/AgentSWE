@@ -1,0 +1,38 @@
+[
+  {
+    "record_ref": "QL-5122",
+    "display_name": "Kestrel Rotor",
+    "detail": "details/inspection-195.html",
+    "card_revision": "2026-07-13"
+  },
+  {
+    "record_ref": "QL-5123",
+    "display_name": "Lunar Bracket",
+    "detail": "details/inspection-003.html",
+    "card_revision": "2026-07-14"
+  },
+  {
+    "record_ref": "QL-5124",
+    "display_name": "Mica Nozzle",
+    "detail": "details/inspection-022.html",
+    "card_revision": "2026-07-15"
+  },
+  {
+    "record_ref": "QL-5125",
+    "display_name": "Amber Valve",
+    "detail": "details/inspection-041.html",
+    "card_revision": "2026-07-16"
+  },
+  {
+    "record_ref": "QL-5103",
+    "display_name": "Retired Cobalt Name",
+    "detail": "details/inspection-045.html",
+    "card_revision": "2025-02-01"
+  },
+  {
+    "record_ref": "QL-5126",
+    "display_name": "Cobalt Sleeve",
+    "detail": "details/inspection-060.html",
+    "card_revision": "2026-07-17"
+  }
+]

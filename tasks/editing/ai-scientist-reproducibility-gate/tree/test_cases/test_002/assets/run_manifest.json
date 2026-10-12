@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "run_id": "run-sigma-002",
+  "project_id": "project-race",
+  "replay": {"command": ["python", "replay.py"], "working_directory": ".", "timeout_seconds": 10, "script_path": "replay.py", "script_sha256": "2af76db7664128483c01c185f5c2d501d443a136f8b2a3e7b1357c938ba4f025"},
+  "workers": [{"worker_id": "sigma-birch", "experiment_id": "exp-birch-multiseed", "seed": 3, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "399f96a74dc4b7fc554fb92c8fb24f14621704a1d0835713086b8b330cbbea30"}],
+  "failure_policy": {"allow_partial": false, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "lab-sigma/release-s2/race-one", "global_process_scan": false}
+}

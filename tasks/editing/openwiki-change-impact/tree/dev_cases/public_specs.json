@@ -1,0 +1,67 @@
+{
+  "dev_001": {
+    "case_id": "dev_001",
+    "change_kind": "git",
+    "scenario": "commit_duplicate",
+    "transaction": {
+      "state_dir": ".openwiki-impact",
+      "tenant_id": "public-team",
+      "request_id": "rename-001",
+      "generation": 1,
+      "payload_digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "owner_id": "public-worker-a",
+      "lease_ms": 30000
+    },
+    "publication": {"root": ".openwiki-public", "site_id": "public-handbook", "generation": 1, "base_path": "/handbook/"},
+    "search": {"root": ".openwiki-search", "index_id": "public-handbook", "generation": 1},
+    "search_queries": [
+      {"query": "Name formatting", "limit": 5, "expected_paths": ["openwiki/api/names.md"]},
+      {"query": "monotonic clock", "limit": 2, "expected_paths": ["openwiki/reference/clock.md"]}
+    ],
+    "expected_pages": ["openwiki/api/names.md"],
+    "direct_pages": ["openwiki/api/names.md"],
+    "unaffected_pages": ["openwiki/reference/clock.md"],
+    "required_text": {"openwiki/api/names.md": ["renderName", "src/names.mjs"]},
+    "forbidden_text": {"openwiki/api/names.md": ["formatName(", "import { formatName }"]},
+    "expected_examples": {"names-basic": "ADA\n"},
+    "expected_stale_kinds": ["symbol-rename"],
+    "preserved_tokens": ["HANDWRITTEN: Keep title casing examples out of this API page."],
+    "preserved_anchors": ["name-formatting"],
+    "expected_diagrams": [],
+    "expected_link_suffixes": ["reference/clock.md"]
+  },
+  "dev_002": {
+    "case_id": "dev_002",
+    "change_kind": "diff",
+    "scenario": "recover_conflict",
+    "transaction": {
+      "state_dir": ".openwiki-impact",
+      "tenant_id": "public-team",
+      "request_id": "labels-002",
+      "generation": 2,
+      "payload_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "owner_id": "public-worker-b",
+      "lease_ms": 30000
+    },
+    "publication": {"root": ".openwiki-public", "site_id": "public-handbook", "generation": 2, "base_path": "/handbook/"},
+    "search": {"root": ".openwiki-search", "index_id": "public-handbook", "generation": 2},
+    "search_queries": [
+      {"query": "Label defaults", "limit": 5, "expected_paths": ["openwiki/api/labels.md"]},
+      {"query": "colon defaults", "limit": 5, "expected_paths": [], "forbidden_paths": ["openwiki/api/labels.md"]}
+    ],
+    "preseed_surfaces": "partial_generation",
+    "preseed": "expired_claim_incomplete_stage",
+    "expected_pages": ["openwiki/api/labels.md"],
+    "direct_pages": ["openwiki/api/labels.md"],
+    "unaffected_pages": ["openwiki/reference/parsing.md"],
+    "required_text": {"openwiki/api/labels.md": ["Ada -> Admin"]},
+    "forbidden_text": {"openwiki/api/labels.md": ["Ada: Admin", "defaults to a colon"]},
+    "expected_examples": {"label-default": "Ada -> Admin\n", "label-explicit": "Ada / Admin\n"},
+    "unreported_examples": ["label-explicit"],
+    "expected_stale_kinds": ["default-behavior"],
+    "preserved_tokens": ["HANDWRITTEN: Explicit separators remain supported for compatibility."],
+    "preserved_anchors": ["label-defaults"],
+    "expected_diagrams": [],
+    "expected_link_suffixes": []
+  }
+}

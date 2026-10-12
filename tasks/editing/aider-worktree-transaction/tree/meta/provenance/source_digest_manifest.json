@@ -1,0 +1,26 @@
+{
+  "schema_version": "agentswe-provenance-v1",
+  "benchmark_id": "12-edit-aider-worktree-transaction-agentloop-v1",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/12-edit-aider-worktree-transaction",
+  "source_digest_algorithm": "sha256-tree-v1",
+  "source_digest_excludes": [".git/**", "**/__pycache__/**", "**/*.pyc"],
+  "source_digest_sha256": "f3a27ff6a5ec47c5f58ebfa3b22f4e0c8412f649030146e4bda8c2a3282cc9a7",
+  "source_digest_at_final_audit": "b88bdb4319ce9d6dfa15aad3b15cea3919d458572a37a85338ee549e8abe9773",
+  "source_changed_during_audit": true,
+  "source_change_note": "The nested fixture repository was already observed dirty and changed during the audit; it was not edited, reset, or copied back. Initial sibling snapshot remains byte-preserving for audited product files.",
+  "manifest_locked_source_digest": "65fea778878c39c755c7ce5fce66580cd0ca1ad73598521de1be7ea88865927d",
+  "manifest_locked_source_digest_origin": "@@AGENTSWE_LEGACY_HARBOR@@/0830-edit-v2/v2_benchmark_manifest.json",
+  "copied_into_sibling": true,
+  "copy_policy": "read-only source audit copy; sibling-only modifications",
+  "audited_real_entries": {
+    "lower_agent": "input/repository/aider/__main__.py -> aider.main.main",
+    "edit_target": "evaluator/harness/public_fixture/aider/worktree_plan_adapter.py",
+    "legacy_public_runner": "dev_cases/run_dev_case.py",
+    "legacy_native_evaluator": "evaluator/harness/evaluate_suite.py"
+  },
+  "source_file_sha256": {
+    "README.md": "a904ef347cc7a015ba1dd1d71644f44f4c911f7440c4fafc555c2f976e6e4a71",
+    "input/repository/aider/main.py": "a93787156610c3f03cdcc0c9c096a7140dfa208986bd739b64a745533bee9c71",
+    "evaluator/harness/public_fixture/aider/worktree_plan_adapter.py": "25f5b9638bcf9490dd088a8556ddd545ed8bd8a7a59cabb44676cb9d9863dee3"
+  }
+}

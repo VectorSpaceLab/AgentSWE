@@ -1,0 +1,14 @@
+{
+  "caseId": "dev_002",
+  "fixtureName": "acceptance-preview-benchmark",
+  "scenario": "revision_invalidate_cancel_compat",
+  "testFile": "e2e-tests/acceptance-inventory.spec.ts",
+  "focusedGrep": "imports unique rows and exports the complete filtered set",
+  "operationId": "public-inventory-preview-v2",
+  "controlCommand": "cancel",
+  "runOutcomes": ["failed", "passed", "infrastructure"],
+  "requirementNeedles": ["quoted", "duplicate SKU", "source row", "filters compose", "all pages", "failed export"],
+  "testContent": "import { test, expect } from \"@playwright/test\";\n\ntest(\"imports unique rows and exports the complete filtered set\", async ({ page }) => {\n  await page.goto(\"/inventory\"); await page.getByLabel(\"CSV file\").setInputFiles({ name: \"items.csv\", mimeType: \"text/csv\", buffer: Buffer.from('sku,name,quantity\\nA1,\"Widget, large\",4\\nA1,duplicate,2') });\n  await expect(page.getByText(/row 3.*duplicate/i)).toBeVisible(); await page.getByRole(\"button\", { name: \"Confirm import\" }).click(); const download = page.waitForEvent(\"download\"); await page.getByRole(\"button\", { name: \"Export filtered CSV\" }).click(); expect((await download).suggestedFilename()).toMatch(/csv$/);\n});\n",
+  "runner": {"delayMs": 80, "outcome": "passed", "passed": 1, "failed": 0, "skipped": 0},
+  "workspaceAction": "mutate_then_restore"
+}

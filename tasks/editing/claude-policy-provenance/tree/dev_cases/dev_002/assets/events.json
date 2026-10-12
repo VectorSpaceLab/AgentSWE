@@ -1,0 +1,7 @@
+[
+  {"session_id":"public-two","hook_event_name":"PreToolUse","tool_name":"Bash","tool_use_id":"rewrite-1","tool_input":{"command":"curl https://example.test/status"},"expect":"allow","expect_decision":"rewrite"},
+  {"session_id":"public-two","hook_event_name":"PostToolUse","tool_name":"Bash","tool_use_id":"rewrite-1","tool_input":{"command":"curl https://example.test/status"},"tool_response":{"status":"ok","headers":{"authorization":"Bearer public_dev_token_123456789"}},"expect":"allow","expect_decision":"rewrite"},
+  {"session_id":"public-two","hook_event_name":"PreToolUse","tool_name":"Bash","tool_use_id":"audit-1","tool_input":{"command":"pwd"},"expect":"allow","expect_decision":"audit_only"},
+  {"session_id":"public-two","hook_event_name":"PreToolUse","tool_name":"Read","tool_use_id":"rotated-read","tool_input":{"file_path":"src/app.py"},"expect":"allow","expect_decision":"allow"},
+  {"session_id":"public-two","hook_event_name":"PreToolUse","tool_name":"mcp__files__inspect","tool_use_id":"delegated-template","tool_input":{"path":"src/public/a.py","url":"https://example.test/info"},"expect":"allow","expect_decision":"allow"}
+]

@@ -1,0 +1,65 @@
+{
+  "schema_version": "agentswe-as-run-files/v1",
+  "files": [
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/dev_cases/dev_001/input.md.pre-0920-hardening",
+      "sha256": "b7cea3912de6aaa370f00b63abcaeadfc003209ec4debb0b8b01bf3c617d20e6",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/dev_cases/dev_002/input.md.pre-0920-hardening",
+      "sha256": "1d46423b5df917a63c8e1a3eb54ae1e99f4ed8f726f874861e32b6e027f8f1c9",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/dev_cases/public_assertions.json.pre-0920-hardening",
+      "sha256": "39151bb6bd0f5eeb1819956be8c057db5d792aed9ee95841bf0d9b7a77c819c0",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/dev_cases/public_harness.py.pre-0920-hardening",
+      "sha256": "53f52736cc43c0b070da47e5f1e513f20b002af8c21c4e81a54fd375654098b3",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/01_task_goal.md.pre-0920-hardening",
+      "sha256": "2f37b829841d5bb5a8be2043f8adf23465b91c5fc870e3ac19caf536539aabba",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/01_task_goal.md.pre-0921-fixes",
+      "sha256": "d42efe571ad116341d02c37f9d43f2864778fa9c48a7c6e1bc6fe144feb66aa8",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/02_interface_and_delivery.md.pre-0920-hardening",
+      "sha256": "f762e562612cfad769258c195293f3d145d2d35a9357aa5978d77e9a1e2e85d2",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/02_interface_and_delivery.md.pre-0921b-spec-commands",
+      "sha256": "bac750ebe387bb488ae9a1e0bf3832b0c49678e4e618702df59620c79cef689b",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/03_requirements_and_constraints.md.pre-0920-hardening",
+      "sha256": "cfd1b77a81901a0c041109cbe372e5ef6b773400f9687a9e67350fb17bf10a0b",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/03_requirements_and_constraints.md.pre-0921-fixes",
+      "sha256": "4be92eda946eaff6d1a2f545ffa19028065503cf0f3a1869daf567ffaf42d23e",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/04_resources.md.pre-0920-hardening",
+      "sha256": "18b5eb7462463d0d570fa741f8b72d95a3c91cebbd525c8d05f6ec0ff85d8395",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    },
+    {
+      "path": "tasks/editing/ai-scientist-reproducibility-gate/tree/input/04_resources.md.pre-0921-fixes",
+      "sha256": "96d9582d5ab98bcfcc65d8fa67be0aa30e6b08a238c1e231b2c5b2ecab926938",
+      "reason": "English release translation of the exact historical as-run snapshot; private source is retained outside the public tree."
+    }
+  ]
+}

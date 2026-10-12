@@ -1,0 +1,1 @@
+{"schema_version":"1.0","policy_version":1,"roles":{"scientist":["reviewer-science"],"maintainer":["reviewer-code"],"operator":["operator-local"],"auditor":["review-audit"],"security":["security-operator"]},"required_review_roles":["scientist","maintainer"]}

@@ -1,0 +1,17 @@
+AgentSWE
+Copyright 2026 The AgentSWE Authors
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes third-party software and material; see THIRD_PARTY.md
+for the components, their licenses, and how they are used. Files under
+third_party/harbor/ are patches to Harbor 0.20.0 (Apache License 2.0) and
+keep their original license notices. The Optimization tasks contain upstream
+benchmark material (BrowseComp, tau2-bench, PinchBench, Terminal-Bench and
+OSWorld task data), two Editing tasks contain reference patches to their
+upstream targets, and the release asset store hosts unmodified copies of
+upstream files; all of these remain under their upstream licenses, listed
+in THIRD_PARTY.md, with the MIT notices in third_party/licenses/. Editing
+targets and files whose upstream license does not permit redistribution are
+not redistributed: setup fetches them by pinned commit or from their
+upstream hosts, checked by sha256.

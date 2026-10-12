@@ -1,0 +1,23 @@
+{
+  "scenario": "partial-decision-admission-takeover",
+  "plan_id": "public-partial-decision",
+  "coordinator_id": "public-owner-old",
+  "takeover_id": "public-owner-new",
+  "lease_seconds": 1,
+  "max_workers": 2,
+  "repositories": {
+    "root": {"id": "shell", "files": {"shell.txt": "shell-base\n"}, "base_state_policy": "require_clean"},
+    "component": {"id": "engine", "files": {"engine.txt": "engine-base\n"}, "base_state_policy": "require_clean"},
+    "gitlink_path": "modules/engine"
+  },
+  "subtasks": [
+    {"id": "shell-edit", "repository_id": "shell", "depends_on": [], "allowed_paths": ["shell.txt"], "worker": "worker-shell.json", "test": "test-shell.json"},
+    {"id": "engine-edit", "repository_id": "engine", "depends_on": [], "allowed_paths": ["engine.txt"], "worker": "worker-engine.json", "test": "test-engine.json"}
+  ],
+  "integration_tests": [
+    {"repository_id": "engine", "spec": "test-engine.json"},
+    {"repository_id": "shell", "spec": "test-shell.json"}
+  ],
+  "participant_order": ["engine", "shell"],
+  "crash": {"after": "participant_refs_committed", "occurrence": 1, "mode": "sigkill"}
+}

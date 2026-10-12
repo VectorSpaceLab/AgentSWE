@@ -1,0 +1,23 @@
+# Developer case 001 — direct-route handoff and callback
+
+You are operating a synthetic OpenClaw deployment with two Gateway processes
+sharing one isolated state directory. A user starts a task from a direct
+channel route and grants a second channel reduced access. The first Gateway
+then loses its lease. Continue the task from the second Gateway, deliver one
+user-visible result through the configured local channel connector, and handle
+one button callback associated with that result.
+
+Use only the Gateway RPC contract exposed by the running OpenClaw product and
+the case-local connector actions. Preserve the exact provider/account/peer and
+optional thread route, use idempotency keys for retries, and distinguish
+connector acceptance from verified delivery. If an operation is ambiguous,
+reconcile its receipt before retrying. Do not expose grants, callback tokens,
+connector credentials, or internal control payloads in projections or the final
+answer.
+
+Write `agent_result.json` in the requested output directory. It must contain a
+case identifier, a concise decision, a list of observed product actions, a
+list of evidence references bound to the current rollout/state, and an explicit
+accounting of any unknown or partial outcome. Also write `run_report.json` with
+status, artifact paths, errors, and basic usage statistics. Do not include
+private reasoning or hidden evaluator data.

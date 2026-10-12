@@ -1,0 +1,302 @@
+{
+  "dev_001": {
+    "domain": "retail",
+    "task_digest": "2160d60fb41666e4b142fef6b9cf3bc628f928710eec7fa1c86ceb61c6c27135",
+    "task_id": "0"
+  },
+  "dev_002": {
+    "domain": "retail",
+    "task_digest": "5532f3c550ac3bb6acd52a8297d5f618c934ce8912f96f041b5412dbad534394",
+    "task_id": "1"
+  },
+  "dev_003": {
+    "domain": "retail",
+    "task_digest": "3f5e38d021c87111f3cc4edb795b365e48d59b255df06d9d209356fc0765d4eb",
+    "task_id": "2"
+  },
+  "dev_004": {
+    "domain": "retail",
+    "task_digest": "8032b3b949a6f2ab2801dfe3465041e9bd5842972b2738a34f6c9f13401f5be0",
+    "task_id": "3"
+  },
+  "dev_005": {
+    "domain": "retail",
+    "task_digest": "85b4e4713afd3009f0f9c99c98ff0d947b6e66a8bc32e7f874c2f33dc9409505",
+    "task_id": "4"
+  },
+  "dev_006": {
+    "domain": "retail",
+    "task_digest": "5a4636a5086169bccd7434523f73f84636012bf8477daf2a095f861342a38ee4",
+    "task_id": "6"
+  },
+  "dev_007": {
+    "domain": "retail",
+    "task_digest": "2b76cb3fe1972d3992eaadba844bb2e4fdb80ce1246a1836cd617ad69d903e70",
+    "task_id": "7"
+  },
+  "dev_008": {
+    "domain": "retail",
+    "task_digest": "c2d3c47ae7df0ca5321362cdbfe60480243914ded3ef5e1d6726df7dc8b93b15",
+    "task_id": "8"
+  },
+  "dev_009": {
+    "domain": "retail",
+    "task_digest": "a397ab597739851189e259189ebf35c44f4f8cf594fc275d2eae95fb384b4cfd",
+    "task_id": "10"
+  },
+  "dev_010": {
+    "domain": "retail",
+    "task_digest": "dfe06c84d9c076663195854df6e64f4356e9e9a85163e90fe61afa7c556f11ac",
+    "task_id": "11"
+  },
+  "dev_011": {
+    "domain": "retail",
+    "task_digest": "936d7b87f2bd51be6add48dced4d4a3bc14d03945e9dcc6b82f3371c94b75515",
+    "task_id": "13"
+  },
+  "dev_012": {
+    "domain": "retail",
+    "task_digest": "ebf66aa203396fbb89e239cf5f6030570647b200724f61584371b25676672431",
+    "task_id": "14"
+  },
+  "dev_013": {
+    "domain": "retail",
+    "task_digest": "e84f517ef3b9a8c9ac5de9ae7d53b3058148de7e48ef22a5814d784c68294a35",
+    "task_id": "15"
+  },
+  "dev_014": {
+    "domain": "retail",
+    "task_digest": "f41d9cb0e0e56e6df6ad00e6e2cd4afb61f82cc3862938d002c34d03f415c834",
+    "task_id": "16"
+  },
+  "dev_015": {
+    "domain": "retail",
+    "task_digest": "0693ca8e531cb1a4695600984bb4104bc243e2354e342717cf130ea0a8413357",
+    "task_id": "19"
+  },
+  "dev_016": {
+    "domain": "retail",
+    "task_digest": "2b2f3d2dfc7b7d07d8e3457d6541e101bdd402de5cab70c614bff172c2976b9e",
+    "task_id": "20"
+  },
+  "dev_017": {
+    "domain": "retail",
+    "task_digest": "9dd3d5f202f87efa12847eb039858673a4ae0030e1ada57022e804621c501b8b",
+    "task_id": "21"
+  },
+  "dev_018": {
+    "domain": "retail",
+    "task_digest": "35435855d2698f740db3dfb4b678b0442645521fb36808099780a14b237d00ff",
+    "task_id": "22"
+  },
+  "dev_019": {
+    "domain": "retail",
+    "task_digest": "6062aab7907b94ecccc34db661a4894df2259176dd312587b0bbfe6607b99485",
+    "task_id": "23"
+  },
+  "dev_020": {
+    "domain": "retail",
+    "task_digest": "4553cbf772fab9280d750ce58a5b32038c131886ffd47151d8e3b2dd53708b61",
+    "task_id": "24"
+  },
+  "test_001": {
+    "domain": "retail",
+    "task_digest": "57891232cd7ecd9e0074e5344790a8bf071c9cdcc1aa7ebbe4ae43d0c6411d91",
+    "task_id": "5"
+  },
+  "test_002": {
+    "domain": "retail",
+    "task_digest": "a475ea66cb5b2746e515297b2e8f9cf58af1327fd662c5f774518b4d51e6b939",
+    "task_id": "9"
+  },
+  "test_003": {
+    "domain": "retail",
+    "task_digest": "fb71b7753616f12d64c66e22c3bcbd46627a0020c11d8f3aba771bea881946ee",
+    "task_id": "12"
+  },
+  "test_004": {
+    "domain": "retail",
+    "task_digest": "64c9ca7556a05a0991e9587664a626799c30243b0516f50212aba8c8890065e3",
+    "task_id": "17"
+  },
+  "test_005": {
+    "domain": "retail",
+    "task_digest": "67048a7c898ad4dc13719803758f1078d1d242c6f40c7bfefaa442c8e04eb6c0",
+    "task_id": "18"
+  },
+  "test_006": {
+    "domain": "retail",
+    "task_digest": "1d33daf7980a0e009e4e2f6d1ddb6ebba9dc5e337e7ad9a7a20e5a111a0f5be0",
+    "task_id": "26"
+  },
+  "test_007": {
+    "domain": "retail",
+    "task_digest": "0ab17928aa4ad5537bc2f0fe05bc01dc1f4ffd8df7150fc122273c1b6dcbef31",
+    "task_id": "27"
+  },
+  "test_008": {
+    "domain": "retail",
+    "task_digest": "9c602f488709b79932a6c749f0a2662c6c30011cab87060614f3cf7b27ae0148",
+    "task_id": "32"
+  },
+  "test_009": {
+    "domain": "retail",
+    "task_digest": "a677db8aedcbd151b5f81064341903c42263b4e2ad04bb4586d217ee40f3bb99",
+    "task_id": "33"
+  },
+  "test_010": {
+    "domain": "retail",
+    "task_digest": "26fd12caa2bac9e48a6a2db60f851c90a9fd3390d659a318ef033318ab25a484",
+    "task_id": "36"
+  },
+  "test_011": {
+    "domain": "retail",
+    "task_digest": "3305511c743622a893c78371125d4c9afa9e54044cfd1160b7527a1aa4777b30",
+    "task_id": "38"
+  },
+  "test_012": {
+    "domain": "retail",
+    "task_digest": "1b6eeae7c8e801720e4f7114e478952009846b38834c30fb80eb8e4183e82c1f",
+    "task_id": "39"
+  },
+  "test_013": {
+    "domain": "retail",
+    "task_digest": "d70f2040b0a2a91c7a8632a545ebefed5febc4acd135618ab11f1fc509fe605e",
+    "task_id": "40"
+  },
+  "test_014": {
+    "domain": "retail",
+    "task_digest": "8b4422e8d929e805f60b550950113f70f1473ebf06442f4def40f04ba31429f2",
+    "task_id": "42"
+  },
+  "test_015": {
+    "domain": "retail",
+    "task_digest": "bf066df7360fe8e740afd0a653175fda8a778549d4d9b5ed79f33764bb0a2c9c",
+    "task_id": "45"
+  },
+  "test_016": {
+    "domain": "retail",
+    "task_digest": "9c21b13492a170b8e89af3ecf95889f1fc7e2365415a879c5fb505a09b2ef5f2",
+    "task_id": "49"
+  },
+  "test_017": {
+    "domain": "retail",
+    "task_digest": "b2dd96f310e57a58ed4c4d090ad21113886442a057c5eca583cf85ce03c8a3ca",
+    "task_id": "51"
+  },
+  "test_018": {
+    "domain": "retail",
+    "task_digest": "b3f742ed4ecce7a015e176ca9982d0790276dd84b97ee9c6b41ac4693e81ad00",
+    "task_id": "53"
+  },
+  "test_019": {
+    "domain": "retail",
+    "task_digest": "e19823439a7561ee04818fa64afb06eb76a7ffd257166067bafc3485757062ab",
+    "task_id": "55"
+  },
+  "test_020": {
+    "domain": "retail",
+    "task_digest": "a7fa8821b00743ed6159e2be2447963d772077e53cb3be6c1b9f44c493dbe8d7",
+    "task_id": "56"
+  },
+  "test_021": {
+    "domain": "retail",
+    "task_digest": "3c0692a212cc70ed1f4ec45aeab538f61df0e9fbdaec27697a6bcb9ad3ff900c",
+    "task_id": "60"
+  },
+  "test_022": {
+    "domain": "retail",
+    "task_digest": "e334240cd8343d91ab36b9d01acc934f62fed18d388fea27a48bd2e9ce1e5412",
+    "task_id": "61"
+  },
+  "test_023": {
+    "domain": "retail",
+    "task_digest": "d136a02d36aa5adb0ce902cc6dc1e1cc7811b017b8b7f464a65387bd01605378",
+    "task_id": "62"
+  },
+  "test_024": {
+    "domain": "retail",
+    "task_digest": "f4a6527fb13bc9588aad6a47fd54abf7f1600101e142efb5e955500bff8807b8",
+    "task_id": "64"
+  },
+  "test_025": {
+    "domain": "retail",
+    "task_digest": "92867ce6abc3dd777ea8cdbcdb3aafc8e97eb914c914cb079b4ed69c771e606f",
+    "task_id": "65"
+  },
+  "test_026": {
+    "domain": "retail",
+    "task_digest": "0e6103412f2a850aff51b1013d9767577503eb0b8d15a9b1f5702cdff85b6c52",
+    "task_id": "68"
+  },
+  "test_027": {
+    "domain": "retail",
+    "task_digest": "f0365e0cbd24918baa83047f9f4cd5175777cd43d86748cacf86139c0ec1225d",
+    "task_id": "70"
+  },
+  "test_028": {
+    "domain": "retail",
+    "task_digest": "a58b0af584400445e99aff8a08ee9efd84cf9844f1278795bba5ee08d5b33bb2",
+    "task_id": "71"
+  },
+  "test_029": {
+    "domain": "retail",
+    "task_digest": "f1c058badde3a41a7e081b3537c297fb317b992296feddb4495217084b9f9ec3",
+    "task_id": "74"
+  },
+  "test_030": {
+    "domain": "retail",
+    "task_digest": "c16a5b67c9fff9322937f22da56162f52cbb9937e002ca166b3e1f8c6fdff269",
+    "task_id": "77"
+  },
+  "test_031": {
+    "domain": "retail",
+    "task_digest": "daf9cfaf8e5f23c1d80fdf671c860388c8161f6a98964f7cb62f44e4b0405fb1",
+    "task_id": "79"
+  },
+  "test_032": {
+    "domain": "retail",
+    "task_digest": "4ab5e2d31779fa5b8892578bd0403cc515c324654a7eff5b1ef041a37c1cec1f",
+    "task_id": "86"
+  },
+  "test_033": {
+    "domain": "retail",
+    "task_digest": "6191d9ae9f4567f011ea19621f418588e776186ec1878739917e4774d1f74e5f",
+    "task_id": "90"
+  },
+  "test_034": {
+    "domain": "retail",
+    "task_digest": "6ff08a577591ce89f9b2ab2655e5f1efd18609603cd186e152ce508d156e5454",
+    "task_id": "94"
+  },
+  "test_035": {
+    "domain": "retail",
+    "task_digest": "bf9704d935b934d705a7573ce73130e230cd0a897c288418dcdf8acae2159f0c",
+    "task_id": "97"
+  },
+  "test_036": {
+    "domain": "retail",
+    "task_digest": "b0e9d9e1ac48b673d6f95eea77f1e9c204164b2c308e9dd19cefdd6a9c9daabd",
+    "task_id": "100"
+  },
+  "test_037": {
+    "domain": "retail",
+    "task_digest": "cfb249d88d2f71ee4ef3b27dbdc0cf7920008722b6b46ee92019cd0053a308f9",
+    "task_id": "101"
+  },
+  "test_038": {
+    "domain": "retail",
+    "task_digest": "41d4d03b3b362f8bc46d4c0d66d98be8b41b03dcb5e813a47d7d20a6af1049e7",
+    "task_id": "102"
+  },
+  "test_039": {
+    "domain": "retail",
+    "task_digest": "421126170913f5b29518621cdd5d5327332d0a9337956b606183455384227dcf",
+    "task_id": "108"
+  },
+  "test_040": {
+    "domain": "retail",
+    "task_digest": "3ea532c550b4647d7fb7723e540bd029c65a607d3753a4b24039824fe0712c01",
+    "task_id": "111"
+  }
+}

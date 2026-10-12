@@ -1,0 +1,13 @@
+journey,rider_class,event,station,timestamp_local,charged_credits,route
+J-101,adult,board,Oak,2026-04-06 07:20,4.4,N
+J-101,adult,exit,River,2026-04-06 07:42,,N
+J-102,adult,board,River,2026-04-06 08:30,3.6,N
+J-102,adult,exit,Hill,2026-04-06 08:42,,N
+J-201,adult,board,Pine,2026-04-06 10:05,3.6,N
+J-201,adult,exit,Hill,2026-04-06 10:35,,N
+J-202,adult,board,Hill,2026-04-06 11:29,3.6,N
+J-202,adult,exit,River,2026-04-06 11:41,,N
+J-301,child,board,Oak,2026-04-06 12:00,1.2,N
+J-301,child,exit,Pine,2026-04-06 12:18,,N
+D-9,adult,board,Oak,2026-02-10 08:00,4.4,S
+D-9,adult,exit,Hill,2026-02-10 08:31,,S

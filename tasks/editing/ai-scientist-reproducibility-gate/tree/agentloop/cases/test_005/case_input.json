@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "case_id": "test_005",
+  "scenario": "project_isolation_unauthorized_peer_and_notification_retry",
+  "evaluator_nonce": "runtime-generated",
+  "oracle": "evaluator-private"
+}

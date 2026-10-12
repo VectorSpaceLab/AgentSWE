@@ -1,0 +1,347 @@
+{
+ "fonts/etc/conf.avail/10-antialias.conf": {
+  "sha256": "165b063637788761ee91c00fd74055c993e68663f37ffecb396a3ec780674292"
+ },
+ "fonts/etc/conf.avail/10-autohint.conf": {
+  "sha256": "b60c416c62c59949ce53a0b7bd0c77e76f309c500c767ec59e02587c3726e5bc"
+ },
+ "fonts/etc/conf.avail/10-hinting-full.conf": {
+  "sha256": "0ddfabd0287f73028ad872006389fbe63fab7d7ba2a0f1f85d35c282a0dde6ca"
+ },
+ "fonts/etc/conf.avail/10-hinting-medium.conf": {
+  "sha256": "bf2274bd1e7ee08b16ea6f0e67d073b42076d43c4bc61ed0d1159da905288ad9"
+ },
+ "fonts/etc/conf.avail/10-hinting-none.conf": {
+  "sha256": "938da6a7f533af329510bb3b7bba103639bbd7ff0761d1d6556ee5079d603d36"
+ },
+ "fonts/etc/conf.avail/10-hinting-slight.conf": {
+  "sha256": "1fac58aa3c865e9b05088f94f7a4684d8a60d134421690cfd04842eb00fe1332"
+ },
+ "fonts/etc/conf.avail/10-no-sub-pixel.conf": {
+  "sha256": "db6cc09b48abbec33a6074b04cfc1dc5161b86cf73fd9321e7c7e6853bda875e"
+ },
+ "fonts/etc/conf.avail/10-scale-bitmap-fonts.conf": {
+  "sha256": "31bc5919577b3c897a850948e2a3ede8bd612e6736afe84e532ec8a6c12a36ca"
+ },
+ "fonts/etc/conf.avail/10-sub-pixel-bgr.conf": {
+  "sha256": "133e75ed6eab24cd4b352603b1f3d54d131211e0d95c3a32274b389dacfccd1e"
+ },
+ "fonts/etc/conf.avail/10-sub-pixel-rgb.conf": {
+  "sha256": "12eea6c29a800f58efc25dec0d928779ec344006698902c3a037e0522c4ae126"
+ },
+ "fonts/etc/conf.avail/10-sub-pixel-vbgr.conf": {
+  "sha256": "c8e81739ef7fb736eebf9251d7caf67fcc931ce894de0b3f5dd46a10f4e146b5"
+ },
+ "fonts/etc/conf.avail/10-sub-pixel-vrgb.conf": {
+  "sha256": "8591239ca7d60fdec74b0701c2b043ec1af6a48bf5089fb050559e599e122c95"
+ },
+ "fonts/etc/conf.avail/10-unhinted.conf": {
+  "sha256": "177de69285f723ecc71108bc8fcac7d125fcea7945770e5d97d74f0bf5ec989d"
+ },
+ "fonts/etc/conf.avail/11-lcdfilter-default.conf": {
+  "sha256": "7b72aa9bbe1559da3931bb4dbb64666aca90fa5b81886cc60ab5c74383ed2756"
+ },
+ "fonts/etc/conf.avail/11-lcdfilter-legacy.conf": {
+  "sha256": "5f4e884146127d72f2357b22e175a9f8aeeb2f494355910c1b33bbaadc4e098e"
+ },
+ "fonts/etc/conf.avail/11-lcdfilter-light.conf": {
+  "sha256": "e5d07262e90c1ae756261e26b0a95e937c4e5e81743f6b21eb68e165e232d883"
+ },
+ "fonts/etc/conf.avail/20-unhint-small-dejavu-lgc-sans-mono.conf": {
+  "sha256": "0a6b0f1c1f5d1c06a811b517a3d2690700bba8e961cd55dd2c7648cde3605a21"
+ },
+ "fonts/etc/conf.avail/20-unhint-small-dejavu-lgc-sans.conf": {
+  "sha256": "144619057c0a040de247c74cf09f230d737b9c1c534f3ba8804fdd3ddeded8b0"
+ },
+ "fonts/etc/conf.avail/20-unhint-small-dejavu-lgc-serif.conf": {
+  "sha256": "977c24eb43f10d21263bbdb624649e5edf63147bd7bb4f84db97ce7d53bb9054"
+ },
+ "fonts/etc/conf.avail/20-unhint-small-dejavu-sans-mono.conf": {
+  "sha256": "3e90c9c36beef46f10d1529251f8683b9c4ac900695adbb4a23a4b6036f938a5"
+ },
+ "fonts/etc/conf.avail/20-unhint-small-dejavu-sans.conf": {
+  "sha256": "0d9c177b6a85daa9957ed6750d4eb26122604da18d340e7ba31e6f4d24f963ed"
+ },
+ "fonts/etc/conf.avail/20-unhint-small-dejavu-serif.conf": {
+  "sha256": "68777b1705ec7a05a86430def4be093668e84e305cc7e11291df52403a7318cc"
+ },
+ "fonts/etc/conf.avail/20-unhint-small-vera.conf": {
+  "sha256": "e4bc8e2f51fe4becf778c9bf3f977935d4396f42193ee02e9d582c71a212e2b9"
+ },
+ "fonts/etc/conf.avail/25-unhint-nonlatin.conf": {
+  "sha256": "13c34be22daec29f99930aa9e5cdc4b6d4b837d3d0a7ad21b398502a1087d810"
+ },
+ "fonts/etc/conf.avail/30-cjk-aliases.conf": {
+  "sha256": "f739eef808ea21d6d2d7663b7c2f32e46b6b7e3043647b935ab3e63b65ab1cb2"
+ },
+ "fonts/etc/conf.avail/30-metric-aliases.conf": {
+  "sha256": "70a02c61b439d2f9034fc93f0399a3ded395dc2c8c8da34ce3db31a1daa6b840"
+ },
+ "fonts/etc/conf.avail/40-nonlatin.conf": {
+  "sha256": "c6845176bc55e2e4563abe421028c994f4cf93107cfe43442b9f18833fa44f10"
+ },
+ "fonts/etc/conf.avail/45-generic.conf": {
+  "sha256": "48e9b9efb969f77f04d055ad512dd732a8319a655bd93011921c912321b18ac6"
+ },
+ "fonts/etc/conf.avail/45-latin.conf": {
+  "sha256": "f5974c9720f67c41760cdf4052bff39a8416ec02d1b360356dd08cc1c99da549"
+ },
+ "fonts/etc/conf.avail/49-sansserif.conf": {
+  "sha256": "8763cdac2dc15bc9ca4722bfc42915caacc585e1b73b1687027999eba1a4859e"
+ },
+ "fonts/etc/conf.avail/50-user.conf": {
+  "sha256": "f8ba8a95fb232a9baf2766e54be0c10b3cde40a276faa6d988e67255992f619f"
+ },
+ "fonts/etc/conf.avail/51-local.conf": {
+  "sha256": "f28ac67ab31540c5b5df3faee9d1d6c6d31ba83ea87e851850f5f9e32341126c"
+ },
+ "fonts/etc/conf.avail/53-monospace-lcd-filter.conf": {
+  "sha256": "c04ec3f2b651d31f3968fd725787d10c8bc2eab02203979b6b961477de3fdbd5"
+ },
+ "fonts/etc/conf.avail/56-language-selector-ar.conf": {
+  "sha256": "2a20b68dfaff858ac5eea910bda2969a2f377f8689a87b36e0d47b5174532bdb"
+ },
+ "fonts/etc/conf.avail/57-dejavu-sans-mono.conf": {
+  "sha256": "1f2ead86f8203d809abfc9d88d92b04316edd67b6291795ea74ea8a0c3c2e04d"
+ },
+ "fonts/etc/conf.avail/57-dejavu-sans.conf": {
+  "sha256": "f6285e2d336f93086acfa2ac7895ef75ef5ff34f833ba5a63c09fb2841aedc27"
+ },
+ "fonts/etc/conf.avail/57-dejavu-serif.conf": {
+  "sha256": "7c596f7e202090ded38fded904c4a17d5a189b6c9cc914a2e88554116f6474ca"
+ },
+ "fonts/etc/conf.avail/58-dejavu-lgc-sans-mono.conf": {
+  "sha256": "807e5222c6d11a72ad527ebc088f42daf2a807e7718c8f7ff227cbfecafd3d70"
+ },
+ "fonts/etc/conf.avail/58-dejavu-lgc-sans.conf": {
+  "sha256": "ecde2093f005c73d7da21cdd7b80c791910050609db36cb5eea84a4ba8da5cef"
+ },
+ "fonts/etc/conf.avail/58-dejavu-lgc-serif.conf": {
+  "sha256": "e685632c3edbb6868a7ca5275e7c71f25486a8cfd16113a478194a5631205619"
+ },
+ "fonts/etc/conf.avail/60-generic.conf": {
+  "sha256": "65acf3c836c88d4d4b455d791cb32d5f7f8850e47951de8439cf3c177beea075"
+ },
+ "fonts/etc/conf.avail/60-latin.conf": {
+  "sha256": "50858dff2837f01fb9603c6aef6c2a472fca91499ff799ca84e391318639adda"
+ },
+ "fonts/etc/conf.avail/64-language-selector-prefer.conf": {
+  "sha256": "d676b20f52e37fee12ae00a16aac62aad4993df503af7e2ef2600f5682c1c082"
+ },
+ "fonts/etc/conf.avail/65-fonts-persian.conf": {
+  "sha256": "4d53dc8cc9604e0fec716a5947b5235314b1594d1c09f62a34778e6321dc8f20"
+ },
+ "fonts/etc/conf.avail/65-khmer.conf": {
+  "sha256": "ab056a77ca1f8bc94117ce99f53fbbdd4516656086b0bb7104de3b58948c3848"
+ },
+ "fonts/etc/conf.avail/65-nonlatin.conf": {
+  "sha256": "306af8437a37ac6d3eb8ba6b35f40373720f4f6569f9dc9848290eadcfea2575"
+ },
+ "fonts/etc/conf.avail/69-language-selector-ja.conf": {
+  "sha256": "181e83241c3099ec6c4149606592b9a4055ceb5384de172e42c0d110b49689ed"
+ },
+ "fonts/etc/conf.avail/69-language-selector-zh-cn.conf": {
+  "sha256": "981ec34e217822271b144e999822a0a181d7005a76df4a81aae3ef1db8686a82"
+ },
+ "fonts/etc/conf.avail/69-language-selector-zh-hk.conf": {
+  "sha256": "7b9b662a9e0530993eb4a6dc1c50b0ddb6f13c32c06cce9968325b8ad213bade"
+ },
+ "fonts/etc/conf.avail/69-language-selector-zh-mo.conf": {
+  "sha256": "54a26b1b55610ab35d83d0f8761b3890d40030129867d4e3ead4445d86090b4d"
+ },
+ "fonts/etc/conf.avail/69-language-selector-zh-sg.conf": {
+  "sha256": "3376539295efaff06446dc3de2c5cda8da6284c7d210e935b405d0d9cac8593f"
+ },
+ "fonts/etc/conf.avail/69-language-selector-zh-tw.conf": {
+  "sha256": "4041241462fcdb3d3a95d6d9ab7a4aaed21c66e5c30a06029939635d9bc27355"
+ },
+ "fonts/etc/conf.avail/69-unifont.conf": {
+  "sha256": "eb4f4ce7f09017cc9764ea9979dc01ff21902f5566bc73e7d721a872fcc80cbb"
+ },
+ "fonts/etc/conf.avail/70-force-bitmaps.conf": {
+  "sha256": "0b795a6a0a08f815cab64bbc7ab0a4cedd40ba7b272e005faebb1a2ab25bf4f6"
+ },
+ "fonts/etc/conf.avail/70-no-bitmaps.conf": {
+  "sha256": "a68f782f773c0a0061b7780b227f221c8b3fc06d66bd8fe654b261617b3dbbe0"
+ },
+ "fonts/etc/conf.avail/70-yes-bitmaps.conf": {
+  "sha256": "87228113c2e8ffbf5565ffaa80d5e5fde33b14f0725accf69e1e31c80df398c0"
+ },
+ "fonts/etc/conf.avail/80-delicious.conf": {
+  "sha256": "d3cb327de779ad929b12a501b447e1f9c541f51437e389b3d17edb3ecff83496"
+ },
+ "fonts/etc/conf.avail/90-synthetic.conf": {
+  "sha256": "54a5935ea79c66e07faf743b81f2647eca849800b2b0422e84cd66527a75066a"
+ },
+ "fonts/etc/conf.avail/99-language-selector-zh.conf": {
+  "sha256": "ef4066201648e08522dcc9a3739f33c1231167985fc3c5e8a870abad45927bf5"
+ },
+ "fonts/etc/conf.d/10-antialias.conf": {
+  "link": "../conf.avail/10-antialias.conf"
+ },
+ "fonts/etc/conf.d/10-hinting-slight.conf": {
+  "link": "../conf.avail/10-hinting-slight.conf"
+ },
+ "fonts/etc/conf.d/10-scale-bitmap-fonts.conf": {
+  "link": "../conf.avail/10-scale-bitmap-fonts.conf"
+ },
+ "fonts/etc/conf.d/11-lcdfilter-default.conf": {
+  "link": "../conf.avail/11-lcdfilter-default.conf"
+ },
+ "fonts/etc/conf.d/20-unhint-small-dejavu-lgc-sans-mono.conf": {
+  "link": "../conf.avail/20-unhint-small-dejavu-lgc-sans-mono.conf"
+ },
+ "fonts/etc/conf.d/20-unhint-small-dejavu-lgc-sans.conf": {
+  "link": "../conf.avail/20-unhint-small-dejavu-lgc-sans.conf"
+ },
+ "fonts/etc/conf.d/20-unhint-small-dejavu-lgc-serif.conf": {
+  "link": "../conf.avail/20-unhint-small-dejavu-lgc-serif.conf"
+ },
+ "fonts/etc/conf.d/20-unhint-small-dejavu-sans-mono.conf": {
+  "link": "../conf.avail/20-unhint-small-dejavu-sans-mono.conf"
+ },
+ "fonts/etc/conf.d/20-unhint-small-dejavu-sans.conf": {
+  "link": "../conf.avail/20-unhint-small-dejavu-sans.conf"
+ },
+ "fonts/etc/conf.d/20-unhint-small-dejavu-serif.conf": {
+  "link": "../conf.avail/20-unhint-small-dejavu-serif.conf"
+ },
+ "fonts/etc/conf.d/20-unhint-small-vera.conf": {
+  "link": "../conf.avail/20-unhint-small-vera.conf"
+ },
+ "fonts/etc/conf.d/30-metric-aliases.conf": {
+  "link": "../conf.avail/30-metric-aliases.conf"
+ },
+ "fonts/etc/conf.d/40-nonlatin.conf": {
+  "link": "../conf.avail/40-nonlatin.conf"
+ },
+ "fonts/etc/conf.d/45-generic.conf": {
+  "link": "../conf.avail/45-generic.conf"
+ },
+ "fonts/etc/conf.d/45-latin.conf": {
+  "link": "../conf.avail/45-latin.conf"
+ },
+ "fonts/etc/conf.d/49-sansserif.conf": {
+  "link": "../conf.avail/49-sansserif.conf"
+ },
+ "fonts/etc/conf.d/50-user.conf": {
+  "link": "../conf.avail/50-user.conf"
+ },
+ "fonts/etc/conf.d/51-local.conf": {
+  "link": "../conf.avail/51-local.conf"
+ },
+ "fonts/etc/conf.d/57-dejavu-sans-mono.conf": {
+  "link": "../conf.avail/57-dejavu-sans-mono.conf"
+ },
+ "fonts/etc/conf.d/57-dejavu-sans.conf": {
+  "link": "../conf.avail/57-dejavu-sans.conf"
+ },
+ "fonts/etc/conf.d/57-dejavu-serif.conf": {
+  "link": "../conf.avail/57-dejavu-serif.conf"
+ },
+ "fonts/etc/conf.d/58-dejavu-lgc-sans-mono.conf": {
+  "link": "../conf.avail/58-dejavu-lgc-sans-mono.conf"
+ },
+ "fonts/etc/conf.d/58-dejavu-lgc-sans.conf": {
+  "link": "../conf.avail/58-dejavu-lgc-sans.conf"
+ },
+ "fonts/etc/conf.d/58-dejavu-lgc-serif.conf": {
+  "link": "../conf.avail/58-dejavu-lgc-serif.conf"
+ },
+ "fonts/etc/conf.d/60-generic.conf": {
+  "link": "../conf.avail/60-generic.conf"
+ },
+ "fonts/etc/conf.d/60-latin.conf": {
+  "link": "../conf.avail/60-latin.conf"
+ },
+ "fonts/etc/conf.d/65-fonts-persian.conf": {
+  "link": "../conf.avail/65-fonts-persian.conf"
+ },
+ "fonts/etc/conf.d/65-nonlatin.conf": {
+  "link": "../conf.avail/65-nonlatin.conf"
+ },
+ "fonts/etc/conf.d/69-unifont.conf": {
+  "link": "../conf.avail/69-unifont.conf"
+ },
+ "fonts/etc/conf.d/70-no-bitmaps.conf": {
+  "link": "../conf.avail/70-no-bitmaps.conf"
+ },
+ "fonts/etc/conf.d/80-delicious.conf": {
+  "link": "../conf.avail/80-delicious.conf"
+ },
+ "fonts/etc/conf.d/90-synthetic.conf": {
+  "link": "../conf.avail/90-synthetic.conf"
+ },
+ "fonts/etc/conf.d/README": {
+  "sha256": "f15acc29263815e7e04144a4b125e826a50557cdfb44dfc20cea5dcd869c6ea1"
+ },
+ "fonts/etc/fonts.conf": {
+  "sha256": "b295bbdd3cd23a94ebf783a561f3a5e28f1472f1ba3a6a82541099bb1edbfef1"
+ },
+ "fonts/share/truetype/dejavu/DejaVuMathTeXGyre.ttf": {
+  "sha256": "cec1516aa62148981865ba26b78c09400ad5c986158f4b88575c5471c7914637"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSans-Bold.ttf": {
+  "sha256": "d1c3ff99f1e1ce1827a33efd4dad81f40babda06bff9e43bd7591c86662a287b"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSans-BoldOblique.ttf": {
+  "sha256": "0c6513ec0ec9f1ab20911c1bc504d8147181b4a629617a554a4a1e5092217a98"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSans-ExtraLight.ttf": {
+  "sha256": "1b08ff988f63f2a522bc0c270fd61b967cc881fd4e88a1c754dea292e5b9584c"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSans-Oblique.ttf": {
+  "sha256": "407e832b067328af32a4941b1fc96be1affb88a2727cb8a95c752c310018217a"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSans.ttf": {
+  "sha256": "690243adfefe0ce154b547db6205794bd30ac4277275179517a90994f4980648"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansCondensed-Bold.ttf": {
+  "sha256": "7d89d85f537dd4a84aedfbfb83a949513badb4eefc93813fdc3f15a07e911e66"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansCondensed-BoldOblique.ttf": {
+  "sha256": "7f2943cfb636e25f277f6bcc4601ddb1440b921bd541e295f0186156124ebb0f"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansCondensed-Oblique.ttf": {
+  "sha256": "ec22a31e4d30b2fe16e38f67d4923f787a350ca4ab624478cbbd2445b63b84fc"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansCondensed.ttf": {
+  "sha256": "2449fc0ce1d47a2a5f8378150b0588c3f36f7c13de5ae1f46347707fbc40d735"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansMono-Bold.ttf": {
+  "sha256": "f8aa70b5d4210d77624f5b5b5cf094fadf9fd019caf5b528fa5af42fc4ac43a5"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansMono-BoldOblique.ttf": {
+  "sha256": "166f485cb39da15fb04de913e7572a76739ba9580a78ef876f97b593e42fd376"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansMono-Oblique.ttf": {
+  "sha256": "6df35684aa7ed7060354c946464d6e047a957d307c3aef4c7bc87aee9e33d729"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSansMono.ttf": {
+  "sha256": "39c29931201f08dd89fdba4129c76288e6baeecf7c94fe4f6a757f2b50718b1b"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerif-Bold.ttf": {
+  "sha256": "f81ce497906182460f9a4beb89bec7c1265af2182f8110c25821dfc88486942e"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerif-BoldItalic.ttf": {
+  "sha256": "a53a60ed4e1909d5304edd97c1f81855f571aa7d4a7ae3e726036b15823d6759"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerif-Italic.ttf": {
+  "sha256": "cffc8590085abac828360879ae449e5715424cd1e1a7b7b304b7ad08211971b8"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerif.ttf": {
+  "sha256": "3731a19f2b50d86d81dd1a1effcd81492ed1fa44f6ea904792dd98fdae9b3dfe"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerifCondensed-Bold.ttf": {
+  "sha256": "44394fc4e9f348221199b734659d284b1b561369ba9fd82e2645bfbc6936c85a"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerifCondensed-BoldItalic.ttf": {
+  "sha256": "be3d357607395d7bb16a8c150e38abd32773e11325c3fbef5db504aab8c8f59c"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerifCondensed-Italic.ttf": {
+  "sha256": "d38bc359e7082fdc7c33bb874d49146d386a84e97aadc1c164512f7379f99c5b"
+ },
+ "fonts/share/truetype/dejavu/DejaVuSerifCondensed.ttf": {
+  "sha256": "28a88960a891d76e34b5da90efa86810f1a6706ebd2af3d34265c56314a830fd"
+ }
+}

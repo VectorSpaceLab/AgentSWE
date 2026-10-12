@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "case_id", "decision", "observed_actions", "evidence", "uncertainty"],
+  "properties": {
+    "schema_version": {"const": "openclaw-agent-result-v1"},
+    "case_id": {"type": "string", "pattern": "^(dev|test)_[0-9]{3}$"},
+    "decision": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "observed_actions": {"type": "array", "items": {"type": "string", "maxLength": 300}},
+    "evidence": {"type": "array", "items": {"type": "object", "required": ["kind", "reference"], "properties": {"kind": {"type": "string"}, "reference": {"type": "string"}}, "additionalProperties": false}},
+    "uncertainty": {"type": "array", "items": {"type": "string", "maxLength": 500}},
+    "prohibited_disclosures": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

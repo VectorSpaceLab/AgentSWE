@@ -1,0 +1,13 @@
+# local configuration and state: never committed
+.env
+.agentswe/
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+# editor / OS
+.DS_Store
+*.swp
+
+# Creation adapters record their latest run beside the adapter (paper adapter code, kept as is)
+tasks/creation/*/adapter/LATEST_RUN

@@ -1,0 +1,6 @@
+{
+  "source": "@@AGENTSWE_EDITING_TASKS@@/claude-policy-provenance/tree/harbor/native_builder_evidence.py",
+  "sha256": "500ae11a1d8acb06738543725f05bed0a06187247a768bd363e54131d4eb1c6e",
+  "adaptation": "Only native expected cwd changed from /workspace to the OpenHands configured /workspace/worktree. Remaining validator unchanged.",
+  "adapted_sha256": "de7d6cc286656626e26a4f1b13f82fce173df8af9e62e7d7042318fd69b81633"
+}

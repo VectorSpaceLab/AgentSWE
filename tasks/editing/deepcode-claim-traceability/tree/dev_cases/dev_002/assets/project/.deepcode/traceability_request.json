@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "project_root": "..",
+  "paper_sources": [
+    {"path": "../references/paper.md", "role": "main"},
+    {"path": "../references/stable_selection_note.md", "role": "external_evidence"}
+  ]
+}

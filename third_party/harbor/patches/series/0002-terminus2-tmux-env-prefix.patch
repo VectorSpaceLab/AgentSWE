@@ -1,0 +1,32 @@
+Subject: [PATCH 0002] Terminus-2: pass session env through `env K=V tmux new-session` instead of `-e` (tmux < 3.2)
+
+Applies on top of profile 'pristine'.
+
+--- a/harbor/agents/terminus_2/tmux_session.py
++++ b/harbor/agents/terminus_2/tmux_session.py
+@@ -390,16 +390,19 @@
+ 
+     @property
+     def _tmux_start_session(self) -> str:
+-        # Build environment variable options for tmux new-session -e KEY=value
+-        env_options = "".join(
+-            f"-e {shlex.quote(f'{key}={value}')} "
+-            for key, value in self._extra_env.items()
+-        )
++        # Pass the delegated environment through the `env` utility instead of
++        # tmux's `-e` option.  The latter is not supported by tmux 3.1c (the
++        # version present in the TerminalBench task images), where it is
++        # parsed as an unknown option and prevents the session from starting.
++        env_options = " ".join(
++            shlex.quote(f"{key}={value}") for key, value in self._extra_env.items()
++        )
++        env_prefix = f"env {env_options} " if env_options else ""
+ 
+         return (
+             f"export TERM=xterm-256color && "
+             f"export SHELL=/bin/bash && "
+-            f"tmux new-session {env_options}-x {self._pane_width} -y {self._pane_height} -d -s {self._session_name} 'bash --login' \\; "
++            f"{env_prefix}tmux new-session -x {self._pane_width} -y {self._pane_height} -d -s {self._session_name} 'bash --login' \\; "
+             f"pipe-pane -t {self._session_name} "
+             f"'cat > {self._logging_path}'"
+         )

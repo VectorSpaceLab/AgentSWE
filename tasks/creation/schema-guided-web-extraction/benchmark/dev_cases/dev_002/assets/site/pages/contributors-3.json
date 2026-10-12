@@ -1,0 +1,37 @@
+[
+  {
+    "person_id": "RG-311",
+    "display": "Avery Chen",
+    "role": "Designer",
+    "as_of": "2026-06-20T09:00:00Z",
+    "profile": "profiles/card-82.html"
+  },
+  {
+    "person_id": "RG-312",
+    "display": "Mina Chen",
+    "role": "Editor",
+    "as_of": "2026-06-21T09:00:00Z",
+    "profile": "profiles/card-02.html"
+  },
+  {
+    "person_id": "RG-313",
+    "display": "N. Kim",
+    "role": "Engineer",
+    "as_of": "2026-06-10T09:00:00Z",
+    "profile": "profiles/card-19.html"
+  },
+  {
+    "person_id": "RG-314",
+    "display": "Riley Park",
+    "role": "Researcher",
+    "as_of": "2026-06-11T09:00:00Z",
+    "profile": "profiles/card-36.html"
+  },
+  {
+    "person_id": null,
+    "display": "Sasha Morgan",
+    "role": "Photographer",
+    "as_of": "2026-06-12T09:00:00Z",
+    "profile": "profiles/card-53.html"
+  }
+]

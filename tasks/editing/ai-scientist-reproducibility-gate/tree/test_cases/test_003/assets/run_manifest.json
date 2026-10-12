@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "run_id": "run-tau-003",
+  "project_id": "project-recovery",
+  "replay": {"command": ["python", "replay.py"], "working_directory": ".", "timeout_seconds": 10, "script_path": "replay.py", "script_sha256": "b7711fa2388a55fd58af851072024329fe450f3ee5d786bf9539b68999ceddf3"},
+  "workers": [{"worker_id": "tau-cobalt", "experiment_id": "exp-archive-7", "seed": 9, "status": "succeeded", "result_path": "raw_results.json", "result_sha256": "19dd7f677d76e1fe62a6530c27f69d06f200b5e4a226a59f3a27238f8e44bc0f"}],
+  "failure_policy": {"allow_partial": false, "fatal_failure_classes": ["pool_broken", "integrity_error"], "preserve_successful_results": true},
+  "cleanup_scope": {"scope_id": "lab-tau/release-t3/request-t1", "global_process_scan": false}
+}

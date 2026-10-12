@@ -1,0 +1,22 @@
+{
+  "case_id": "test_005",
+  "change_kind": "directories",
+  "scenario": "concurrent_duplicate",
+  "transaction": {"state_dir": ".openwiki-impact", "tenant_id": "monorepo-team", "request_id": "alpha-003", "generation": 3, "payload_digest": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "owner_id": "worker-a", "lease_ms": 30000},
+  "publication": {"root": ".monorepo-site", "site_id": "packages", "generation": 3, "base_path": "/packages/"},
+  "search": {"root": ".monorepo-index", "index_id": "packages", "generation": 3},
+  "search_queries": [{"query": "Alpha deployed", "limit": 2, "expected_paths": ["openwiki/packages/alpha.md"]}, {"query": "alpha-v1", "limit": 4, "expected_paths": [], "forbidden_paths": ["openwiki/packages/alpha.md"]}, {"query": "beta-v1", "limit": 1, "expected_paths": ["openwiki/packages/beta.md"]}],
+  "ceilings": {"surface_availability": 25, "safety_boundary": 30},
+  "expected_pages": ["openwiki/packages/alpha.md"],
+  "direct_pages": ["openwiki/packages/alpha.md"],
+  "unaffected_pages": ["openwiki/packages/beta.md", "openwiki/overview.md"],
+  "required_text": {"openwiki/packages/alpha.md": ["alpha-v2"]},
+  "forbidden_text": {"openwiki/packages/alpha.md": ["alpha-v1"]},
+  "expected_examples": {"alpha-mode": "alpha-v2\n"},
+  "expected_stale_kinds": ["default-behavior"],
+  "preserved_tokens": ["HANDWRITTEN ALPHA NOTE: Alpha is deployed independently."],
+  "preserved_anchors": ["alpha-api"],
+  "expected_diagrams": [],
+  "expected_link_suffixes": ["packages/alpha.md", "packages/beta.md"],
+  "weights": {"preserved_executable_docs": 15, "static_publication": 30, "full_text_search": 30, "cross_surface_convergence": 20, "production_compatibility_security": 5}
+}

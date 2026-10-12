@@ -1,0 +1,1 @@
+{"schema_version":"1.0","status":"calibration","artifact_paths":["solution.patch","edit_report.json","run_report.json"],"errors":[],"runtime_seconds":0,"peak_memory_bytes":0,"api_calls":{"gateway":0,"serper":0,"web_retrieval":0}}

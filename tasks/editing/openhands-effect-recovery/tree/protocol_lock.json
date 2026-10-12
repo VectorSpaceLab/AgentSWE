@@ -1,0 +1,52 @@
+{
+  "schema_version": "agentswe-edit-protocol-lock/v1",
+  "benchmark_id": "openhands-effect-recovery-agentloop-v1",
+  "lower_agent": {
+    "product": "patched OpenHands Agent Canvas",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "broker": "evaluator-owned"
+  },
+  "builder": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "session": "single-continuous",
+    "transport": "native_codex_direct",
+    "credential_method": "Harbor temporary tmpfs auth.json",
+    "existing_proxy": "http://127.0.0.1:7890",
+    "timeout_seconds": 28800,
+    "memory_bytes": 17179869184
+  },
+  "lifecycle": {
+    "candidate_rounds": "up_to_10",
+    "max_dev_rounds": 10,
+    "feedback_revisions": "fresh_after_each_acceptance",
+    "distinct_digest_required": true,
+    "dev_passed_is_automatic_freeze": false,
+    "hidden_strictly_after_freeze": true
+  },
+  "inventory": {
+    "dev": [
+      "dev_001",
+      "dev_002"
+    ],
+    "hidden": [
+      "test_001",
+      "test_002",
+      "test_003",
+      "test_004",
+      "test_005",
+      "test_006"
+    ]
+  },
+  "visibility": {
+    "builder": [
+      "input",
+      "dev_cases"
+    ],
+    "candidate_credential": "placeholder-only",
+    "hidden_oracle": "evaluator-only",
+    "builder_runtime_auth": "user-authorized auth.json; excluded from public package, Candidate, reports and evidence"
+  },
+  "result_and_code_are_separate": true
+}

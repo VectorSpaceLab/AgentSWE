@@ -1,0 +1,27 @@
+{
+  "schema_version": "dyad-agentloop-protocol-v1",
+  "benchmark_id": "dyad-acceptance-driven-agentloop-v1",
+  "lower_product": "dyad",
+  "lower_entry": "npm start (scripts/start-supervisor.mjs) with typed chat:stream acceptance flow",
+  "builder": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "single_harbor_invocation": true,
+    "single_continuous_session": true,
+    "credential": "broker-only-placeholder"
+  },
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "medium",
+  "transport": "evaluator-owned-responses-broker",
+  "candidate_credential": "broker-only-placeholder",
+  "builder_visibility": ["input", "dev_cases"],
+  "hidden_visibility": [],
+  "max_candidate_rounds": 10,
+  "candidate_rounds": "up_to_10",
+  "feedback_revisions": "fresh_after_each_acceptance",
+  "dev_passed_is_automatic_freeze": false,
+  "required_dev_cases_per_round": ["dev_001", "dev_002"],
+  "hidden_after_freeze": true,
+  "result_and_code_separate": true,
+  "status_without_successful_broker_call": "PARTIAL"
+}

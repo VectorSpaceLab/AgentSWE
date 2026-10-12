@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "run_id": "public-magnitude-run",
+  "calls": [
+    {"call_id": "verify-1", "model": "gpt-5.6-sol", "prompt_tokens": 1200, "completion_tokens": 300},
+    {"call_id": "writeup-1", "model": "gpt-5.6-sol", "prompt_tokens": 800, "completion_tokens": 200}
+  ]
+}

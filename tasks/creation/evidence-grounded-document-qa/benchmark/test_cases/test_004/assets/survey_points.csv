@@ -1,0 +1,6 @@
+transect,chainage_m,deposited_area_m2,quality
+T1,0,42,accepted
+T2,280,58,accepted
+T3,610,96,accepted
+T4,940,70,accepted
+M-T3,620,140,Mesa Creek tributary distractor

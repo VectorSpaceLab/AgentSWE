@@ -1,0 +1,66 @@
+[
+  {
+    "object_ref": "MX-3323",
+    "title": "Cedar Map 23",
+    "category": "textile",
+    "detail": "details/object-250.html",
+    "annex": false,
+    "revision": "2026-06-07"
+  },
+  {
+    "object_ref": "MX-3324",
+    "title": "Quiet Engine 24",
+    "category": "model",
+    "detail": "details/object-279.html",
+    "annex": false,
+    "revision": "2026-06-08"
+  },
+  {
+    "object_ref": "MX-3325",
+    "title": "Tidal Notes 25",
+    "category": "drawing",
+    "detail": "details/object-308.html",
+    "annex": false,
+    "revision": "2026-06-09"
+  },
+  {
+    "object_ref": "MX-3326",
+    "title": "Glass Horizon 26",
+    "category": "photograph",
+    "detail": "details/object-337.html",
+    "annex": false,
+    "revision": "2026-06-10"
+  },
+  {
+    "object_ref": "MX-3327",
+    "title": "Signal Garden 27",
+    "category": "textile",
+    "detail": "details/object-366.html",
+    "annex": false,
+    "revision": "2026-06-11"
+  },
+  {
+    "object_ref": "MX-3328",
+    "title": "River Study 28",
+    "category": "model",
+    "detail": "details/object-395.html",
+    "annex": false,
+    "revision": "2026-06-12"
+  },
+  {
+    "object_ref": "OLD-MX-829",
+    "title": "Night Transit 29",
+    "category": "drawing",
+    "detail": "details/object-023.html",
+    "annex": false,
+    "revision": "2026-06-13"
+  },
+  {
+    "object_ref": "MX-3330",
+    "title": "Salt Diagram 30",
+    "category": "photograph",
+    "detail": "details/object-052.html",
+    "annex": false,
+    "revision": "2026-06-14"
+  }
+]

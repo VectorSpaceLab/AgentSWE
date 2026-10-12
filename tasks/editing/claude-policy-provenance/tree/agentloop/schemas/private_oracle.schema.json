@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "case_id",
+    "runtime_nonce",
+    "case_contract_digest",
+    "oracle_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "agentswe-claude-private-oracle/v2"},
+    "case_id": {"enum": ["test_001", "test_002", "test_003", "test_004", "test_005", "test_006"]},
+    "runtime_nonce": {"type": "string", "minLength": 16},
+    "case_contract_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "oracle_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "required_action_ids": {"type": "array", "items": {"type": "string"}},
+    "forbidden_action_ids": {"type": "array", "items": {"type": "string"}},
+    "expected_permissions": {"type": "object", "additionalProperties": {"type": "string"}},
+    "expected_completion_claim": {"enum": ["complete", "partial", "untrusted"]}
+  }
+}

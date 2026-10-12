@@ -1,0 +1,20 @@
+{
+  "schema_version": "agentswe-provenance-source-digest-v1",
+  "benchmark_id": "dyad-acceptance-driven-agentloop-v1",
+  "authoritative_source": "@@AGENTSWE_EDITING_SOURCES@@/19-edit-dyad-acceptance-driven",
+  "authoritative_source_commit": "c7896a72e4ceaa14410832e53334d15a97e7d70f",
+  "authoritative_source_digest_from_0830_manifest": "c20e683c3ecaf1b513ae0ea6a9f063e9e3259e5c2a3eadcc0fb35e8c4ebcaeed",
+  "recursive_digest_algorithm": "sha256(sorted relative path records; path length + path + kind + payload length + payload; symlinks record link text)",
+  "authoritative_source_recursive_digest_observed_2026_09_01": "f6b3989d4449be0701230e91af3c9ec52c73a5d76487dcd2a3d3d02120993353",
+  "digest_comparison_note": "The 0830 pinned digest is retained as the canonical staging provenance. The observed recursive digest uses the sibling audit algorithm and is recorded separately; it is not silently substituted.",
+  "source_files_read": [
+    "README.md", "input/01_task_goal.md", "input/02_interface_and_delivery.md", "input/03_requirements_and_constraints.md", "input/04_resources.md",
+    "dev_cases/dev_001/input.md", "dev_cases/dev_002/input.md", "dev_cases/public_harness.py", "dev_cases/run_dev_case.py",
+    "evaluator/eval_prompt.md", "evaluator/rubric.md", "evaluator/harness/evaluate_suite.py", "evaluator/harness/harness_common.py", "evaluator/harness/selftest.py",
+    "meta/construction_report.md", "meta/cycle_001_refine_last_message.md", "meta/cycle_001_refine_report.md", "meta/cycle_002_refine_report.md", "meta/reference_baseline.md", "meta/source_repo_analysis.md",
+    "input/repository/package.json", "input/repository/scripts/start-supervisor.mjs", "input/repository/src/ipc/ipc_host.ts", "input/repository/src/ipc/types/chat.ts", "input/repository/src/ipc/handlers/chat_stream_handlers.ts", "input/repository/src/ipc/utils/llm_engine_provider.ts", "input/repository/src/ipc/utils/get_model_client.ts", "input/repository/src/testing/chat_flow_harness.ts", "input/repository/src/testing/hybrid_chat_harness.tsx"
+  ],
+  "copied_to_sibling": ["input/", "dev_cases/", "README.source.md"],
+  "source_mutation_check": "must be run before and after every pilot/formal phase",
+  "credential_values_recorded": false
+}

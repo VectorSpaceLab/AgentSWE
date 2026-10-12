@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "phase": "A",
+  "status": "PARTIAL",
+  "checks": {
+    "source_read_only": true,
+    "sibling_only_write_target": true,
+    "public_inventory_exactly_two": true,
+    "hidden_inventory_exactly_six": true,
+    "lower_entry": "dist/cli.js",
+    "broker_model": "gpt-5.6-sol",
+    "broker_reasoning_effort": "medium",
+    "candidate_credential": "broker-only-placeholder",
+    "hidden_strictly_after_freeze": true,
+    "result_code_independent": true,
+    "real_successful_broker_calls": 0,
+    "formal_started": false,
+    "docker_or_api_smoke_started": false
+  },
+  "source_digests": {
+    "v2_manifest_source_digest": "87dea0aea5c019f4a37799587b1eed60e313e8dcca53a67f5feba11fd42229b3",
+    "native_pinned_repository_tree_digest": "9f89b2c56a072f2e5c63d3b60bd6e7c7e9f56861ee1500e0925603ab938e1160",
+    "upstream_commit": "630eb9ec3fa22a4bed2d347fc3ea3a6a3bd22abc"
+  },
+  "partial_reason": "Phase A deliberately stopped before lower-agent execution; no real successful evaluator-owned broker call exists."
+}

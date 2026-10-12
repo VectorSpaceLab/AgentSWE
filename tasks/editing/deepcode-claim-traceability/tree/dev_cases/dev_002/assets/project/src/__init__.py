@@ -1,0 +1,1 @@
+"""Synthetic ordered selection project."""
