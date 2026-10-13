@@ -5,6 +5,7 @@
 <p align="center">
   <a href="https://vectorspacelab.github.io/AgentSWE"><img src="https://img.shields.io/badge/Project%20Page-AgentSWE-yellow" alt="project page"></a>
   <a href="https://arxiv.org/abs/2610.13361"><img src="https://img.shields.io/badge/arXiv-2610.13361-b31b1b.svg" alt="arxiv"></a>
+  <a href="https://huggingface.co/papers/2610.13361"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Paper-Hugging%20Face-ffd21e.svg" alt="hugging face paper"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
 </p>
 
@@ -41,7 +42,7 @@ three stages of an agent's life: **Creation** (10), **Editing** (10) and **Optim
 
 ## 🔥 News
 
-- **2026-10**: The paper is on [arXiv](https://arxiv.org/abs/2610.13361).
+- **2026-10**: The paper is on [arXiv](https://arxiv.org/abs/2610.13361) and [Hugging Face Papers](https://huggingface.co/papers/2610.13361).
 - **2026-10**: Code, all 25 tasks and the Lite set are released.
 
 ## 📦 Benchmark

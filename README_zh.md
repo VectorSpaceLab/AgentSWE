@@ -5,6 +5,7 @@
 <p align="center">
   <a href="https://vectorspacelab.github.io/AgentSWE"><img src="https://img.shields.io/badge/Project%20Page-AgentSWE-yellow" alt="project page"></a>
   <a href="https://arxiv.org/abs/2610.13361"><img src="https://img.shields.io/badge/arXiv-2610.13361-b31b1b.svg" alt="arxiv"></a>
+  <a href="https://huggingface.co/papers/2610.13361"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Paper-Hugging%20Face-ffd21e.svg" alt="hugging face paper"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license"></a>
 </p>
 
@@ -38,7 +39,7 @@ agent，再用它从没见过的用例去测交付出来的 agent。25 个任务
 
 ## 🔥 新闻
 
-- **2026-10**：论文已发布在 [arXiv](https://arxiv.org/abs/2610.13361)。
+- **2026-10**：论文已发布在 [arXiv](https://arxiv.org/abs/2610.13361) 和 [Hugging Face Papers](https://huggingface.co/papers/2610.13361)。
 - **2026-10**：开源代码、全部 25 个任务和 Lite 子集。
 
 ## 📦 基准
